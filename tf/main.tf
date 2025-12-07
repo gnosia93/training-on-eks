@@ -198,6 +198,8 @@ rm -rf awscliv2.zip aws
 curl -fsSL https://code-server.dev/install.sh | sh
 
 # Run Code Server in background
+# To have systemd start code-server now and restart on boot:
+#  sudo systemctl enable --now code-server@ec2-user
 nohup code-server --bind-addr 0.0.0.0:8080 --auth ${var.vscode_server_password} &> /home/ec2-user/vscode.log &
 EOF
 
