@@ -195,7 +195,7 @@ rm -rf awscliv2.zip aws
 # Install eksctl
 
 # Install VS Code Server (Code Server) using the version variable
-curl -fsSL code-server.dev | sh -s -- --version ${var.codeserver_version}
+curl -fsSL https://code-server.dev/install.sh | sh
 
 # Run Code Server in background
 nohup code-server --bind-addr 0.0.0.0:8080 --auth ${var.vscode_server_password} &> /home/ec2-user/vscode.log &
