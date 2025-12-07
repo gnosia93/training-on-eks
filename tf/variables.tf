@@ -33,7 +33,6 @@ variable "allowed_ip_cidrs" {
   description = "List of CIDR blocks allowed to access SSH (22) and VS Code (8080)"
   type        = list(string)
   # 0.0.0.0/0 은 모든 IP를 허용합니다. 보안을 위해 본인의 IP CIDR로 변경하세요.
-  default     = ["0.0.0.0/0"] 
   default     = [
 #    "0.0.0,0/0",         # 모든 IP
     "122.36.213.114/32"  # 내아이피
