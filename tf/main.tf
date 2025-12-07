@@ -200,6 +200,6 @@ curl -fsSL https://code-server.dev/install.sh | sh
 EOF
 
   tags = {
-    Name = "Graviton3-EKS-Host"
+    Name = "code-server"
   }
 }
