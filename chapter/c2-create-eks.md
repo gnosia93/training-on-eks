@@ -1,6 +1,8 @@
 << 아키텍처 다이어그램 >> 
 * x-86-ng : 2 instances
-* kapenter for gpu and graviton instances.
+* node scaling with kapenter
+  * for gpu
+  * for graviton
 
 
 ## 목차 ##
