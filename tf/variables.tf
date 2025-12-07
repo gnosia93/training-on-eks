@@ -26,7 +26,7 @@ variable "key_name" {
 variable "vscode_server_password" {
   description = "Password for the Code Server (VS Code Server) web UI"
   type        = string
-  default     = "password" # 보안을 위해 강력한 비밀번호로 변경 권장
+  default     = "code!@#" # 보안을 위해 강력한 비밀번호로 변경 권장
 }
 
 variable "allowed_ip_cidrs" {
