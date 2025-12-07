@@ -116,7 +116,7 @@ resource "aws_iam_role_policy_attachment" "eks_creator_policy_workers" {
 }
 
 resource "aws_iam_role_policy_attachment" "eks_creator_policy_ec2_container_registry" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
   role       = aws_iam_role.eks_creator_role.name
 }
 
