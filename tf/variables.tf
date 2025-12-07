@@ -34,6 +34,10 @@ variable "allowed_ip_cidrs" {
   type        = list(string)
   # 0.0.0.0/0 은 모든 IP를 허용합니다. 보안을 위해 본인의 IP CIDR로 변경하세요.
   default     = ["0.0.0.0/0"] 
+  default     = [
+#    "0.0.0,0/0",         # 모든 IP
+    "122.36.213.114/32"  # 내아이피
+  ]
 }
 
 variable "codeserver_version" {
