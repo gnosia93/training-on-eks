@@ -192,13 +192,7 @@ sudo ./aws/install
 rm -rf awscliv2.zip aws
 
 # Install kubectl
-curl -O s3.us-west-2.amazonaws.com
-chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/kubectl
-
 # Install eksctl
-curl --silent --location "github.com" | tar xz -C /tmp
-sudo mv /tmp/eksctl /usr/local/bin
 
 # Install VS Code Server (Code Server) using the version variable
 curl -fsSL code-server.dev | sh -s -- --version ${var.codeserver_version}
