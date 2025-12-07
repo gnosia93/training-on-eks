@@ -199,8 +199,8 @@ curl -fsSL https://code-server.dev/install.sh | sh
 
 # Run Code Server in background
 # To have systemd start code-server now and restart on boot:
-sudo systemctl enable --now code-server@ec2-user
-#nohup code-server --bind-addr 0.0.0.0:8080 --auth none &> /home/ec2-user/vscode.log &
+# sudo systemctl enable --now code-server@ec2-user
+nohup code-server --bind-addr 0.0.0.0:8080 &> /home/ec2-user/vscode.log &
 EOF
 
   tags = {
