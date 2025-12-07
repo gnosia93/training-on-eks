@@ -39,8 +39,3 @@ variable "allowed_ip_cidrs" {
   ]
 }
 
-variable "codeserver_version" {
-  description = "Specific version of the code-server to install"
-  type        = string
-  default     = "4.21.1" # 최신 버전을 확인하여 업데이트 가능
-}
