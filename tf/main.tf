@@ -125,6 +125,9 @@ resource "aws_instance" "graviton_box" {
   associate_public_ip_address = true
   key_name                    = var.key_name
 
+  # IAM Instance Profile 연결 <--- EC2에 권한을 부여합니다.
+  iam_instance_profile = aws_iam_instance_profile.eks_creator_profile.name
+
   user_data = <<-EOF
 #!/bin/bash
 sudo dnf update -y
