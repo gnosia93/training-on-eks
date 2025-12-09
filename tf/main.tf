@@ -168,7 +168,7 @@ resource "aws_instance" "graviton_box" {
   user_data = <<_DATA
 #!/bin/bash
 echo "install code-server ..."
-sudo -u ec2-user curl -fsSL https://code-server.dev/install.sh | sh
+sudo su - ec2-user -c "curl -fsSL https://code-server.dev/install.sh | sh"
 nohup code-server --bind-addr 0.0.0.0:8080 --auth none > /home/ec2-user/code-server.log 2>&1 &
 
 _DATA
