@@ -32,6 +32,12 @@ eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권�
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
 
 ```
+aws ec2 describe-vpcs --filters "Name=tag:Name,Values=training-on-eks"
+
+```
+
+
+```
 eksctl create cluster --name=training-on-eks \
   --enable-auto-mode --version=1.33 --region=ap-northeast-2 \
   --vpc-public-subnets="subnet-0abcdef1234567890,subnet-0fedcba9876543210" \
