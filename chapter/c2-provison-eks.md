@@ -5,6 +5,8 @@
   * for graviton
 
 ## 사전 준비 ##
+
+1. kubectl 을 설치한다 
 ```
 curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/arm64/kubectl
 chmod +x ./kubectl
@@ -13,6 +15,12 @@ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 
 kubectl version --client
 ```
+
+2. eksctl 을 설치한다.
+```
+aws sts get-caller-identity
+
+```  
 
 
 
