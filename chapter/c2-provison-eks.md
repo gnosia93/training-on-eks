@@ -35,7 +35,18 @@ eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권�
 cd training-on-eks/tf
 terraform output 
 ```
-
+```
+instance_public_dns = "ec2-43-203-120-143.ap-northeast-2.compute.amazonaws.com"
+private_subnet = [
+  "subnet-009f634c97979d460",
+  "subnet-05f66b53201e3c4cf",
+]
+public_subnet = [
+  "subnet-01bd51c8c77af6d59",
+  "subnet-0de148d8e62debe6d",
+]
+vscode_url = "http://ec2-43-203-120-143.ap-northeast-2.compute.amazonaws.com:8080"
+```
 
 ```
 eksctl create cluster --name=training-on-eks \
