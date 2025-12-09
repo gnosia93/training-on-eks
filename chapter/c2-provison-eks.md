@@ -53,7 +53,9 @@ vscode_url = "http://ec2-43-203-120-143.ap-northeast-2.compute.amazonaws.com:808
 eksctl 파라미터 값인 public 및 private-subnets 값을 조회된 값으로 수정한 후 클러스터를 생성한다.  
 ```
 eksctl create cluster --name=training-on-eks \
-  --enable-auto-mode --version=1.33 --region=ap-northeast-2 \
+  --enable-auto-mode \
+  --version=1.33 \
+  --region=ap-northeast-2 \
   --vpc-public-subnets="subnet-01bd51c8c77af6d59,subnet-0de148d8e62debe6d" \
   --vpc-private-subnets="subnet-009f634c97979d460,subnet-05f66b53201e3c4cf" \
 ```
