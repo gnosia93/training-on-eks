@@ -168,8 +168,14 @@ resource "aws_instance" "graviton_box" {
   user_data = <<_DATA
 #!/bin/bash
 echo "install code-server ..."
-sudo su - ec2-user -c "curl -fsSL https://code-server.dev/install.sh | sh"
+curl -fsSL https://code-server.dev/install.sh | sh
+sudo systemctl enable --now code-server@ec2-user
 
+CONFIG_FILE="/home/ec2-user/.config/code-server/config.yaml"
+sed -i 's/^\s*bind-addr:\s*127.0.0.1:8080/bind-addr: 0.0.0.0:8080/g' "$CONFIG_FILE"
+sed -i 's/^\s*auth:\s*password/auth: none/g' "$CONFIG_FILE"
+
+sudo systemctl restart code-server@ec2-user  
 _DATA
 
   tags = {
