@@ -167,7 +167,7 @@ resource "aws_instance" "graviton_box" {
   # IAM Instance Profile 연결 <--- EC2에 권한을 부여합니다.
   iam_instance_profile = aws_iam_instance_profile.eks_creator_profile.name
 
-  user_data = <<-EOF
+  user_data = <<_DATA
 #!/bin/bash
 sudo dnf update -y
 sudo dnf install -y git unzip 
@@ -181,7 +181,7 @@ sed -i 's/^\s*bind-addr:\s*127.0.0.1:8080/bind-addr: 0.0.0.0:8080/g' "$CONFIG_FI
 sed -i 's/^\s*auth:\s*password/auth: none/g' "$CONFIG_FILE"
 
 sudo systemctl restart code-server@ec2-user  
-EOF
+_DATA
 
   tags = {
     Name = "code-server"
