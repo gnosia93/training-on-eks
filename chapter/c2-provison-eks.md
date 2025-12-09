@@ -28,7 +28,7 @@ sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 ```
 
 ## 클러스터 생성 ##
-eks 클러스터를 생성하기 위해서는 아래 도표에 나와 있는 것처럼 최소의 권한이 필요하다.
+eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권한을 가지고 있어야 한다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
 
 
