@@ -35,6 +35,43 @@ eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권�
 eksctl create cluster --name=my-auto-cluster --enable-auto-mode --version=1.29 --region=ap-northeast-2
 ```
 
+## gpu 파드 스케줄링 ##
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-gpu-pod-specific-type
+spec:
+  containers:
+    - name: cuda-container
+      image: nvidia/cuda:11.4.0-base-ubuntu20.04
+      resources:
+        limits:
+          nvidia.com: 1
+  affinity:
+    nodeAffinity:
+      # 필수 조건 (이 조건에 맞는 노드가 없으면 파드가 스케줄링되지 않음)
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: karpenter.k8s.aws/instance-type
+            operator: In
+            values:
+            - g5.2xlarge
+            - g5.4xlarge
+      # 선호 조건 (가능하다면 이 인스턴스 유형을 사용하지만, 없어도 다른 인스턴스 사용 가능)
+      # preferredDuringSchedulingIgnoredDuringExecution:
+      # - weight: 1
+      #   preference:
+      #     matchExpressions:
+      #     - key: karpenter.k8s.aws/instance-family
+      #       operator: In
+      #       values:
+      #       - p4d
+
+```
+
+
 ## 목차 ##
 * 사전준비 - 소프트웨어 설치
 * 클러스터 생성
