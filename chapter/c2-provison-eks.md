@@ -32,7 +32,10 @@ eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권�
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
 
 ```
-eksctl create cluster --name=training-on-eks --enable-auto-mode --version=1.33 --region=ap-northeast-2
+eksctl create cluster --name=training-on-eks \
+  --enable-auto-mode --version=1.33 --region=ap-northeast-2 \
+  --vpc-public-subnets="subnet-0abcdef1234567890,subnet-0fedcba9876543210" \
+  --vpc-private-subnets="subnet-0bbccddeeff112233,subnet-0aaffeeccbb112233" \
 ```
 
 ## gpu 파드 스케줄링 ##
