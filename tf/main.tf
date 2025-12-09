@@ -193,7 +193,7 @@ rm -rf awscliv2.zip aws
 
 # Install VS Code Server (Code Server) - 설치하면 자동으로 systemctl 에 등록된다.
 curl -fsSL https://code-server.dev/install.sh | sh
-sudo systemctl enable --now code-server@$ec2-user
+sudo systemctl enable --now code-server@ec2-user
 EOF
 
   tags = {
