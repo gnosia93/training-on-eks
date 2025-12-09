@@ -10,5 +10,12 @@ output "vscode_url" {
 
 output "public_subnet" {
     description = "퍼블릭 서브넷 ID 목록"
-    value       = values(aws_subnet.example)[*].id
+    value       = values(aws_subnet.public)[*].id
 }
+
+output "private_subnet" {
+    description = "프라이빗 서브넷 ID 목록"
+    value       = values(aws_subnet.private)[*].id
+}
+
+
