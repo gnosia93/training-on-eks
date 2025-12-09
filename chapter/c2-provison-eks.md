@@ -27,16 +27,7 @@ tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
 sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 ```
 
-
-
-
-```
-aws sts get-caller-identity
-```
-
-
-
-
+## 클러스터 생성 ##
 
 
 
