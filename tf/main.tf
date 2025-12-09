@@ -169,7 +169,8 @@ resource "aws_instance" "graviton_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-
+echo "install code-server ..."
+curl -fsSL https://code-server.dev/install.sh | sh
 
 _DATA
 
