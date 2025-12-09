@@ -5,6 +5,7 @@
   * for graviton
 
 ## [kubectl 및 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
+code server 에 접속하여 kubectl 과 eksctl을 설치한다. 
  
 1. kubectl 을 설치한다 
 ```
