@@ -168,7 +168,7 @@ resource "aws_instance" "graviton_box" {
   user_data = <<-EOF
 #!/bin/bash
 sudo dnf update -y
-sudo dnf install -y git unzip curl
+sudo dnf install -y git unzip 
 
 # Install VS Code Server (Code Server) - 설치하면 자동으로 systemctl 에 등록된다.
 curl -fsSL https://code-server.dev/install.sh | sh
