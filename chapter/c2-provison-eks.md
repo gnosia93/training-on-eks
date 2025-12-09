@@ -57,7 +57,7 @@ eksctl create cluster --name=training-on-eks \
   --version=1.33 \
   --region=ap-northeast-2 \
   --vpc-public-subnets="subnet-01bd51c8c77af6d59,subnet-0de148d8e62debe6d" \
-  --vpc-private-subnets="subnet-009f634c97979d460,subnet-05f66b53201e3c4cf" \
+  --vpc-private-subnets="subnet-009f634c97979d460,subnet-05f66b53201e3c4cf" 
 ```
 
 ## gpu 파드 스케줄링 ##
