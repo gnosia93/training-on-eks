@@ -7,3 +7,8 @@ output "vscode_url" {
     value = "http://${aws_instance.graviton_box.public_dns}:8080"
     description = "브라우저에서 VS Code 서버에 접속할 수 있는 URL (PW: 'password' by default)"
 }
+
+output "public_subnet" {
+    description = "퍼블릭 서브넷 ID 목록"
+    value       = values(aws_subnet.example)[*].id
+}
