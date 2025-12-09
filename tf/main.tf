@@ -170,12 +170,6 @@ resource "aws_instance" "graviton_box" {
 sudo dnf update -y
 sudo dnf install -y git unzip curl
 
-# Install AWS CLI v2
-curl "awscli.amazonaws.com" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-rm -rf awscliv2.zip aws
-
 # Install VS Code Server (Code Server) - 설치하면 자동으로 systemctl 에 등록된다.
 curl -fsSL https://code-server.dev/install.sh | sh
 sudo systemctl enable --now code-server@ec2-user
