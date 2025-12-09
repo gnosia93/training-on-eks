@@ -28,7 +28,7 @@ resource "aws_subnet" "public" {
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   vpc_id                  = aws_vpc.main.id
   map_public_ip_on_launch = true
-  tags = { Name = "public-subnet-${count.index + 1}" }
+  tags = { Name = "training-on-eks-pub-subnet-${count.index + 1}" }
 }
 
 resource "aws_subnet" "private" {
@@ -36,7 +36,7 @@ resource "aws_subnet" "private" {
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index + 2)
   availability_zone = data.aws_availability_zones.available.names[count.index]
   vpc_id            = aws_vpc.main.id
-  tags = { Name = "private-subnet-${count.index + 1}" }
+  tags = { Name = "training-on-eks-priv-subnet-${count.index + 1}" }
 }
 
 resource "aws_eip" "nat" {
