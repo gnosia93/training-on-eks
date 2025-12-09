@@ -5,7 +5,8 @@
   * for graviton
 
 ## 사전 준비 ##
-
+* https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl
+  
 1. kubectl 을 설치한다 
 ```
 curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/arm64/kubectl
