@@ -32,7 +32,7 @@ eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권�
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
 
 ```
-eksctl create cluster --name=my-auto-cluster --enable-auto-mode --version=1.29 --region=ap-northeast-2
+eksctl create cluster --name=training-on-eks --enable-auto-mode --version=1.33 --region=ap-northeast-2
 ```
 
 ## gpu 파드 스케줄링 ##
