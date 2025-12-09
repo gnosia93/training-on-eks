@@ -4,7 +4,7 @@
   * for gpu
   * for graviton
 
-## [kubectl 과 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
+## [kubectl 및 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
  
 1. kubectl 을 설치한다 
 ```
