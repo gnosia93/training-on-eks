@@ -7,3 +7,7 @@ terraform init
 
 terraform apply -auto-approve
 ```
+
+
+
+sudo systemctl daemon-reload
