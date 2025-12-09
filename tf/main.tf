@@ -101,22 +101,7 @@ resource "aws_iam_role" "eks_creator_role" {
 # EKS 클러스터 생성을 위한 필수 권한 부여
 # Note: 이 정책들은 클러스터 생성에 필요한 거의 모든 권한을 포함하므로 주의해야 합니다.
 resource "aws_iam_role_policy_attachment" "eks_creator_policy_cluster" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_creator_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_creator_policy_vpc" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.eks_creator_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_creator_policy_workers" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.eks_creator_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_creator_policy_ec2_container_registry" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
   role       = aws_iam_role.eks_creator_role.name
 }
 
