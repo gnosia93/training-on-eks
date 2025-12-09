@@ -31,7 +31,9 @@ sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권한을 가지고 있어야 한다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
 
-
+```
+eksctl create cluster --name=my-auto-cluster --enable-auto-mode --version=1.29 --region=ap-northeast-2
+```
 
 ## 목차 ##
 * 사전준비 - 소프트웨어 설치
