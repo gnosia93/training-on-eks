@@ -31,10 +31,12 @@ sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권한을 가지고 있어야 한다. 이번 워크샵에서는 EC2 인스턴스에 해당당 Role인 TOE_EKS_EC2_ROLE 이 AdminFullAccess 권한을 가지고 있다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
 
+테라폼으로 퍼블릭 및 프라이빗 서브넷 리스트를 조회한다. 
 ```
 cd training-on-eks/tf
 terraform output 
 ```
+[결과]
 ```
 instance_public_dns = "ec2-43-203-120-143.ap-northeast-2.compute.amazonaws.com"
 private_subnet = [
@@ -48,11 +50,12 @@ public_subnet = [
 vscode_url = "http://ec2-43-203-120-143.ap-northeast-2.compute.amazonaws.com:8080"
 ```
 
+eksctl 파라미터 값인 public 및 private-subnets 값을 조회된 값으로 수정한 후 클러스터를 생성한다.  
 ```
 eksctl create cluster --name=training-on-eks \
   --enable-auto-mode --version=1.33 --region=ap-northeast-2 \
-  --vpc-public-subnets="subnet-0abcdef1234567890,subnet-0fedcba9876543210" \
-  --vpc-private-subnets="subnet-0bbccddeeff112233,subnet-0aaffeeccbb112233" \
+  --vpc-public-subnets="subnet-01bd51c8c77af6d59,subnet-0de148d8e62debe6d" \
+  --vpc-private-subnets="subnet-009f634c97979d460,subnet-05f66b53201e3c4cf" \
 ```
 
 ## gpu 파드 스케줄링 ##
