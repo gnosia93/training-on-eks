@@ -58,7 +58,7 @@ kubectl describe pod pytorch-dist-job-worker-1 -n pytorch
 
 * 참고 - pytorchjob 삭제하기
 ```
-kubectl delete pytorchjob pytorch-ddp -n pytorch
+kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
 
 ## 부연설명 ##
