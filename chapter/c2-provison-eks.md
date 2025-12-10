@@ -278,7 +278,9 @@ p5en.48xlarge   g6.16xlarge     g6.12xlarge     g4dn.16xlarge
 ```
 * 디바이스 플러그인 배포: 클러스터에 aws-efa-k8s-device-plugin이 DaemonSet으로 배포되어 실행 중이어야 합니다. 이 플러그인이 aws.amazon.com 리소스를 노출시킵니다.
 * [DLC 이미지](https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/appendix-dlc-release-notes-pytorch.html): 컨테이너 이미지 자체가 EFA 드라이버와 통신할 수 있는 libfabric 라이브러리와 애플리케이션(예: MPI)을 포함하고 있어야 합니다.
-
+```
+public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
+```
 
 
 
