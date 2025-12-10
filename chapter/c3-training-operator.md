@@ -1,5 +1,5 @@
 ## 트레이닝 오퍼레이터 설치 ##
-kubeflow 의 트레이닝만 오퍼레이터만 단독으로 설치한다. 분산 트레이닝을 실행하기 위해서 다른 모듈은 필요하지 않다.  
+kubeflow 의 여러 모듈중 트레이닝 오퍼레이터만 단독으로 설치한다. 기본적인 분산 트레이닝을 실행하기 위해서 다른 모듈은 필요하지 않다.  
 ```
 sudo dnf install git -y
 kubectl apply --server-side -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.1"
