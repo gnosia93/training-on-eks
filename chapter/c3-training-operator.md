@@ -77,8 +77,9 @@ cleanPodPolicy는 Job이 성공하거나 실패했을 때 워커 Pod들을 어�
 
 #### 3. restartPolicy ####
 
+#### 4. pytorch-dist-job.yaml 이해하기 ####
 
-#### 4. kustomize ####
+#### 5. kustomize ####
 
 ## 레퍼런스 ##
 * https://www.kubeflow.org/docs/components/trainer/legacy-v1/installation/
