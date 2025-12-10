@@ -145,7 +145,7 @@ spec:
       requirements:
         - key: kubernetes.io/arch
           operator: In
-          values: ["arm64", "amd64"]   # X86, ARM 시영  
+          values: ["amd64"]            # X86 만 설정  
         - key: karpenter.sh/capacity-type
           operator: In
           values: ["on-demand"]        # 온디맨드 인스턴스 사용        
