@@ -180,7 +180,8 @@ metadata:
 spec:
   containers:
     - name: cuda-container
-      image: nvidia/cuda:11.4.0-base-ubuntu20.04
+      image: nvidia/cuda:11.4.0-runtime-ubuntu20.04 # 'runtime' 이미지 사용
+      command: ["nvidia-smi"] # 컨테이너 시작 시 실행할 
       resources:
         limits:
           nvidia.com/gpu: 1
