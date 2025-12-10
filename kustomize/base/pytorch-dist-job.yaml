@@ -15,7 +15,7 @@ spec:
         spec:
           containers:
           - name: pytorch
-            image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
+            image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
             command: ["/bin/bash", "-c"] 
             args: 
               - |
@@ -39,7 +39,7 @@ spec:
             effect: "NoSchedule"
           containers:
           - name: pytorch
-            image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
+            image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
             command: ["/bin/bash", "-c"] 
             args: 
               - |
