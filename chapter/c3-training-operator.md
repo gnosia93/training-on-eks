@@ -38,7 +38,7 @@ cd training-on-eks
 ```
 ```
 kubectl create ns pytorch
-kubectl apply -k kustomize/overlays/ddp/ -n pytorch
+kubectl apply -k kustomize/overlays/ddp/
 kubectl describe pod pytorch-dist-job-master-0 -n pytorch
 
 kubectl delete pytorchjob pytorch-ddp -n pytorch
