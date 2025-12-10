@@ -156,8 +156,9 @@ spec:
     expireAfter: 30m
 ```
 
+gpu-nodepool.yaml 파일을 만든 다음 노드풀을 생성해 준다.  
 ```
-kubectl apply -f gpu-node-pool.yaml
+kubectl apply -f gpu-nodepool.yaml
 ```
 
 
