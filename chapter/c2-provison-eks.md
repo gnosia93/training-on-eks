@@ -260,9 +260,26 @@ Wed Dec 10 06:44:46 2025
 
 ### 필수 전제 조건 요약 (Pod 배포 전 완료되어야 함): ###
 * EKS 모드: EKS 관리형 노드 그룹 또는 자체 관리형 노드를 사용해야 합니다 (Fargate 불가).
-* 인스턴스 유형: EFA를 지원하는 EC2 인스턴스 유형(예: P4, P3, C5n 등)을 사용해야 합니다.
+#### 2. 인스턴스 유형: EFA를 지원하는 GPU 인스턴스 유형 ####
+```
+aws ec2 describe-instance-types \
+    --filters Name=network-info.efa-supported,Values=true \
+    --query "InstanceTypes[?GpuInfo.Gpus!=null].InstanceType" \
+    --output text | sort
+```
+[결과]
+```
+g5.16xlarge     p4d.24xlarge
+g5.8xlarge      g4dn.8xlarge    g6e.24xlarge    gr6.8xlarge     g5.48xlarge
+g6.24xlarge     g6e.48xlarge    g6e.8xlarge
+g6.48xlarge     g4dn.metal      g6e.16xlarge    g4dn.12xlarge   g6.8xlarge      g5.24xlarge
+g6e.12xlarge    g5.12xlarge
+p5en.48xlarge   g6.16xlarge     g6.12xlarge     g4dn.16xlarge
+```
 * 디바이스 플러그인 배포: 클러스터에 aws-efa-k8s-device-plugin이 DaemonSet으로 배포되어 실행 중이어야 합니다. 이 플러그인이 aws.amazon.com 리소스를 노출시킵니다.
 * 애플리케이션 이미지: 컨테이너 이미지 자체가 EFA 드라이버와 통신할 수 있는 libfabric 라이브러리와 애플리케이션(예: MPI)을 포함하고 있어야 합니다.
+
+
 
 
 ```
