@@ -7,6 +7,19 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 
 helm install kube-prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+
+# 5. 설치 확인
+echo "설치된 Pod 확인:"
+kubectl get pods -n monitoring
+
+echo "----------------------------------------------------"
+echo "설치가 완료되었습니다."
+echo "Grafana에 접속하려면 다음 포트 포워딩 명령어를 새 터미널에서 실행하십시오:"
+echo "kubectl port-forward svc/prometheus-grafana 8080:80 -n monitoring"
+echo "그 후 웹 브라우저에서 http://localhost:8080 으로 접속하십시오."
+echo "기본 사용자 이름: admin, 기본 비밀번호: prom-operator"
+echo "----------------------------------------------------"
+
 ```
 kube-prometheus-stack 은 Prometheus Operator, Prometheus, Grafana, Alertmanager 등을 모두 포함하는 종합 패키지이다
 
