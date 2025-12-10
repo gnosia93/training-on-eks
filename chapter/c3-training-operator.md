@@ -83,6 +83,17 @@ spec:
                 nvidia.com: "1"
 ```
 
+* github 코드 주소 생성
+
+* 분산작업 스케줄링
+```
+kustomize 를 <GIT_REPO> 값 수정후 스케줄링
+```
+
+### restartPolicy 에 대해서 ###
+
+
+
 ### EC2 torchrun 과 Kubeflow PyTorchJob 의 차이점 ###
 #### EC2 (torchrun 수동 실행): ####
 - 랭크 0: 코디네이터 겸 GPU 연산 참여 (모든 노드가 동일한 역할 수행)
