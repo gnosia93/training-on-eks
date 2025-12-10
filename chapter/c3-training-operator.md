@@ -20,8 +20,6 @@ NAME                                 READY   STATUS    RESTARTS   AGE
 training-operator-79cc5c4557-lzqnt   1/1     Running   0          4m12s
 ```
 
-
-
 ## 파이썬 SDK 설치 ##
 ```
 sudo dnf install python3-pip -y
@@ -29,15 +27,22 @@ python3 --version
 pip install -U kubeflow-training
 pip install -U "kubeflow-training[huggingface]"
 ```
+kubeflow 의 경우 SDK 를 이용하여 분산 훈련 작업을 실행하는 것이 기본 설계 사상이지만, 여기서는 yaml 을 사용하여 트레이닝 작업을 실행한다.   
 
 ## 트레이닝 작업 실행하기 ##
 
+먼저 네임스페이스를 생성한다. 
+```
+kubectl create ns pytorch
+```
+
+[pytorch-dist-job.yaml]
 ```
 apiVersion: kubeflow.org/v1
 kind: PyTorchJob
 metadata:
-  name: pytorch-dist-dynamic-job
-  namespace: kubeflow-user-example-com # 사용자의 네임스페이스로 변경하세요
+  name: pytorch-dist-job
+  namespace: pytorch 
 spec:
   runPolicy:
     cleanPodPolicy: Running
