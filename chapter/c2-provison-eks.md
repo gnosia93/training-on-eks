@@ -189,17 +189,17 @@ spec:
     - key: "example-key"
       operator: "Exists"
       effect: "NoSchedule"
-  affinity:
-    nodeAffinity:
-      # 필수 조건 (이 조건에 맞는 노드가 없으면 파드가 스케줄링되지 않음)
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: karpenter.k8s.aws/instance-type
-            operator: In
-            values:
-            - g5.2xlarge
-            - g5.4xlarge
+ # affinity:
+ #   nodeAffinity:
+ #     # 필수 조건 (이 조건에 맞는 노드가 없으면 파드가 스케줄링되지 않음)
+ #     requiredDuringSchedulingIgnoredDuringExecution:
+ #       nodeSelectorTerms:
+ #       - matchExpressions:
+ #         - key: karpenter.k8s.aws/instance-type
+ #           operator: In
+ #           values:
+ #           - g5.2xlarge
+ #           - g5.4xlarge
       # 선호 조건 (가능하다면 이 인스턴스 유형을 사용하지만, 없어도 다른 인스턴스 사용 가능)
       # preferredDuringSchedulingIgnoredDuringExecution:
       # - weight: 1
