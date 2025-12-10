@@ -43,7 +43,7 @@ spec:
     cleanPodPolicy: Running
   
   pytorchReplicaSpecs:
-    Master:
+    Master:                       # 마스터는 GPU 연산 작업에는 참여하지 않는다. GPU Toleration 설정 불필요
       replicas: 1
       restartPolicy: OnFailure
       template:
@@ -51,14 +51,17 @@ spec:
           containers:
           - name: pytorch
             image: pytorch/pytorch:1.13.1-cuda11.7-cudnn8-runtime
-            command: ["python", "/workspace/code/main.py"] 
+            command: ["/bin/bash", "-c"] 
+            args: 
+              - |
+                git clone <GIT_REPO> /workspace/code    
+                python /workspace/code/training.py
     Worker:
       replicas: 2
       restartPolicy: OnFailure
       template:
         spec:
-          # EKS Teleration 설정
-          tolerations:
+          tolerations:            # GPU Toleration 설정 
           - key: "gpu"
             operator: "Equal"
             value: "true"
@@ -66,7 +69,11 @@ spec:
           containers:
           - name: pytorch
             image: pytorch/pytorch:1.13.1-cuda11.7-cudnn8-runtime
-            command: ["python", "/workspace/code/main.py"] 
+              command: ["/bin/bash", "-c"] 
+            args: 
+              - |
+                git clone <GIT_REPO> /workspace/code    
+                python /workspace/code/training.py 
             resources:
               limits:
                 nvidia.com: "1"
