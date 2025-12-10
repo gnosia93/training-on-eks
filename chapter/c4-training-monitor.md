@@ -1,3 +1,12 @@
+## helm ##
+```
+sudo dnf install helm
+```
+
+
+
+## 설명 ##
+
 PyTorchJob을 모니터링하는 환경을 구축하려면 Kubernetes 클러스터의 표준 모니터링 스택인 Prometheus와 Grafana를 활용하는 것이 일반적입니다. Kubeflow 환경에서는 이러한 도구들이 이미 통합되어 있을 가능성이 높습니다.
 모니터링 환경 구축 및 설정 방법은 다음과 같습니다.
 1. 전제 조건 및 구성 요소
