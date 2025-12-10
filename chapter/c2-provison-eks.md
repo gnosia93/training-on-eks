@@ -174,6 +174,8 @@ system            default     1       True    12h
 
 ## GPU 파드 스케줄링 ##
 
+[도커허브 nvidia/cuda](https://hub.docker.com/r/nvidia/cuda) 로 방문해서 nvidia-smi 가 설치되어 있는 컨테이너 이미를 확인한다.  
+
 [gpu-pod.yaml]
 ```
 apiVersion: v1
@@ -183,8 +185,8 @@ metadata:
 spec:
   containers:
     - name: cuda-container
-      image: nvidia/cuda:11.4.0-runtime-ubuntu20.04 # 'runtime' 이미지 사용
-      command: ["nvidia-smi"] # 컨테이너 시작 시 실행할 
+      image: nvidia/cuda: 13.0.2-runtime-ubuntu22.04    # runtime 이미지 사용
+      command: ["nvidia-smi"]                           # 컨테이너 시작 시 실행할 프로그램
       resources:
         limits:
           nvidia.com/gpu: 1
