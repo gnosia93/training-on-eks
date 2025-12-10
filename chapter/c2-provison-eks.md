@@ -189,7 +189,7 @@ spec:
         limits:
           nvidia.com/gpu: 1
   tolerations:
-    - key: "example-key"
+    - key: "gpu-workload"
       operator: "Exists"
       effect: "NoSchedule"
  # affinity:
