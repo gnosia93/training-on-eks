@@ -138,21 +138,12 @@ spec:
         kind: NodeClass
         name: default
       requirements:
-        # OS 및 아키텍처 요구사항
-        - key: kubernetes.io/os
-          operator: In
-          values: ["bottlerocket", "linux"]
-        - key: kubernetes.io/arch
-          operator: In
-          values: ["amd64"]
         - key: karpenter.sh/capacity-type
           operator: In
-          values: ["on-demand"] # 온디맨드 인스턴스 사용
-        
-        # --- GPU 인스턴스 타입 요구사항 ---
-        - key: karpenter.k8s.aws/instance-category
+          values: ["on-demand"] # 온디맨드 인스턴스 사용        
+        - key: eks.amazonaws.com/instance-category 
           operator: In
-          values: ["g", "p"] # G (NVIDIA T4G/A10G 등), P (고성능 A100 등) 타입 지정
+          values: ["g", "p"]    # GPU 인스턴스 사용  
         
         # 특정 세대(예: 4세대 이상) 또는 특정 타입만 허용할 수 있습니다.
         # - key: karpenter.k8s.aws/instance-type
