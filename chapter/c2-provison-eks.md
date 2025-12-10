@@ -88,19 +88,21 @@ kubectl describe nodepool system -n karpenter
 kubectl describe nodepool general-purpose -n karpenter
 ```   
 
-2. gpu 노드풀 생성
-
+2. 카펜터 버전 조회
 ```
-kubectl api-versions | karpenter
+kubectl api-resources | grep karpenter
 ```
-karpenter.sh/v1
+[결과]
+```
+nodeclaims                                       karpenter.sh/v1                   false        NodeClaim
+nodepools                                        karpenter.sh/v1                   false        NodePool
+```
 
-
-
+3. gpu 노드풀 생성
 [gpu-nodepool.yaml] 
 ```
-apiVersion: karpenter.k8s.aws/v1
-kind: EC2NodeClass
+apiVersion: karpenter.sh/v1
+kind: NodeClaim
 metadata:
   name: gpu-default
 spec:
