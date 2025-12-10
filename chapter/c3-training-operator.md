@@ -62,9 +62,11 @@ spec:
       template:
         spec:
           tolerations:            # GPU Toleration 설정 
-          - key: "gpu"
-            operator: "Equal"
-            value: "true"
+          - key: "nvidia.com/gpu"
+            operator: "Exists"
+            effect: "NoSchedule"
+          - key: "gpu-workload"
+            operator: "Exists"
             effect: "NoSchedule"
           containers:
           - name: pytorch
