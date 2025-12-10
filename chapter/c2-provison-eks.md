@@ -98,6 +98,30 @@ nodeclaims                                       karpenter.sh/v1                
 nodepools                                        karpenter.sh/v1                   false        NodePool
 ```
 
+```
+kubectl get crd -o wide
+```
+[결과]
+```
+NAME                                            CREATED AT
+applicationnetworkpolicies.networking.k8s.aws   2025-12-09T17:19:41Z
+clusternetworkpolicies.networking.k8s.aws       2025-12-09T17:19:41Z
+clusterpolicyendpoints.networking.k8s.aws       2025-12-09T17:19:42Z
+cninodes.eks.amazonaws.com                      2025-12-09T17:21:32Z
+cninodes.vpcresources.k8s.aws                   2025-12-09T17:19:42Z
+ingressclassparams.eks.amazonaws.com            2025-12-09T17:21:32Z
+nodeclaims.karpenter.sh                         2025-12-09T17:21:32Z
+nodeclasses.eks.amazonaws.com                   2025-12-09T17:21:32Z
+nodediagnostics.eks.amazonaws.com               2025-12-09T17:21:32Z
+nodepools.karpenter.sh                          2025-12-09T17:21:32Z
+policyendpoints.networking.k8s.aws              2025-12-09T17:19:41Z
+securitygrouppolicies.vpcresources.k8s.aws      2025-12-09T17:19:42Z
+targetgroupbindings.eks.amazonaws.com           2025-12-09T17:21:32Z
+```
+
+
+
+
 3. gpu 노드풀 생성
 [gpu-nodepool.yaml] 
 ```
