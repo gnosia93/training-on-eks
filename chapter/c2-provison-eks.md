@@ -92,8 +92,8 @@ kubectl describe nodepool general-purpose -n karpenter
 
 [gpu-nodepool.yaml] 
 ```
-apiVersion: karpenter.k8s.aws/v1beta1
-kind: AWSNodeClass
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
 metadata:
   name: gpu-default
 spec:
@@ -113,7 +113,7 @@ spec:
     # 생성된 EC2 인스턴스에 추가할 태그
     intent: gpu-workload
 ---
-apiVersion: karpenter.k8s.aws/v1beta1
+apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: gpu-pool
@@ -121,7 +121,9 @@ spec:
   template:
     spec:
       nodeClassRef:
-        name: gpu-default # 위에서 정의한 AWSNodeClass 이름
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: gpu-default     # 위에서 정의한 NodeClass 
       requirements:
         # OS 및 아키텍처 요구사항
         - key: kubernetes.io/os
