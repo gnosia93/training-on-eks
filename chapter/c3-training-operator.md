@@ -19,5 +19,11 @@ NAME                                 READY   STATUS    RESTARTS   AGE
 training-operator-79cc5c4557-lzqnt   1/1     Running   0          4m12s
 ```
 
+파이썬 버전 확인 및 pip 설치
+```
+sudo dnf install python3-pip -y
+python3 --version
+```
+
 ## 레퍼런스 ##
 * https://www.kubeflow.org/docs/components/trainer/legacy-v1/installation/
