@@ -4,7 +4,7 @@
 
 * [2. EKS 클러스터 생성하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c2-provison-eks.md) 
 
-* [3. kubeflow 설치](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-training-operator.md)
+* [3. Training Operator 설치](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-training-operator.md)
 
 
 ## 레퍼런스 ## 
