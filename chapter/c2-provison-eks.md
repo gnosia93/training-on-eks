@@ -310,17 +310,17 @@ spec:
   containers:
   - name: dl-container-efa
     # 위에서 추천한 AWS DLC 이미지 사용 (리전과 태그를 실제 값으로 변경하세요)
-    image: 763104351884.dkr.ecr.us-east-1.amazonaws.com
+    image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
     command: ["/bin/bash", "-c", "echo 'EFA and GPU configured successfully!'; sleep infinity"]
     resources:
       limits:
         # 8개의 NVIDIA GPU 할당 요청
-        nvidia.com/gpu: 8 
+        nvidia.com/gpu: 1 
         # EFA 리소스 할당 요청 (이 리소스 타입은 EFA Device Plugin이 설치되어야 사용 가능)
         # Auto Mode에서는 AWS가 EFA 플러그인 설치를 관리합니다.
         # aws.amazon.com: "1" # 필요한 경우 주석 해제하여 사용
       requests:
-        nvidia.com/gpu: 8
+        nvidia.com/gpu: 1
 
     # EFA 사용을 위한 환경 변수 설정 (컨테이너 내 라이브러리 설정)
     env:
