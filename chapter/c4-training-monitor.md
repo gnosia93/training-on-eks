@@ -23,6 +23,10 @@ kube-prometheus-prometheus-node-exporter-mzx7j           1/1     Running   0    
 prometheus-kube-prometheus-kube-prome-prometheus-0       2/2     Running   0          2m21s
 ```
 
+```
+kubectl port-forward svc/kube-prometheus-grafana 8080:80 -n monitoring &
+```
+
 echo "----------------------------------------------------"
 echo "설치가 완료되었습니다."
 echo "Grafana에 접속하려면 다음 포트 포워딩 명령어를 새 터미널에서 실행하십시오:"
