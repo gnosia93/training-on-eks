@@ -14,6 +14,7 @@ paddlejobs.kubeflow.org                         2025-12-10T11:29:58Z
 pytorchjobs.kubeflow.org                        2025-12-10T11:29:59Z
 tfjobs.kubeflow.org                             2025-12-10T11:30:00Z
 xgboostjobs.kubeflow.org                        2025-12-10T11:30:01Z
+
 NAME                                 READY   STATUS    RESTARTS   AGE
 training-operator-79cc5c4557-lzqnt   1/1     Running   0          4m12s
 ```
