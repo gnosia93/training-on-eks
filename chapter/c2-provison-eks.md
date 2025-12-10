@@ -196,40 +196,56 @@ spec:
     - key: "gpu-workload"                              # GPU 노드풀에 파드를 스케줄링하기 위해서 toleration 을 설정한다.        
       operator: "Exists"
       effect: "NoSchedule"
- # affinity:
- #   nodeAffinity:
- #     # 필수 조건 (이 조건에 맞는 노드가 없으면 파드가 스케줄링되지 않음)
- #     requiredDuringSchedulingIgnoredDuringExecution:
- #       nodeSelectorTerms:
- #       - matchExpressions:
- #         - key: karpenter.k8s.aws/instance-type
- #           operator: In
- #           values:
- #           - g5.2xlarge
- #           - g5.4xlarge
-      # 선호 조건 (가능하다면 이 인스턴스 유형을 사용하지만, 없어도 다른 인스턴스 사용 가능)
-      # preferredDuringSchedulingIgnoredDuringExecution:
-      # - weight: 1
-      #   preference:
-      #     matchExpressions:
-      #     - key: karpenter.k8s.aws/instance-family
-      #       operator: In
-      #       values:
-      #       - p4d
-
 ```
 
+파드를 생성하고 nvidia-smi 가 동작하는 확인한다.  
+```
+kubectl apply -f gpu-pod.yaml
+kubectl describe pod gpu-pod
+kubectl logs gpu-pod
+```
+[출력]
+```
+Node-Selectors:              <none>
+Tolerations:                 gpu-workload:NoSchedule op=Exists
+                             node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+                             nvidia.com/gpu:NoSchedule op=Exists
+Events:
+  Type     Reason            Age                  From                   Message
+  ----     ------            ----                 ----                   -------
+  Warning  FailedScheduling  5m12s                default-scheduler      0/2 nodes are available: 1 node(s) had untolerated taint {CriticalAddonsOnly: }, 1 node(s) had untolerated taint {karpenter.sh/disrupted: }. preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling.
+  Normal   Scheduled         4m25s                default-scheduler      Successfully assigned default/gpu-pod to i-0b2714b5d7951c695
+  Normal   Nominated         5m12s                eks-auto-mode/compute  Pod should schedule on: nodeclaim/gpu-pool-6csft
+  Normal   Pulling           4m20s                kubelet                Pulling image "nvidia/cuda:13.0.2-runtime-ubuntu22.04"
+  Normal   Pulled            3m21s                kubelet                Successfully pulled image "nvidia/cuda:13.0.2-runtime-ubuntu22.04" in 58.965s (58.965s including waiting). Image size: 1766399024 bytes.
+  Normal   Created           12s (x6 over 3m21s)  kubelet                Created container: cuda-container
+  Normal   Started           12s (x6 over 3m21s)  kubelet                Started container cuda-container
+  Normal   Pulled            12s (x5 over 3m10s)  kubelet                Container image "nvidia/cuda:13.0.2-runtime-ubuntu22.04" already present on machine
+  Warning  BackOff           0s (x15 over 3m9s)   kubelet                Back-off restarting failed container cuda-container in pod gpu-pod_default(4b7846fb-2e8f-4ba7-9d6d-ee5711363436)
 
 
-
-
-## 목차 ##
-* 사전준비 - 소프트웨어 설치
-* 클러스터 생성
-* 카펜터 설정
-* kubeflow 트레이닝 설정 
-* GPU POD 생성해 보기. 
-
+Wed Dec 10 06:44:46 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 13.0     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA T4G                     On  |   00000000:00:1F.0 Off |                    0 |
+| N/A   49C    P8              9W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
 
 ## 레퍼런스 ##
 
