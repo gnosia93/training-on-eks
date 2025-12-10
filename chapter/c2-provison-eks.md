@@ -65,7 +65,7 @@ eksctl create cluster --name=training-on-eks \
 ```
 kubectl config current-context
 ```
-[출력]
+[결과]
 ```
 i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 ```
