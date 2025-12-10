@@ -82,6 +82,7 @@ NAME              NODECLASS   NODES   READY   AGE
 general-purpose   default     0       True    8h
 system            default     1       True    8h
 
+kubectl describe nodepool system -n karpenter
 kubectl describe nodepool general-purpose -n karpenter
 ```   
 
