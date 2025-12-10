@@ -68,21 +68,8 @@ i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 ```
 
 ## gpu 노드풀 준비 ##
-
-1. 카펜터 노드 클래스 조회
-```
-kubectl get nodeclass
-```
-[결과]
-```
-NAME      ROLE                                                           READY   AGE
-default   eksctl-training-on-eks-cluster-AutoModeNodeRole-DB4LZ4lI0H7N   True    11h
-``` 
-
-2. 카펜터 노드풀 조회
-   
-기본적으로 아래와 같이 두개의 노드풀이 생성되지만, gpu 파드는 스케줄링 할 수 없다. 노드풀의 세부 설정을 describe 해 보면
-C, M, R 인스턴스 타입(CPU) 에만 파드가 스케줄링 하게 되었다. 
+EKS 오토모드에서 아래와 같이 두개의 노드풀이 자동으로 생성되지만, gpu 파드를 스케줄링 할 수는 없다. 노드풀의 세부 설정을 describe 해 보면
+C, M, R 인스턴스 타입(CPU) 만을 가지고 있어 CPU를 사용하는 파드만 스케줄링이 가능하다.
 ```
 kubectl get nodepools -n karpenter
 ```
@@ -98,7 +85,8 @@ kubectl describe nodepool system -n karpenter
 kubectl describe nodepool general-purpose -n karpenter
 ```   
 
-3. CRD 조회
+또한 카펜터에서 제공하는 CRD와는 다른 별도의 CRD 를 사용하고, 사용할 수 있는 레이블 역시 오픈 소스 카펜터와는 다른 것을 사용한다. 예를들어 
+기존의 karpenter.k8s.aws/instance-category 레이블은 오토모드에서 eks.amazonaws.com/instance-category 으로 변경되었다 (자세한 내용은 https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html 참조) 
 ```
 kubectl get crd -o wide
 ```
@@ -119,10 +107,11 @@ policyendpoints.networking.k8s.aws              2025-12-09T17:19:41Z
 securitygrouppolicies.vpcresources.k8s.aws      2025-12-09T17:19:42Z
 targetgroupbindings.eks.amazonaws.com           2025-12-09T17:21:32Z
 ```
+crd 를 조회해 보면 api 가 변경된 것을 확인할 수 있다. 노드풀의 경우 karpenter.sh 에 있으나, 노드 클래스의 경우 eks.amazonaws.com 으로 변경되었다.
 
-4. [gpu 노드풀 생성](https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html)
+### [gpu 노드풀 생성](https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html) ###
 
-노드 클래스는 EKS Auto 모드 클러스터 생성시 자동으로 만들어지는 default 클래스를 사용한다.   
+여기서는 gpu-pool 을 신규로 생성 예정인데, 노드 클래스의 경우 EKS 오토모드에서 기본으로 제공하는 default 클래스를 사용할 것이다. 노드 클래스 역시 기존의 EC2NodeClass 와 비교해서 상당 부분이 바뀌였다. (세부적인 내용은 https://docs.aws.amazon.com/eks/latest/userguide/create-node-class.html 에서 참조)
 
 [gpu-nodepool.yaml] 
 ```
