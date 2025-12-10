@@ -187,13 +187,13 @@ metadata:
 spec:
   containers:
     - name: cuda-container
-      image: nvidia/cuda: 13.0.2-runtime-ubuntu22.04    # runtime 이미지 사용
-      command: ["nvidia-smi"]                           # 컨테이너 시작 시 실행할 프로그램
+      image: nvidia/cuda:13.0.2-runtime-ubuntu22.04    # runtime 이미지 사용
+      command: ["nvidia-smi"]                          # 컨테이너 시작 시 실행할 프로그램
       resources:
         limits:
           nvidia.com/gpu: 1
   tolerations:                                             
-    - key: "gpu-workload"                               # GPU 노드풀에 파드를 스케줄링하기 위해서 toleration 을 설정한다.        
+    - key: "gpu-workload"                              # GPU 노드풀에 파드를 스케줄링하기 위해서 toleration 을 설정한다.        
       operator: "Exists"
       effect: "NoSchedule"
  # affinity:
