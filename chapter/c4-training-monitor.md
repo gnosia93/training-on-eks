@@ -39,7 +39,11 @@ spec:
     app.kubernetes.io/instance: kube-prometheus
     app.kubernetes.io/name: grafana
   sessionAffinity: None
-  type: NodeBalancer 
+  type: LoadBalancer
+```
+
+
+ 
 ```
 kubectl port-forward svc/kube-prometheus-grafana 8080:80 -n monitoring &
 ```
