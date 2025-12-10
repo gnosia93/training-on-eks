@@ -171,12 +171,12 @@ kubectl apply -f gpu-nodepool.yaml
 ```
 
 
-
+[gpu-pod.yaml]
 ```
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-gpu-pod-specific-type
+  name: gpu-pod
 spec:
   containers:
     - name: cuda-container
