@@ -31,16 +31,32 @@ kubeflow 의 경우 SDK 를 이용하여 분산 훈련 작업을 실행하는 �
 
 ## 트레이닝 작업 실행하기 ##
 
-먼저 네임스페이스를 생성한다. 
+깃으로 다운로드 받은 후 해당 디렉토리로 이동한다. 
 ```
 git clone https://github.com/gnosia93/training-on-eks.git
 cd training-on-eks
 ```
+pytorch 네임스페이스를 생성하고 파드를 실행한다. 
 ```
 kubectl create ns pytorch
 kubectl apply -k kustomize/overlays/ddp/
+kubectl get pods -n pytorch
+```
+[결과]
+```
+NAME                        READY   STATUS            RESTARTS   AGE
+pytorch-dist-job-master-0   1/1     Running           0          3m34s
+pytorch-dist-job-worker-0   0/1     PodInitializing   0          3m34s
+pytorch-dist-job-worker-1   0/1     PodInitializing   0          3m33s
+```
+마스터와 워커로드의 세부 정보를 조회한다. 
+```
 kubectl describe pod pytorch-dist-job-master-0 -n pytorch
+kubectl describe pod pytorch-dist-job-worker-0 -n pytorch
+kubectl describe pod pytorch-dist-job-worker-1 -n pytorch
 
+* 참고 - 잡삭제 명령어
+```
 kubectl delete pytorchjob pytorch-ddp -n pytorch
 ```
 
