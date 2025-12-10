@@ -89,9 +89,76 @@ kubectl describe nodepool general-purpose -n karpenter
 ```   
 
 2. gpu 노드풀 생성
+
+[gpu-node-pool.yaml] 
 ```
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: AWSNodeClass
+metadata:
+  name: gpu-default
+spec:
+  amiSelector:
+    # EKS 최신 버전에 맞는 Bottlerocket AMI를 사용하는 것을 권장합니다.
+    # Karpenter는 적절한 AMI ID를 자동으로 찾습니다.
+    kubernetes.io/os: bottlerocket
+    kubernetes.io/arch: amd64
+  role: "KarpenterNodeRole-training-on-eks" # EKS 클러스터 이름에 맞게 수정
+  subnetSelector:
+    # 'karpenter.sh/discovery' 태그 또는 EKS 클러스터 이름 태그를 사용하도록 수정
+    karpenter.sh/discovery: "training-on-eks" 
+  securityGroupSelector:
+    # EKS 클러스터 이름에 맞는 보안 그룹 태그를 사용하도록 수정
+    kubernetes.sh/cluster-sh: "training-on-eks"
+  tags:
+    # 생성된 EC2 인스턴스에 추가할 태그
+    intent: gpu-workload
+---
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: NodePool
+metadata:
+  name: gpu-pool
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        name: gpu-default # 위에서 정의한 AWSNodeClass 이름
+      requirements:
+        # OS 및 아키텍처 요구사항
+        - key: kubernetes.io/os
+          operator: In
+          values: ["bottlerocket", "linux"]
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"] # 온디맨드 인스턴스 사용
+        
+        # --- GPU 인스턴스 타입 요구사항 ---
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["g", "p"] # G (NVIDIA T4G/A10G 등), P (고성능 A100 등) 타입 지정
+        
+        # 특정 세대(예: 4세대 이상) 또는 특정 타입만 허용할 수 있습니다.
+        # - key: karpenter.k8s.aws/instance-type
+        #   operator: In
+        #   values: ["g5.xlarge", "p3.2xlarge"]
+        
+      # GPU 노드임을 명시하는 Taint 추가 (GPU Pod만 스케줄링되도록 유도)
+      taints:
+        - key: "gpu-workload"
+          effect: "NoSchedule"
+
+    # Karpenter가 노드를 얼마나 유지할지 결정하는 설정
+    # 30분 동안 사용되지 않으면 노드 종료
+  disruption:
+    consolidationPolicy: WhenEmpty
+    expireAfter: 30m
 ```
 
+```
+kubectl apply -f gpu-node-pool.yaml
+```
 
 
 
