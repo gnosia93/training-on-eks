@@ -1,1 +1,30 @@
-ddd
+# overlays/custom-url/kustomization.yaml
+
+# 베이스 파일 지정
+resources:
+- ../../base/pytorchjob.yaml
+
+# 패치 적용
+patches:
+# Master 스펙의 args 필드를 덮어씁니다.
+- patch: |-
+    - op: replace
+      path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
+      value: |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        python /workspace/code/training.py
+  target:
+    kind: PyTorchJob
+    name: pytorch-dist-job
+
+# Worker 스펙의 args 필드를 덮어씁니다.
+- patch: |-
+    - op: replace
+      path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
+      value: |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        python /workspace/code/training.py
+  target:
+    kind: PyTorchJob
+    name: pytorch-dist-job
+
