@@ -20,7 +20,7 @@ spec:
             args: 
               - |
                 git clone github.com /workspace/code    
-                torchrun --nproc_per_node=1 python /workspace/code/training.py
+                python /workspace/code/training.py
     Worker:
       replicas: 2
       restartPolicy: OnFailure
@@ -44,7 +44,7 @@ spec:
             args: 
               - |
                 git clone github.com /workspace/code    
-                torchrun --nproc_per_node=1 python /workspace/code/training.py
+                python /workspace/code/training.py
             resources:
               limits:
                 nvidia.com/gpu: "1"
