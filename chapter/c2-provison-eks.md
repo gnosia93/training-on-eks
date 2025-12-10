@@ -349,9 +349,7 @@ spec:
     - name: FI_PROVIDER
       value: "efa"
     - name: FI_LOG_LEVEL
-      value: "INFO"
-    
-  restartPolicy: OnFailure
+      value: "INFO"    
 ```
 
 
