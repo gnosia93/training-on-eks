@@ -74,7 +74,8 @@ i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 
 1. 카펜터 노드풀 조회
    
-기본으로 아래와 같이 두개의 노드풀이 생성되지만, gpu 파드는 스케줄링 되지 않는다. (노드풀의 세부설정은 describe 명령어로 조회)
+기본적으로 아래와 같이 두개의 노드풀이 생성되지만, gpu 파드는 스케줄링 할 수 없다. 노드풀의 세부설정은 describe 명령어로 조회해 보면
+X86 CPU 만 스케줄링이 가능하게 되어있다. 
 ```
 kubectl get nodepools -n karpenter
 NAME              NODECLASS   NODES   READY   AGE
