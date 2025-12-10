@@ -46,9 +46,6 @@ kubectl apply -f kube-prometheus-grafana
 ```
 
  
-```
-kubectl port-forward svc/kube-prometheus-grafana 8080:80 -n monitoring &
-```
 
 echo "----------------------------------------------------"
 echo "설치가 완료되었습니다."
