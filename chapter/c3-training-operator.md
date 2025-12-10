@@ -25,6 +25,7 @@ training-operator-79cc5c4557-lzqnt   1/1     Running   0          4m12s
 sudo dnf install python3-pip -y
 python3 --version
 pip install -U kubeflow-training
+pip install -U "kubeflow-training[huggingface]"
 ```
 
 ## 레퍼런스 ##
