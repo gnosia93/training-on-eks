@@ -163,12 +163,6 @@ spec:
       taints:
         - key: "gpu-workload"
           effect: "NoSchedule"
-
-    # Karpenter가 노드를 얼마나 유지할지 결정하는 설정
-    # 30분 동안 사용되지 않으면 노드 종료
-  disruption:
-    consolidationPolicy: WhenEmpty
-    expireAfter: 30m
 ```
 
 gpu-nodepool.yaml 파일을 만든 다음 노드풀을 생성해 준다.  
