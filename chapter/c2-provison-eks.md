@@ -237,6 +237,9 @@ Wed Dec 10 06:44:46 2025
 ```
 (참고) describe 의 출력 결과중 마지막 라인의 Warning BackOff 의 경우 컨테이너는 종료하였으나 파드가 살아있기 때문에 발생하는 메시지이다. 즉 nvidia-smi 는 실행을 종료하였으나 파드는 살아있다.
 
+## EFA 테스트 하기 ##
+
+
 ## 레퍼런스 ##
 
 * [Getting Started with Karpenter](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/)
