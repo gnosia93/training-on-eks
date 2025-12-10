@@ -7,10 +7,19 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 
 helm install kube-prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
-
-# 5. 설치 확인
-echo "설치된 Pod 확인:"
 kubectl get pods -n monitoring
+```
+[결과]
+```
+NAME                                                     READY   STATUS    RESTARTS   AGE
+alertmanager-kube-prometheus-kube-prome-alertmanager-0   2/2     Running   0          2m21s
+kube-prometheus-grafana-7bd844d876-97bvc                 3/3     Running   0          2m41s
+kube-prometheus-kube-prome-operator-5698d75fcb-rgt58     1/1     Running   0          2m41s
+kube-prometheus-kube-state-metrics-5849b6fdb-5j5qw       1/1     Running   0          2m41s
+kube-prometheus-prometheus-node-exporter-9f98j           1/1     Running   0          2m41s
+kube-prometheus-prometheus-node-exporter-mzx7j           1/1     Running   0          2m41s
+prometheus-kube-prometheus-kube-prome-prometheus-0       2/2     Running   0          2m21s
+```
 
 echo "----------------------------------------------------"
 echo "설치가 완료되었습니다."
