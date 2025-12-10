@@ -82,7 +82,7 @@ spec:
       image: nvidia/cuda:11.4.0-base-ubuntu20.04
       resources:
         limits:
-          nvidia.com: 1
+          nvidia.com/gpu: 1
   affinity:
     nodeAffinity:
       # 필수 조건 (이 조건에 맞는 노드가 없으면 파드가 스케줄링되지 않음)
