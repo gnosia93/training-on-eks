@@ -71,6 +71,21 @@ i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 ```
 
 ## gpu 파드 스케줄링 ##
+
+1. 카펜터 gpu 노드풀 생성
+```
+kubectl get nodepools -n karpenter
+NAME              NODECLASS   NODES   READY   AGE
+general-purpose   default     0       True    8h
+system            default     1       True    8h
+
+kubectl describe nodepool general-purpose -n karpenter
+```   
+
+
+
+
+
 ```
 apiVersion: v1
 kind: Pod
