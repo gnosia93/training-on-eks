@@ -8,4 +8,5 @@
 
 
 ## 레퍼런스 ## 
-* https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/ml-cluster-configuration.html
+
+* [AI/ML 워크로드용 Amazon EKS 클러스터 구성](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/ml-cluster-configuration.html)
