@@ -1,8 +1,5 @@
 << 아키텍처 다이어그램 >> 
-* x-86-ng : 2 instances
-* node scaling with kapenter
-  * for gpu
-  * for graviton
+
 
 ## [kubectl 및 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
 code server 에 접속하여 kubectl 과 eksctl을 설치한다. 
