@@ -83,9 +83,9 @@ spec:
                 python /workspace/code/training.py 
             resources:
               limits:
-                nvidia.com: "1"
+                nvidia.com/gpu: "1"
               requests:
-                nvidia.com: "1"
+                nvidia.com/gpu: "1"
 ```
 
 * github 코드 주소 생성
