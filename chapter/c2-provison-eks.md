@@ -88,16 +88,7 @@ kubectl describe nodepool system -n karpenter
 kubectl describe nodepool general-purpose -n karpenter
 ```   
 
-2. 카펜터 버전 조회
-```
-kubectl api-resources | grep karpenter
-```
-[결과]
-```
-nodeclaims                                       karpenter.sh/v1                   false        NodeClaim
-nodepools                                        karpenter.sh/v1                   false        NodePool
-```
-
+2. CRD 조회
 ```
 kubectl get crd -o wide
 ```
@@ -119,14 +110,13 @@ securitygrouppolicies.vpcresources.k8s.aws      2025-12-09T17:19:42Z
 targetgroupbindings.eks.amazonaws.com           2025-12-09T17:21:32Z
 ```
 
-
-
-
 3. gpu 노드풀 생성
+* https://docs.aws.amazon.com/eks/latest/userguide/create-node-class.html
+* https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html
 [gpu-nodepool.yaml] 
 ```
-apiVersion: karpenter.sh/v1
-kind: NodeClaim
+apiVersion: eks.amazonaws.com/v1
+kind: NodeClass
 metadata:
   name: gpu-default
 spec:
