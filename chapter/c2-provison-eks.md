@@ -201,9 +201,18 @@ spec:
 ```
 
 
+
+
+
 ## 목차 ##
 * 사전준비 - 소프트웨어 설치
 * 클러스터 생성
 * 카펜터 설정
 * kubeflow 트레이닝 설정 
 * GPU POD 생성해 보기. 
+
+
+## 레퍼런스 ##
+
+* [Getting Started with Karpenter](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/)
+
