@@ -90,6 +90,13 @@ kubectl describe nodepool general-purpose -n karpenter
 
 2. gpu 노드풀 생성
 
+```
+kubectl api-versions | karpenter
+```
+karpenter.sh/v1
+
+
+
 [gpu-nodepool.yaml] 
 ```
 apiVersion: karpenter.k8s.aws/v1
