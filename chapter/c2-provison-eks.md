@@ -277,12 +277,8 @@ g6e.12xlarge    g5.12xlarge
 p5en.48xlarge   g6.16xlarge     g6.12xlarge     g4dn.16xlarge
 ```
 * 디바이스 플러그인 배포: 클러스터에 aws-efa-k8s-device-plugin이 DaemonSet으로 배포되어 실행 중이어야 합니다. 이 플러그인이 aws.amazon.com 리소스를 노출시킵니다.
-* [DLC 이미지](https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/appendix-dlc-release-notes-pytorch.html)
- ```
- public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
- ```
-
-
+#### 4. [DLC 이미지](https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/appendix-dlc-release-notes-pytorch.html) 에서 헤딩 이미지를 찾는다. ####
+  
 
 ```
 apiVersion: v1
@@ -311,7 +307,21 @@ spec:
   - name: dl-container-efa
     # 위에서 추천한 AWS DLC 이미지 사용 (리전과 태그를 실제 값으로 변경하세요)
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
-    command: ["/bin/bash", "-c", "echo 'EFA and GPU configured successfully!'; sleep infinity"]
+    command: ["/bin/bash", "-c"]
+        args:
+        - |
+          echo "Checking for EFA fabric interface using fi_info..."
+          # EFA 활성화 확인 명령어
+          fi_info -p efa
+          
+          # 추가적인 연결 테스트는 여기 아래에 명령어를 추가할 수 있습니다.
+          # 예시: /opt/amazon/efa/bin/efa_test.sh
+          
+          if [ $? -eq 0 ]; then
+            echo "EFA interface found successfully."
+          else
+            echo "Failed to find EFA interface."
+          fi
     resources:
       limits:
         # 8개의 NVIDIA GPU 할당 요청
