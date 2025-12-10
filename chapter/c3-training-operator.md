@@ -48,30 +48,10 @@ spec:
       restartPolicy: OnFailure
       template:
         spec:
-          initContainers:
-          - name: clone-repository
-            image: alpine/git:latest
-            # 환경 변수 GIT_REPO_URL 사용
-            command: ["/bin/sh", "-c", "git clone $(GIT_REPO_URL) /workspace/code"]
-            env:
-            - name: GIT_REPO_URL
-              # value는 외부에서 주입될 값입니다. 
-              # 실제 사용 시 이 필드를 동적으로 채워야 합니다.
-              value: "github.com" 
-            volumeMounts:
-            - name: workdir
-              mountPath: /workspace
           containers:
           - name: pytorch
             image: pytorch/pytorch:1.13.1-cuda11.7-cudnn8-runtime
             command: ["python", "/workspace/code/main.py"] 
-            volumeMounts:
-            - name: workdir
-              mountPath: /workspace
-          volumes:
-          - name: workdir
-            emptyDir: {}
-
     Worker:
       replicas: 2
       restartPolicy: OnFailure
@@ -83,20 +63,6 @@ spec:
             operator: "Equal"
             value: "true"
             effect: "NoSchedule"
-            
-          initContainers:
-          - name: clone-repository
-            image: alpine/git:latest
-            # 환경 변수 GIT_REPO_URL 사용
-            command: ["/bin/sh", "-c", "git clone $(GIT_REPO_URL) /workspace/code"]
-            env:
-            - name: GIT_REPO_URL
-              # Master와 동일하게 외부에서 주입될 값
-              value: "github.com" 
-            volumeMounts:
-            - name: workdir
-              mountPath: /workspace
-
           containers:
           - name: pytorch
             image: pytorch/pytorch:1.13.1-cuda11.7-cudnn8-runtime
@@ -106,14 +72,18 @@ spec:
                 nvidia.com: "1"
               requests:
                 nvidia.com: "1"
-            volumeMounts:
-            - name: workdir
-              mountPath: /workspace
-          
-          volumes:
-          - name: workdir
-            emptyDir: {}
 ```
+
+### EC2 torchrun 과 Kubeflow PyTorchJob 의 차이점 ###
+#### EC2 (torchrun 수동 실행): ####
+- 랭크 0: 코디네이터 겸 GPU 연산 참여 (모든 노드가 동일한 역할 수행)
+- 월드 사이즈: 4개의 EC2 사용 시, 월드 사이즈 4.
+
+#### Kubeflow PyTorchJob (Operator 사용): ####
+- Master Pod (랭크 0): 마스터 파드는 실제 GPU 연산(훈련)에 직접 참여하지 않지만, 분산 시스템의 원활한 작동을 위해 필수적인 조정자 및 관리자 역할을 한다. 통신 그룹 초기화 및 조정 (Orchestration), 로그 취합 및 출력 관리, 모델 체크포인트 및 저장 관리, 데이터셋 분할 조정 (IterableDataset 사용 시), 사전 준비 및 후처리 작업 (경우에 따라) 을 수행한다. 
+- Worker Pods (랭크 1~4): 전용 연산 참여자. GPU 리소스를 할당받아 연산만 수행합니다.
+- 월드 사이즈: 4개의 워커와 1개의 마스터 사용 시, 월드 사이즈 5.
+
 
 
 
