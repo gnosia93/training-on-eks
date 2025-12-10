@@ -20,8 +20,7 @@ spec:
             args: 
               - |
                 git clone github.com /workspace/code    
-                cd /workspace/code/training-on-eks/samples
-                python mnist-ddp.py
+                python /workspace/code/training.py
     Worker:
       replicas: 2
       restartPolicy: OnFailure
@@ -41,8 +40,7 @@ spec:
             args: 
               - |
                 git clone github.com /workspace/code    
-                cd /workspace/code/training-on-eks/samples
-                python mnist-ddp.py
+                python /workspace/code/training.py
             resources:
               limits:
                 nvidia.com/gpu: "1"
