@@ -69,7 +69,17 @@ i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 
 ## gpu 파드 스케줄링 ##
 
-1. 카펜터 노드풀 조회
+1. 카펜터 노드 클래스 조회
+```
+kubectl get nodeclass
+```
+[결과]
+```
+NAME      ROLE                                                           READY   AGE
+default   eksctl-training-on-eks-cluster-AutoModeNodeRole-DB4LZ4lI0H7N   True    11h
+``` 
+
+2. 카펜터 노드풀 조회
    
 기본적으로 아래와 같이 두개의 노드풀이 생성되지만, gpu 파드는 스케줄링 할 수 없다. 노드풀의 세부 설정을 describe 해 보면
 C, M, R 인스턴스 타입(CPU) 에만 파드가 스케줄링 하게 되었다. 
@@ -88,7 +98,7 @@ kubectl describe nodepool system -n karpenter
 kubectl describe nodepool general-purpose -n karpenter
 ```   
 
-2. CRD 조회
+3. CRD 조회
 ```
 kubectl get crd -o wide
 ```
@@ -110,32 +120,12 @@ securitygrouppolicies.vpcresources.k8s.aws      2025-12-09T17:19:42Z
 targetgroupbindings.eks.amazonaws.com           2025-12-09T17:21:32Z
 ```
 
-3. gpu 노드풀 생성
-* https://docs.aws.amazon.com/eks/latest/userguide/create-node-class.html
-* https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html
+4. [gpu 노드풀 생성](https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html)
+
+노드 클래스는 EKS Auto 모드 클러스터 생성시 자동으로 만들어지는 default 클래스를 사용한다.   
+
 [gpu-nodepool.yaml] 
 ```
-apiVersion: eks.amazonaws.com/v1
-kind: NodeClass
-metadata:
-  name: gpu-default
-spec:
-  amiSelector:
-    # EKS 최신 버전에 맞는 Bottlerocket AMI를 사용하는 것을 권장합니다.
-    # Karpenter는 적절한 AMI ID를 자동으로 찾습니다.
-    kubernetes.io/os: bottlerocket
-    kubernetes.io/arch: amd64
-  role: "KarpenterNodeRole-training-on-eks" # EKS 클러스터 이름에 맞게 수정
-  subnetSelector:
-    # 'karpenter.sh/discovery' 태그 또는 EKS 클러스터 이름 태그를 사용하도록 수정
-    karpenter.sh/discovery: "training-on-eks" 
-  securityGroupSelector:
-    # EKS 클러스터 이름에 맞는 보안 그룹 태그를 사용하도록 수정
-    kubernetes.sh/cluster-sh: "training-on-eks"
-  tags:
-    # 생성된 EC2 인스턴스에 추가할 태그
-    intent: gpu-workload
----
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
@@ -144,9 +134,9 @@ spec:
   template:
     spec:
       nodeClassRef:
-        group: karpenter.k8s.aws
-        kind: EC2NodeClass
-        name: gpu-default     # 위에서 정의한 NodeClass 
+        group: eks.amazonaws.com
+        kind: NodeClass
+        name: default
       requirements:
         # OS 및 아키텍처 요구사항
         - key: kubernetes.io/os
