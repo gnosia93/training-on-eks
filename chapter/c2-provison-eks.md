@@ -184,6 +184,10 @@ spec:
       resources:
         limits:
           nvidia.com/gpu: 1
+  tolerations:
+    - key: "example-key"
+      operator: "Exists"
+      effect: "NoSchedule"
   affinity:
     nodeAffinity:
       # 필수 조건 (이 조건에 맞는 노드가 없으면 파드가 스케줄링되지 않음)
