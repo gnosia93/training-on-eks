@@ -34,67 +34,7 @@ kubeflow 의 경우 SDK 를 이용하여 분산 훈련 작업을 실행하는 �
 먼저 네임스페이스를 생성한다. 
 ```
 kubectl create ns pytorch
-```
-
-[pytorch-dist-job.yaml]
-```
-apiVersion: kubeflow.org/v1
-kind: PyTorchJob
-metadata:
-  name: pytorch-dist-job
-  namespace: pytorch 
-spec:
-  runPolicy:
-    cleanPodPolicy: Running
-  
-  pytorchReplicaSpecs:
-    Master:                       # 마스터는 GPU 연산 작업에는 참여하지 않는다. GPU Toleration 설정 불필요
-      replicas: 1
-      restartPolicy: OnFailure
-      template:
-        spec:
-          containers:
-          - name: pytorch
-            image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
-            command: ["/bin/bash", "-c"] 
-            args: 
-              - |
-                git clone github.com /workspace/code    
-                python /workspace/code/training.py
-    Worker:
-      replicas: 2
-      restartPolicy: OnFailure
-      template:
-        spec:
-          tolerations:            # GPU Toleration 설정 
-          - key: "nvidia.com/gpu"
-            operator: "Exists"
-            effect: "NoSchedule"
-          - key: "gpu-workload"
-            operator: "Exists"
-            effect: "NoSchedule"
-          containers:
-          - name: pytorch
-            image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
-              command: ["/bin/bash", "-c"] 
-            args: 
-              - |
-                git clone github.com /workspace/code    
-                python /workspace/code/training.py 
-            resources:
-              limits:
-                nvidia.com/gpu: "1"
-              requests:
-                nvidia.com/gpu: "1"
-```
-
-* github 코드 주소 생성
-
-* 분산작업 스케줄링
-```
-https://github.com/gnosia93/training-on-eks.git
-
-kustomize 를 <GIT_REPO> 값 수정후 스케줄링
+kubectl apply -k training-on-eks/kustomize/overlays/ddp/
 ```
 
 ## 부연설명 ##
