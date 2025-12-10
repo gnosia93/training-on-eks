@@ -67,7 +67,7 @@ kubectl config current-context
 i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 ```
 
-## gpu 파드 스케줄링 ##
+## gpu 노드풀 준비 ##
 
 1. 카펜터 노드 클래스 조회
 ```
@@ -159,11 +159,20 @@ spec:
           effect: "NoSchedule"
 ```
 
-gpu-nodepool.yaml 파일을 만든 다음 노드풀을 생성해 준다.  
+GPU 파드를 실행할 수 있는 노드풀을 생성하고 READY 상태를 확인한다.   
 ```
 kubectl apply -f gpu-nodepool.yaml
+kubectl get nodepool
+```
+[결과]
+```
+NAME              NODECLASS   NODES   READY   AGE
+general-purpose   default     0       True    12h
+gpu-pool          default     0       True    8s
+system            default     1       True    12h
 ```
 
+## GPU 파드 스케줄링 ##
 
 [gpu-pod.yaml]
 ```
