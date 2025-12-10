@@ -73,6 +73,7 @@ i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 ## gpu 파드 스케줄링 ##
 
 1. 카펜터 노드풀 조회
+   
 기본으로 아래와 같이 두개의 노드풀이 생성되지만, gpu 파드는 스케줄링 되지 않는다. (노드풀의 세부설정은 describe 명령어로 조회)
 ```
 kubectl get nodepools -n karpenter
