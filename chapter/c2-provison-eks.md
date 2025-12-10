@@ -75,10 +75,15 @@ i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 C, M, R 인스턴스 타입(CPU) 에만 파드가 스케줄링 하게 되었다. 
 ```
 kubectl get nodepools -n karpenter
+```
+[결과]
+```
 NAME              NODECLASS   NODES   READY   AGE
 general-purpose   default     0       True    8h
 system            default     1       True    8h
-
+```
+[참고] 아래는 카펜터 노드풀의 상세 설정을 조회할 수 있는 명령어 셋이다.
+```
 kubectl describe nodepool system -n karpenter
 kubectl describe nodepool general-purpose -n karpenter
 ```   
