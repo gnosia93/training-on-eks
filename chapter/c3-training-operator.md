@@ -54,8 +54,9 @@ pytorch-dist-job-worker-1   0/1     PodInitializing   0          3m33s
 kubectl describe pod pytorch-dist-job-master-0 -n pytorch
 kubectl describe pod pytorch-dist-job-worker-0 -n pytorch
 kubectl describe pod pytorch-dist-job-worker-1 -n pytorch
+```
 
-* 참고 - 잡삭제 명령어
+* 참고 - pytorchjob 삭제하기
 ```
 kubectl delete pytorchjob pytorch-ddp -n pytorch
 ```
