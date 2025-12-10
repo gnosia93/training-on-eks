@@ -8,7 +8,7 @@ helm repo update
 
 helm install kube-prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
 ```
-
+kube-prometheus-stack 은 Prometheus Operator, Prometheus, Grafana, Alertmanager 등을 모두 포함하는 종합 패키지이다
 
 
 ## 설명 ##
