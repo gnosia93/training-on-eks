@@ -265,6 +265,63 @@ Wed Dec 10 06:44:46 2025
 * 애플리케이션 이미지: 컨테이너 이미지 자체가 EFA 드라이버와 통신할 수 있는 libfabric 라이브러리와 애플리케이션(예: MPI)을 포함하고 있어야 합니다.
 
 
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: efa-gpu-dl-pod
+  labels:
+    app: dl-training
+spec:
+  # EKS Auto Mode 사용을 위한 필수 셀렉터
+  nodeSelector:
+    eks.amazonaws.com/compute-type: auto
+    # EFA 지원 인스턴스 선택을 위한 레이블 (AWS가 자동으로 붙여줌)
+    # P4, P5 인스턴스 등에서 EFA가 활성화됩니다.
+    # 클러스터 구성에 따라 레이블 키가 달라질 수 있습니다.
+    # 예시 레이블:
+    # networking.eks.amazonaws.com: "true" 
+
+  # GPU 노드에 스케줄링될 수 있도록 톨러레이션 추가
+  tolerations:
+  - key: "nvidia.com/gpu"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+  containers:
+  - name: dl-container-efa
+    # 위에서 추천한 AWS DLC 이미지 사용 (리전과 태그를 실제 값으로 변경하세요)
+    image: 763104351884.dkr.ecr.us-east-1.amazonaws.com
+    command: ["/bin/bash", "-c", "echo 'EFA and GPU configured successfully!'; sleep infinity"]
+    resources:
+      limits:
+        # 8개의 NVIDIA GPU 할당 요청
+        nvidia.com/gpu: 8 
+        # EFA 리소스 할당 요청 (이 리소스 타입은 EFA Device Plugin이 설치되어야 사용 가능)
+        # Auto Mode에서는 AWS가 EFA 플러그인 설치를 관리합니다.
+        # aws.amazon.com: "1" # 필요한 경우 주석 해제하여 사용
+      requests:
+        nvidia.com/gpu: 8
+
+    # EFA 사용을 위한 환경 변수 설정 (컨테이너 내 라이브러리 설정)
+    env:
+    - name: NCCL_DEBUG
+      value: "INFO"
+    - name: NCCL_ALGO
+      value: "RING"
+    # AWS Libfabric을 NCCL 네트워크 제공자로 지정
+    - name: NCCL_NET
+      value: "AWS Libfabric"
+    - name: FI_EFA_USE_DEVICE_RDMA
+      value: "1"
+    - name: FI_PROVIDER
+      value: "efa"
+    - name: FI_LOG_LEVEL
+      value: "INFO"
+    
+  restartPolicy: OnFailure
+```
+
 
 
 ## 레퍼런스 ##
