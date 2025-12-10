@@ -33,8 +33,10 @@ kubeflow 의 경우 SDK 를 이용하여 분산 훈련 작업을 실행하는 �
 
 먼저 네임스페이스를 생성한다. 
 ```
-https://github.com/gnosia93/training-on-eks.git
+git clone https://github.com/gnosia93/training-on-eks.git
 cd training-on-eks
+```
+```
 kubectl create ns pytorch
 kubectl apply -k kustomize/overlays/ddp/
 ```
