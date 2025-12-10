@@ -56,27 +56,29 @@ kubectl describe pod pytorch-dist-job-worker-0 -n pytorch
 kubectl describe pod pytorch-dist-job-worker-1 -n pytorch
 ```
 
-* 참고 - pytorchjob 삭제하기
+#### 참고 - pytorchjob 삭제하기 ####
 ```
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
 
 ## 부연설명 ##
 
-### 1. EC2 보다 초기화 시간이 긴 이유 ###
+#### 1. EC2 보다 초기화 시간이 긴 이유 ####
 
 torchrun을 일반 EC2에서 실행할 때는 이미 환경이 구성된 상태에서 프로세스만 띄우면 되지만, PyTorchJob를 활용하게 되는 경우 노드 확보, 이미지 다운로드, 네트워크 설정, 데이터 준비 등 모든 과정을 포함하므로 시작하는 데 시간이 더 오래 걸리게 된다.
 초기화 속도를 높이려면 GPU 이미지를 노드에 미리 캐시해두거나, 데이터셋을 PVC에 미리 준비해두는 등의 최적화가 필요합니다.
 
 
-### 2. cleanPodPolicy ###
+#### 2. cleanPodPolicy ####
 cleanPodPolicy는 Job이 성공하거나 실패했을 때 워커 Pod들을 어떻게 처리할지 Kubernetes 오퍼레이터에게 지시하는 정책입니다. 설정 가능한 값은 다음과 같습니다.
 * 디폴트 (None): 작업 완료 후 모든 Pod 유지 (로그/디버깅 용이)
 * 사용자 설정 (Running): 완료된 Pod는 유지, 실행 중인 Pod만 종료
 * 권장 설정 (All): 작업 완료 후 모든 Pod 삭제 (리소스 정리 자동화)
 
-### 3. restartPolicy ###
+#### 3. restartPolicy ####
 
+
+#### 4. kustomize ####
 
 ## 레퍼런스 ##
 * https://www.kubeflow.org/docs/components/trainer/legacy-v1/installation/
