@@ -23,6 +23,7 @@ kube-prometheus-prometheus-node-exporter-9f98j           1/1     Running   0    
 kube-prometheus-prometheus-node-exporter-mzx7j           1/1     Running   0          2m41s
 prometheus-kube-prometheus-kube-prome-prometheus-0       2/2     Running   0          2m21s
 ```
+그라파나 서비스를 로드밸런스 타입으로 변경하여 외부에 노출시킨다.
 [kube-prometheus-grafana.yaml]
 ```
 apiVersion: v1
@@ -43,7 +44,7 @@ spec:
   type: LoadBalancer
 ```
 ```
-kubectl apply -f kube-prometheus-grafana
+kubectl apply -f kube-prometheus-grafana.yaml
 ```
 
  
