@@ -39,6 +39,8 @@ cd training-on-eks
 ```
 kubectl create ns pytorch
 kubectl apply -k kustomize/overlays/ddp/
+
+kubectl delete pytorchjob pytorch-ddp -n pytorch
 ```
 
 ## 부연설명 ##
