@@ -1,4 +1,5 @@
-## helm ##
+## 프로메테우스 설치 ##
+helm 차트를 설치한다. 
 ```
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
 sh get_helm.sh
