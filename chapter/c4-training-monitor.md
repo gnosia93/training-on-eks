@@ -24,6 +24,23 @@ prometheus-kube-prometheus-kube-prome-prometheus-0       2/2     Running   0    
 ```
 
 ```
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-prometheus-grafana
+  namespace: monitoring
+spec:
+  ports:
+  - name: http-web
+    port: 80
+    protocol: TCP
+    targetPort: grafana
+  selector:
+    app.kubernetes.io/instance: kube-prometheus
+    app.kubernetes.io/name: grafana
+  sessionAffinity: None
+  type: NodeBalancer 
+```
 kubectl port-forward svc/kube-prometheus-grafana 8080:80 -n monitoring &
 ```
 
