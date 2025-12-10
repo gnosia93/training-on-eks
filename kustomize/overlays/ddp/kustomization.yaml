@@ -2,7 +2,7 @@
 
 # 베이스 파일 지정
 resources:
-- ../../base/pytorchjob.yaml
+- ../../base/pytorch-dist-job.yaml
 
 # 패치 적용
 patches:
@@ -12,7 +12,7 @@ patches:
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
-        python /workspace/code/training.py
+        python /workspace/code/training-on-eks/samples/mnist-ddp.py
   target:
     kind: PyTorchJob
     name: pytorch-dist-job
@@ -23,7 +23,7 @@ patches:
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
       value: |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
-        python /workspace/code/training.py
+        python /workspace/code/training-on-eks/samples/mnist-ddp.py
   target:
     kind: PyTorchJob
     name: pytorch-dist-job
