@@ -1,3 +1,4 @@
+## 트레이닝 오퍼레이터 설치 ##
 kubeflow 의 트레이닝만 오퍼레이터만 단독으로 설치한다. 분산 트레이닝을 실행하기 위해서 다른 모듈은 필요하지 않다.  
 ```
 sudo dnf install git -y
@@ -19,10 +20,11 @@ NAME                                 READY   STATUS    RESTARTS   AGE
 training-operator-79cc5c4557-lzqnt   1/1     Running   0          4m12s
 ```
 
-파이썬 버전 확인 및 pip 설치
+## 파이썬 환경 구성 ##
 ```
 sudo dnf install python3-pip -y
 python3 --version
+pip install -U kubeflow-training
 ```
 
 ## 레퍼런스 ##
