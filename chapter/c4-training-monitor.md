@@ -22,7 +22,7 @@ kube-prometheus-prometheus-node-exporter-9f98j           1/1     Running   0    
 kube-prometheus-prometheus-node-exporter-mzx7j           1/1     Running   0          2m41s
 prometheus-kube-prometheus-kube-prome-prometheus-0       2/2     Running   0          2m21s
 ```
-
+[kube-prometheus-grafana.yaml]
 ```
 apiVersion: v1
 kind: Service
@@ -41,7 +41,9 @@ spec:
   sessionAffinity: None
   type: LoadBalancer
 ```
-
+```
+kubectl apply -f kube-prometheus-grafana
+```
 
  
 ```
