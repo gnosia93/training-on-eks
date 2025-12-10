@@ -174,7 +174,9 @@ system            default     1       True    12h
 
 ## GPU 파드 스케줄링 ##
 
-[도커허브 nvidia/cuda](https://hub.docker.com/r/nvidia/cuda) 로 방문해서 nvidia-smi 가 설치되어 있는 컨테이너 이미를 확인한다.  
+[도커허브 nvidia/cuda](https://hub.docker.com/r/nvidia/cuda) 로 방문해서 nvidia-smi 가 설치되어 있는 컨테이너 이미지를 확인한다.  
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/cuda-container.png)
+이번 워크샵에서는 13.0.2-runtime-ubuntu22.04 도커 이미지로 nvidia-smi 를 실행할 예정이다.   
 
 [gpu-pod.yaml]
 ```
