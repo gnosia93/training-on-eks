@@ -6,7 +6,7 @@
 
 * [3. Training Operator 설치](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-training-operator.md)
 
-* [4. 모니터링 환경 구축하기]()
+* [4. 모니터링 환경 구축하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c4-training-monitor.md)
 
 ## 레퍼런스 ## 
 
