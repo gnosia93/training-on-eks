@@ -92,6 +92,8 @@ spec:
 
 * 분산작업 스케줄링
 ```
+https://github.com/gnosia93/training-on-eks.git
+
 kustomize 를 <GIT_REPO> 값 수정후 스케줄링
 ```
 
