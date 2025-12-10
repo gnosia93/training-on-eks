@@ -59,7 +59,7 @@ spec:
             command: ["/bin/bash", "-c"] 
             args: 
               - |
-                git clone <GIT_REPO> /workspace/code    
+                git clone github.com /workspace/code    
                 python /workspace/code/training.py
     Worker:
       replicas: 2
@@ -79,7 +79,7 @@ spec:
               command: ["/bin/bash", "-c"] 
             args: 
               - |
-                git clone <GIT_REPO> /workspace/code    
+                git clone github.com /workspace/code    
                 python /workspace/code/training.py 
             resources:
               limits:
