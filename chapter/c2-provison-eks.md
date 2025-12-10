@@ -311,7 +311,7 @@ spec:
     # 위에서 추천한 AWS DLC 이미지 사용 (리전과 태그를 실제 값으로 변경하세요)
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
     command: ["/bin/bash", "-c"]
-        args:
+    args:
         - |
           echo "Checking for EFA fabric interface using fi_info..."
           # EFA 활성화 확인 명령어
