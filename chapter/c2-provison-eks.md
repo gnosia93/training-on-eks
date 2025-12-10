@@ -138,12 +138,15 @@ spec:
         kind: NodeClass
         name: default
       requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["arm64", "amd64"]   # X86, ARM 시영  
         - key: karpenter.sh/capacity-type
           operator: In
-          values: ["on-demand"] # 온디맨드 인스턴스 사용        
+          values: ["on-demand"]        # 온디맨드 인스턴스 사용        
         - key: eks.amazonaws.com/instance-category 
           operator: In
-          values: ["g", "p"]    # GPU 인스턴스 사용  
+          values: ["g", "p"]           # GPU 인스턴스 사용  
         
         # 특정 세대(예: 4세대 이상) 또는 특정 타입만 허용할 수 있습니다.
         # - key: karpenter.k8s.aws/instance-type
