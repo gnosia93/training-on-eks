@@ -36,7 +36,7 @@ spec:
           containers:
           - name: pytorch
             image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
-              command: ["/bin/bash", "-c"] 
+            command: ["/bin/bash", "-c"] 
             args: 
               - |
                 git clone github.com /workspace/code    
