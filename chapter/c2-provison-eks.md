@@ -61,6 +61,15 @@ eksctl create cluster --name=training-on-eks \
   --vpc-private-subnets="subnet-009f634c97979d460,subnet-05f66b53201e3c4cf" 
 ```
 
+생성된 클러스터를 확인한다. 
+```
+kubectl config current-context
+```
+[출력]
+```
+i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
+```
+
 ## gpu 파드 스케줄링 ##
 ```
 apiVersion: v1
