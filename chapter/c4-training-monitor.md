@@ -5,7 +5,9 @@ sh get_helm.sh
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-
+```
+helm 설치후 프로메테우스 스택(kube-prometheus-stack)을 설치한다. 이 스택에는 Prometheus Operator, Prometheus, Grafana, Alertmanager 등이 포함되어 있다.
+```
 helm install kube-prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
 kubectl get pods -n monitoring
 ```
@@ -30,7 +32,7 @@ echo "기본 사용자 이름: admin, 기본 비밀번호: prom-operator"
 echo "----------------------------------------------------"
 
 ```
-kube-prometheus-stack 은 Prometheus Operator, Prometheus, Grafana, Alertmanager 등을 모두 포함하는 종합 패키지이다
+
 
 
 ## 설명 ##
