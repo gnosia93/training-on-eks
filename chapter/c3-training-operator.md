@@ -55,7 +55,7 @@ spec:
         spec:
           containers:
           - name: pytorch
-            image: pytorch/pytorch:1.13.1-cuda11.7-cudnn8-runtime
+            image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
             command: ["/bin/bash", "-c"] 
             args: 
               - |
@@ -75,7 +75,7 @@ spec:
             effect: "NoSchedule"
           containers:
           - name: pytorch
-            image: pytorch/pytorch:1.13.1-cuda11.7-cudnn8-runtime
+            image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
               command: ["/bin/bash", "-c"] 
             args: 
               - |
