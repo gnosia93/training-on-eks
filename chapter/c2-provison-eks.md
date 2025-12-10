@@ -1,5 +1,6 @@
 일반 EKS 모드와 달리, EKS Auto Mode에서는 AWS가 관리하는 핵심 애드온들이 쿠버네티스 파드(Pod) 형태가 아니라, 워커 노드 OS 내의 systemd 프로세스로 직접 실행된다.
 그래서 kube-system 네임스페이스의 파드를 조회하더라도 아래와 같이 메트릭 서버만 보인다. 또한 컴퓨팅 노드로 로그인 하는 수단 역시 제공하지 않는다.   
+aws-node나 coredns, aws-ebs-csi-driver 등 같은 파드들이 목록에 나타나지 않는다.
 
 ```
 kubectl get pods -n kube-system
