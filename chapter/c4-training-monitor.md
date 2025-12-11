@@ -8,7 +8,7 @@ time=2025-12-11T06:53:46.918Z level=ERROR msg="the libdcgm.so.4 library was not 
 
 ## 어떻게 GPU 정보는 뽑아오지 ? ##
 
-
+* https://docs.aws.amazon.com/ko_kr/eks/latest/best-practices/aiml-observability.html
 
 
 
