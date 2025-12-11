@@ -10,6 +10,9 @@ time=2025-12-11T06:53:46.918Z level=ERROR msg="the libdcgm.so.4 library was not 
 
 * https://docs.aws.amazon.com/ko_kr/eks/latest/best-practices/aiml-observability.html
 
+```
+aws eks list-addons --cluster-name training-on-eks
+```
 
 
 
