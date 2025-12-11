@@ -1,3 +1,11 @@
+
+
+## 레퍼런스 ##
+* [Tracking GPU Usage in K8s with Prometheus and DCGM: A Complete Guide](https://medium.com/@penkow/tracking-gpu-usage-in-k8s-with-prometheus-and-dcgm-a-complete-guide-7c8590809d7c)
+
+
+
+
 ## 프로메테우스 설치 ##
 helm 차트를 설치한다. 
 ```
