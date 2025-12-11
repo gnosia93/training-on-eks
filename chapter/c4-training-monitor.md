@@ -13,16 +13,6 @@ time=2025-12-11T06:53:46.918Z level=ERROR msg="the libdcgm.so.4 library was not 
 
 
 
-헬름을 먼저 설치하고 NVIDIA 레포지토리를 등록한다. 
-```
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
-    && chmod 700 get_helm.sh \
-    && ./get_helm.sh
-
-helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
-    && helm repo update
-```
-
 
 
 
