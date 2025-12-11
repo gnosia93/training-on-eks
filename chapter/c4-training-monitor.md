@@ -34,8 +34,8 @@ metadata:
   name: kube-prometheus-grafana
   namespace: monitoring
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-    service.beta.kubernetes.io/aws-load-balancer-internal: "false"
+    service.beta.kubernetes.io/aws-load-balancer-type: "external" # ALB/NLB용으로 프로비저닝
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing" # 인터넷 연결형
 spec:
   ports:
   - name: http-web
