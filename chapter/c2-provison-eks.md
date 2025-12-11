@@ -72,6 +72,10 @@ eksctl create cluster --name=training-on-eks \
   --region=ap-northeast-2 \
   --vpc-public-subnets="subnet-01bd51c8c77af6d59,subnet-0de148d8e62debe6d" \
   --vpc-private-subnets="subnet-009f634c97979d460,subnet-05f66b53201e3c4cf" 
+
+aws ec2 create-tags --resources subnet-01bd51c8c77af6d59 subnet-0de148d8e62debe6d \
+  --tags Key=kubernetes.io/role/elb,Value=1 \
+  --region ap-northeast-2
 ```
 
 생성된 클러스터를 확인한다. 
