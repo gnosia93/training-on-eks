@@ -34,7 +34,7 @@ metadata:
   name: kube-prometheus-grafana
   namespace: monitoring
   annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing 
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
   ports:
   - name: http-web
