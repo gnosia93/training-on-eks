@@ -40,7 +40,9 @@ pytorch 네임스페이스를 생성하고 pytorch-dist-job.yaml 을 kustomize �
 ```
 kubectl create ns pytorch
 kubectl apply -k kustomize/overlays/ddp/
-kubectl get pods -n pytorch
+
+kubectl get pytorchjobs -n pytorch
+kubectl get all -n pytorch
 ```
 [결과]
 ```
