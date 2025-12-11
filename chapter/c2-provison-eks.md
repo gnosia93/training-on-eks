@@ -77,6 +77,10 @@ eksctl create cluster --name=training-on-eks \
 aws ec2 create-tags --resources subnet-01bd51c8c77af6d59 subnet-0de148d8e62debe6d \
   --tags Key=kubernetes.io/role/elb,Value=1 \
   --region ap-northeast-2
+aws ec2 create-tags --resources subnet-01bd51c8c77af6d59 subnet-0de148d8e62debe6d \
+  --tags Key=kubernetes.io/cluster/training-on-eks,Value=owned \
+  --region ap-northeast-2
+
 ```
 
 생성된 클러스터를 확인한다. 
