@@ -34,7 +34,7 @@ metadata:
   name: kube-prometheus-grafana
   namespace: monitoring
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-type: "clb"
 spec:
   ports:
   - name: http-web
