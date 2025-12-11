@@ -1,3 +1,17 @@
+EKS 오토모드에서는 Bottlerocket 기반의 AMI(Amazon Machine Image)를 사용하고 있다.
+GPU 메토릭 정보를 추출하기 위해서 DCGM exporter 파드를 스케줄하는 경우, 아래의 POD 로그에서 보이는 것 처럼 libdcgm.so.4 파일이 설치되어 있지 않아서 파드가 크래시 된다.
+```
+Defaulted container "nvidia-dcgm-exporter" out of: nvidia-dcgm-exporter, toolkit-validation (init)
+time=2025-12-11T06:53:46.917Z level=INFO msg="Starting dcgm-exporter" Version=4.4.2-4.7.0
+time=2025-12-11T06:53:46.918Z level=ERROR msg="the libdcgm.so.4 library was not found. Install Data Center GPU Manager (DCGM)."
+```
+
+
+
+
+
+
+
 헬름을 먼저 설치하고 NVIDIA 레포지토리를 등록한다. 
 ```
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
