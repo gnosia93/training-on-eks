@@ -26,7 +26,7 @@ prometheus-kube-prometheus-kube-prome-prometheus-0       2/2     Running   0    
 
 그라파나 서비스를 로드밸런스 타입으로 변경하여 외부로 노출시킨다.
 
-[kube-prometheus-grafana.yaml]
+[grafana-service.yaml]
 ```
 apiVersion: v1
 kind: Service
@@ -49,7 +49,7 @@ spec:
 ```
 접속 가능한 출발지 IP 대역폭은 loadBalancerSourceRanges 필드를 이용하여 정의한다. 
 ```
-kubectl apply -f kube-prometheus-grafana.yaml
+kubectl apply -f grafana-service.yaml
 ```
 
  
