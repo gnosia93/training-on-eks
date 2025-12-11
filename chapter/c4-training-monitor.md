@@ -6,6 +6,7 @@ time=2025-12-11T06:53:46.917Z level=INFO msg="Starting dcgm-exporter" Version=4.
 time=2025-12-11T06:53:46.918Z level=ERROR msg="the libdcgm.so.4 library was not found. Install Data Center GPU Manager (DCGM)."
 ```
 
+https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks-cluster-observability-cluster-cloudwatch-ci.html
 ## 어떻게 GPU 정보는 뽑아오지 ? ##
 
 * https://docs.aws.amazon.com/ko_kr/eks/latest/best-practices/aiml-observability.html
