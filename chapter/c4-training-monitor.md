@@ -44,7 +44,10 @@ spec:
     app.kubernetes.io/name: grafana
   sessionAffinity: None
   type: LoadBalancer
+  loadBalancerSourceRanges:
+    - "122.36.213.114/32" # 특정 회사/집 IP 대역만 허용
 ```
+접속 가능한 출발지 IP 대역폭은 loadBalancerSourceRanges 필드를 이용하여 정의한다. 
 ```
 kubectl apply -f kube-prometheus-grafana.yaml
 ```
