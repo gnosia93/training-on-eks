@@ -15,6 +15,9 @@ https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks-cluster-o
 aws eks create-addon --cluster-name training-on-eks \
   --addon-name amazon-cloudwatch-observability 
 
+aws eks describe-addon --cluster-name training-on-eks \
+  --addon-name amazon-cloudwatch-observability --query "addon.status"
+
 aws eks list-addons --cluster-name training-on-eks
 ```
 [결과]
