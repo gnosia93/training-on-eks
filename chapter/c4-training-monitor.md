@@ -22,6 +22,8 @@ aws eks list-addons --cluster-name training-on-eks
 ```
 [결과]
 ```
+"ACTIVE"
+
 {
     "addons": [
         "amazon-cloudwatch-observability",
