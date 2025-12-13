@@ -228,6 +228,8 @@ resource "aws_instance" "x86_box" {
   user_data = <<_DATA
 #!/bin/bash
 curl -fsSL https://code-server.dev/install.sh | sh
+systemctl enable --now code-server@ec2-user
+systemctl start --now code-server@ec2-user
 echo "user data script ended successfully."
 _DATA
 
