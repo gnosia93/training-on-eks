@@ -4,14 +4,15 @@
 set -eo pipefail
 
 # --- 1. 환경 변수 설정 (사용자 정보로 변경 필요) ---
-export CLUSTER_NAME="YOUR_EKS_CLUSTER_NAME" # EKS 클러스터 이름으로 변경
-export AWS_REGION="ap-northeast-2" # AWS 리전으로 변경
+export CLUSTER_NAME="YOUR_EKS_CLUSTER_NAME" # EKS 클러스터 이름으로 변경 (예: my-eks-cluster)
+export AWS_REGION="ap-northeast-2"         # AWS 리전으로 변경
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export KARPENTER_VERSION="v0.35.2" # 최신 버전 확인 후 업데이트 권장
+export KARPENTER_VERSION="v0.35.2"          # 사용하려는 Karpenter 버전
+export KARPENTER_NAMESPACE="karpenter"
 
 # 확인: 필요한 도구들이 설치되어 있는지 확인
-if ! command -v kubectl &> /dev/null || ! command -v helm &> dev/null || ! command -v jq &> dev/null; then
-    echo "Error: kubectl, helm, or jq is not installed. Please install them first."
+if ! command -v kubectl &> /dev/null || ! command -v helm &> /dev/null || ! command -v jq &> /dev/null || ! command -v eksctl &> /dev/null; then
+    echo "Error: kubectl, helm, jq, or eksctl is not installed. Please install them first."
     exit 1
 fi
 
@@ -23,19 +24,14 @@ eksctl utils associate-iam-oidc-provider --cluster $CLUSTER_NAME --approve --reg
 
 echo "--- OIDC 공급자 구성 완료 ---"
 
-# --- 3. Karpenter IAM 역할 및 인스턴스 프로파일 생성 ---
-# Karpenter가 EC2 인스턴스를 프로비저닝할 수 있는 권한을 부여합니다.
-
-echo "--- Karpenter IAM 역할 및 프로파일 생성 완료 ---"
-
-# --- 4. 서브넷 및 보안 그룹 태깅 ---
-# Karpenter가 어떤 VPC/서브넷에 노드를 생성해야 할지 알 수 있도록 태그를 지정합니다.
+# --- 3. 서브넷 및 보안 그룹 태깅 ---
+# Karpenter가 사용할 VPC, 서브넷을 식별할 수 있도록 태그를 추가합니다.
 
 # 클러스터 VPC ID 조회
 VPC_ID=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.resourcesVpcConfig.vpcId" --output text)
 
-# 서브넷 ID 조회 및 태그 추가 (환경에 맞게 필터링 조건 수정 필요)
-SUBNET_IDS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${VPC_ID}" "Name=map-publicIpOnDevice,Values=true" --query "Subnets[*].SubnetId" --output text) # Public Subnets 예시
+# Public Subnets 조회 (환경에 맞게 Private Subnet을 사용하려면 필터링 조건 수정)
+SUBNET_IDS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${VPC_ID}" --query "Subnets[*].SubnetId" --output text | tr '\t' ' ')
 
 for SUBNET_ID in $SUBNET_IDS; do
   echo "Tagging subnet: $SUBNET_ID"
@@ -45,15 +41,6 @@ for SUBNET_ID in $SUBNET_IDS; do
 done
 
 echo "--- 서브넷 태깅 완료 ---"
-
-# --- 5. Helm을 사용하여 Karpenter 설치 ---
-# ServiceAccount에 IAM Role ARN을 연결하여 IRSA를 구성합니다.
-
-echo "--- Karpenter Helm 차트 배포 완료 ---"
-
-# --- 6. 설치 확인 ---
-echo "Karpenter 설치가 성공적으로 완료되었습니다. 이제 NodePool과 EC2NodeClass 리소스를 생성하여 사용을 시작할 수 있습니다."
-
 ```
 
 
