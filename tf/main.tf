@@ -184,15 +184,16 @@ resource "aws_instance" "graviton_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-export HOME=/home/ec2-user
+sudo -u ec2-user -i <<EC2_USER_EOF
 curl -fsSL https://code-server.dev/install.sh | sh
-systemctl enable --now code-server@ec2-user
-systemctl start --now code-server@ec2-user
+sudo systemctl enable --now code-server@ec2-user
+sudo systemctl start --now code-server@ec2-user
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /home/ec2-user/.config/code-server/config.yaml
 sed -i 's/auth: password/auth: none/g' /home/ec2-user/.config/code-server/config.yaml
 
-systemctl restart code-server@ec2-user
+sudo systemctl restart code-server@ec2-user
+EC2_USER_EOF
 _DATA
 
   tags = {
@@ -219,15 +220,16 @@ resource "aws_instance" "x86_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-export HOME=/home/ec2-user
+sudo -u ec2-user -i <<EC2_USER_EOF
 curl -fsSL https://code-server.dev/install.sh | sh
-systemctl enable --now code-server@ec2-user
-systemctl start --now code-server@ec2-user
+sudo systemctl enable --now code-server@ec2-user
+sudo systemctl start --now code-server@ec2-user
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /home/ec2-user/.config/code-server/config.yaml
 sed -i 's/auth: password/auth: none/g' /home/ec2-user/.config/code-server/config.yaml
 
-systemctl restart code-server@ec2-user
+sudo systemctl restart code-server@ec2-user
+EC2_USER_EOF
 _DATA
 
   tags = {
