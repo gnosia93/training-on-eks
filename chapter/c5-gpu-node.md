@@ -1,46 +1,16 @@
 ## 카펜터 설치하기 ##
 ```
-#!/bin/bash
-set -eo pipefail
-
-# --- 1. 환경 변수 설정 (사용자 정보로 변경 필요) ---
 export CLUSTER_NAME="YOUR_EKS_CLUSTER_NAME" # EKS 클러스터 이름으로 변경 (예: my-eks-cluster)
 export AWS_REGION="ap-northeast-2"         # AWS 리전으로 변경
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export KARPENTER_VERSION="v0.35.2"          # 사용하려는 Karpenter 버전
 export KARPENTER_NAMESPACE="karpenter"
 
-# 확인: 필요한 도구들이 설치되어 있는지 확인
-if ! command -v kubectl &> /dev/null || ! command -v helm &> /dev/null || ! command -v jq &> /dev/null || ! command -v eksctl &> /dev/null; then
-    echo "Error: kubectl, helm, jq, or eksctl is not installed. Please install them first."
-    exit 1
-fi
-
-echo "--- 환경 변수 설정 완료 ---"
-
-# --- 2. EKS 클러스터 OIDC 공급자 확인 또는 생성 ---
 # OIDC는 Karpenter가 EKS와 통신하기 위한 필수 요구사항입니다.
 eksctl utils associate-iam-oidc-provider --cluster $CLUSTER_NAME --approve --region $AWS_REGION
 
-echo "--- OIDC 공급자 구성 완료 ---"
 
-# --- 3. 서브넷 및 보안 그룹 태깅 ---
-# Karpenter가 사용할 VPC, 서브넷을 식별할 수 있도록 태그를 추가합니다.
 
-# 클러스터 VPC ID 조회
-VPC_ID=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.resourcesVpcConfig.vpcId" --output text)
-
-# Public Subnets 조회 (환경에 맞게 Private Subnet을 사용하려면 필터링 조건 수정)
-SUBNET_IDS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${VPC_ID}" --query "Subnets[*].SubnetId" --output text | tr '\t' ' ')
-
-for SUBNET_ID in $SUBNET_IDS; do
-  echo "Tagging subnet: $SUBNET_ID"
-  aws ec2 create-tags --resources $SUBNET_ID \
-    --tags Key=kubernetes.io/cluster/$CLUSTER_NAME,Value=owned Key=kubernetes.io/role/elb,Value=1 \
-    --region $AWS_REGION
-done
-
-echo "--- 서브넷 태깅 완료 ---"
 ```
 
 
