@@ -227,6 +227,7 @@ ip-10-0-6-224.ap-northeast-2.compute.internal   Ready    <none>   7m27s   v1.33.
 ```
 
 
+### nginx 배포해 보기 ### 
 
 
 
