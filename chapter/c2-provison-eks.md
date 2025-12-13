@@ -83,9 +83,9 @@ managedNodeGroups:
     minSize: 2
     maxSize: 2
     desiredCapacity: 2
-    privateNetworking: true     # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
-  
-``
+    privateNetworking: true     # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
+```
+
 클러스터를 생성한다. 
 ```
 eksctl create cluster -f cluster-config.yaml
@@ -114,6 +114,8 @@ kubectl config current-context
 ```
 i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 ```
+
+
 
 ## gpu 노드풀 준비 ##
 EKS 오토모드에서 아래와 같이 두개의 노드풀이 자동으로 생성되지만, gpu 파드를 스케줄링 할 수는 없다. 노드풀의 세부 설정을 describe 해 보면
