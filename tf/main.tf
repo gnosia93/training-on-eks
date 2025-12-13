@@ -219,8 +219,6 @@ resource "aws_instance" "x86_box" {
 sudo dnf install screen -y
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
-sudo systemctl enable --now code-server@$USER
-sudo systemctl start code-server@$USER
 EC2_USER_SCRIPT
 
 _DATA
