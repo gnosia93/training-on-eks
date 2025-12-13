@@ -184,10 +184,8 @@ resource "aws_instance" "graviton_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-sudo dnf install screen -y
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
-screen code-server --bind-addr 0.0.0.0:8080 --auth none &  
 EC2_USER_SCRIPT
 
 _DATA
@@ -216,7 +214,6 @@ resource "aws_instance" "x86_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-sudo dnf install screen -y
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
 EC2_USER_SCRIPT
