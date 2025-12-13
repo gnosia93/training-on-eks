@@ -30,12 +30,13 @@ sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 
 ## 클러스터 생성 ##
 
-### 클러스터 생성 권한 ###
-eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권한을 가지고 있어야 한다. 이번 워크샵에서는 EC2 인스턴스에 해당당 Role인 TOE_EKS_EC2_ROLE 이 AdminFullAccess 권한을 가지고 있다. 
+그라비톤 인스턴스에서 EKS를 생성할 예정이다. 그라비톤 인스턴스는 EKS 클러스터를 생성하기 위한 권한을 가지고 있어야 하는데 아래 도표는 그라비톤이 가져야 할 최소 권한 리스트이다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
+이 워크샵에서는 TOE_EKS_EC2_ROLE 을 만들어 편의상 AdminFullAccess 권한을 부여하였고, 이를 다시 그라비톤 인스턴스에 부여하였다. (좀더 세부적인 내용은 테라폼 코드를 참조)
 
-### VPC 정보 조회 ###
-* VPC ID
+또한 클러스터가 생성되는 네트워크상의 위치를 정해 주기위해서 VPC ID 와 서브넷 정보가 필요한데, 보안의 강화하기 위해 EKS 클러스터 워커노드는 프라이빗 서브넷에 위치하게 된다.
+
+#### VPC ID 조회 ####
 ```
 VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=training-on-eks --query "Vpcs[].VpcId" --output text)
 echo ${VPC_ID}
@@ -45,7 +46,7 @@ echo ${VPC_ID}
 vpc-030b927274aa21417
 ```
 
-* 서브넷 ID
+#### 프라이빗 서브넷 리스트 조회 ####
 ```
 aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
@@ -54,6 +55,7 @@ aws ec2 describe-subnets \
 ```  
 [결과]
 ```
+subnet-09b59089486e54bfd        subnet-0e521bd6de96308b8        subnet-099acb450b8051d06        subnet-010db3e6a658817d6
 ```
 
 
@@ -71,8 +73,10 @@ vpc:
   id: vpc-030b927274aa21417           # VPC ID를 여기에 지정해야 합니다. 
   subnets:
     private:
-      subnet-009f634c97979d460: { }
-      subnet-05f66b53201e3c4cf: { }
+      subnet-09b59089486e54bfd: { }
+      subnet-0e521bd6de96308b8: { }
+      subnet-099acb450b8051d06: { }
+      subnet-010db3e6a658817d6: { }
 
 # 관리형 노드 그룹을 정의합니다.
 managedNodeGroups:
