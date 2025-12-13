@@ -14,6 +14,8 @@ aws eks describe-cluster --name training-on-eks --query cluster.version
 
 ### 설치하기 ###
 
+OIDC_ENDPOINT는 EKS 클러스터가 발급하는 모든 임시 자격 증명이 유효한지 검증할 수 있는 URL로, 쿠버네티스의 서비스 어카운트가 AWS 리소스에 안전하게 접근할 수 있게 해준다.
+
 ```
 AWS_REGION="$(aws configure list | grep region | tr -s " " | cut -d" " -f3)"
 OIDC_ENDPOINT="$(aws eks describe-cluster --name training-on-eks \
@@ -21,88 +23,14 @@ OIDC_ENDPOINT="$(aws eks describe-cluster --name training-on-eks \
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 K8S_VERSION=$(aws eks describe-cluster --name training-on-eks --query "cluster.version" --output text)
 ```
-OIDC_ENDPOINT는 EKS 클러스터가 발급하는 모든 임시 자격 증명이 유효한지 검증할 수 있는 URL로, 쿠버네티스의 서비스 어카운트가 AWS 리소스에 안전하게 접근할 수 있게 해준다.
 
 
 
 
-```
-export CLUSTER_NAME="YOUR_EKS_CLUSTER_NAME" # EKS 클러스터 이름으로 변경 (예: my-eks-cluster)
-export AWS_REGION="ap-northeast-2"         # AWS 리전으로 변경
-export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export KARPENTER_VERSION="v0.35.2"          # 사용하려는 Karpenter 버전
-export KARPENTER_NAMESPACE="karpenter"
-
-# OIDC는 Karpenter가 EKS와 통신하기 위한 필수 요구사항입니다.
-eksctl utils associate-iam-oidc-provider --cluster $CLUSTER_NAME --approve --region $AWS_REGION
-
-2단계: Karpenter IAM 역할 및 정책 수동 설정 (가장 중요)
-Karpenter 컨트롤러가 EC2 인스턴스를 생성/삭제할 수 있는 권한을 부여해야 합니다. 이 단계는 스크립트로 완전히 자동화하기 어렵기 때문에 수동으로 진행합니다.
-
-# karpenter-policy.json 파일을 다운로드합니다.
-curl -fsSL raw.githubusercontent.com{KARPENTER_VERSION}/website/content/en/docs/getting-started/getting-started-with-eks/cloudformation.yaml | jq -r '.Resources.KarpenterControllerPolicy.Properties.PolicyDocument' > karpenter-policy.json
-
-# IAM 정책을 AWS에 생성합니다.
-aws iam create-policy --policy-name KarpenterControllerPolicy-${CLUSTER_NAME} --policy-document file://karpenter-policy.json
-
-# Trust policy 파일 다운로드 (EKS 클러스터 OIDC URL 사용)
-OIDC_PROVIDER=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.identity.oidc.issuer" --output text | sed -e 's/^https:\/\///')
-
-cat <<EOF > trust-policy.json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/${OIDC_PROVIDER}"
-      },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-        "StringEquals": {
-          "${OIDC_PROVIDER}:aud": "sts.amazonaws.com",
-          "${OIDC_PROVIDER}:sub": "system:serviceaccount:${KARPENTER_NAMESPACE}:karpenter"
-        }
-      }
-    }
-  ]
-}
-EOF
-
-# IAM 역할 생성
-aws iam create-role --role-name KarpenterControllerRole-${CLUSTER_NAME} --assume-role-policy-document file://trust-policy.json
-
-# 역할에 정책 연결
-aws iam attach-role-policy --role-name KarpenterControllerRole-${CLUSTER_NAME} --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/KarpenterControllerPolicy-${CLUSTER_NAME}
 
 
-# 환경 변수 다시 설정 (2단계에서 사용한 변수 유지 시 생략 가능)
-export CLUSTER_NAME="YOUR_EKS_CLUSTER_NAME"
-export AWS_REGION="ap-northeast-2"
-export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export KARPENTER_VERSION="v0.35.2"
-export KARPENTER_NAMESPACE="karpenter"
 
-# 1. 네임스페이스 생성
-kubectl create namespace ${KARPENTER_NAMESPACE}
 
-# 2. Helm repository 추가
-helm repo add karpenter charts.karpenter.sh
-helm repo update
-
-# 3. Helm 설치 (ServiceAccount에 2단계에서 만든 Role ARN 연결)
-helm upgrade --install karpenter karpenter/karpenter --namespace ${KARPENTER_NAMESPACE} \
-  --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/KarpenterControllerRole-${CLUSTER_NAME} \
-  --set settings.clusterName=${CLUSTER_NAME} \
-  --set defaultProvisioner.spec.cluster.name=${CLUSTER_NAME} \
-  --set settings.interruptionQueueName=${CLUSTER_NAME} \
-  --version ${KARPENTER_VERSION}
-
-```
-#### 설치확인 ####
-```
-kubectl get pods -n karpenter
-```
 
 
 
