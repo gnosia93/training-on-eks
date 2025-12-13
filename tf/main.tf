@@ -217,8 +217,15 @@ resource "aws_instance" "x86_box" {
 sudo -u ec2-user -i <<'EOF'
 curl -fsSL https://code-server.dev/install.sh | sh
 sudo systemctl enable --now code-server@$USER
-EOF
 
+CONFIG_FILE="/home/ec2-user/.config/code-server/config.yaml"
+if [ -f "$CONFIG_FILE" ]; then
+    echo "Updating bind-addr in $CONFIG_FILE"
+    sed -i 's/127.0.0.1/0.0.0.0/g' "$CONFIG_FILE"
+    sed -i 's/password/none/g' "$CONFIG_FILE"
+fi
+echo "user data script ended.."
+EOF
 _DATA
 
   tags = {
