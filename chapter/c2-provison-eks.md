@@ -69,7 +69,6 @@ aws ec2 describe-subnets \
 +-----------------+----------------------------+---------------------+
 ```
 
-
 ### 클러스터 생성 ###
 [cluster-config.yaml]
 ```
@@ -108,7 +107,7 @@ managedNodeGroups:                    # 관리형 노드 그룹을 정의합니�
 
 클러스터를 생성한다. 
 ```
-eksctl create cluster -f cluster-config.yaml
+eksctl create cluster -f cluster-config.yaml 
 ```
 
 ### 서브넷 태깅 ### 
