@@ -224,6 +224,8 @@ if [ -f "$CONFIG_FILE" ]; then
     sed -i 's/127.0.0.1/0.0.0.0/g' "$CONFIG_FILE"
     sed -i 's/password/none/g' "$CONFIG_FILE"
 fi
+
+sudo systemctl restart code-server@$USER
 echo "user data script ended.."
 EOF
 _DATA
