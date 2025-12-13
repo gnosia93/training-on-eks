@@ -47,7 +47,10 @@ vpc-030b927274aa21417
 
 * 서브넷 ID
 ```
-aws ec2 describe-subnets --filters Name=vpc-id,Values=${VPC_ID} --query "Subnets[*].SubnetId" --output text
+aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --query "Subnets[*].SubnetId" \
+    --output text
 ```  
 [결과]
 ```
