@@ -202,7 +202,7 @@ aws ec2 describe-subnets \
 +-----------------+----------------------------+--------------------+
 ```
 
-퍼브릭 서브넷을 태깅한다.
+퍼블릭 서브넷을 태깅한다.
 ```
 aws ec2 create-tags --resources subnet-026bdcdeea230b1b3 subnet-0e246ca66e5c239a7 subnet-05cf75c4d41ccc74b \
   --tags Key=kubernetes.io/role/elb,Value=1 Key=kubernetes.io/cluster/training-on-eks,Value=owned \
