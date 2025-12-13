@@ -48,6 +48,30 @@ aws iam create-role --role-name KarpenterControllerRole-${CLUSTER_NAME} --assume
 # 역할에 정책 연결
 aws iam attach-role-policy --role-name KarpenterControllerRole-${CLUSTER_NAME} --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/KarpenterControllerPolicy-${CLUSTER_NAME}
 
+
+# 환경 변수 다시 설정 (2단계에서 사용한 변수 유지 시 생략 가능)
+export CLUSTER_NAME="YOUR_EKS_CLUSTER_NAME"
+export AWS_REGION="ap-northeast-2"
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export KARPENTER_VERSION="v0.35.2"
+export KARPENTER_NAMESPACE="karpenter"
+
+# 1. 네임스페이스 생성
+kubectl create namespace ${KARPENTER_NAMESPACE}
+
+# 2. Helm repository 추가
+helm repo add karpenter charts.karpenter.sh
+helm repo update
+
+# 3. Helm 설치 (ServiceAccount에 2단계에서 만든 Role ARN 연결)
+helm upgrade --install karpenter karpenter/karpenter --namespace ${KARPENTER_NAMESPACE} \
+  --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/KarpenterControllerRole-${CLUSTER_NAME} \
+  --set settings.clusterName=${CLUSTER_NAME} \
+  --set defaultProvisioner.spec.cluster.name=${CLUSTER_NAME} \
+  --set settings.interruptionQueueName=${CLUSTER_NAME} \
+  --version ${KARPENTER_VERSION}
+
+
 ```
 
 
