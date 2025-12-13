@@ -178,7 +178,6 @@ resource "aws_instance" "graviton_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-#!/bin/bash
 EC2_HOME="/home/ec2-user"
 CONFIG_FILE="$EC2_HOME/.config/code-server/config.yaml"
 
