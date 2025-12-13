@@ -71,8 +71,12 @@ helm upgrade --install karpenter karpenter/karpenter --namespace ${KARPENTER_NAM
   --set settings.interruptionQueueName=${CLUSTER_NAME} \
   --version ${KARPENTER_VERSION}
 
-
 ```
+#### 설치확인 ####
+```
+kubectl get pods -n karpenter
+```
+
 
 
 ## gpu 노드풀 준비 ##
