@@ -65,6 +65,9 @@ aws ec2 describe-subnets \
 ```
 
 ### 클러스터 생성 ###
+
+아래 YAML 파일에서 VPC ID 와 프라이빗 서브넷 값을 조회된 값으로 수정한다.   
+
 [cluster-config.yaml]
 ```
 apiVersion: eksctl.io/v1alpha5
