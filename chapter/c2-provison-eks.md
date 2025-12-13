@@ -179,9 +179,9 @@ Error: failed to create cluster "training-on-eks"
 2025-12-13 13:36:05 [ℹ]  deploying stack "eksctl-training-on-eks-cluster"
 ```
 
-
-
 ### 서브넷 태깅 ### 
+
+EKS 로드 밸런서와 인그레스는 서브넷 태그 정보를 이용하여, 프로비저닝 되는 위치를 정하게 된다. 퍼블릭 서브넷에는 kubernetes.io/role/elb=1 과 kubernetes.io/cluster/{cluster name}=owned 값을 설정하도록 하고 프라이빗 서브넷에는 kubernetes.io/role/internal-elb=1 을 설정하도록 한다.   
 ```
 aws ec2 create-tags --resources subnet-01bd51c8c77af6d59 subnet-0de148d8e62debe6d \
   --tags Key=kubernetes.io/role/elb,Value=1 \
@@ -196,7 +196,7 @@ aws ec2 create-tags --resources subnet-009f634c97979d460 subnet-05f66b53201e3c4c
   --region ap-northeast-2
 ```
 
-생성된 클러스터를 확인한다. 
+### 생성된 클러스터 확인 ### 
 ```
 kubectl config current-context
 ```
