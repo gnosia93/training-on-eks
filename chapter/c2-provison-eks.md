@@ -79,9 +79,9 @@ metadata:
   region: ap-northeast-2
 
 vpc:
-  id: vpc-030b927274aa21417           # VPC ID를 여기에 지정해야 합니다. 
+  id: vpc-030b927274aa21417           # VPC ID를 여기에 지정해야 합니다 (조회된 값으로 수정)
   subnets:
-    private:
+    private:                          # 프라이빗 서브넷 정보를 지정해야 합니다 (조회된 값으로 수정)
       subnet-099acb450b8051d06: { az: ap-northeast-2a }
       subnet-0e521bd6de96308b8: { az: ap-northeast-2b }
       subnet-010db3e6a658817d6: { az: ap-northeast-2c }      
@@ -93,7 +93,7 @@ managedNodeGroups:                    # 관리형 노드 그룹을 정의합니�
     maxSize: 2
     desiredCapacity: 2
     amiFamily: AmazonLinux2023_ARM_64
-    privateNetworking: true     # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
+    privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
    
   - name: ng-x86
     instanceType: c6i.2xlarge
@@ -101,7 +101,7 @@ managedNodeGroups:                    # 관리형 노드 그룹을 정의합니�
     maxSize: 2
     desiredCapacity: 2
     amiFamily: AmazonLinux2023
-    privateNetworking: true     # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
+    privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
 ```
 
 클러스터를 생성한다. 
