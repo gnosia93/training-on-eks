@@ -10,10 +10,16 @@ variable "vpc_cidr_block" {
   default     = "10.0.0.0/16"
 }
 
-variable "instance_type" {
+variable "graviton_type" {
   description = "EC2 Instance Type (Graviton)"
   type        = string
-  default     = "c7g.xlarge"
+  default     = "c7g.2xlarge"
+}
+
+variable "x86_type" {
+  description = "EC2 Instance Type (x86)"
+  type        = string
+  default     = "c6i.2xlarge"
 }
 
 variable "key_name" {
