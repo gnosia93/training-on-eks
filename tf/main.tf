@@ -167,7 +167,7 @@ resource "aws_security_group" "instance_sg" {
 
 resource "aws_instance" "graviton_box" {
   ami                         = data.aws_ami.al2023_arm64.id
-  instance_type               = var.instance_type
+  instance_type               = var.graviton_type
   subnet_id                   = aws_subnet.public[0].id
   vpc_security_group_ids      = [aws_security_group.instance_sg.id]
   associate_public_ip_address = true
@@ -191,7 +191,7 @@ _DATA
 
 resource "aws_instance" "x86_box" {
   ami                         = data.aws_ami.al2023_x86_64.id
-  instance_type               = var.instance_type
+  instance_type               = var.x86_type
   subnet_id                   = aws_subnet.public[0].id
   vpc_security_group_ids      = [aws_security_group.instance_sg.id]
   associate_public_ip_address = true
