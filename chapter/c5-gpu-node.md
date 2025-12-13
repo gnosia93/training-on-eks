@@ -1,73 +1,172 @@
+## gpu 노드풀 준비 ##
+EKS 오토모드에서 아래와 같이 두개의 노드풀이 자동으로 생성되지만, gpu 파드를 스케줄링 할 수는 없다. 노드풀의 세부 설정을 describe 해 보면
+C, M, R 인스턴스 타입(CPU) 만을 가지고 있어 CPU를 사용하는 파드만 스케줄링이 가능하다.
+```
+kubectl get nodepools -n karpenter
+```
+[결과]
+```
+NAME              NODECLASS   NODES   READY   AGE
+general-purpose   default     0       True    8h
+system            default     1       True    8h
+```
+[참고] 아래는 카펜터 노드풀의 상세 설정을 조회할 수 있는 명령어 셋이다.
+```
+kubectl describe nodepool system -n karpenter
+kubectl describe nodepool general-purpose -n karpenter
+```   
 
+또한 카펜터에서 제공하는 CRD와는 다른 별도의 CRD 를 사용하고, 사용할 수 있는 레이블 역시 오픈 소스 카펜터와는 다른 것을 사용한다. 예를들어 
+기존의 karpenter.k8s.aws/instance-category 레이블은 오토모드에서 eks.amazonaws.com/instance-category 으로 변경되었다 (자세한 내용은 https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html 참조) 
+```
+kubectl get crd -o wide
+```
+[결과]
+```
+NAME                                            CREATED AT
+applicationnetworkpolicies.networking.k8s.aws   2025-12-09T17:19:41Z
+clusternetworkpolicies.networking.k8s.aws       2025-12-09T17:19:41Z
+clusterpolicyendpoints.networking.k8s.aws       2025-12-09T17:19:42Z
+cninodes.eks.amazonaws.com                      2025-12-09T17:21:32Z
+cninodes.vpcresources.k8s.aws                   2025-12-09T17:19:42Z
+ingressclassparams.eks.amazonaws.com            2025-12-09T17:21:32Z
+nodeclaims.karpenter.sh                         2025-12-09T17:21:32Z
+nodeclasses.eks.amazonaws.com                   2025-12-09T17:21:32Z
+nodediagnostics.eks.amazonaws.com               2025-12-09T17:21:32Z
+nodepools.karpenter.sh                          2025-12-09T17:21:32Z
+policyendpoints.networking.k8s.aws              2025-12-09T17:19:41Z
+securitygrouppolicies.vpcresources.k8s.aws      2025-12-09T17:19:42Z
+targetgroupbindings.eks.amazonaws.com           2025-12-09T17:21:32Z
+```
+crd 를 조회해 보면 api 가 변경된 것을 확인할 수 있다. 노드풀의 경우 karpenter.sh 에 있으나, 노드 클래스의 경우 eks.amazonaws.com 으로 변경되었다.
+
+
+
+
+### [gpu 노드풀 생성](https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html) ###
+
+여기서는 gpu-pool 을 신규로 생성 예정인데, 노드 클래스의 경우 EKS 오토모드에서 기본으로 제공하는 default 클래스를 사용할 것이다. 노드 클래스 역시 기존의 EC2NodeClass 와 비교해서 상당 부분이 바뀌였다. (세부적인 내용은 https://docs.aws.amazon.com/eks/latest/userguide/create-node-class.html 에서 참조)
+
+[gpu-nodepool.yaml] 
+```
+apiVersion: karpenter.sh/v1
+kind: NodePool
 metadata:
-  name: efa-gpu-dl-pod
-  labels:
-    app: dl-training
+  name: gpu-pool
 spec:
-  # EKS Auto Mode 사용을 위한 필수 셀렉터
-  nodeSelector:
-    eks.amazonaws.com/compute-type: auto
-    # EFA 지원 인스턴스 선택을 위한 레이블 (AWS가 자동으로 붙여줌)
-    # P4, P5 인스턴스 등에서 EFA가 활성화됩니다.
-    # 클러스터 구성에 따라 레이블 키가 달라질 수 있습니다.
-    # 예시 레이블:
-    # networking.eks.amazonaws.com: "true" 
-
-  # GPU 노드에 스케줄링될 수 있도록 톨러레이션 추가
-  tolerations:
-  - key: "nvidia.com/gpu"
-    operator: "Exists"
-    effect: "NoSchedule"
-  - key: "gpu-workload"
-    operator: "Exists"
-    effect: "NoSchedule"
-
-  containers:
-  - name: dl-container-efa
-    # 위에서 추천한 AWS DLC 이미지 사용 (리전과 태그를 실제 값으로 변경하세요)
-    image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
-    command: ["/bin/bash", "-c"]
-    args:
-        - |
-          echo "Checking for EFA fabric interface using fi_info..."
-          # EFA 활성화 확인 명령어
-          fi_info -p efa
-          
-          # 추가적인 연결 테스트는 여기 아래에 명령어를 추가할 수 있습니다.
-          # 예시: /opt/amazon/efa/bin/efa_test.sh
-          
-          if [ $? -eq 0 ]; then
-            echo "EFA interface found successfully."
-          else
-            echo "Failed to find EFA interface."
-          fi
-    resources:
-      limits:
-        # 8개의 NVIDIA GPU 할당 요청
-        nvidia.com/gpu: 1 
-        # EFA 리소스 할당 요청 (이 리소스 타입은 EFA Device Plugin이 설치되어야 사용 가능)
-        # Auto Mode에서는 AWS가 EFA 플러그인 설치를 관리합니다.
-        # aws.amazon.com: "1" # 필요한 경우 주석 해제하여 사용
-      requests:
-        nvidia.com/gpu: 1
-
-    # EFA 사용을 위한 환경 변수 설정 (컨테이너 내 라이브러리 설정)
-    env:
-    - name: NCCL_DEBUG
-      value: "INFO"
-    - name: NCCL_ALGO
-      value: "RING"
-    # AWS Libfabric을 NCCL 네트워크 제공자로 지정
-    - name: NCCL_NET
-      value: "AWS Libfabric"
-    - name: FI_EFA_USE_DEVICE_RDMA
-      value: "1"
-    - name: FI_PROVIDER
-      value: "efa"
-    - name: FI_LOG_LEVEL
-      value: "INFO"    
+  template:
+    spec:
+      nodeClassRef:
+        group: eks.amazonaws.com
+        kind: NodeClass
+        name: default
+      requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]            # X86 만 설정  
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]        # 온디맨드 인스턴스 사용        
+        - key: eks.amazonaws.com/instance-category 
+          operator: In
+          values: ["g", "p"]           # GPU 인스턴스 사용  
+        
+        # 특정 세대(예: 4세대 이상) 또는 특정 타입만 허용할 수 있습니다.
+        # - key: karpenter.k8s.aws/instance-type
+        #   operator: In
+        #   values: ["g5.xlarge", "p3.2xlarge"]
+        
+      # GPU 노드임을 명시하는 Taint 추가 (GPU Pod만 스케줄링되도록 유도)
+      taints:
+        - key: "gpu-workload"
+          effect: "NoSchedule"
 ```
 
+GPU 파드를 실행할 수 있는 노드풀을 생성하고 READY 상태를 확인한다.   
+```
+kubectl apply -f gpu-nodepool.yaml
+kubectl get nodepool
+```
+[결과]
+```
+NAME              NODECLASS   NODES   READY   AGE
+general-purpose   default     0       True    12h
+gpu-pool          default     0       True    8s
+system            default     1       True    12h
+```
+
+## GPU 파드 스케줄링 ##
+
+[도커허브 nvidia/cuda](https://hub.docker.com/r/nvidia/cuda) 로 가서 nvidia-smi 가 설치되어 있는 컨테이너 이미지를 확인한다. 해당 페이지에서 아래로 스크롤하면 최신 컨테이너 이미지 정보를 확인할 수 있다.    
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/cuda-container.png)
+이번 워크샵에서는 13.0.2-runtime-ubuntu22.04 도커 이미지로 nvidia-smi 를 실행할 예정이다.   
+
+[gpu-pod.yaml]
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-pod
+spec:
+  containers:
+    - name: cuda-container
+      image: nvidia/cuda:13.0.2-runtime-ubuntu22.04    # runtime 이미지 사용
+      command: ["nvidia-smi"]                          # 컨테이너 시작 시 실행할 프로그램
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+  tolerations:                                             
+    - key: "gpu-workload"                              # GPU 노드풀에 파드를 스케줄링하기 위해서 toleration 을 설정한다.        
+      operator: "Exists"
+      effect: "NoSchedule"
+```
+
+파드를 생성하고 nvidia-smi 가 동작하는 확인한다.  
+```
+kubectl apply -f gpu-pod.yaml
+kubectl describe pod gpu-pod
+kubectl logs gpu-pod
+```
+[출력]
+```
+Node-Selectors:              <none>
+Tolerations:                 gpu-workload:NoSchedule op=Exists
+                             node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+                             nvidia.com/gpu:NoSchedule op=Exists
+Events:
+  Type     Reason            Age                  From                   Message
+  ----     ------            ----                 ----                   -------
+  Warning  FailedScheduling  5m12s                default-scheduler      0/2 nodes are available: 1 node(s) had untolerated taint {CriticalAddonsOnly: }, 1 node(s) had untolerated taint {karpenter.sh/disrupted: }. preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling.
+  Normal   Scheduled         4m25s                default-scheduler      Successfully assigned default/gpu-pod to i-0b2714b5d7951c695
+  Normal   Nominated         5m12s                eks-auto-mode/compute  Pod should schedule on: nodeclaim/gpu-pool-6csft
+  Normal   Pulling           4m20s                kubelet                Pulling image "nvidia/cuda:13.0.2-runtime-ubuntu22.04"
+  Normal   Pulled            3m21s                kubelet                Successfully pulled image "nvidia/cuda:13.0.2-runtime-ubuntu22.04" in 58.965s (58.965s including waiting). Image size: 1766399024 bytes.
+  Normal   Created           12s (x6 over 3m21s)  kubelet                Created container: cuda-container
+  Normal   Started           12s (x6 over 3m21s)  kubelet                Started container cuda-container
+  Normal   Pulled            12s (x5 over 3m10s)  kubelet                Container image "nvidia/cuda:13.0.2-runtime-ubuntu22.04" already present on machine
+  Warning  BackOff           0s (x15 over 3m9s)   kubelet                Back-off restarting failed container cuda-container in pod gpu-pod_default(4b7846fb-2e8f-4ba7-9d6d-ee5711363436)
 
 
-## 레퍼런스 ##
+Wed Dec 10 06:44:46 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 13.0     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA T4G                     On  |   00000000:00:1F.0 Off |                    0 |
+| N/A   49C    P8              9W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
+(참고) describe 의 출력 결과중 마지막 라인의 Warning BackOff 의 경우 컨테이너는 종료하였으나 파드가 살아있기 때문에 발생하는 메시지이다. 즉 nvidia-smi 는 실행을 종료하였으나 파드는 살아있다.
