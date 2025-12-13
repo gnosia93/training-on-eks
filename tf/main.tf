@@ -217,6 +217,7 @@ resource "aws_instance" "x86_box" {
 sudo -u ec2-user -i <<'EOF'
 curl -fsSL https://code-server.dev/install.sh | sh
 sudo systemctl enable --now code-server@$USER
+sudo systemctl start --now code-server@$USER
 
 CONFIG_FILE="/home/ec2-user/.config/code-server/config.yaml"
 if [ -f "$CONFIG_FILE" ]; then
