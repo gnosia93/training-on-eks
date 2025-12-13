@@ -13,12 +13,16 @@ aws eks describe-cluster --name training-on-eks --query cluster.version
 
 
 ### 설치하기 ###
+
 ```
 AWS_REGION="$(aws configure list | grep region | tr -s " " | cut -d" " -f3)"
-OIDC_ENDPOINT="$(aws eks describe-cluster --name training-on-eks --query "cluster.identity.oidc.issuer" --output text)"
+OIDC_ENDPOINT="$(aws eks describe-cluster --name training-on-eks \
+  --query "cluster.identity.oidc.issuer" --output text)"
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 K8S_VERSION=$(aws eks describe-cluster --name training-on-eks --query "cluster.version" --output text)
 ```
+OIDC_ENDPOINT는 EKS 클러스터가 발급하는 모든 임시 자격 증명이 유효한지 검증할 수 있는 URL로, 쿠버네티스의 서비스 어카운트가 AWS 리소스에 안전하게 접근할 수 있게 해준다.
+
 
 
 
