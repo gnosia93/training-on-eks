@@ -27,28 +27,26 @@ tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
 sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 ```
 
+
 ## 클러스터 생성 ##
+
+### 클러스터 생성 권한에 대해서 ###
 eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권한을 가지고 있어야 한다. 이번 워크샵에서는 EC2 인스턴스에 해당당 Role인 TOE_EKS_EC2_ROLE 이 AdminFullAccess 권한을 가지고 있다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
 
-로컬 PC 에서 테라폼으로 퍼블릭 및 프라이빗 서브넷 리스트를 조회한다. 
+### VPC 정보 조회 ###
+* VPC ID
 ```
-cd training-on-eks/tf
-terraform output 
+aws ec2 describe-vpcs --filters Name=tag:Name,Values=training-on-eks --query "Vpcs[].VpcId" --output text
 ```
 [결과]
 ```
-instance_public_dns = "ec2-43-203-120-143.ap-northeast-2.compute.amazonaws.com"
-private_subnet = [
-  "subnet-009f634c97979d460",
-  "subnet-05f66b53201e3c4cf",
-]
-public_subnet = [
-  "subnet-01bd51c8c77af6d59",
-  "subnet-0de148d8e62debe6d",
-]
-vscode_url = "http://ec2-43-203-120-143.ap-northeast-2.compute.amazonaws.com:8080"
+vpc-030b927274aa21417
 ```
+
+* 서브넷 ID
+```
+```  
 
 ### 클러스터 생성 ###
 [cluster-config.yaml]
@@ -61,8 +59,7 @@ metadata:
   region: ap-northeast-2
 
 vpc:
-  # VPC ID를 여기에 지정해야 합니다.
-  id: "vpc-your-actual-vpc-id"
+  id: vpc-030b927274aa21417           # VPC ID를 여기에 지정해야 합니다. 
   subnets:
     private:
       subnet-009f634c97979d460: { }
