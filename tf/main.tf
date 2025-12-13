@@ -222,9 +222,11 @@ resource "aws_instance" "x86_box" {
 #!/bin/bash
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
-nohup code-server --bind-addr 0.0.0.0:8080 --auth none &
+echo "nohup code-server --bind-addr 0.0.0.0:8080 --auth none &" | tee -a ~/.bashrc 
 EC2_USER_SCRIPT
 
+# 인스턴스 재부팅 명령어 실행
+reboot
 _DATA
 
   tags = {
