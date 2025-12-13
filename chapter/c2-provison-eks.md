@@ -30,7 +30,7 @@ sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 
 ## 클러스터 생성 ##
 
-### 클러스터 생성 권한에 대해서 ###
+### 클러스터 생성 권한 ###
 eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권한을 가지고 있어야 한다. 이번 워크샵에서는 EC2 인스턴스에 해당당 Role인 TOE_EKS_EC2_ROLE 이 AdminFullAccess 권한을 가지고 있다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
 
