@@ -18,6 +18,36 @@ curl -fsSL raw.githubusercontent.com{KARPENTER_VERSION}/website/content/en/docs/
 # IAM 정책을 AWS에 생성합니다.
 aws iam create-policy --policy-name KarpenterControllerPolicy-${CLUSTER_NAME} --policy-document file://karpenter-policy.json
 
+# Trust policy 파일 다운로드 (EKS 클러스터 OIDC URL 사용)
+OIDC_PROVIDER=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.identity.oidc.issuer" --output text | sed -e 's/^https:\/\///')
+
+cat <<EOF > trust-policy.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/${OIDC_PROVIDER}"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "${OIDC_PROVIDER}:aud": "sts.amazonaws.com",
+          "${OIDC_PROVIDER}:sub": "system:serviceaccount:${KARPENTER_NAMESPACE}:karpenter"
+        }
+      }
+    }
+  ]
+}
+EOF
+
+# IAM 역할 생성
+aws iam create-role --role-name KarpenterControllerRole-${CLUSTER_NAME} --assume-role-policy-document file://trust-policy.json
+
+# 역할에 정책 연결
+aws iam attach-role-policy --role-name KarpenterControllerRole-${CLUSTER_NAME} --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/KarpenterControllerPolicy-${CLUSTER_NAME}
+
 ```
 
 
