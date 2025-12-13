@@ -178,35 +178,14 @@ resource "aws_instance" "graviton_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-EC2_HOME="/home/ec2-user"
-CONFIG_FILE="$EC2_HOME/.config/code-server/config.yaml"
-
-echo "Starting code-server installation as root..."
 curl -fsSL https://code-server.dev/install.sh | sh
 systemctl enable --now code-server@ec2-user
 systemctl start --now code-server@ec2-user
 
-echo "Waiting for config file $CONFIG_FILE to be created..."
-MAX_RETRIES=10
-RETRY_COUNT=0
-
-while [ ! -f "$CONFIG_FILE" ] && [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    sleep 2
-    ((RETRY_COUNT++))
-done
-
-if [ -f "$CONFIG_FILE" ]; then
-    echo "Updating bind-addr and auth in $CONFIG_FILE"
-    sed -i 's/127.0.0.1/0.0.0.0/g' "$CONFIG_FILE"
-    sed -i 's/auth: password/auth: none/g' "$CONFIG_FILE"    
-    chown ec2-user:ec2-user "$CONFIG_FILE"
-else
-    echo "Error: Config file not found after retries. Manual intervention needed."
-fi
+sed -i 's/127.0.0.1/0.0.0.0/g' /home/ec2-user/.config/code-server/config.yaml
+sed -i 's/auth: password/auth: none/g' /home/ec2-user/.config/code-server/config.yaml
 
 systemctl restart code-server@ec2-user
-echo "user data script ended successfully."
-
 _DATA
 
   tags = {
@@ -236,7 +215,11 @@ resource "aws_instance" "x86_box" {
 curl -fsSL https://code-server.dev/install.sh | sh
 systemctl enable --now code-server@ec2-user
 systemctl start --now code-server@ec2-user
-echo "user data script ended successfully."
+
+sed -i 's/127.0.0.1/0.0.0.0/g' /home/ec2-user/.config/code-server/config.yaml
+sed -i 's/auth: password/auth: none/g' /home/ec2-user/.config/code-server/config.yaml
+
+systemctl restart code-server@ec2-user
 _DATA
 
   tags = {
