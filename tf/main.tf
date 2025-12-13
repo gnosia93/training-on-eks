@@ -114,7 +114,7 @@ resource "aws_iam_instance_profile" "eks_creator_profile" {
 
 
 # ------------------------------------------------
-# Graviton EC2 인스턴스 구성
+# Graviton / X86 EC2 인스턴스 구성
 # ------------------------------------------------
 
 data "aws_ami" "al2023_arm64" {
@@ -125,6 +125,17 @@ data "aws_ami" "al2023_arm64" {
     values = ["al2023-ami-*-kernel-6.1-arm64"]
   }
 }
+
+data "aws_ami" "al2023_x86_64" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023.*-kernel-6.1-x86_64"]
+  }
+}
+
 
 resource "aws_security_group" "instance_sg" {
   vpc_id = aws_vpc.main.id
@@ -174,6 +185,32 @@ sudo su - ec2-user -c "nohup code-server --bind-addr 0.0.0.0:8080 --auth none > 
 _DATA
 
   tags = {
-    Name = "code-server"
+    Name = "code-server-graviton"
   }
 }
+
+resource "aws_instance" "x86_box" {
+  ami                         = data.aws_ami.al2023_x86_64.id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public[0].id
+  vpc_security_group_ids      = [aws_security_group.instance_sg.id]
+  associate_public_ip_address = true
+  key_name                    = var.key_name
+
+  # IAM Instance Profile 연결 <--- EC2에 권한을 부여합니다.
+  iam_instance_profile = aws_iam_instance_profile.eks_creator_profile.name
+
+  user_data = <<_DATA
+#!/bin/bash
+echo "install code-server ..."
+sudo su - ec2-user -c "curl -fsSL https://code-server.dev/install.sh | sh"
+sudo su - ec2-user -c "nohup code-server --bind-addr 0.0.0.0:8080 --auth none > /home/ec2-user/code-server.log 2>&1 &"
+
+_DATA
+
+  tags = {
+    Name = "code-server-x86"
+  }
+}
+
+
