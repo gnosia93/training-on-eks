@@ -186,7 +186,7 @@ resource "aws_instance" "graviton_box" {
 #!/bin/bash
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
-echo "nohup code-server --bind-addr 0.0.0.0:8080 --auth none &" | tee -a /home/ec2-user/.bashrc 
+nohup code-server --bind-addr 0.0.0.0:8080 --auth none &  
 EC2_USER_SCRIPT
 
 _DATA
@@ -217,7 +217,7 @@ resource "aws_instance" "x86_box" {
 #!/bin/bash
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
-echo "nohup code-server --bind-addr 0.0.0.0:8080 --auth none &" | tee -a /home/ec2-user/.bashrc 
+nohup code-server --bind-addr 0.0.0.0:8080 --auth none & 
 EC2_USER_SCRIPT
 
 _DATA
