@@ -4,21 +4,12 @@
 
 ## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 
-### 카펜터 호환성 확인하기 ###
-
-아래의 도표는 카펜터와 EKS 의 호환성 메트릭로, 카펜터를 EKS 클러스터에 배포하기 전에 꼭 확인해야 한다.
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
-
+본 워크샵에서 사용하는 EKS 클러스트의 버전은 1.33 으로 아래의 명령어를 통해서 확인할 수 있다. 
 ```
 aws eks describe-cluster --name training-on-eks --query cluster.version
 ```
-[결과]
-```
-"1.33"
-```
-현재 사용하는 있는 EKS 클러스터 버전은 1.33 으로 1.5 버전 이상의 카펜터를 설치해야 한다. 
-
-
+카펜터를 설치하기 전에 가장 먼저해야 하는 일은 EKS 클러스터와의 호환성을 확인하는 것으로, 버전 1.5 이상의 카펜터가 필요한 것을 확인할 수 있다.
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
 
 
 
