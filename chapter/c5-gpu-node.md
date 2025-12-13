@@ -24,7 +24,9 @@ AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 K8S_VERSION=$(aws eks describe-cluster --name training-on-eks --query "cluster.version" --output text)
 ```
 
-
+```
+https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterControllerRole.sh
+```
 
 
 
