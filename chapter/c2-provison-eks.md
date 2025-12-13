@@ -202,7 +202,7 @@ aws ec2 describe-subnets \
 +-----------------+----------------------------+--------------------+
 ```
 
-서브넷에 대해서 태깅한다.
+퍼브릭 서브넷을 태깅한다.
 ```
 aws ec2 create-tags --resources subnet-026bdcdeea230b1b3 subnet-0e246ca66e5c239a7 subnet-05cf75c4d41ccc74b \
   --tags Key=kubernetes.io/role/elb,Value=1 \
@@ -211,7 +211,9 @@ aws ec2 create-tags --resources subnet-026bdcdeea230b1b3 subnet-0e246ca66e5c239a
 aws ec2 create-tags --resources subnet-026bdcdeea230b1b3 subnet-0e246ca66e5c239a7 subnet-05cf75c4d41ccc74b \
   --tags Key=kubernetes.io/cluster/training-on-eks,Value=owned \
   --region ap-northeast-2
-
+```
+프라이빗 서브넷을 태깅한다. 
+```
 aws ec2 create-tags --resources subnet-099acb450b8051d06 subnet-0e521bd6de96308b8 subnet-010db3e6a658817d6 \
   --tags Key=kubernetes.io/role/internal-elb,Value=1 \
   --region ap-northeast-2
