@@ -184,16 +184,11 @@ resource "aws_instance" "graviton_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-sudo -u ec2-user -i <<EC2_USER_EOF
+sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
-sudo systemctl enable --now code-server@ec2-user
-sudo systemctl start --now code-server@ec2-user
+echo "nohup code-server --bind-addr 0.0.0.0:8080 --auth none &" | tee -a /home/ec2-user/.bashrc 
+EC2_USER_SCRIPT
 
-sed -i 's/127.0.0.1/0.0.0.0/g' /home/ec2-user/.config/code-server/config.yaml
-sed -i 's/auth: password/auth: none/g' /home/ec2-user/.config/code-server/config.yaml
-
-sudo systemctl restart code-server@ec2-user
-EC2_USER_EOF
 _DATA
 
   tags = {
