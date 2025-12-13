@@ -225,6 +225,12 @@ resource "aws_instance" "x86_box" {
   # IAM Instance Profile 연결 <--- EC2에 권한을 부여합니다.
   iam_instance_profile = aws_iam_instance_profile.eks_creator_profile.name
 
+  // 루트 볼륨 크기를 30GB로 설정
+  root_block_device {
+    volume_size = 30 # GiB 단위
+    volume_type = "gp3" # 최신 gp3 볼륨 타입 사용
+  }
+
   user_data = <<_DATA
 #!/bin/bash
 curl -fsSL https://code-server.dev/install.sh | sh
