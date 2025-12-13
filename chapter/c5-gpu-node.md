@@ -1,5 +1,9 @@
 
 ## 카펜터 설치하기 ##
+
+### Compatibility Matrix ###
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
+
 ```
 export CLUSTER_NAME="YOUR_EKS_CLUSTER_NAME" # EKS 클러스터 이름으로 변경 (예: my-eks-cluster)
 export AWS_REGION="ap-northeast-2"         # AWS 리전으로 변경
