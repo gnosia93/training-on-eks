@@ -50,12 +50,21 @@ vpc-030b927274aa21417
 ```
 aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
-    --query "Subnets[*].SubnetId" \
-    --output text
+    --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
+    --output table
 ```  
 [결과]
 ```
-subnet-09b59089486e54bfd        subnet-0e521bd6de96308b8        subnet-099acb450b8051d06        subnet-010db3e6a658817d6
+----------------------------------------------------------------------
+|                           DescribeSubnets                          |
++-----------------+----------------------------+---------------------+
+|       AZ        |            ID              |        Name         |
++-----------------+----------------------------+---------------------+
+|  ap-northeast-2d|  subnet-09b59089486e54bfd  |  TOE-priv-subnet-4  |
+|  ap-northeast-2b|  subnet-0e521bd6de96308b8  |  TOE-priv-subnet-2  |
+|  ap-northeast-2a|  subnet-099acb450b8051d06  |  TOE-priv-subnet-1  |
+|  ap-northeast-2c|  subnet-010db3e6a658817d6  |  TOE-priv-subnet-3  |
++-----------------+----------------------------+---------------------+
 ```
 
 
@@ -73,13 +82,11 @@ vpc:
   id: vpc-030b927274aa21417           # VPC ID를 여기에 지정해야 합니다. 
   subnets:
     private:
-      subnet-09b59089486e54bfd: { }
-      subnet-0e521bd6de96308b8: { }
-      subnet-099acb450b8051d06: { }
-      subnet-010db3e6a658817d6: { }
+      subnet-099acb450b8051d06: { az: ap-northeast-2a }
+      subnet-0e521bd6de96308b8: { az: ap-northeast-2b }
+      subnet-010db3e6a658817d6: { az: ap-northeast-2c }      
 
-# 관리형 노드 그룹을 정의합니다.
-managedNodeGroups:
+managedNodeGroups:                    # 관리형 노드 그룹을 정의합니다.
   - name: ng-arm
     instanceType: c7g.2xlarge
     minSize: 2
