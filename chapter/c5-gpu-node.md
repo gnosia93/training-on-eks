@@ -6,6 +6,7 @@
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
 
+현재 사용하는 있는 EKS 클러스터 버전은 1.33 으로 
 ```
 aws eks describe-cluster --name training-on-eks --query cluster.version
 ```
@@ -13,6 +14,9 @@ aws eks describe-cluster --name training-on-eks --query cluster.version
 ```
 "1.33"
 ```
+
+
+
 
 
 ```
