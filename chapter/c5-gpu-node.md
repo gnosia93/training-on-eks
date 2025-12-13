@@ -9,7 +9,8 @@ export KARPENTER_NAMESPACE="karpenter"
 # OIDC는 Karpenter가 EKS와 통신하기 위한 필수 요구사항입니다.
 eksctl utils associate-iam-oidc-provider --cluster $CLUSTER_NAME --approve --region $AWS_REGION
 
-
+2단계: Karpenter IAM 역할 및 정책 수동 설정 (가장 중요)
+Karpenter 컨트롤러가 EC2 인스턴스를 생성/삭제할 수 있는 권한을 부여해야 합니다. 이 단계는 스크립트로 완전히 자동화하기 어렵기 때문에 수동으로 진행합니다.
 
 ```
 
