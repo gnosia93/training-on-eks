@@ -13,13 +13,13 @@ variable "vpc_cidr_block" {
 variable "graviton_type" {
   description = "EC2 Instance Type (Graviton)"
   type        = string
-  default     = "c7g.2xlarge"
+  default     = "c7g.xlarge"
 }
 
 variable "x86_type" {
   description = "EC2 Instance Type (x86)"
   type        = string
-  default     = "c6i.2xlarge"
+  default     = "c6i.xlarge"
 }
 
 variable "key_name" {
