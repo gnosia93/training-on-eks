@@ -50,16 +50,51 @@ public_subnet = [
 vscode_url = "http://ec2-43-203-120-143.ap-northeast-2.compute.amazonaws.com:8080"
 ```
 
-eksctl 파라미터 값인 public 및 private-subnets 값을 조회된 값으로 수정한 후 클러스터를 생성한다.  
+### 클러스터 생성 ###
+[cluster-config.yaml]
 ```
-eksctl create cluster --name=training-on-eks \
-  --enable-auto-mode \
-  --version=1.33 \
-  --region=ap-northeast-2 \
-  --vpc-public-subnets="subnet-01bd51c8c77af6d59,subnet-0de148d8e62debe6d" \
-  --vpc-private-subnets="subnet-009f634c97979d460,subnet-05f66b53201e3c4cf" 
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: training-on-eks
+  version: "1.33"
+  region: ap-northeast-2
 
-# 퍼블릭 서브넷에 태그추가 
+vpc:
+  # VPC ID를 여기에 지정해야 합니다.
+  id: "vpc-your-actual-vpc-id"
+  subnets:
+    # public 서브넷 정의를 제거합니다.
+    private:
+      # 실제 서브넷 ID와 해당 AZ로 변경하세요. (NAT Gateway가 구성되어 있어야 함)
+      subnet-009f634c97979d460: { az: ap-northeast-2a }
+      subnet-05f66b53201e3c4cf: { az: ap-northeast-2c }
+
+# 관리형 노드 그룹을 정의합니다.
+managedNodeGroups:
+  - name: ng-arm
+    instanceType: c7g.2xlarge
+    minSize: 2
+    maxSize: 2
+    desiredCapacity: 2
+    amiFamily: AmazonLinux2_ARM_64
+    privateNetworking: true     # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
+   
+  - name: ng-x86
+    instanceType: c6i.2xlarge
+    minSize: 2
+    maxSize: 2
+    desiredCapacity: 2
+    privateNetworking: true     # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
+  
+``
+클러스터를 생성한다. 
+```
+eksctl create cluster -f cluster-config.yaml
+```
+
+### 서브넷 태깅 ### 
+```
 aws ec2 create-tags --resources subnet-01bd51c8c77af6d59 subnet-0de148d8e62debe6d \
   --tags Key=kubernetes.io/role/elb,Value=1 \
   --region ap-northeast-2
