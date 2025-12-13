@@ -182,6 +182,18 @@ echo "install code-server ..."
 sudo su - ec2-user -c "curl -fsSL https://code-server.dev/install.sh | sh"
 sudo su - ec2-user -c "nohup code-server --bind-addr 0.0.0.0:8080 --auth none > /home/ec2-user/code-server.log 2>&1 &"
 
+sudo su - ec2-user -c "ARCH=arm64"
+sudo su - ec2-user -c "curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/$ARCH/kubectl"
+sudo su - ec2-user -c "chmod +x ./kubectl"
+sudo su - ec2-user -c "mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH"
+sudo su - ec2-user -c "echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc"
+
+sudo su - ec2-user -c "PLATFORM=$(uname -s)_$ARCH"
+sudo su - ec2-user -c "curl -sLO 'https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz'"
+sudo su - ec2-user -c "tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz"
+sudo su - ec2-user -c "sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl"
+
+
 _DATA
 
   tags = {
@@ -205,6 +217,17 @@ resource "aws_instance" "x86_box" {
 echo "install code-server ..."
 sudo su - ec2-user -c "curl -fsSL https://code-server.dev/install.sh | sh"
 sudo su - ec2-user -c "nohup code-server --bind-addr 0.0.0.0:8080 --auth none > /home/ec2-user/code-server.log 2>&1 &"
+
+sudo su - ec2-user -c "ARCH=amd64"
+sudo su - ec2-user -c "curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/$ARCH/kubectl"
+sudo su - ec2-user -c "chmod +x ./kubectl"
+sudo su - ec2-user -c "mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH"
+sudo su - ec2-user -c "echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc"
+
+sudo su - ec2-user -c "PLATFORM=$(uname -s)_$ARCH"
+sudo su - ec2-user -c "curl -sLO 'https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz'"
+sudo su - ec2-user -c "tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz"
+sudo su - ec2-user -c "sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl"
 
 _DATA
 
