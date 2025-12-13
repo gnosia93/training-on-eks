@@ -1,8 +1,3 @@
-<< 아키텍처 다이어그램 >> 
-
-* graviton 에만 kubectl, eksctl 를 설치한다. 
-
-
 ## [kubectl 및 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
 그라비톤을 사용하여 EKS 클러스터를 관리할 예정이므로, code-server-graviton 에만 kubectl 과 eksctl을 설치한다. 
  
