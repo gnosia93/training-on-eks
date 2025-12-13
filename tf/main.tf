@@ -220,10 +220,20 @@ sudo systemctl enable --now code-server@$USER
 sudo systemctl start --now code-server@$USER
 
 CONFIG_FILE="/home/ec2-user/.config/code-server/config.yaml"
+echo "Waiting for config file $CONFIG_FILE to be created..."
+MAX_RETRIES=10
+RETRY_COUNT=0
+while [ ! -f "$CONFIG_FILE" ] && [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    sleep 2
+    ((RETRY_COUNT++))
+done
+
 if [ -f "$CONFIG_FILE" ]; then
     echo "Updating bind-addr in $CONFIG_FILE"
     sed -i 's/127.0.0.1/0.0.0.0/g' "$CONFIG_FILE"
     sed -i 's/auth: password/auth: none/g' "$CONFIG_FILE"
+else
+    echo "Error: Config file not found after retries. Manual intervention needed."
 fi
 
 sudo systemctl restart code-server@$USER
