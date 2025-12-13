@@ -109,6 +109,77 @@ managedNodeGroups:                    # 관리형 노드 그룹을 정의합니�
 ```
 eksctl create cluster -f cluster-config.yaml 
 ```
+[결과]
+```
+2025-12-13 13:33:19 [ℹ]  eksctl version 0.220.0
+2025-12-13 13:33:19 [ℹ]  using region ap-northeast-2
+2025-12-13 13:33:20 [✔]  using existing VPC (vpc-030b927274aa21417) and subnets (private:map[subnet-010db3e6a658817d6:{subnet-010db3e6a658817d6 ap-northeast-2c 10.0.6.0/24 0 } subnet-099acb450b8051d06:{subnet-099acb450b8051d06 ap-northeast-2a 10.0.4.0/24 0 } subnet-0e521bd6de96308b8:{subnet-0e521bd6de96308b8 ap-northeast-2b 10.0.5.0/24 0 }] public:map[])
+2025-12-13 13:33:20 [!]  custom VPC/subnets will be used; if resulting cluster doesn't function as expected, make sure to review the configuration of VPC/subnets
+2025-12-13 13:33:20 [ℹ]  nodegroup "ng-arm" will use "" [AmazonLinux2023/1.33]
+2025-12-13 13:33:20 [ℹ]  nodegroup "ng-x86" will use "" [AmazonLinux2023/1.33]
+2025-12-13 13:33:20 [!]  Auto Mode will be enabled by default in an upcoming release of eksctl. This means managed node groups and managed networking add-ons will no longer be created by default. To maintain current behavior, explicitly set 'autoModeConfig.enabled: false' in your cluster configuration. Learn more: https://eksctl.io/usage/auto-mode/
+2025-12-13 13:33:20 [ℹ]  using Kubernetes version 1.33
+2025-12-13 13:33:20 [ℹ]  creating EKS cluster "training-on-eks" in "ap-northeast-2" region with managed nodes
+2025-12-13 13:33:20 [ℹ]  2 nodegroups (ng-arm, ng-x86) were included (based on the include/exclude rules)
+2025-12-13 13:33:20 [ℹ]  will create a CloudFormation stack for cluster itself and 2 managed nodegroup stack(s)
+2025-12-13 13:33:20 [ℹ]  if you encounter any issues, check CloudFormation console or try 'eksctl utils describe-stacks --region=ap-northeast-2 --cluster=training-on-eks'
+2025-12-13 13:33:20 [ℹ]  Kubernetes API endpoint access will use default of {publicAccess=true, privateAccess=false} for cluster "training-on-eks" in "ap-northeast-2"
+2025-12-13 13:33:20 [ℹ]  CloudWatch logging will not be enabled for cluster "training-on-eks" in "ap-northeast-2"
+2025-12-13 13:33:20 [ℹ]  you can enable it with 'eksctl utils update-cluster-logging --enable-types={SPECIFY-YOUR-LOG-TYPES-HERE (e.g. all)} --region=ap-northeast-2 --cluster=training-on-eks'
+2025-12-13 13:33:20 [ℹ]  default addons coredns, metrics-server, vpc-cni, kube-proxy were not specified, will install them as EKS addons
+2025-12-13 13:33:20 [ℹ]  
+2 sequential tasks: { create cluster control plane "training-on-eks", 
+    2 sequential sub-tasks: { 
+        2 sequential sub-tasks: { 
+            1 task: { create addons },
+            wait for control plane to become ready,
+        },
+        2 parallel sub-tasks: { 
+            create managed nodegroup "ng-arm",
+            create managed nodegroup "ng-x86",
+        },
+    } 
+}
+2025-12-13 13:33:20 [ℹ]  building cluster stack "eksctl-training-on-eks-cluster"
+2025-12-13 13:33:20 [!]  1 error(s) occurred and cluster hasn't been created properly, you may wish to check CloudFormation console
+2025-12-13 13:33:20 [ℹ]  to cleanup resources, run 'eksctl delete cluster --region=ap-northeast-2 --name=training-on-eks'
+2025-12-13 13:33:20 [✖]  creating CloudFormation stack "eksctl-training-on-eks-cluster": operation error CloudFormation: CreateStack, https response error StatusCode: 400, RequestID: 1fb7ff59-938e-48f3-bf06-baf755736b29, AlreadyExistsException: Stack [eksctl-training-on-eks-cluster] already exists
+Error: failed to create cluster "training-on-eks"
+[ec2-user@ip-10-0-0-60 ~]$ eksctl create cluster -f cluster-config.yaml 
+2025-12-13 13:36:04 [ℹ]  eksctl version 0.220.0
+2025-12-13 13:36:04 [ℹ]  using region ap-northeast-2
+2025-12-13 13:36:05 [✔]  using existing VPC (vpc-030b927274aa21417) and subnets (private:map[subnet-010db3e6a658817d6:{subnet-010db3e6a658817d6 ap-northeast-2c 10.0.6.0/24 0 } subnet-099acb450b8051d06:{subnet-099acb450b8051d06 ap-northeast-2a 10.0.4.0/24 0 } subnet-0e521bd6de96308b8:{subnet-0e521bd6de96308b8 ap-northeast-2b 10.0.5.0/24 0 }] public:map[])
+2025-12-13 13:36:05 [!]  custom VPC/subnets will be used; if resulting cluster doesn't function as expected, make sure to review the configuration of VPC/subnets
+2025-12-13 13:36:05 [ℹ]  nodegroup "ng-arm" will use "" [AmazonLinux2023/1.33]
+2025-12-13 13:36:05 [ℹ]  nodegroup "ng-x86" will use "" [AmazonLinux2023/1.33]
+2025-12-13 13:36:05 [!]  Auto Mode will be enabled by default in an upcoming release of eksctl. This means managed node groups and managed networking add-ons will no longer be created by default. To maintain current behavior, explicitly set 'autoModeConfig.enabled: false' in your cluster configuration. Learn more: https://eksctl.io/usage/auto-mode/
+2025-12-13 13:36:05 [ℹ]  using Kubernetes version 1.33
+2025-12-13 13:36:05 [ℹ]  creating EKS cluster "training-on-eks" in "ap-northeast-2" region with managed nodes
+2025-12-13 13:36:05 [ℹ]  2 nodegroups (ng-arm, ng-x86) were included (based on the include/exclude rules)
+2025-12-13 13:36:05 [ℹ]  will create a CloudFormation stack for cluster itself and 2 managed nodegroup stack(s)
+2025-12-13 13:36:05 [ℹ]  if you encounter any issues, check CloudFormation console or try 'eksctl utils describe-stacks --region=ap-northeast-2 --cluster=training-on-eks'
+2025-12-13 13:36:05 [ℹ]  Kubernetes API endpoint access will use default of {publicAccess=true, privateAccess=false} for cluster "training-on-eks" in "ap-northeast-2"
+2025-12-13 13:36:05 [ℹ]  CloudWatch logging will not be enabled for cluster "training-on-eks" in "ap-northeast-2"
+2025-12-13 13:36:05 [ℹ]  you can enable it with 'eksctl utils update-cluster-logging --enable-types={SPECIFY-YOUR-LOG-TYPES-HERE (e.g. all)} --region=ap-northeast-2 --cluster=training-on-eks'
+2025-12-13 13:36:05 [ℹ]  default addons metrics-server, vpc-cni, kube-proxy, coredns were not specified, will install them as EKS addons
+2025-12-13 13:36:05 [ℹ]  
+2 sequential tasks: { create cluster control plane "training-on-eks", 
+    2 sequential sub-tasks: { 
+        2 sequential sub-tasks: { 
+            1 task: { create addons },
+            wait for control plane to become ready,
+        },
+        2 parallel sub-tasks: { 
+            create managed nodegroup "ng-arm",
+            create managed nodegroup "ng-x86",
+        },
+    } 
+}
+2025-12-13 13:36:05 [ℹ]  building cluster stack "eksctl-training-on-eks-cluster"
+2025-12-13 13:36:05 [ℹ]  deploying stack "eksctl-training-on-eks-cluster"
+```
+
+
 
 ### 서브넷 태깅 ### 
 ```
@@ -133,6 +204,11 @@ kubectl config current-context
 ```
 i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
 ```
+
+
+
+
+
 
 
 
@@ -177,6 +253,9 @@ securitygrouppolicies.vpcresources.k8s.aws      2025-12-09T17:19:42Z
 targetgroupbindings.eks.amazonaws.com           2025-12-09T17:21:32Z
 ```
 crd 를 조회해 보면 api 가 변경된 것을 확인할 수 있다. 노드풀의 경우 karpenter.sh 에 있으나, 노드 클래스의 경우 eks.amazonaws.com 으로 변경되었다.
+
+
+
 
 ### [gpu 노드풀 생성](https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html) ###
 
