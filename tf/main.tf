@@ -216,6 +216,7 @@ resource "aws_instance" "x86_box" {
 #!/bin/bash
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
+sudo systemctl enable --now code-server@$USER
 EC2_USER_SCRIPT
 
 _DATA
