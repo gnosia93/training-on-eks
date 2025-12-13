@@ -2,7 +2,7 @@
 이를 해결하기 위해서는 GPU 설정을 가지고 있는 신규 노드 그룹을 만들거나, 카펜터를 이용하여 동적으로 인스턴스를 프러비저닝 해 줘야 한다. 
 현재의 클러스터 설정으로는 파드에서 GPU 리소스를 요청하는 경우 해당 파드는 pending 상태에 빠지게 된다.  
 
-## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
+## [카펜터](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 
 본 워크샵에서 사용하는 EKS 클러스터의 버전은 1.33 으로 아래의 명령어를 통해서 확인할 수 있다. 
 ```
@@ -11,6 +11,14 @@ aws eks describe-cluster --name training-on-eks --query cluster.version
 카펜터를 설치하기 전에 가장 먼저해야 하는 일은 EKS 클러스터와의 호환성을 확인하는 것으로, 아래 호환성 메트릭을 보면 버전 1.5 이상의 카펜터가 필요한 것을 알 수 있다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
 
+
+### 설치하기 ###
+```
+AWS_REGION="$(aws configure list | grep region | tr -s " " | cut -d" " -f3)"
+OIDC_ENDPOINT="$(aws eks describe-cluster --name training-on-eks --query "cluster.identity.oidc.issuer" --output text)"
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+K8S_VERSION=$(aws eks describe-cluster --name training-on-eks --query "cluster.version" --output text)
+```
 
 
 
