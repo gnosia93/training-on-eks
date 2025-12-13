@@ -220,16 +220,9 @@ resource "aws_instance" "x86_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-sudo -u ec2-user -i <<EC2_USER_EOF
+sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
-sudo systemctl enable --now code-server@ec2-user
-sudo systemctl start --now code-server@ec2-user
-
-sed -i 's/127.0.0.1/0.0.0.0/g' /home/ec2-user/.config/code-server/config.yaml
-sed -i 's/auth: password/auth: none/g' /home/ec2-user/.config/code-server/config.yaml
-
-sudo systemctl restart code-server@ec2-user
-EC2_USER_EOF
+EC2_USER_SCRIPT
 _DATA
 
   tags = {
