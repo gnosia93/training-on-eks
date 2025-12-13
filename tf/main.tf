@@ -214,31 +214,46 @@ resource "aws_instance" "x86_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-sudo -u ec2-user -i <<'EOF'
-curl -fsSL https://code-server.dev/install.sh | sh
-sudo systemctl enable --now code-server@$USER
-sudo systemctl start --now code-server@$USER
+EC2_HOME="/home/ec2-user"
+CONFIG_FILE="$EC2_HOME/.config/code-server/config.yaml"
 
-CONFIG_FILE="/home/ec2-user/.config/code-server/config.yaml"
+echo "Starting code-server installation as root..."
+
+# 1. code-server 설치 (root 권한으로 RPM 패키지 설치)
+curl -fsSL code-server.dev | sh
+
+# 2. code-server 서비스 활성화 및 시작 (systemctl은 root 권한으로 실행되어야 함)
+# code-server@ec2-user 서비스 인스턴스를 대상으로 합니다.
+systemctl enable --now code-server@ec2-user
+systemctl start --now code-server@ec2-user
+
 echo "Waiting for config file $CONFIG_FILE to be created..."
 MAX_RETRIES=10
 RETRY_COUNT=0
+
+# 3. 설정 파일 생성 대기
 while [ ! -f "$CONFIG_FILE" ] && [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     sleep 2
     ((RETRY_COUNT++))
 done
 
+# 4. 파일 존재 확인 및 수정
 if [ -f "$CONFIG_FILE" ]; then
-    echo "Updating bind-addr in $CONFIG_FILE"
+    echo "Updating bind-addr and auth in $CONFIG_FILE"
+    # root 권한으로 파일 수정
     sed -i 's/127.0.0.1/0.0.0.0/g' "$CONFIG_FILE"
     sed -i 's/auth: password/auth: none/g' "$CONFIG_FILE"
+    
+    # 설치 스크립트가 이미 소유권을 설정했겠지만, 확실하게 ec2-user 소유로 변경
+    chown ec2-user:ec2-user "$CONFIG_FILE"
 else
     echo "Error: Config file not found after retries. Manual intervention needed."
 fi
 
-sudo systemctl restart code-server@$USER
-echo "user data script ended.."
-EOF
+# 5. 변경된 설정을 적용하기 위해 서비스 재시작
+systemctl restart code-server@ec2-user
+
+echo "user data script ended successfully."
 _DATA
 
   tags = {
