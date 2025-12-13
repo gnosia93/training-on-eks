@@ -187,6 +187,7 @@ resource "aws_instance" "graviton_box" {
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh && \
 sudo systemctl enable --now code-server@ec2-user && \
+sleep 30 && \
 sed -i 's/127.0.0.1/0.0.0.0/g; s/auth: password/auth: none/g' /home/ec2-user/.config/code-server/config.yaml
 EC2_USER_SCRIPT
 
