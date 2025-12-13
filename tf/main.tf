@@ -222,10 +222,8 @@ resource "aws_instance" "x86_box" {
 #!/bin/bash
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
 curl -fsSL https://code-server.dev/install.sh | sh
+nohup code-server --bind-addr 0.0.0.0:8080 --auth none &
 EC2_USER_SCRIPT
-
-systemctl enable --now code-server@ec2-user
-systemctl start --now code-server@ec2-user
 
 _DATA
 
