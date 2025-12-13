@@ -25,6 +25,10 @@ K8S_VERSION=$(aws eks describe-cluster --name training-on-eks --query "cluster.v
 ```
 
 ```
+https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterNodeRole.sh
+```
+
+```
 https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterControllerRole.sh
 ```
 
