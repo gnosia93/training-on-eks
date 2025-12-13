@@ -4,8 +4,16 @@
 
 ## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 
-### Compatibility Matrix ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
+
+```
+aws eks describe-cluster --name training-on-eks --query cluster.version
+```
+[결과]
+```
+"1.33"
+```
+
 
 ```
 export CLUSTER_NAME="YOUR_EKS_CLUSTER_NAME" # EKS 클러스터 이름으로 변경 (예: my-eks-cluster)
