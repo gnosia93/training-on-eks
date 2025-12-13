@@ -22,7 +22,8 @@ code server 에 접속하여 kubectl 과 eksctl을 설치한다.
  
 1. kubectl 을 설치한다 
 ```
-curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/arm64/kubectl
+ARCH=arm64     # amd64 or arm64
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/$ARCH/kubectl
 chmod +x ./kubectl
 mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
 echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
@@ -33,7 +34,7 @@ kubectl version --client
 2. eksctl 을 설치한다.
 ```
 # for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
-ARCH=arm64
+ARCH=arm64     # amd64 or arm64
 PLATFORM=$(uname -s)_$ARCH
 curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
 
