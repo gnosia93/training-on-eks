@@ -220,7 +220,6 @@ sed -i 's/127.0.0.1/0.0.0.0/g; s/auth: password/auth: none/g' /home/ec2-user/.co
 EC2_USER_SCRIPT
 
 sudo systemctl start code-server@ec2-user
-
 _DATA
 
   tags = {
