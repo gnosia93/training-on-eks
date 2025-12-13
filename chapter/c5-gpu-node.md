@@ -2,7 +2,7 @@
 이를 해결하기 위해서는 GPU 설정을 가지고 있는 신규 노드 그룹을 만들거나, 카펜터를 이용하여 동적으로 인스턴스를 프러비저닝 해 줘야 한다. 
 현재의 클러스터 설정으로는 파드에서 GPU 리소스를 요청하는 경우 해당 파드는 pending 상태에 빠지게 된다.  
 
-## 카펜터 설치하기 ##
+## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 
 ### Compatibility Matrix ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
