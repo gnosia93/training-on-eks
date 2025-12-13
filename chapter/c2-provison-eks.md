@@ -197,13 +197,35 @@ aws ec2 create-tags --resources subnet-009f634c97979d460 subnet-05f66b53201e3c4c
 ```
 
 ### 생성된 클러스터 확인 ### 
+* 현재 컨텍스트(클러스터)
 ```
 kubectl config current-context
 ```
 [결과]
 ```
-i-0693a2a2c5ae6c4dd@training-on-eks.ap-northeast-2.eksctl.io
+i-048265208fb345ec5@training-on-eks.ap-northeast-2.eksctl.io
 ```
+* 노드그룹
+```
+eksctl get nodegroup --cluster=training-on-eks --region=ap-northeast-2
+```
+```
+CLUSTER         NODEGROUP       STATUS  CREATED                 MIN SIZE        MAX SIZE        DESIRED CAPACITY        INSTANCE TYPE   IMAGE ID                ASG NAME                                  TYPE
+training-on-eks ng-arm          ACTIVE  2025-12-13T13:47:35Z    2               2               2                       c7g.2xlarge     AL2023_ARM_64_STANDARD  eks-ng-arm-a2cd8bfb-ba01-1252-3342-5cabc45b0b0b    managed
+training-on-eks ng-x86          ACTIVE  2025-12-13T13:47:34Z    2               2               2                       c6i.2xlarge     AL2023_x86_64_STANDARD  eks-ng-x86-e8cd8bfb-ba1b-0f17-c83a-0db24ba49f87    managed
+```
+* 노드 리스트
+```
+kubectl get nodes -o wide 
+```
+```
+NAME                                            STATUS   ROLES    AGE     VERSION               INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION                    CONTAINER-RUNTIME
+ip-10-0-4-148.ap-northeast-2.compute.internal   Ready    <none>   7m27s   v1.33.5-eks-ecaa3a6   10.0.4.148    <none>        Amazon Linux 2023.9.20251208   6.12.58-82.121.amzn2023.aarch64   containerd://2.1.5
+ip-10-0-4-191.ap-northeast-2.compute.internal   Ready    <none>   7m31s   v1.33.5-eks-ecaa3a6   10.0.4.191    <none>        Amazon Linux 2023.9.20251208   6.12.58-82.121.amzn2023.x86_64    containerd://2.1.5
+ip-10-0-6-140.ap-northeast-2.compute.internal   Ready    <none>   7m32s   v1.33.5-eks-ecaa3a6   10.0.6.140    <none>        Amazon Linux 2023.9.20251208   6.12.58-82.121.amzn2023.x86_64    containerd://2.1.5
+ip-10-0-6-224.ap-northeast-2.compute.internal   Ready    <none>   7m27s   v1.33.5-eks-ecaa3a6   10.0.6.224    <none>        Amazon Linux 2023.9.20251208   6.12.58-82.121.amzn2023.aarch64   containerd://2.1.5
+```
+
 
 
 
