@@ -180,16 +180,39 @@ Error: failed to create cluster "training-on-eks"
 ### 서브넷 태깅 ### 
 
 EKS 로드 밸런서와 인그레스는 서브넷 태그 정보를 이용하여, 프로비저닝 되는 위치를 정하게 된다. 퍼블릭 서브넷에는 kubernetes.io/role/elb=1 과 kubernetes.io/cluster/{cluster name}=owned 값을 설정하도록 하고 프라이빗 서브넷에는 kubernetes.io/role/internal-elb=1 을 설정하도록 한다.   
+
+#### 퍼블릭 서브넷 리스트 조회 ####
 ```
-aws ec2 create-tags --resources subnet-01bd51c8c77af6d59 subnet-0de148d8e62debe6d \
+aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=TOE-pub-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
+    --output table
+```  
+[결과]
+```
+---------------------------------------------------------------------
+|                          DescribeSubnets                          |
++-----------------+----------------------------+--------------------+
+|       AZ        |            ID              |       Name         |
++-----------------+----------------------------+--------------------+
+|  ap-northeast-2a|  subnet-026bdcdeea230b1b3  |  TOE-pub-subnet-1  |
+|  ap-northeast-2b|  subnet-0e246ca66e5c239a7  |  TOE-pub-subnet-2  |
+|  ap-northeast-2d|  subnet-024c415fd4c7b2ae2  |  TOE-pub-subnet-4  |
+|  ap-northeast-2c|  subnet-05cf75c4d41ccc74b  |  TOE-pub-subnet-3  |
++-----------------+----------------------------+--------------------+
+```
+
+서브넷에 대해서 태깅한다.
+```
+aws ec2 create-tags --resources subnet-026bdcdeea230b1b3 subnet-0e246ca66e5c239a7 subnet-05cf75c4d41ccc74b \
   --tags Key=kubernetes.io/role/elb,Value=1 \
   --region ap-northeast-2
 
-aws ec2 create-tags --resources subnet-01bd51c8c77af6d59 subnet-0de148d8e62debe6d \
+aws ec2 create-tags --resources subnet-026bdcdeea230b1b3 subnet-0e246ca66e5c239a7 subnet-05cf75c4d41ccc74b \
   --tags Key=kubernetes.io/cluster/training-on-eks,Value=owned \
   --region ap-northeast-2
 
-aws ec2 create-tags --resources subnet-009f634c97979d460 subnet-05f66b53201e3c4cf \
+aws ec2 create-tags --resources subnet-099acb450b8051d06 subnet-0e521bd6de96308b8 subnet-010db3e6a658817d6 \
   --tags Key=kubernetes.io/role/internal-elb,Value=1 \
   --region ap-northeast-2
 ```
