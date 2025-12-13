@@ -8,7 +8,7 @@
 ```
 aws eks describe-cluster --name training-on-eks --query cluster.version
 ```
-카펜터를 설치하기 전에 가장 먼저해야 하는 일은 EKS 클러스터와의 호환성을 확인하는 것으로, 아래 호환성 메트릭을 보면 버전 1.5 이상의 카펜터가 필요한 것을 확인할 수 있다.
+카펜터를 설치하기 전에 가장 먼저해야 하는 일은 EKS 클러스터와의 호환성을 확인하는 것으로, 아래 호환성 메트릭을 보면 버전 1.5 이상의 카펜터가 필요한 것을 알 수 있다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
 
 
