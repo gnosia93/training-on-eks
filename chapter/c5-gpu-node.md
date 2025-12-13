@@ -12,6 +12,12 @@ eksctl utils associate-iam-oidc-provider --cluster $CLUSTER_NAME --approve --reg
 2단계: Karpenter IAM 역할 및 정책 수동 설정 (가장 중요)
 Karpenter 컨트롤러가 EC2 인스턴스를 생성/삭제할 수 있는 권한을 부여해야 합니다. 이 단계는 스크립트로 완전히 자동화하기 어렵기 때문에 수동으로 진행합니다.
 
+# karpenter-policy.json 파일을 다운로드합니다.
+curl -fsSL raw.githubusercontent.com{KARPENTER_VERSION}/website/content/en/docs/getting-started/getting-started-with-eks/cloudformation.yaml | jq -r '.Resources.KarpenterControllerPolicy.Properties.PolicyDocument' > karpenter-policy.json
+
+# IAM 정책을 AWS에 생성합니다.
+aws iam create-policy --policy-name KarpenterControllerPolicy-${CLUSTER_NAME} --policy-document file://karpenter-policy.json
+
 ```
 
 
