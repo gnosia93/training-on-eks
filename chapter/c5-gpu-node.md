@@ -4,7 +4,7 @@
 
 ## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 
-본 워크샵에서 사용하는 EKS 클러스트의 버전은 1.33 으로 아래의 명령어를 통해서 확인할 수 있다. 
+본 워크샵에서 사용하는 EKS 클러스터의 버전은 1.33 으로 아래의 명령어를 통해서 확인할 수 있다. 
 ```
 aws eks describe-cluster --name training-on-eks --query cluster.version
 ```
