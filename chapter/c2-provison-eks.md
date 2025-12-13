@@ -80,7 +80,7 @@ metadata:
 vpc:
   id: vpc-030b927274aa21417           # VPC ID를 여기에 지정해야 합니다 (조회된 값으로 수정)
   subnets:
-    private:                          # 프라이빗 서브넷 정보를 지정해야 합니다 (조회된 값으로 수정)
+    private:                          # 프라이빗 서브넷 정보를 지정해야 합니다 (조회된 값으로 수정 - 4개의 서브넷 중 3개만 사용)
       subnet-099acb450b8051d06: { az: ap-northeast-2a }
       subnet-0e521bd6de96308b8: { az: ap-northeast-2b }
       subnet-010db3e6a658817d6: { az: ap-northeast-2c }      
