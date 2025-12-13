@@ -196,8 +196,8 @@ aws ec2 create-tags --resources subnet-009f634c97979d460 subnet-05f66b53201e3c4c
   --region ap-northeast-2
 ```
 
-### 생성된 클러스터 확인 ### 
-* 현재 컨텍스트(클러스터)
+### 클러스터 확인 ### 
+* 현재 컨텍스트(생성된 클러스터)
 ```
 kubectl config current-context
 ```
