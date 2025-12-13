@@ -64,11 +64,9 @@ vpc:
   # VPC ID를 여기에 지정해야 합니다.
   id: "vpc-your-actual-vpc-id"
   subnets:
-    # public 서브넷 정의를 제거합니다.
     private:
-      # 실제 서브넷 ID와 해당 AZ로 변경하세요. (NAT Gateway가 구성되어 있어야 함)
-      subnet-009f634c97979d460: { az: ap-northeast-2a }
-      subnet-05f66b53201e3c4cf: { az: ap-northeast-2c }
+      subnet-009f634c97979d460: { }
+      subnet-05f66b53201e3c4cf: { }
 
 # 관리형 노드 그룹을 정의합니다.
 managedNodeGroups:
