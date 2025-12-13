@@ -1,24 +1,7 @@
-일반 EKS 모드와 달리, EKS Auto Mode에서는 AWS가 관리하는 핵심 애드온들이 쿠버네티스 파드(Pod) 형태가 아니라, 워커 노드 OS 내의 systemd 프로세스로 직접 실행된다.
-그래서 kube-system 네임스페이스의 파드를 조회하더라도 아래와 같이 메트릭 서버만 보인다. 또한 컴퓨팅 노드로 로그인 하는 수단 역시 제공하지 않는다.   
-aws-node나 coredns, aws-ebs-csi-driver 등 같은 파드들이 목록에 나타나지 않는다.
-
-```
-kubectl get pods -n kube-system
-```
-[결과]
-```
-NAME                              READY   STATUS    RESTARTS   AGE
-metrics-server-7645d75fbf-krbcm   1/1     Running   0          14h
-metrics-server-7645d75fbf-rsnnx   1/1     Running   0          14h 
-```
-
-
-
 << 아키텍처 다이어그램 >> 
 
-
 ## [kubectl 및 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
-code server 에 접속하여 kubectl 과 eksctl을 설치한다. 
+code-server-graviton 에 접속하여 kubectl 과 eksctl을 설치한다. 
  
 1. kubectl 을 설치한다 
 ```
@@ -33,7 +16,6 @@ kubectl version --client
 
 2. eksctl 을 설치한다.
 ```
-# for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
 ARCH=arm64     # amd64 or arm64
 PLATFORM=$(uname -s)_$ARCH
 curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
