@@ -37,7 +37,8 @@ eks 클러스터를 생성하기 위해서는 아래와 같이 최소한의 권�
 ### VPC 정보 조회 ###
 * VPC ID
 ```
-aws ec2 describe-vpcs --filters Name=tag:Name,Values=training-on-eks --query "Vpcs[].VpcId" --output text
+VPC = (aws ec2 describe-vpcs --filters Name=tag:Name,Values=training-on-eks --query "Vpcs[].VpcId" --output text)
+echo $VPC
 ```
 [결과]
 ```
@@ -46,7 +47,12 @@ vpc-030b927274aa21417
 
 * 서브넷 ID
 ```
+aws ec2 describe-subnets --filters Name=vpc-id,Values=${VPC} --query "Subnets[*].SubnetId" --output text
 ```  
+[결과]
+```
+```
+
 
 ### 클러스터 생성 ###
 [cluster-config.yaml]
