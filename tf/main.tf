@@ -214,21 +214,9 @@ resource "aws_instance" "x86_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-echo "install code-server ..."
 sudo -u ec2-user -i <<'EOF'
 curl -fsSL https://code-server.dev/install.sh | sh
-(nohup code-server --bind-addr 0.0.0.0:8080 --auth none > /home/ec2-user/code-server.log 2>&1 &)
-
-ARCH=amd64
-curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/$ARCH/kubectl
-chmod +x ./kubectl
-mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
-echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
-
-PLATFORM=$(uname -s)_$ARCH
-curl -sLO 'https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz'
-tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
-sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
+sudo systemctl enable --now code-server@$USER
 EOF
 
 _DATA
