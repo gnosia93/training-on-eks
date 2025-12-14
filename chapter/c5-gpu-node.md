@@ -1,4 +1,4 @@
-## [nvidia 디바이스 플러그인 설치](https://docs.aws.amazon.com/eks/latest/userguide/ml-eks-k8s-device-plugin.html) ##
+## [Nvidia 디바이스 플러그인 설치](https://docs.aws.amazon.com/eks/latest/userguide/ml-eks-k8s-device-plugin.html) ##
 
 쿠버네티스는 CPU 및 메모리 같은 일반적인 리소스만 관리할 수 있고, GPU의 존재에 대해서는 알지 못한다.
 nvidia 디바이스 플러그인은 각 노드에서 실행되면서 탑재된 NVIDIA GPU를 감지하고, GPU 의 정보를 쿠버네티스 컨트롤 플레인에게 전달한다.
