@@ -30,7 +30,7 @@ K8S_VERSION=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --query "cluster
 ### 카펜터 노드 IAM Role ###
 카펜터 노드 Role 은 카펜터 컨트롤러가 AWS 환경 내에서 사용자를 대신해 실제 컴퓨팅 자원(EC2 인스턴스)을 생성, 관리, 그리고 종료하는 일련의 작업을 수행할 때 사용된다. 이 Role은 카펜터가 클라우드 환경에서 노드의 수명 주기를 완벽하게 제어할 수 있도록 하는 필수적인 역할을 한다.   
 ```
-curl -s https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterNodeRole.sh | sh
+curl -s https://raw.githubusercontent.com/gnosia93/training-on-eks/refs/heads/main/karpenter/KarpenterNodeRole.sh | sh
 ```
 
 ### 카펜터 컨트롤러 IAM Role ###
