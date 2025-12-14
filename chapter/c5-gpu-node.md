@@ -19,7 +19,7 @@ nvdp/nvidia-device-plugin       0.18.0          0.18.0          A Helm chart for
 helm install nvdp nvdp/nvidia-device-plugin \
   --namespace nvidia \
   --create-namespace \
-  --version 0.17.4 \
+  --version 0.18.0 \
   --set gfd.enabled=true
 
 kubectl get daemonset -n nvidia
