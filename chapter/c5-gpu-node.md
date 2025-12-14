@@ -364,9 +364,6 @@ spec:
         limits:
           nvidia.com/gpu: 1
   tolerations:                                             
-    - key: "gpu-workload"                              # GPU 노드풀에 파드를 스케줄링하기 위해서 toleration 을 설정한다.        
-      operator: "Exists"
-      effect: "NoSchedule"
     - key: "nvidia.com"
       operator: "Exists"
       effect: "NoSchedule"                             # GPU를 요청하는 Pod만 스케줄되도록 강제합니다.
