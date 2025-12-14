@@ -32,7 +32,9 @@ K8S_VERSION=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --query "cluster
 https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterNodeRole.sh
 ```
 
-카펜터 컨트롤러가 신규 인스턴스를 프로비저닝하는 데 필요한 IAM Roe을 생성한다. 컨트롤러는 서비스 어카운트용 IAM 역할(IRSA)을 사용하며, 이를 위해서는 OIDC 엔드포인트가 필요하다
+### 카펜터 컨트롤러 IAM Role ###
+카펜터 컨트롤러는 EKS 클러스터에서 노드의 자동 생성, 관리, 종료를 전담하는 핵심 소프트웨어, 대기 중인 파드(Unschedulable Pods)가 있는지 계속 감시하고, 신규 파드의 CPU, 메모리, 특정 하드웨어(GPU 등) 요구 사항을 분석하여 노드 필요성 판단한다. 또한 새 노드가 준비되면, 대기 중이던 파드를 새로 생성된 노드에 직접 할당하거나, 더 이상 사용되지 않아 유휴 상태이거나 비효율적인 노드를 감지하면 해당 노드를 안전하게 종료하기도 한다. 
+여기서는 카펜터 컨트롤러가 신규 인스턴스를 프로비저닝하는 데 필요한 IAM Role을 생성하는데, 카펜터 컨트롤러는 서비스 어카운트용 IAM 역할(IRSA)을 사용하며 OIDC 엔드포인트와 통신한다. 카펜터 컨트롤러는 OIDC 엔드포인트를 통해 발급받은 신뢰할 수 있는 신분증(ID 토큰)을 사용하여 AWS에 자신의 신분을 증명하며, 이를 통해 IRSA에 정의된 필요한 권한만을 안전하게 위임받아 작업을 수행한다.
 ```
 https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterControllerRole.sh
 ```
