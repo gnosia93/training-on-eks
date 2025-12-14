@@ -26,8 +26,8 @@ export OIDC_ENDPOINT="$(aws eks describe-cluster --name "${CLUSTER_NAME}" \
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 export K8S_VERSION=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --query "cluster.version" --output text)
 
-kubectl create ns ${KARPENTER_NAMESPACE}
-eksctl utils associate-iam-oidc-provider --cluster ${CLUSTER_NAME} --approve
+kubectl create ns ${KARPENTER_NAMESPACE}                                            # karpenter 네임스페이스 생성 
+eksctl utils associate-iam-oidc-provider --cluster ${CLUSTER_NAME} --approve        # AWS IAM에서 OIDC 공급자 등록
 ```
 
 #### 1. 카펜터 노드 IAM Role ####
