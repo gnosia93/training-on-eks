@@ -1,8 +1,8 @@
 ## [Nvidia 디바이스 플러그인 설치](https://docs.aws.amazon.com/eks/latest/userguide/ml-eks-k8s-device-plugin.html) ##
 
 쿠버네티스는 CPU 및 메모리 같은 일반적인 리소스만 관리할 수 있고, GPU의 존재에 대해서는 알지 못한다.
-Nvidia 디바이스 플러그인은 각 노드에서 실행되면서 GPU를 감지하고, GPU의 정보를 쿠버네티스 컨트롤 플레인에게 전달한다.
-디바이스 플러그인은 GPU 드라이버 및 NVIDIA 컨테이너 런타임(예: nvidia-container-runtime)과 연동하여, 파드 내부의 컨테이너가 호스트 머신의 GPU 하드웨어에 직접 접근할 수 있도록 경로를 설정해 준다.
+Nvidia 디바이스 플러그인은 각 노드의 GPU를 감지하고, GPU에 대한 정보를 쿠버네티스 컨트롤 플레인에게 전달한다.
+디바이스 플러그인은 GPU 드라이버 및 NVIDIA 컨테이너 런타임(예: nvidia-container-runtime)과 연동하여, 컨테이너가 호스트의 GPU 하드웨어에 직접 접근할 수 있도록  해준다.
 
 ```
 helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
