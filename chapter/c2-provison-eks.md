@@ -268,6 +268,11 @@ ip-10-0-6-224.ap-northeast-2.compute.internal   Ready    <none>   7m27s   v1.33.
 
 
 
+## 레퍼런스 ##
+
+* [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
+
+
 
 
 
