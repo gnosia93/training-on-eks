@@ -117,8 +117,24 @@ helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KA
 ```
 
 카펜터 디플로이먼트를 수정하여 카펜터 컨트롤러가 이미 존재하는 노드그룹의 노드에 스케줄링되도록 nodeAffinity 를 수정한다.  
-```
 
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/karpenter.png)
+```
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: karpenter.sh/nodepool
+          operator: DoesNotExist
+        - key: eks.amazonaws.com/nodegroup         # 여기서 부터 
+          operator: In
+          values:
+          - ng-arm
+          - ng-x86                                 # 여기까지 karpenter.yaml 의 420번 라인 이후로 추가 
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - topologyKey: "kubernetes.io/hostname"
 ```
 
 
