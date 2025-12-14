@@ -29,20 +29,20 @@ export K8S_VERSION=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --query "
 kubectl create ns ${KARPENTER_NAMESPACE}
 ```
 
-### 1. 카펜터 노드 IAM Role ###
+#### 1. 카펜터 노드 IAM Role ####
 카펜터 노드 Role 은 카펜터 컨트롤러가 AWS 환경 내에서 사용자를 대신해 실제 컴퓨팅 자원(EC2 인스턴스)을 생성, 관리, 그리고 종료하는 일련의 작업을 수행할 때 사용된다. 이 Role은 카펜터가 클라우드 환경에서 노드의 수명 주기를 완벽하게 제어할 수 있도록 하는 필수적인 역할을 한다.   
 ```
 curl -s https://raw.githubusercontent.com/gnosia93/training-on-eks/refs/heads/main/karpenter/KarpenterNodeRole.sh | sh
 ```
 
-### 2. 카펜터 컨트롤러 IAM Role ###
+#### 2. 카펜터 컨트롤러 IAM Role ####
 카펜터 컨트롤러는 EKS 클러스터에서 노드의 자동 생성, 관리, 종료를 전담하는 핵심 소프트웨어, 대기 중인 파드(Unschedulable Pods)가 있는지 계속 감시하고, 신규 파드의 CPU, 메모리, 특정 하드웨어(GPU 등) 요구 사항을 분석하여 노드 필요성 판단한다. 또한 새 노드가 준비되면, 대기 중이던 파드를 새로 생성된 노드에 직접 할당하거나, 더 이상 사용되지 않아 유휴 상태이거나 비효율적인 노드를 감지하면 해당 노드를 안전하게 종료하기도 한다. 
 여기서는 카펜터 컨트롤러가 신규 인스턴스를 프로비저닝하는 데 필요한 IAM Role을 생성하는데, 카펜터 컨트롤러는 서비스 어카운트용 IAM 역할(IRSA)을 사용하며 OIDC 엔드포인트와 통신한다. 카펜터 컨트롤러는 OIDC 엔드포인트를 통해 발급받은 신뢰할 수 있는 신분증(ID 토큰)을 사용하여 AWS에 자신의 신분을 증명하며, 이를 통해 IRSA에 정의된 필요한 권한만을 안전하게 위임받아 작업을 수행한다.
 ```
 curl -s https://raw.githubusercontent.com/gnosia93/training-on-eks/refs/heads/main/karpenter/KarpenterControllerRole.sh | sh
 ```
 
-### 3. 서브넷 및 시큐리티 그룹 태깅 ###
+#### 3. 서브넷 및 시큐리티 그룹 태깅 ####
 
 카펜터가 EC2 인스턴스를 새로 생성할때, 해당 인스턴스가 어느 네트워크(서브넷)에 위치해야 하고 어떤 네트워크 규칙(시큐리티 그룹)을 따라야 하는지 알고 있어야 한다. 
 카펜터는 기존 노드그룹(ng-arm, ng-x86)의 서브넷과 시큐리티 그룹을 그대로 사용하게 되는데, 이를 위해 karpenter.sh/discovery={cluster name} 태깅을 기존 서브넷과 시큐리티 그룹에 할당한다.  
@@ -83,8 +83,25 @@ aws ec2 create-tags \
     --resources "${SECURITY_GROUPS}"
 ```
 
+#### 4. aws-auth 컨피드맵 수정 ####
 
+새로운 워커 노드가 시작되면, 해당 노드는 EKS 컨트롤 플레인에 자기 자신을 등록하는 데, 이때 사용하는 것이 바로 우리가 생성한 카펜터 노드 IAM Role 이다. EKS 컨트롤 플레인은 aws-auth ConfigMap을 확인하여, 해당 IAM Role ARN이 mapRoles 목록에 있는지 확인하게 된다. 즉 IAM 역할이나 사용자가 쿠버네티스의 RBAC 에 매핑되어 있는지를 확인하는 것이다.
+이 과정이 실패하면 노드는 클러스터에 정상적으로 합류하지 못하고 'NotReady' 상태로 머무르게 된다.
 
+```
+kubectl edit configmap aws-auth -n kube-system
+```
+명령어를 이용하여 aws-auth 컨피그맵에 KarpenterNodeRole-traing-on-eks 를 추가한다. 
+```
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  ## If you intend to run Windows workloads, the kube-proxy group should be specified.
+  # For more information, see https://github.com/aws/karpenter/issues/5099.
+  # - eks:kube-proxy-windows
+  rolearn: arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/KarpenterNodeRole-${CLUSTER_NAME}
+  username: system:node:{{EC2PrivateDNSName}}
+```
 
 
 ## gpu 노드풀 준비 ##
