@@ -41,52 +41,41 @@ helm version
 
 또한 클러스터가 생성되는 네트워크상의 위치를 정해 주기위해서 VPC ID 와 서브넷 정보가 필요한데, 보안의 강화하기 위해 EKS 클러스터 워커노드는 프라이빗 서브넷에 위치하게 된다.
 
-#### VPC ID 조회 ####
+
+### 클러스터 생성 ###
+
+환경변수를 설정한다. 
 ```
+export CLUSTER_NAME="training-on-eks"
+export AWS_DEFAULT_REGION="ap-northeast-2"
+export K8S_VERSION="1.33"
+export GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-gpu/recommended/image_id --query Parameter.Value --output text)"
 export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=training-on-eks --query "Vpcs[].VpcId" --output text)
-echo ${VPC_ID}
-```
-[결과]
-```
-vpc-07c85e9b1c1bcc598
 ```
 
-#### 프라이빗 서브넷 리스트 조회 ####
+#### 프라이빗 서브넷 조회 ####
 ```
 aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
     --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
     --output table
 ```  
-[결과]
-```
-----------------------------------------------------------------------
-|                           DescribeSubnets                          |
-+-----------------+----------------------------+---------------------+
-|       AZ        |            ID              |        Name         |
-+-----------------+----------------------------+---------------------+
-|  ap-northeast-2b|  subnet-052a978810c47cc89  |  TOE-priv-subnet-2  |
-|  ap-northeast-2c|  subnet-0ff15887f5579f484  |  TOE-priv-subnet-3  |
-|  ap-northeast-2a|  subnet-0c5aa6962f74640ec  |  TOE-priv-subnet-1  |
-|  ap-northeast-2d|  subnet-0d99c79e93d39f69c  |  TOE-priv-subnet-4  |
-+-----------------+----------------------------+---------------------+
-```
 
-### 클러스터 생성 ###
 
-아래 YAML 파일에서 VPC ID 와 프라이빗 서브넷 값을 조회된 값으로 수정한다.   
-
-[cluster-config.yaml]
 ```
+eksctl create cluster -f - <<EOF
+---
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
-  name: training-on-eks
-  version: "1.33"
-  region: ap-northeast-2
+  name: "${CLUSTER_NAME}"
+  version: "${K8S_VERSION}"
+  region: "${AWS_DEFAULT_REGION}"
+  tags:
+    karpenter.sh/discovery: "${CLUSTER_NAME}"     
 
 vpc:
-  id: vpc-07c85e9b1c1bcc598           # VPC ID를 여기에 지정해야 합니다 (조회된 값으로 수정)
+  id: "${VPC_ID}"                    
   subnets:
     private:                          # 프라이빗 서브넷 정보를 지정해야 합니다 (조회된 값으로 수정 - 4개의 서브넷 중 3개만 사용)
       subnet-0c5aa6962f74640ec: { az: ap-northeast-2a }
@@ -109,6 +98,7 @@ managedNodeGroups:                    # 관리형 노드 그룹을 정의합니�
     desiredCapacity: 1
     amiFamily: AmazonLinux2023
     privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
+EOF
 ```
 
 클러스터를 생성한다. 
