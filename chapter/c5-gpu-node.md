@@ -171,49 +171,29 @@ replicaset.apps/karpenter-565db98b46   2         2         2       31s
 ```
 
 
-## gpu 노드풀 준비 ##
-EKS 오토모드에서 아래와 같이 두개의 노드풀이 자동으로 생성되지만, gpu 파드를 스케줄링 할 수는 없다. 노드풀의 세부 설정을 describe 해 보면
-C, M, R 인스턴스 타입(CPU) 만을 가지고 있어 CPU를 사용하는 파드만 스케줄링이 가능하다.
+## GPU 노드풀 준비 ##
+
+아래 조회 결과에서 볼수 있는 것처럼 현재 클러스터에는 GPU를 스케줄링 할수 있는 카펜터 노드풀이 존재하지 않는다.
+클러스터 생성시 만들어진 노드그룹(ng-arm, ng-x86) 역시 CPU 만으로 구성되어져 있다.  
 ```
 kubectl get nodepools -n karpenter
 ```
 [결과]
 ```
-NAME              NODECLASS   NODES   READY   AGE
-general-purpose   default     0       True    8h
-system            default     1       True    8h
+No resources found
 ```
-[참고] 아래는 카펜터 노드풀의 상세 설정을 조회할 수 있는 명령어 셋이다.
+GPU 노드풀을 만들기 전에 카펜터 관련 CRD를 조회하여 해당 API 의 도메인를 확인하도록 한다. 
+노드 클래스는 karpenter.k8s.aws 사용하고, 노드 클레임과 노드풀은 karpenter.sh 도메인을 사용하고 있는 것을 확인할 수 있다. 
+참골로 EKS Auto 모드의 경우 오픈소스 카펜터와는 별도의 CRD 를 사용하고 있으며 API 도메인 역시 동일하지 않다. (다른 CRD 임)    
 ```
-kubectl describe nodepool system -n karpenter
-kubectl describe nodepool general-purpose -n karpenter
-```   
-
-또한 카펜터에서 제공하는 CRD와는 다른 별도의 CRD 를 사용하고, 사용할 수 있는 레이블 역시 오픈 소스 카펜터와는 다른 것을 사용한다. 예를들어 
-기존의 karpenter.k8s.aws/instance-category 레이블은 오토모드에서 eks.amazonaws.com/instance-category 으로 변경되었다 (자세한 내용은 https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html 참조) 
-```
-kubectl get crd -o wide
+kubectl get crd -o wide | grep karpenter
 ```
 [결과]
 ```
-NAME                                            CREATED AT
-applicationnetworkpolicies.networking.k8s.aws   2025-12-09T17:19:41Z
-clusternetworkpolicies.networking.k8s.aws       2025-12-09T17:19:41Z
-clusterpolicyendpoints.networking.k8s.aws       2025-12-09T17:19:42Z
-cninodes.eks.amazonaws.com                      2025-12-09T17:21:32Z
-cninodes.vpcresources.k8s.aws                   2025-12-09T17:19:42Z
-ingressclassparams.eks.amazonaws.com            2025-12-09T17:21:32Z
-nodeclaims.karpenter.sh                         2025-12-09T17:21:32Z
-nodeclasses.eks.amazonaws.com                   2025-12-09T17:21:32Z
-nodediagnostics.eks.amazonaws.com               2025-12-09T17:21:32Z
-nodepools.karpenter.sh                          2025-12-09T17:21:32Z
-policyendpoints.networking.k8s.aws              2025-12-09T17:19:41Z
-securitygrouppolicies.vpcresources.k8s.aws      2025-12-09T17:19:42Z
-targetgroupbindings.eks.amazonaws.com           2025-12-09T17:21:32Z
+ec2nodeclasses.karpenter.k8s.aws                2025-12-14T04:26:24Z
+nodeclaims.karpenter.sh                         2025-12-14T04:26:25Z
+nodepools.karpenter.sh                          2025-12-14T04:26:23Z
 ```
-crd 를 조회해 보면 api 가 변경된 것을 확인할 수 있다. 노드풀의 경우 karpenter.sh 에 있으나, 노드 클래스의 경우 eks.amazonaws.com 으로 변경되었다.
-
-
 
 
 ### [gpu 노드풀 생성](https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html) ###
