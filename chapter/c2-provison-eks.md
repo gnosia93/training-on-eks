@@ -1,7 +1,7 @@
 ## [kubectl 및 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
 그라비톤을 사용하여 EKS 클러스터를 관리할 예정이므로, code-server-graviton 에만 kubectl 과 eksctl을 설치한다. 
  
-1. kubectl 을 설치한다 
+#### 1. kubectl 설치 #### 
 ```
 ARCH=arm64     # amd64 or arm64
 curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/$ARCH/kubectl
@@ -12,7 +12,7 @@ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 kubectl version --client
 ```
 
-2. eksctl 을 설치한다.
+#### 2. eksctl 설치 ####
 ```
 ARCH=arm64     # amd64 or arm64
 PLATFORM=$(uname -s)_$ARCH
@@ -23,6 +23,13 @@ sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 
 eksctl version
 ```
+
+#### 3. helm 설치 ####
+```
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+chmod 700 get_helm.sh
+./get_helm.sh
+``` 
 
 
 ## 클러스터 생성 ##
