@@ -25,7 +25,7 @@ helm install nvdp nvdp/nvidia-device-plugin \
 kubectl get daemonset -n nvidia
 ```
 
-### 부연설명 - GPU Operator 에 대해서 ###
+#### 부연설명 - GPU Operator 에 대해서 ####
 GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)으로, 이를 이용하면 직접 드라이버를 설치하거나 디바이스 플러그인을 설치할 필요가 없고, 오퍼레이터가 이 모든 작업을 대신 해준다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-operator.png)
 
