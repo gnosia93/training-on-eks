@@ -334,7 +334,7 @@ helm upgrade -i nvdp nvdp/nvidia-device-plugin \
 	--create-namespace \
 	--version 0.18.0
 
-kubectl get daemonset -n kube-system | grep nvidia-device-plugin
+kubectl get daemonset -n nvidia-device-plugin
 ```
 
 ### 부연설명 - GPU Operator 에 대해서 ###
