@@ -2,7 +2,7 @@
 이를 해결하기 위해서는 GPU 설정을 가지고 있는 신규 노드 그룹을 만들거나, 카펜터를 이용하여 동적으로 인스턴스를 프러비저닝 해 줘야 한다. 
 현재의 설정으로는 GPU 리소스를 요청하는 파드는 pending 상태에 빠지게 된다.  
 
-## [카펜터](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
+## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 
 본 워크샵에서 사용하는 EKS 클러스터의 버전은 1.33 으로 아래의 명령어를 통해서 확인할 수 있다. 
 ```
@@ -12,10 +12,9 @@ aws eks describe-cluster --name training-on-eks --query cluster.version
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/comp%20matrix.png)
 
 
-### 설치하기 ###
+#### 1. 환경변수 설정 및 OIDC 등록 ####
 
 OIDC_ENDPOINT는 EKS 클러스터가 발급하는 모든 임시 자격 증명이 유효한지 검증할 수 있는 URL로, 쿠버네티스의 서비스 어카운트가 AWS 리소스에 안전하게 접근할 수 있게 해준다.
-
 ```
 export KARPENTER_NAMESPACE=karpenter
 export CLUSTER_NAME=training-on-eks
@@ -30,13 +29,12 @@ kubectl create ns ${KARPENTER_NAMESPACE}                                        
 eksctl utils associate-iam-oidc-provider --cluster ${CLUSTER_NAME} --approve        # AWS IAM에서 OIDC 공급자 등록
 ```
 
-#### 1. 카펜터 노드 IAM Role ####
+#### 2. 카펜터 노드 및 컨트롤러 IAM Role 설정 ####
 카펜터 노드 Role 은 카펜터 컨트롤러가 AWS 환경 내에서 사용자를 대신해 실제 컴퓨팅 자원(EC2 인스턴스)을 생성, 관리, 그리고 종료하는 일련의 작업을 수행할 때 사용된다. 이 Role은 카펜터가 클라우드 환경에서 노드의 수명 주기를 완벽하게 제어할 수 있도록 하는 필수적인 역할을 한다.   
 ```
 curl -s https://raw.githubusercontent.com/gnosia93/training-on-eks/refs/heads/main/karpenter/KarpenterNodeRole.sh | sh
 ```
 
-#### 2. 카펜터 컨트롤러 IAM Role ####
 카펜터 컨트롤러는 EKS 클러스터에서 노드의 자동 생성, 관리, 종료를 전담하는 핵심 소프트웨어, 대기 중인 파드(Unschedulable Pods)가 있는지 계속 감시하고, 신규 파드의 CPU, 메모리, 특정 하드웨어(GPU 등) 요구 사항을 분석하여 노드 필요성 판단한다. 또한 새 노드가 준비되면, 대기 중이던 파드를 새로 생성된 노드에 직접 할당하거나, 더 이상 사용되지 않아 유휴 상태이거나 비효율적인 노드를 감지하면 해당 노드를 안전하게 종료하기도 한다. 
 여기서는 카펜터 컨트롤러가 신규 인스턴스를 프로비저닝하는 데 필요한 IAM Role을 생성하는데, 카펜터 컨트롤러는 서비스 어카운트용 IAM 역할(IRSA)을 사용하며 OIDC 엔드포인트와 통신한다. 카펜터 컨트롤러는 OIDC 엔드포인트를 통해 발급받은 신뢰할 수 있는 신분증(ID 토큰)을 사용하여 AWS에 자신의 신분을 증명하며, 이를 통해 IRSA에 정의된 필요한 권한만을 안전하게 위임받아 작업을 수행한다.
 ```
@@ -48,18 +46,16 @@ curl -s https://raw.githubusercontent.com/gnosia93/training-on-eks/refs/heads/ma
 카펜터가 EC2 인스턴스를 새로 생성할때, 해당 인스턴스가 어느 네트워크(서브넷)에 위치해야 하고 어떤 네트워크 규칙(시큐리티 그룹)을 따라야 하는지 알고 있어야 한다. 
 카펜터는 기존 노드그룹(ng-arm, ng-x86)의 서브넷과 시큐리티 그룹을 그대로 사용하게 되는데, 이를 위해 karpenter.sh/discovery={cluster name} 태깅을 기존 서브넷과 시큐리티 그룹에 할당한다.  
 
-* 서브넷 태깅
 ```
+# 서븐넷 태깅
 for NODEGROUP in $(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" --query 'nodegroups' --output text); do
     aws ec2 create-tags \
         --tags "Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}" \
         --resources $(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" \
                         --nodegroup-name "${NODEGROUP}" --query 'nodegroup.subnets' --output text)
 done
-```
 
-* 시큐리티 그룹 태깅
-```
+# 시큐리티 그룹 태깅
 NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" \
     --query 'nodegroups[0]' --output text)
 
@@ -68,12 +64,10 @@ LAUNCH_TEMPLATE=$(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" \
     --output text | tr -s "\t" ",")
 
 # If your EKS setup is configured to use only Cluster security group, then please execute -
-
 SECURITY_GROUPS=$(aws eks describe-cluster \
     --name "${CLUSTER_NAME}" --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
 
 # If your setup uses the security groups in the Launch template of a managed node group, then :
-
 SECURITY_GROUPS="$(aws ec2 describe-launch-template-versions \
     --launch-template-id "${LAUNCH_TEMPLATE%,*}" --versions "${LAUNCH_TEMPLATE#*,}" \
     --query 'LaunchTemplateVersions[0].LaunchTemplateData.[NetworkInterfaces[0].Groups||SecurityGroupIds]' \
