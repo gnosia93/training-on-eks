@@ -118,10 +118,10 @@ helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KA
 
 카펜터 디플로이먼트를 수정하여 카펜터 컨트롤러가 이미 존재하는 노드그룹의 노드에 스케줄링되도록 nodeAffinity 를 수정한다.  
 
-* 수정전
+#### karpenter.yaml 수정전 ####
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/karpenter.png)
 
-* 추가할 내용
+#### karpenter.yaml 에 추가할 내용 ####
 ```
 affinity:
   nodeAffinity:
@@ -139,9 +139,10 @@ affinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       - topologyKey: "kubernetes.io/hostname"
 ```
-* 수정후 
+#### 수정후 #### 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/karpenter-after.png)
 
+아래 스크립트로 CRD(노드풀, 노드 클래스, 노드 클레임)와 카펜터 오브젝트들을 설치한다. 
 ```
 kubectl create -f \
     "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v${KARPENTER_VERSION}/pkg/apis/crds/karpenter.sh_nodepools.yaml"
