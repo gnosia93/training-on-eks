@@ -320,11 +320,31 @@ nvidia 디바이스 플러그인은 각 노드에서 실행되면서 탑재된 N
 디바이스 플러그인은 GPU 드라이버 및 NVIDIA 컨테이너 런타임(예: nvidia-container-runtime)과 연동하여, 파드 내부의 컨테이너가 호스트 머신의 GPU 하드웨어에 직접 접근할 수 있도록 경로를 설정해 준다.
 
 ```
-
+helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
+helm repo update
+helm upgrade -i nvdp nvdp/nvidia-device-plugin \
+	--namespace nvidia-device-plugin \
+	--create-namespace \
+	--version 0.16.0
 ```
 ```
 kubectl get daemonset -n kube-system | grep nvidia-device-plugin
 ```
+
+### GPU Operator 에 대해서 ###
+GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)입니다.
+GPU Operator를 설치하면, 사용자가 직접 드라이버를 설치하거나 디바이스 플러그인 YAML 파일을 적용할 필요가 없습니다. 오퍼레이터가 이 모든 작업을 대신 해줍니다.
+
+#### GPU Operator의 주요 역할 ####
+* 드라이버 설치 자동화: 새 노드가 클러스터에 조인되면, 오퍼레이터가 자동으로 적절한 NVIDIA GPU 드라이버를 찾아 설치합니다.
+* 디바이스 플러그인 배포: 드라이버 설치가 끝나면 자동으로 nvidia-device-plugin 데몬셋을 배포합니다.
+* 런타임 구성: 컨테이너 런타임(containerd 또는 Docker)이 GPU를 인식하도록 설정합니다.
+* 모니터링 통합: GPU 활용률 등을 모니터링할 수 있는 컴포넌트(DCGM 등)를 함께 설치합니다.
+
+#### 어떤 것을 사용해야 할까요? ####
+* nvidia-device-plugin (단순한 방법): 이미 노드에 GPU 드라이버가 설치되어 있거나, 드라이버 설치를 수동으로 관리하고 싶을 때 사용합니다. 현재 상황처럼 빠르게 GPU 인식을 시키고 싶을 때 적합합니다.
+* GPU Operator (완전 자동화): GPU 노드 관리를 완전히 자동화하고 싶을 때 사용합니다. 설정은 더 복잡하지만, 노드가 추가/제거될 때 드라이버 설치부터 모든 과정을 자동으로 처리해 줍니다.
+현재의 AMI 는 Nvidia Driver 및 런타임 구성이 완료된 버전이기 때문에 nvidia-device-plugin 을 배포하도록 한다. 
 
 
 
