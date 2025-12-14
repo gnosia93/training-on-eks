@@ -42,9 +42,12 @@ curl -s https://raw.githubusercontent.com/gnosia93/training-on-eks/refs/heads/ma
 curl -s https://raw.githubusercontent.com/gnosia93/training-on-eks/refs/heads/main/karpenter/KarpenterControllerRole.sh | sh
 ```
 
+### 3. 서브넷 및 시큐리티 그룹 태깅 ###
 
-### 3. 노드그룹 서브넷 태깅 ###
-카펜터가 자동 노드 추가시 사용할 서브넷을 식별하기 위해, 기존 노드그룹(ng-arm, ng-x86)의 서브넷에 karpenter.sh/discovery=training-on-eks 태킹을 추가한다.
+카펜터가 EC2 인스턴스를 새로 생성할때, 해당 인스턴스가 어느 네트워크(서브넷)에 위치해야 하고 어떤 네트워크 규칙(시큐리티 그룹)을 따라야 하는지 알고 있어야 한다. 
+서브넷의 경우 기조 노드그룹의 서브넷을 사용하게 되고 (여기서는 ng-arm, ng-x86), 시큐리티 그룹 역시 기존 노드 그룹에 설정된 네트워크 규칙 그대로 사용하게 된다. 
+
+* 서브넷 태깅
 ```
 for NODEGROUP in $(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" --query 'nodegroups' --output text); do
     aws ec2 create-tags \
@@ -54,6 +57,31 @@ for NODEGROUP in $(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" --qu
 done
 ```
 
+* 시큐리티 그룹 태깅
+```
+NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" \
+    --query 'nodegroups[0]' --output text)
+
+LAUNCH_TEMPLATE=$(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" \
+    --nodegroup-name "${NODEGROUP}" --query 'nodegroup.launchTemplate.{id:id,version:version}' \
+    --output text | tr -s "\t" ",")
+
+# If your EKS setup is configured to use only Cluster security group, then please execute -
+
+SECURITY_GROUPS=$(aws eks describe-cluster \
+    --name "${CLUSTER_NAME}" --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
+
+# If your setup uses the security groups in the Launch template of a managed node group, then :
+
+SECURITY_GROUPS="$(aws ec2 describe-launch-template-versions \
+    --launch-template-id "${LAUNCH_TEMPLATE%,*}" --versions "${LAUNCH_TEMPLATE#*,}" \
+    --query 'LaunchTemplateVersions[0].LaunchTemplateData.[NetworkInterfaces[0].Groups||SecurityGroupIds]' \
+    --output text)"
+
+aws ec2 create-tags \
+    --tags "Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}" \
+    --resources "${SECURITY_GROUPS}"
+```
 
 
 
