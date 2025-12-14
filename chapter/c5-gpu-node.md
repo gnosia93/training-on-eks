@@ -1,8 +1,51 @@
+## [nvidia 디바이스 플러그인 설치](https://docs.aws.amazon.com/eks/latest/userguide/ml-eks-k8s-device-plugin.html) ##
+
+쿠버네티스는 CPU 및 메모리 같은 일반적인 리소스만 관리할 수 있고, GPU의 존재에 대해서는 알지 못한다.
+nvidia 디바이스 플러그인은 각 노드에서 실행되면서 탑재된 NVIDIA GPU를 감지하고, GPU 의 정보를 쿠버네티스 컨트롤 플레인에게 전달한다.
+디바이스 플러그인은 GPU 드라이버 및 NVIDIA 컨테이너 런타임(예: nvidia-container-runtime)과 연동하여, 파드 내부의 컨테이너가 호스트 머신의 GPU 하드웨어에 직접 접근할 수 있도록 경로를 설정해 준다.
+
+```
+helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
+helm repo update
+helm search repo nvdp --devel
+```
+[결과]
+```
+NAME                            CHART VERSION   APP VERSION     DESCRIPTION                                       
+nvdp/gpu-feature-discovery      0.18.0          0.18.0          A Helm chart for gpu-feature-discovery on Kuber...
+nvdp/nvidia-device-plugin       0.18.0          0.18.0          A Helm chart for the nvidia-device-plugin on Ku...
+```
+```
+helm install nvdp nvdp/nvidia-device-plugin \
+  --namespace nvidia \
+  --create-namespace \
+  --version 0.17.4 \
+  --set gfd.enabled=true
+
+kubectl get daemonset -n nvidia
+```
+
+### 부연설명 - GPU Operator 에 대해서 ###
+GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)입니다.
+GPU Operator를 설치하면, 사용자가 직접 드라이버를 설치하거나 디바이스 플러그인 YAML 파일을 적용할 필요가 없습니다. 오퍼레이터가 이 모든 작업을 대신 해줍니다.
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-operator.png)
+
+#### GPU Operator의 주요 역할 ####
+* 드라이버 설치 자동화: 새 노드가 클러스터에 조인되면, 오퍼레이터가 자동으로 적절한 NVIDIA GPU 드라이버를 찾아 설치합니다.
+* 디바이스 플러그인 배포: 드라이버 설치가 끝나면 자동으로 nvidia-device-plugin 데몬셋을 배포합니다.
+* 런타임 구성: 컨테이너 런타임(containerd 또는 Docker)이 GPU를 인식하도록 설정합니다.
+* 모니터링 통합: GPU 활용률 등을 모니터링할 수 있는 컴포넌트(DCGM 등)를 함께 설치합니다.
+
+#### 어떤 것을 사용해야 할까요? ####
+* nvidia-device-plugin (단순한 방법): 이미 노드에 GPU 드라이버가 설치되어 있거나, 드라이버 설치를 수동으로 관리하고 싶을 때 사용합니다. 현재 상황처럼 빠르게 GPU 인식을 시키고 싶을 때 적합합니다.
+* GPU Operator (완전 자동화): GPU 노드 관리를 완전히 자동화하고 싶을 때 사용합니다. 설정은 더 복잡하지만, 노드가 추가/제거될 때 드라이버 설치부터 모든 과정을 자동으로 처리해 줍니다.
+현재의 AMI 는 Nvidia Driver 및 런타임 구성이 완료된 버전이기 때문에 nvidia-device-plugin 을 배포하도록 한다. 
+
+
+## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 카펜터는 스케줄링 되지 않는 파드가 클러스터 이벤트 로그에 발견되면, 이를 해결하기 위해 신규 노드를 자동으로 프로비저닝 한다. 현재 클러스터 노드 그룹은 2개로 (ng_x86 과 ng_grav) GPU 인스턴스를 스케줄링 할수 없는 그룹들이다. 
 이를 해결하기 위해서는 GPU 설정을 가지고 있는 신규 노드 그룹을 만들거나, 카펜터를 이용하여 동적으로 인스턴스를 프러비저닝 해 줘야 한다. 
 현재의 설정으로는 GPU 리소스를 요청하는 파드는 pending 상태에 빠지게 된다.  
-
-## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 
 본 워크샵에서 사용하는 EKS 클러스터의 버전은 1.33 으로 아래의 명령어를 통해서 확인할 수 있다. 
 ```
@@ -310,49 +353,6 @@ GPU를 인식하고 사용할 수 있도록 하드웨어 접근 권한을 설정
 * 파이썬 및 종속성: Python 인터프리터, pip install로 설치된 라이브러리들 (numpy, pandas 등).
 
 AMI가 제공하는 드라이버를 활용하여 애플리케이션을 실행하는 것이 컨테이너 이미지의 역할입니다.
-
-## [nvidia 디바이스 플러그인 설치](https://docs.aws.amazon.com/eks/latest/userguide/ml-eks-k8s-device-plugin.html) ##
-
-쿠버네티스는 CPU 및 메모리 같은 일반적인 리소스만 관리할 수 있고, GPU의 존재에 대해서는 알지 못한다.
-nvidia 디바이스 플러그인은 각 노드에서 실행되면서 탑재된 NVIDIA GPU를 감지하고, GPU 의 정보를 쿠버네티스 컨트롤 플레인에게 전달한다.
-디바이스 플러그인은 GPU 드라이버 및 NVIDIA 컨테이너 런타임(예: nvidia-container-runtime)과 연동하여, 파드 내부의 컨테이너가 호스트 머신의 GPU 하드웨어에 직접 접근할 수 있도록 경로를 설정해 준다.
-
-```
-helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
-helm repo update
-helm search repo nvdp
-```
-[결과]
-```
-NAME                            CHART VERSION   APP VERSION     DESCRIPTION                                       
-nvdp/gpu-feature-discovery      0.18.0          0.18.0          A Helm chart for gpu-feature-discovery on Kuber...
-nvdp/nvidia-device-plugin       0.18.0          0.18.0          A Helm chart for the nvidia-device-plugin on Ku...
-```
-```
-helm upgrade -i nvdp nvdp/nvidia-device-plugin \
-	--namespace nvidia-device-plugin \
-	--create-namespace \
-	--version 0.18.0
-
-kubectl get daemonset -n nvidia-device-plugin
-```
-
-### 부연설명 - GPU Operator 에 대해서 ###
-GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)입니다.
-GPU Operator를 설치하면, 사용자가 직접 드라이버를 설치하거나 디바이스 플러그인 YAML 파일을 적용할 필요가 없습니다. 오퍼레이터가 이 모든 작업을 대신 해줍니다.
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-operator.png)
-
-#### GPU Operator의 주요 역할 ####
-* 드라이버 설치 자동화: 새 노드가 클러스터에 조인되면, 오퍼레이터가 자동으로 적절한 NVIDIA GPU 드라이버를 찾아 설치합니다.
-* 디바이스 플러그인 배포: 드라이버 설치가 끝나면 자동으로 nvidia-device-plugin 데몬셋을 배포합니다.
-* 런타임 구성: 컨테이너 런타임(containerd 또는 Docker)이 GPU를 인식하도록 설정합니다.
-* 모니터링 통합: GPU 활용률 등을 모니터링할 수 있는 컴포넌트(DCGM 등)를 함께 설치합니다.
-
-#### 어떤 것을 사용해야 할까요? ####
-* nvidia-device-plugin (단순한 방법): 이미 노드에 GPU 드라이버가 설치되어 있거나, 드라이버 설치를 수동으로 관리하고 싶을 때 사용합니다. 현재 상황처럼 빠르게 GPU 인식을 시키고 싶을 때 적합합니다.
-* GPU Operator (완전 자동화): GPU 노드 관리를 완전히 자동화하고 싶을 때 사용합니다. 설정은 더 복잡하지만, 노드가 추가/제거될 때 드라이버 설치부터 모든 과정을 자동으로 처리해 줍니다.
-현재의 AMI 는 Nvidia Driver 및 런타임 구성이 완료된 버전이기 때문에 nvidia-device-plugin 을 배포하도록 한다. 
-
 
 
 ## GPU 파드 스케줄링 ##
