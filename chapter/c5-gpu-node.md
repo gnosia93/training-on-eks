@@ -87,7 +87,6 @@ aws ec2 create-tags \
 
 새로운 워커 노드가 시작되면, 해당 노드는 EKS 컨트롤 플레인에 자기 자신을 등록하는 데, 이때 사용하는 것이 바로 우리가 생성한 카펜터 노드 IAM Role 이다. EKS 컨트롤 플레인은 aws-auth ConfigMap을 확인하여, 해당 IAM Role ARN이 mapRoles 목록에 있는지 확인하게 된다. 즉 IAM 역할이나 사용자가 쿠버네티스의 RBAC 에 매핑되어 있는지를 확인하는 것이다.
 이 과정이 실패하면 노드는 클러스터에 정상적으로 합류하지 못하고 'NotReady' 상태로 머무르게 된다.
-
 ```
 eksctl create iamidentitymapping \
   --username system:node:{{EC2PrivateDNSName}} \
@@ -96,6 +95,11 @@ eksctl create iamidentitymapping \
   --group system:bootstrappers \
   --group system:nodes
 ```
+
+```
+kubectl describe configmap aws-auth -n kube-system
+```
+
 
 ## gpu 노드풀 준비 ##
 EKS 오토모드에서 아래와 같이 두개의 노드풀이 자동으로 생성되지만, gpu 파드를 스케줄링 할 수는 없다. 노드풀의 세부 설정을 describe 해 보면
