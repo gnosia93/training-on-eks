@@ -41,14 +41,11 @@ helm version
 
 또한 클러스터가 생성되는 네트워크상의 위치를 정해 주기위해서 VPC ID 와 서브넷 정보가 필요한데, 보안의 강화하기 위해 EKS 클러스터 워커노드는 프라이빗 서브넷에 위치하게 된다.
 
-
-### 클러스터 생성 ###
-
-환경변수를 설정한다. 
 ```
 export CLUSTER_NAME="training-on-eks"
 export AWS_DEFAULT_REGION="ap-northeast-2"
 export K8S_VERSION="1.33"
+export KARPENTER_VERSION="1.8.3"
 export GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-gpu/recommended/image_id --query Parameter.Value --output text)"
 export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=training-on-eks --query "Vpcs[].VpcId" --output text)
 ```
@@ -103,7 +100,7 @@ iam:
   withOIDC: true 
 
 karpenter:
-  version: '1.0.6' # Exact version must be specified
+  version: "${KARPENTER_VERSION}"
 EOF
 ```
 
