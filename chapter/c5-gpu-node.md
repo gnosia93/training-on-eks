@@ -182,9 +182,13 @@ kubectl get nodepools -n karpenter
 ```
 No resources found
 ```
-GPU 노드풀을 만들기 전에 카펜터 관련 CRD를 조회하여 해당 API 의 도메인를 확인하도록 한다. 
+
+CRD 는 사용자 정의 리소스 정의(Custom Resource Definition)의 약자로 파드, 서비스, 디폴로이먼트와 같은 내장된 리소스 객체이외에 
+사용자가 원하는 형태의 새로운 리소스 타입을 쿠버네티스 API로 추가할 수 있게 해주는 강력한 기능이다. 
+CRD 로 필요한 리소스 타입을 정의하고, Operator 즉 쿠버네티스 컨트롤러를 사용자가 직접 그 기능을 구현하면 된다. 카펜터 역시 CRD 의 한 유형이다.   
+GPU 노드풀을 만들기 전에, 먼저 카펜터 CRD를 조회하여 해당 API 의 도메인를 확인하도록 한다. 
 노드 클래스는 karpenter.k8s.aws 사용하고, 노드 클레임과 노드풀은 karpenter.sh 도메인을 사용하고 있는 것을 확인할 수 있다. 
-참골로 EKS Auto 모드의 경우 오픈소스 카펜터와는 별도의 CRD 를 사용하고 있으며 API 도메인 역시 동일하지 않다. (다른 CRD 임)    
+참고로 EKS Auto 모드의 경우 오픈소스 카펜터와는 별도의 CRD 를 사용하고 있으며 API 도메인 역시 동일하지 않다. (다른 CRD 임)    
 ```
 kubectl get crd -o wide | grep karpenter
 ```
