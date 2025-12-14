@@ -272,6 +272,8 @@ kubectl get nodepool
 ```
 [결과]
 ```
+NAME       NODECLASS   NODES   READY   AGE
+gpu-pool   default     0       False   5s
 ```
 
 컨테이너 환경에서 GPU 워크로드(AI/ML)를 실행할 때, 컨테이너 이미지(Container Image)와 AMI (Amazon Machine Image)는 명확하게 역할이 구분된다
