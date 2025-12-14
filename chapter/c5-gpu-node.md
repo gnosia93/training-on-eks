@@ -205,31 +205,28 @@ cat <<EOF | envsubst | kubectl apply -f -
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
-  name: default
+  name: gpu-pool
 spec:
   template:
     spec:
       requirements:
         - key: kubernetes.io/arch
           operator: In
-          values: ["amd64"]
-        - key: kubernetes.io/os
-          operator: In
-          values: ["linux"]
+          values: ["amd64"]            # X86 만 설정  
         - key: karpenter.sh/capacity-type
           operator: In
-          values: ["spot"]
-        - key: karpenter.k8s.aws/instance-category
+          values: ["on-demand"]        # 온디맨드 인스턴스 사용        
+        - key: eks.amazonaws.com/instance-category 
           operator: In
-          values: ["c", "m", "r"]
-        - key: karpenter.k8s.aws/instance-generation
-          operator: Gt
-          values: ["2"]
+          values: ["g", "p"]           # GPU 인스턴스 사용  
       nodeClassRef:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
         name: default
       expireAfter: 720h # 30 * 24h = 720h
+      taints:                          # GPU 노드임을 명시하는 Taint 추가 (GPU Pod만 스케줄링되도록 유도)
+        - key: "gpu-workload"
+          effect: "NoSchedule"
   limits:
     cpu: 1000
   disruption:
@@ -241,15 +238,15 @@ kind: EC2NodeClass
 metadata:
   name: default
 spec:
-  role: "KarpenterNodeRole-${CLUSTER_NAME}" # replace with your cluster name
+  role: "KarpenterNodeRole-${CLUSTER_NAME}"         
   amiSelectorTerms:
     - alias: "al2023@${ALIAS_VERSION}"
   subnetSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "${CLUSTER_NAME}" # replace with your cluster name
+        karpenter.sh/discovery: "${CLUSTER_NAME}"   
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "${CLUSTER_NAME}" # replace with your cluster name
+        karpenter.sh/discovery: "${CLUSTER_NAME}"   
 EOF
 
 ```
