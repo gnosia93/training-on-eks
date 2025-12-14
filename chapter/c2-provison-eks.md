@@ -46,7 +46,6 @@ export CLUSTER_NAME="training-on-eks"
 export AWS_DEFAULT_REGION="ap-northeast-2"
 export K8S_VERSION="1.33"
 export KARPENTER_VERSION="1.8.3"
-export GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-gpu/recommended/image_id --query Parameter.Value --output text)"
 export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=training-on-eks --query "Vpcs[].VpcId" --output text)
 ```
 
