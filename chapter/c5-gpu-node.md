@@ -254,7 +254,7 @@ metadata:
 spec:
   role: "KarpenterNodeRole-${CLUSTER_NAME}"         
   amiSelectorTerms:
-    - alias: "${PYTORCH_DLAMI}"
+    - id: "${PYTORCH_DLAMI}"
   subnetSelectorTerms:
     - tags:
         karpenter.sh/discovery: "${CLUSTER_NAME}"   
