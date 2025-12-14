@@ -223,7 +223,6 @@ spec:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
         name: default
-      expireAfter: 720h # 30 * 24h = 720h
       taints:                          # GPU 노드임을 명시하는 Taint 추가 (GPU Pod만 스케줄링되도록 유도)
         - key: "gpu-workload"
           effect: "NoSchedule"
@@ -258,7 +257,17 @@ kubectl get nodepool
 ```
 ```
 
+컨테이너 환경에서 GPU 워크로드(AI/ML)를 실행할 때, **컨테이너 이미지(Container Image)**와 **AMI (Amazon Machine Image)**는 명확하게 역할이 분리됩니다.
+핵심 원칙은 **"호스트 OS(AMI)는 하드웨어와 쿠버네티스 환경을 준비하고, 컨테이너 이미지는 애플리케이션 실행 환경을 준비한다"**는 것입니다.
 
+#### AMI에서 담당해야 하는 주요 부분: ###
+* 운영 체제 (OS): Amazon Linux, Ubuntu 등 기본 OS 커널.
+* NVIDIA GPU 드라이버: 가장 중요합니다. GPU 하드웨어를 직접 제어하는 낮은 수준의 드라이버는 호스트 OS(AMI) 레벨에 설치되어야 합니다. 컨테이너 내부에서는 하드웨어에 직접 접근할 수 없기 때문입니다.
+* CUDA 런타임 라이브러리 (선택적/기본): 드라이버와 함께 설치되는 기본 CUDA 라이브러리 일부가 포함됩니다.
+* 컨테이너 런타임: Docker, containerd 등 컨테이너를 실행하는 엔진.
+* 쿠버네티스 에이전트: kubelet, aws-node (CNI), nvidia-container-runtime (Docker 대신 GPU 사용을 위한 런타임) 등 클러스터 조인을 위한 필수 소프트웨어.
+
+GPU를 인식하고 사용할 수 있도록 하드웨어 접근 권한을 설정하는 것이 AMI의 역할입니다.
 
 
 
