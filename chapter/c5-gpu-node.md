@@ -118,6 +118,7 @@ helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KA
 ```
 
 karpenter.yaml의 카펜터 디플로이먼트를 수정하여 카펜터 컨트롤러가 이미 존재하는 노드그룹의 노드에 스케줄링되도록 nodeAffinity 를 수정한다.  
+yaml 의 경우 탭과 Identation 에 민감하니 수정시 주의를 요한다.  
 
 #### karpenter.yaml 수정전 ####
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/karpenter.png)
