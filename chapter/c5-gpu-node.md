@@ -156,6 +156,26 @@ kubectl create -f \
 kubectl apply -f karpenter.yaml
 ```
 
+#### 6. 카펜터 동작 확인 ####
+```
+kubectl get all -n karpenter
+```
+[결과]
+```
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/karpenter-565db98b46-4d9km   1/1     Running   0          31s
+pod/karpenter-565db98b46-pmt99   1/1     Running   0          31s
+
+NAME                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/karpenter   ClusterIP   172.20.216.254   <none>        8080/TCP   19m
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/karpenter   2/2     2            2           12m
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/karpenter-565db98b46   2         2         2       31s
+```
+
 
 ## gpu 노드풀 준비 ##
 EKS 오토모드에서 아래와 같이 두개의 노드풀이 자동으로 생성되지만, gpu 파드를 스케줄링 할 수는 없다. 노드풀의 세부 설정을 describe 해 보면
