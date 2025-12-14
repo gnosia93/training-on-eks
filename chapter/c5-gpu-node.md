@@ -149,12 +149,13 @@ export KARPENTER_VERSION="1.8.3"
 
 helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KARPENTER_VERSION}" --namespace "${KARPENTER_NAMESPACE}" \
     --set "settings.clusterName=${CLUSTER_NAME}" \
-#    --set "settings.interruptionQueue=${CLUSTER_NAME}" \
     --set "serviceAccount.annotations.eks\.amazonaws\.com/role-arn=arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/KarpenterControllerRole-${CLUSTER_NAME}" \
     --set controller.resources.requests.cpu=1 \
     --set controller.resources.requests.memory=1Gi \
     --set controller.resources.limits.cpu=1 \
     --set controller.resources.limits.memory=1Gi > karpenter.yaml
+
+#    --set "settings.interruptionQueue=${CLUSTER_NAME}" \
 ```
 
 karpenter.yaml의 카펜터 디플로이먼트를 수정하여 카펜터 컨트롤러가 이미 존재하는 노드그룹의 노드에 스케줄링되도록 nodeAffinity 를 수정한다.  
