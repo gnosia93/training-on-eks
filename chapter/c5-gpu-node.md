@@ -200,7 +200,7 @@ nodeclaims.karpenter.sh                         2025-12-14T04:26:25Z
 nodepools.karpenter.sh                          2025-12-14T04:26:23Z
 ```
 
-#### DLAMI 조회 ####
+#### 1. DLAMI 조회 ####
 ```
 export PYTORCH_DLAMI=$(aws ec2 describe-images --region ${AWS_REGION} --owners amazon \
     --filters 'Name=name,Values=Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.8 (Amazon Linux 2023) ????????' \
@@ -214,7 +214,7 @@ echo ${PYTORCH_DLAMI}
 ami-00aec23bbe1278680
 ```
 
-노드풀 생성하기 
+#### 2. GPU 노드풀 생성하기 #### 
 ```
 cat <<EOF | envsubst | kubectl apply -f -
 apiVersion: karpenter.sh/v1
