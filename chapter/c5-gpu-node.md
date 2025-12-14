@@ -250,54 +250,17 @@ spec:
 EOF
 
 ```
-
-[gpu-nodepool.yaml] 
-```
-apiVersion: karpenter.sh/v1
-kind: NodePool
-metadata:
-  name: gpu-pool
-spec:
-  template:
-    spec:
-      nodeClassRef:
-        group: eks.amazonaws.com
-        kind: NodeClass
-        name: default
-      requirements:
-        - key: kubernetes.io/arch
-          operator: In
-          values: ["amd64"]            # X86 만 설정  
-        - key: karpenter.sh/capacity-type
-          operator: In
-          values: ["on-demand"]        # 온디맨드 인스턴스 사용        
-        - key: eks.amazonaws.com/instance-category 
-          operator: In
-          values: ["g", "p"]           # GPU 인스턴스 사용  
-        
-        # 특정 세대(예: 4세대 이상) 또는 특정 타입만 허용할 수 있습니다.
-        # - key: karpenter.k8s.aws/instance-type
-        #   operator: In
-        #   values: ["g5.xlarge", "p3.2xlarge"]
-        
-      # GPU 노드임을 명시하는 Taint 추가 (GPU Pod만 스케줄링되도록 유도)
-      taints:
-        - key: "gpu-workload"
-          effect: "NoSchedule"
-```
-
 GPU 파드를 실행할 수 있는 노드풀을 생성하고 READY 상태를 확인한다.   
 ```
-kubectl apply -f gpu-nodepool.yaml
 kubectl get nodepool
 ```
 [결과]
 ```
-NAME              NODECLASS   NODES   READY   AGE
-general-purpose   default     0       True    12h
-gpu-pool          default     0       True    8s
-system            default     1       True    12h
 ```
+
+
+
+
 
 ## GPU 파드 스케줄링 ##
 
