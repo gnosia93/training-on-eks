@@ -116,6 +116,10 @@ helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KA
     --set controller.resources.limits.memory=1Gi > karpenter.yaml
 ```
 
+카펜터 디플로이먼트를 수정하여 카펜터 컨트롤러가 이미 존재하는 노드그룹의 노드에 스케줄링되도록 nodeAffinity 를 수정한다.  
+```
+
+```
 
 
 
