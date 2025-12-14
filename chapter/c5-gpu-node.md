@@ -433,6 +433,7 @@ Wed Dec 10 06:44:46 2025
 
 ## 레퍼런스 ##
 
+* [Karpenter Workshop](https://catalog.workshops.aws/karpenter/en-US)
 * [Amazon EKS optimized Amazon Linux 2023 accelerated AMIs now available](https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/)
 * https://sirzzang.github.io/dev/Dev-Kubernetes-GPU-Setting/
  
