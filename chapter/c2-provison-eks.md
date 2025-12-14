@@ -109,6 +109,14 @@ managedNodeGroups:                    # 관리형 노드 그룹을 정의합니�
     desiredCapacity: 1
     amiFamily: AmazonLinux2023
     privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
+
+   - name: ng-gpu
+    instanceType: g6.xlarge
+    minSize: 1
+    maxSize: 1
+    desiredCapacity: 1
+    amiFamily: AmazonLinux2023
+    privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
 ```
 
 클러스터를 생성한다. 
