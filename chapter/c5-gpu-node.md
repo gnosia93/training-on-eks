@@ -1,7 +1,7 @@
 ## [Nvidia 디바이스 플러그인 설치](https://docs.aws.amazon.com/eks/latest/userguide/ml-eks-k8s-device-plugin.html) ##
 
 쿠버네티스는 CPU 및 메모리 같은 일반적인 리소스만 관리할 수 있고, GPU의 존재에 대해서는 알지 못한다.
-nvidia 디바이스 플러그인은 각 노드에서 실행되면서 탑재된 NVIDIA GPU를 감지하고, GPU 의 정보를 쿠버네티스 컨트롤 플레인에게 전달한다.
+Nvidia 디바이스 플러그인은 각 노드에서 실행되면서 GPU를 감지하고, GPU의 정보를 쿠버네티스 컨트롤 플레인에게 전달한다.
 디바이스 플러그인은 GPU 드라이버 및 NVIDIA 컨테이너 런타임(예: nvidia-container-runtime)과 연동하여, 파드 내부의 컨테이너가 호스트 머신의 GPU 하드웨어에 직접 접근할 수 있도록 경로를 설정해 준다.
 
 ```
@@ -26,7 +26,7 @@ kubectl get daemonset -n nvidia
 ```
 
 ### 부연설명 - GPU Operator 에 대해서 ###
-GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)이다. 이를 이용하면 사용자가 직접 드라이버를 설치하거나 디바이스 플러그인 YAML 파일을 적용할 필요가 없고, 오퍼레이터가 이 모든 작업을 대신 해준다.
+GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)으로, 이를 이용하면 직접 드라이버를 설치하거나 디바이스 플러그인을 설치할 필요가 없고, 오퍼레이터가 이 모든 작업을 대신 해준다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-operator.png)
 
 #### GPU Operator의 주요 역할 ####
@@ -34,6 +34,7 @@ GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)이
 * 디바이스 플러그인 배포: 드라이버 설치가 끝나면 자동으로 nvidia-device-plugin 데몬셋을 배포합니다.
 * 런타임 구성: 컨테이너 런타임(containerd 또는 Docker)이 GPU를 인식하도록 설정합니다.
 * 모니터링 통합: GPU 활용률 등을 모니터링할 수 있는 컴포넌트(DCGM 등)를 함께 설치합니다.
+
 
 ## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 카펜터는 스케줄링 되지 않는 파드가 클러스터 이벤트 로그에 발견되면, 이를 해결하기 위해 신규 노드를 자동으로 프로비저닝 한다. 현재 클러스터 노드 그룹은 2개로 (ng_x86 과 ng_grav) GPU 인스턴스를 스케줄링 할수 없는 그룹들이다. 
