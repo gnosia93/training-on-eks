@@ -269,7 +269,13 @@ spec:
         karpenter.sh/discovery: "${CLUSTER_NAME}"   
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "${CLUSTER_NAME}"   
+        karpenter.sh/discovery: "${CLUSTER_NAME}"
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 100Gi                           # root 보륨 크기 - 40GB 이상 권장
+        volumeType: gp3
+        deleteOnTermination: true
 EOF
 ```
 GPU 파드를 실행할 수 있는 노드풀을 생성한다.   
