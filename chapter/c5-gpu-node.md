@@ -103,6 +103,7 @@ kubectl describe configmap aws-auth -n kube-system
 
 
 #### 5. 카펜터 배포하기 ####
+헬름의 template 옵션을 이용하여 karpenter.yaml 파일을 만들고 카펜터 디플로이먼트의 nodeAffinity 를 아래와 같이 수정한다. 
 ```
 export KARPENTER_VERSION="1.8.3"
 
@@ -116,7 +117,7 @@ helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KA
     --set controller.resources.limits.memory=1Gi > karpenter.yaml
 ```
 
-카펜터 디플로이먼트를 수정하여 카펜터 컨트롤러가 이미 존재하는 노드그룹의 노드에 스케줄링되도록 nodeAffinity 를 수정한다.  
+karpenter.yaml의 카펜터 디플로이먼트를 수정하여 카펜터 컨트롤러가 이미 존재하는 노드그룹의 노드에 스케줄링되도록 nodeAffinity 를 수정한다.  
 
 #### karpenter.yaml 수정전 ####
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/karpenter.png)
