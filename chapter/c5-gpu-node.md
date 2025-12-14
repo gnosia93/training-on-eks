@@ -102,6 +102,22 @@ kubectl describe configmap aws-auth -n kube-system
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/aws-auth.png)
 
 
+#### 5. 카펜터 배포하기 ####
+```
+export KARPENTER_VERSION="1.8.3"
+
+helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KARPENTER_VERSION}" --namespace "${KARPENTER_NAMESPACE}" \
+    --set "settings.clusterName=${CLUSTER_NAME}" \
+    --set "settings.interruptionQueue=${CLUSTER_NAME}" \
+    --set "serviceAccount.annotations.eks\.amazonaws\.com/role-arn=arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/KarpenterControllerRole-${CLUSTER_NAME}" \
+    --set controller.resources.requests.cpu=1 \
+    --set controller.resources.requests.memory=1Gi \
+    --set controller.resources.limits.cpu=1 \
+    --set controller.resources.limits.memory=1Gi > karpenter.yaml
+```
+
+
+
 
 ## gpu 노드풀 준비 ##
 EKS 오토모드에서 아래와 같이 두개의 노드풀이 자동으로 생성되지만, gpu 파드를 스케줄링 할 수는 없다. 노드풀의 세부 설정을 describe 해 보면
