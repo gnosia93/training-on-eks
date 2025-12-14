@@ -288,12 +288,10 @@ spec:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
         name: default
-      taints:                          # GPU 노드임을 명시하는 Taint 추가 (GPU Pod만 스케줄링되도록 유도)
-        - key: "gpu-workload"
-          effect: "NoSchedule"
-        - key: "nvidia.com"
+      taints:                          
+        - key: "nvidia.com"            # 새로 생성되는 노드에 GPU Taint를 적용합니다.
           operator: "Exists"
-          effect: "NoSchedule"         # GPU를 요청하는 Pod만 스케줄되도록 강제합니다.  
+          effect: "NoSchedule"           
   limits:
     cpu: 1000
   disruption:
