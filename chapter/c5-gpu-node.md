@@ -47,7 +47,7 @@ curl -s https://raw.githubusercontent.com/gnosia93/training-on-eks/refs/heads/ma
 카펜터는 기존 노드그룹(ng-arm, ng-x86)의 서브넷과 시큐리티 그룹을 그대로 사용하게 되는데, 이를 위해 karpenter.sh/discovery={cluster name} 태깅을 기존 서브넷과 시큐리티 그룹에 할당한다.  
 
 ```
-# 서븐넷 태깅
+##### 서븐넷 태깅
 for NODEGROUP in $(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" --query 'nodegroups' --output text); do
     aws ec2 create-tags \
         --tags "Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}" \
@@ -55,7 +55,7 @@ for NODEGROUP in $(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" --qu
                         --nodegroup-name "${NODEGROUP}" --query 'nodegroup.subnets' --output text)
 done
 
-# 시큐리티 그룹 태깅
+##### 시큐리티 그룹 태깅
 NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" \
     --query 'nodegroups[0]' --output text)
 
