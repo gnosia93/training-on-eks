@@ -35,6 +35,14 @@ GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)으
 * 런타임 구성: 컨테이너 런타임(containerd 또는 Docker)이 GPU를 인식하도록 설정합니다.
 * 모니터링 통합: GPU 활용률 등을 모니터링할 수 있는 컴포넌트(DCGM 등)를 함께 설치합니다.
 
+본 워크샵에서는 Nvidia 디바이스 드라이버와 Nvida 컨테이너 툴킷이 설치된 Amazon EKS optimized Amazon Linux 2023 accelerated AMI 를 사용하는 관계로 위에 안내된 것 처럼 드바이스 플로그인을 설치하도록 한다. 참고로 Amazon 2023 리눅스에는 이미 nvidia-container 가 설치된 것을 확인할 수 있다.  
+```
+sh-5.2$ rpm -qa | grep nvidia-container
+nvidia-container-toolkit-base-1.18.1-1.x86_64
+libnvidia-container1-1.18.1-1.x86_64
+libnvidia-container-tools-1.18.1-1.x86_64
+nvidia-container-toolkit-1.18.1-1.x86_64
+```
 
 ## [카펜터 설치하기](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/) ##
 카펜터는 스케줄링 되지 않는 파드가 클러스터 이벤트 로그에 발견되면, 이를 해결하기 위해 신규 노드를 자동으로 프로비저닝 한다. 현재 클러스터 노드 그룹은 2개로 (ng_x86 과 ng_grav) GPU 인스턴스를 스케줄링 할수 없는 그룹들이다. 
