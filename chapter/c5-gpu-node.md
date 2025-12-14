@@ -27,7 +27,8 @@ AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 K8S_VERSION=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --query "cluster.version" --output text)
 ```
 
-카펜터 노드 Role을 생성한다. 
+### 카펜터 노드 IAM Role ###
+카펜터 노드 Role 은 카펜터 컨트롤러가 AWS 환경 내에서 사용자를 대신해 실제 컴퓨팅 자원(EC2 인스턴스)을 생성, 관리, 그리고 종료하는 일련의 작업을 수행할 때 사용된다. 이 Role은 카펜터가 클라우드 환경에서 노드의 수명 주기를 완벽하게 제어할 수 있도록 하는 필수적인 역할을 한다.   
 ```
 https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterNodeRole.sh
 ```
