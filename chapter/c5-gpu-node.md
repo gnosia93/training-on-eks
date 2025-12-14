@@ -273,7 +273,7 @@ spec:
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
-        volumeSize: 100Gi                           # root 보륨 크기 - 40GB 이상 권장
+        volumeSize: 100Gi                           # root 볼륨 크기 - 40GB 이상 권장
         volumeType: gp3
         deleteOnTermination: true
 EOF
