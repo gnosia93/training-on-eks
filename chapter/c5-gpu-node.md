@@ -206,7 +206,7 @@ nodeclaims.karpenter.sh                         2025-12-14T04:26:25Z
 nodepools.karpenter.sh                          2025-12-14T04:26:23Z
 ```
 
-#### 1. DLAMI 조회 ####
+#### [1. DLAMI 조회](https://docs.aws.amazon.com/ko_kr/dlami/latest/devguide/appendix-ami-release-notes.html#appendix-ami-release-notes-base) ####
 ```
 export PYTORCH_DLAMI=$(aws ec2 describe-images --region ${AWS_REGION} --owners amazon \
     --filters 'Name=name,Values=Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.8 (Amazon Linux 2023) ????????' \
