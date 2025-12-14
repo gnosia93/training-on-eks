@@ -27,10 +27,12 @@ AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 K8S_VERSION=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --query "cluster.version" --output text)
 ```
 
+카펜터 노드 Role을 생성한다. 
 ```
 https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterNodeRole.sh
 ```
 
+카펜터 컨트롤러가 신규 인스턴스를 프로비저닝하는 데 필요한 IAM Roe을 생성한다. 컨트롤러는 서비스 어카운트용 IAM 역할(IRSA)을 사용하며, 이를 위해서는 OIDC 엔드포인트가 필요하다
 ```
 https://github.com/gnosia93/training-on-eks/blob/main/karpenter/KarpenterControllerRole.sh
 ```
