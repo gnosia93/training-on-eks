@@ -99,6 +99,8 @@ eksctl create iamidentitymapping \
 ```
 kubectl describe configmap aws-auth -n kube-system
 ```
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/aws-auth.png)
+
 
 
 ## gpu 노드풀 준비 ##
