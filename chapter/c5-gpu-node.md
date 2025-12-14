@@ -170,6 +170,12 @@ NAME                                   DESIRED   CURRENT   READY   AGE
 replicaset.apps/karpenter-565db98b46   2         2         2       31s
 ```
 
+* 카펜터 출력 로그 확인
+```
+kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
+```
+
+
 
 ## GPU 노드풀 준비 ##
 
