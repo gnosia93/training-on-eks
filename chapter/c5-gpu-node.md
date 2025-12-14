@@ -257,8 +257,8 @@ kubectl get nodepool
 ```
 ```
 
-컨테이너 환경에서 GPU 워크로드(AI/ML)를 실행할 때, **컨테이너 이미지(Container Image)**와 **AMI (Amazon Machine Image)**는 명확하게 역할이 구분된다
-핵심 원칙은 **"호스트 OS(AMI)는 하드웨어와 쿠버네티스 환경을 준비하고, 컨테이너 이미지는 애플리케이션 실행 환경을 준비한다"**는 것이다. 
+컨테이너 환경에서 GPU 워크로드(AI/ML)를 실행할 때, 컨테이너 이미지(Container Image)와 AMI (Amazon Machine Image)는 명확하게 역할이 구분된다
+핵심 원칙은 AMI는 하드웨어와 쿠버네티스 환경을 준비하고, 컨테이너 이미지는 애플리케이션 실행 환경을 준비한다. 
 
 #### 1. AMI 에서 담당하는 부분 ###
 * 운영 체제 (OS): Amazon Linux, Ubuntu 등 기본 OS 커널.
