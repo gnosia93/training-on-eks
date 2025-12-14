@@ -3,7 +3,7 @@
 ### 1단계: 노드의 IAM 역할 및 권한 확인 ####
 Karpenter 설정 시 지정했던 IAM 역할에 필수 정책이 연결되어 있는지 확인합니다.
 ```
-aws iam list-attached-role-policies --role-name KarpenterNodeRole-<YOUR_CLUSTER_NAME>
+aws iam list-attached-role-policies --role-name KarpenterNodeRole-training-on-eks
 ```
 
 * 필수 정책:
@@ -11,8 +11,8 @@ aws iam list-attached-role-policies --role-name KarpenterNodeRole-<YOUR_CLUSTER_
   - AmazonEC2ContainerRegistryReadOnly
 만약 정책이 누락되었다면, AWS CLI로 추가해 줍니다.
 ```
-aws iam attach-role-policy --role-name KarpenterNodeRole-<YOUR_CLUSTER_NAME> --policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
-aws iam attach-role-policy --role-name KarpenterNodeRole-<YOUR_CLUSTER_NAME> --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+aws iam attach-role-policy --role-name KarpenterNodeRole-training-on-eks --policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+aws iam attach-role-policy --role-name KarpenterNodeRole-training-on-eks --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
 ```
 
 ### 2단계: aws-auth ConfigMap 확인 (가장 중요) ###
