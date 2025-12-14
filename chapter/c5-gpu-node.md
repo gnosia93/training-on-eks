@@ -252,7 +252,8 @@ kind: EC2NodeClass
 metadata:
   name: default
 spec:
-  role: "KarpenterNodeRole-${CLUSTER_NAME}"         
+  role: "KarpenterNodeRole-${CLUSTER_NAME}"
+  amiFamily: AL2023                                 # AMI 계열을 명시         
   amiSelectorTerms:
     - id: "${PYTORCH_DLAMI}"
   subnetSelectorTerms:
@@ -262,7 +263,6 @@ spec:
     - tags:
         karpenter.sh/discovery: "${CLUSTER_NAME}"   
 EOF
-
 ```
 GPU 파드를 실행할 수 있는 노드풀을 생성하고 READY 상태를 확인한다.   
 ```
