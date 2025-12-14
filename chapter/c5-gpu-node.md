@@ -221,6 +221,7 @@ apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: gpu-pool
+  namespace: karpenter
 spec:
   template:
     spec:
@@ -251,6 +252,7 @@ apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
 metadata:
   name: default
+  namespace: karpenter
 spec:
   role: "KarpenterNodeRole-${CLUSTER_NAME}"
   amiFamily: AL2023                                 # AMI 계열을 명시         
