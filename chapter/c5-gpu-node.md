@@ -291,6 +291,9 @@ spec:
       taints:                          # GPU 노드임을 명시하는 Taint 추가 (GPU Pod만 스케줄링되도록 유도)
         - key: "gpu-workload"
           effect: "NoSchedule"
+        - key: "nvidia.com"
+          operator: "Exists"
+          effect: "NoSchedule"         # GPU를 요청하는 Pod만 스케줄되도록 강제합니다.  
   limits:
     cpu: 1000
   disruption:
@@ -381,6 +384,9 @@ spec:
     - key: "gpu-workload"                              # GPU 노드풀에 파드를 스케줄링하기 위해서 toleration 을 설정한다.        
       operator: "Exists"
       effect: "NoSchedule"
+    - key: "nvidia.com"
+      operator: "Exists"
+      effect: "NoSchedule"                             # GPU를 요청하는 Pod만 스케줄되도록 강제합니다.
 ```
 
 파드를 생성하고 nvidia-smi 가 동작하는 확인한다.  
