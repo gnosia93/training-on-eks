@@ -175,8 +175,6 @@ replicaset.apps/karpenter-565db98b46   2         2         2       31s
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 
-
-
 ## GPU 노드풀 준비 ##
 
 아래 조회 결과에서 볼수 있는 것처럼 현재 클러스터에는 GPU를 스케줄링 할수 있는 카펜터 노드풀이 존재하지 않는다.
@@ -322,12 +320,20 @@ nvidia 디바이스 플러그인은 각 노드에서 실행되면서 탑재된 N
 ```
 helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
 helm repo update
+helm search repo nvdp
+```
+[결과]
+```
+NAME                            CHART VERSION   APP VERSION     DESCRIPTION                                       
+nvdp/gpu-feature-discovery      0.18.0          0.18.0          A Helm chart for gpu-feature-discovery on Kuber...
+nvdp/nvidia-device-plugin       0.18.0          0.18.0          A Helm chart for the nvidia-device-plugin on Ku...
+```
+```
 helm upgrade -i nvdp nvdp/nvidia-device-plugin \
 	--namespace nvidia-device-plugin \
 	--create-namespace \
-	--version 0.16.0
-```
-```
+	--version 0.18.0
+
 kubectl get daemonset -n kube-system | grep nvidia-device-plugin
 ```
 
