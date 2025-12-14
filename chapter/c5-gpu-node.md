@@ -27,6 +27,7 @@ export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output t
 export K8S_VERSION=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --query "cluster.version" --output text)
 
 kubectl create ns ${KARPENTER_NAMESPACE}
+eksctl utils associate-iam-oidc-provider --cluster ${CLUSTER_NAME} --approve
 ```
 
 #### 1. 카펜터 노드 IAM Role ####
