@@ -266,7 +266,7 @@ spec:
         karpenter.sh/discovery: "${CLUSTER_NAME}"   
 EOF
 ```
-GPU 파드를 실행할 수 있는 노드풀을 생성하고 READY 상태를 확인한다.   
+GPU 파드를 실행할 수 있는 노드풀을 생성한다.   
 ```
 kubectl get nodepool
 ```
@@ -275,6 +275,8 @@ kubectl get nodepool
 NAME       NODECLASS   NODES   READY   AGE
 gpu-pool   default     0       False   5s
 ```
+
+### 부연설명 ###
 
 컨테이너 환경에서 GPU 워크로드(AI/ML)를 실행할 때, 컨테이너 이미지(Container Image)와 AMI (Amazon Machine Image)는 명확하게 역할이 구분된다
 핵심 원칙은 AMI는 하드웨어와 쿠버네티스 환경을 준비하고, 컨테이너 이미지는 애플리케이션 실행 환경을 준비한다. 
@@ -297,7 +299,7 @@ GPU를 인식하고 사용할 수 있도록 하드웨어 접근 권한을 설정
 
 AMI가 제공하는 드라이버를 활용하여 애플리케이션을 실행하는 것이 컨테이너 이미지의 역할입니다.
 
-#### 참고: EKS 최적화 AMI vs DLAMI ####
+#### 3. EKS 최적화 AMI vs DLAMI ####
 * EKS 최적화 AMI: 쿠버네티스 구동에 필요한 kubelet, aws-node CNI 등이 설치되어 있지만, GPU 드라이버나 ML 프레임워크는 포함되어 있지 않습니다.
 * Deep Learning AMI: GPU 드라이버, CUDA가 완벽하게 설정되어 있어 ML 워크로드에 최적입니다. Karpenter는 이 AMI를 사용하여 새 노드를 띄운 후, 자동으로 EKS 클러스터에 조인하는 부트스트랩 스크립트를 실행합니다.
 
