@@ -278,6 +278,11 @@ GPU를 인식하고 사용할 수 있도록 하드웨어 접근 권한을 설정
 
 AMI가 제공하는 드라이버를 활용하여 애플리케이션을 실행하는 것이 컨테이너 이미지의 역할입니다.
 
+#### 참고: EKS 최적화 AMI vs DLAMI ####
+* EKS 최적화 AMI: 쿠버네티스 구동에 필요한 kubelet, aws-node CNI 등이 설치되어 있지만, GPU 드라이버나 ML 프레임워크는 포함되어 있지 않습니다.
+* Deep Learning AMI: GPU 드라이버, CUDA가 완벽하게 설정되어 있어 ML 워크로드에 최적입니다. Karpenter는 이 AMI를 사용하여 새 노드를 띄운 후, 자동으로 EKS 클러스터에 조인하는 부트스트랩 스크립트를 실행합니다.
+
+
 ## GPU 파드 스케줄링 ##
 
 [도커허브 nvidia/cuda](https://hub.docker.com/r/nvidia/cuda) 로 가서 nvidia-smi 가 설치되어 있는 컨테이너 이미지를 확인한다. 해당 페이지에서 아래로 스크롤하면 최신 컨테이너 이미지 정보를 확인할 수 있다.    
