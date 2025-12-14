@@ -289,9 +289,8 @@ spec:
         kind: EC2NodeClass
         name: default
       taints:                          
-        - key: "nvidia.com"            # 새로 생성되는 노드에 GPU Taint를 적용합니다.
-          operator: "Exists"
-          effect: "NoSchedule"           
+        - key: "nvidia.com/gpu"        # 새로 생성되는 노드에 GPU Taint를 적용합니다.
+          effect: "NoSchedule"    
   limits:
     cpu: 1000
   disruption:
