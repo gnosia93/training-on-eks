@@ -89,20 +89,13 @@ aws ec2 create-tags \
 이 과정이 실패하면 노드는 클러스터에 정상적으로 합류하지 못하고 'NotReady' 상태로 머무르게 된다.
 
 ```
-kubectl edit configmap aws-auth -n kube-system
+eksctl create iamidentitymapping \
+  --username system:node:{{EC2PrivateDNSName}} \
+  --cluster "${CLUSTER_NAME}" \
+  --arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/KarpenterInstanceNodeRole" \
+  --group system:bootstrappers \
+  --group system:nodes
 ```
-명령어를 이용하여 aws-auth 컨피그맵에 KarpenterNodeRole-traing-on-eks 를 추가한다. 
-```
-- groups:
-  - system:bootstrappers
-  - system:nodes
-  ## If you intend to run Windows workloads, the kube-proxy group should be specified.
-  # For more information, see https://github.com/aws/karpenter/issues/5099.
-  # - eks:kube-proxy-windows
-  rolearn: arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/KarpenterNodeRole-${CLUSTER_NAME}
-  username: system:node:{{EC2PrivateDNSName}}
-```
-
 
 ## gpu 노드풀 준비 ##
 EKS 오토모드에서 아래와 같이 두개의 노드풀이 자동으로 생성되지만, gpu 파드를 스케줄링 할 수는 없다. 노드풀의 세부 설정을 describe 해 보면
