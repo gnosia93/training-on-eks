@@ -141,6 +141,34 @@ eksctl create cluster -f cluster.yaml
 2025-12-15 05:09:52 [✔]  EKS cluster "training-on-eks" in "ap-northeast-2" region is ready
 ```
 
+#### 시큐리티 그룹 태깅 ####
+카펜터가 EC2 인스턴스를 새로 생성할때, 해당 인스턴스가 어느 네트워크(서브넷)에 위치해야 하고 어떤 네트워크 규칙(시큐리티 그룹)을 따라야 하는지 알고 있어야 한다. 카펜터는 기존 노드그룹(ng-arm, ng-x86)의 서브넷과 시큐리티 그룹을 그대로 사용하게 되는데, 이를 위해 karpenter.sh/discovery={cluster name} 태깅을 기존 서브넷과 시큐리티 그룹에 할당한다.
+서브넷의 경우 테라폼에서 이미 태깅하였다.
+```
+NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" \
+    --query 'nodegroups[0]' --output text)
+
+LAUNCH_TEMPLATE=$(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" \
+    --nodegroup-name "${NODEGROUP}" --query 'nodegroup.launchTemplate.{id:id,version:version}' \
+    --output text | tr -s "\t" ",")
+
+# If your EKS setup is configured to use only Cluster security group, then please execute -
+SECURITY_GROUPS=$(aws eks describe-cluster \
+    --name "${CLUSTER_NAME}" --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
+
+# If your setup uses the security groups in the Launch template of a managed node group, then :
+SECURITY_GROUPS="$(aws ec2 describe-launch-template-versions \
+    --launch-template-id "${LAUNCH_TEMPLATE%,*}" --versions "${LAUNCH_TEMPLATE#*,}" \
+    --query 'LaunchTemplateVersions[0].LaunchTemplateData.[NetworkInterfaces[0].Groups||SecurityGroupIds]' \
+    --output text)"
+
+aws ec2 create-tags \
+    --tags "Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}" \
+    --resources "${SECURITY_GROUPS}"
+```
+
+
+
 ### 4. 클러스터 확인 ### 
 #### 4.1 컨텍스트 ####
 ```
