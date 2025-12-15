@@ -35,10 +35,17 @@ NAME        READY   UP-TO-DATE   AVAILABLE   AGE
 karpenter   2/2     2            2           6m18s
 ```
 
-#### 카펜터 로그 확인 ####
+#### 로그 확인 ####
 ```
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
+
+#### 카펜터 백업 ####
+```
+kubectl get deployment karpenter -n karpenter -o yaml > karpenter-deployment.yaml
+kubectl get service karpenter -n karpenter -o yaml > karpenter-service.yaml
+```
+
 
 ## GPU 노드풀 준비 ##
 
