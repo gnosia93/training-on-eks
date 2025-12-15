@@ -6,19 +6,16 @@ helm install kube-prometheus-stack prometheus/kube-prometheus-stack --namespace 
 
 kubectl get pods -l "release=kube-prometheus-stack" --namespace monitoring
 ```
-### Get Grafana 'admin' user password by running: ###
+
+#### Get Grafana 'admin' user password by running: ####
 ```
 kubectl --namespace monitoring get secrets kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 ```
 
-### Access Grafana local instance: ###
+#### grafana ####
 ```
-export POD_NAME=$(kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=kube-prometheus-stack" -oname)
-kubectl --namespace monitoring port-forward $POD_NAME 3000
-```
+kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=kube-prometheus-stack" -oname
 
-### Get your grafana admin user password by running: ###
-```
 kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-secret -o jsonpath="{.items[0].data.admin-password}" | base64 --decode ; echo
 ```
 
@@ -28,10 +25,17 @@ kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-s
 ```
 helm repo add nvidia https://nvidia.github.io/dcgm-exporter/helm-charts
 helm repo update
-helm install --generate-name nvidia/dcgm-exporter -n kube-system
+helm install --generate-name nvidia/dcgm-exporter -n monitoring
 
 kubectl get pods -n monitoring
 kubectl get services -n monitoring
+```
+
+
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods -n monitoring -l "app.kubernetes.io/name=dcgm-exporter,app.kubernetes.io/instance=dcgm-exporter-1765809536" -o jsonpath="{.items[0].metadata.name}")
+  kubectl -n monitoring port-forward $POD_NAME 8080:9400 &
+  echo "Visit http://127.0.0.1:8080/metrics to use your application"
 ```
 
 * 설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 **metrics**라는 이름의 Prometheus 엔드포인트로 노출하기 시작합니다 (기본 포트: 9400).
