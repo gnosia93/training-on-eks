@@ -58,8 +58,7 @@ SUBNET_IDS=$(aws ec2 describe-subnets \
     --output text)
 
 if [ -z "$SUBNET_IDS" ]; then
-    echo "ERROR: No subnets found with the specified filters in VPC ${VPC_ID}."
-    exit 1
+    echo "에러: VPC ${VPC_ID} 에 서브넷이 존재하지 않습니다.."
 fi
 
 # YAML 형식에 맞게 동적 문자열 생성 (각 ID 뒤에 ": {}" 추가 및 앞쪽 Identation과 줄바꿈)
