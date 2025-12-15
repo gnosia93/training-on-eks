@@ -25,32 +25,9 @@ helm install nvdp nvdp/nvidia-device-plugin \
 kubectl get daemonset -n nvidia
 ```
 
-## 카펜터 확인 ##
-```
-kubectl get deployment -n karpenter
-```
-[결과]
-```
-NAME        READY   UP-TO-DATE   AVAILABLE   AGE
-karpenter   2/2     2            2           6m18s
-```
-
-#### 로그 확인 ####
-```
-kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
-```
-
-#### 카펜터 백업 ####
-```
-kubectl get deployment karpenter -n karpenter -o yaml > karpenter-deployment.yaml
-kubectl get service karpenter -n karpenter -o yaml > karpenter-service.yaml
-```
-
-
 ## GPU 노드풀 생성 ##
-
 ```
-cat > nodepool-gpu.yaml <<EOF
+cat <<EOF > nodepool-gpu.yaml 
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
