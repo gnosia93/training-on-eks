@@ -256,7 +256,7 @@ i-048265208fb345ec5@training-on-eks.ap-northeast-2.eksctl.io
 ```
 * 노드그룹
 ```
-eksctl get nodegroup --cluster=training-on-eks --region=ap-northeast-2
+eksctl get nodegroup --cluster=training-on-eks
 ```
 ```
 CLUSTER         NODEGROUP       STATUS  CREATED                 MIN SIZE        MAX SIZE        DESIRED CAPACITY        INSTANCE TYPE   IMAGE ID                ASG NAME                                  TYPE
@@ -274,13 +274,6 @@ ip-10-0-4-191.ap-northeast-2.compute.internal   Ready    <none>   7m31s   v1.33.
 ip-10-0-6-140.ap-northeast-2.compute.internal   Ready    <none>   7m32s   v1.33.5-eks-ecaa3a6   10.0.6.140    <none>        Amazon Linux 2023.9.20251208   6.12.58-82.121.amzn2023.x86_64    containerd://2.1.5
 ip-10-0-6-224.ap-northeast-2.compute.internal   Ready    <none>   7m27s   v1.33.5-eks-ecaa3a6   10.0.6.224    <none>        Amazon Linux 2023.9.20251208   6.12.58-82.121.amzn2023.aarch64   containerd://2.1.5
 ```
-
-
-### nginx 배포해 보기 ### 
-
-* TBD
-
-
 
 ## 레퍼런스 ##
 
