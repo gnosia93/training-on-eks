@@ -186,67 +186,8 @@ Error: failed to create cluster "training-on-eks"
 2025-12-13 13:36:05 [ℹ]  deploying stack "eksctl-training-on-eks-cluster"
 ```
 
-### 3. 서브넷 태깅 ### 
-
-EKS 로드 밸런서와 인그레스는 서브넷 태그 정보를 이용하여, 프로비저닝 되는 위치를 정하게 된다. 퍼블릭 서브넷에는 kubernetes.io/role/elb=1 과 kubernetes.io/cluster/{cluster name}=owned 값을 설정하도록 하고 프라이빗 서브넷에는 kubernetes.io/role/internal-elb=1 을 설정하도록 한다.   
-
-#### 3.1 퍼블릭 서브넷 ### 
-```
-SUBNET_IDS=$(aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=TOE-pub-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
-    --query "Subnets[*].SubnetId" \
-    --output text)
-
-if [ -z "$SUBNET_IDS" ]; then
-  echo "경고: 조건에 맞는 서브넷을 찾을 수 없습니다. 스크립트를 종료합니다."
-fi
-
-for SUBNET_ID in $SUBNET_IDS; do
-  echo "  -> 퍼블릭 $SUBNET_ID에 태그 적용 중..."
-  
-  # create-tags 명령 실행
-  aws ec2 create-tags \
-      --resources "$SUBNET_ID" \
-      --tags Key=kubernetes.io/role/elb,Value=1 \
-             Key=kubernetes.io/cluster/"$CLUSTER_NAME",Value=owned
-
-  if [ $? -eq 0 ]; then
-    echo "     [성공] 태그가 적용되었습니다."
-  else
-    echo "     [실패] 태그 적용 중 오류 발생. 권한을 확인하세요."
-  fi
-done
-```
-
-#### 3.2 프라이빗 서브넷 #### 
-```
-SUBNET_IDS=$(aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
-    --query "Subnets[*].SubnetId" \
-    --output text)
-
-if [ -z "$SUBNET_IDS" ]; then
-  echo "경고: 조건에 맞는 서브넷을 찾을 수 없습니다. 스크립트를 종료합니다."
-fi
-
-for SUBNET_ID in $SUBNET_IDS; do
-  echo "  -> 프라이빗 $SUBNET_ID에 태그 적용 중..."
-  
-  # create-tags 명령 실행
-  aws ec2 create-tags \
-      --resources "$SUBNET_ID" \
-      --tags Key=kubernetes.io/role/internal-elb,Value=1
-
-  if [ $? -eq 0 ]; then
-    echo "     [성공] 태그가 적용되었습니다."
-  else
-    echo "     [실패] 태그 적용 중 오류 발생. 권한을 확인하세요."
-  fi
-done
-```
-
-### 4. 클러스터 확인 ### 
-#### 4.1 현재 컨텍스트 ####
+### 3. 클러스터 확인 ### 
+#### 3.1 현재 컨텍스트 ####
 ```
 kubectl config current-context
 ```
@@ -254,7 +195,7 @@ kubectl config current-context
 ```
 i-048265208fb345ec5@training-on-eks.ap-northeast-2.eksctl.io
 ```
-#### 4.2 노드그룹 ####
+#### 3.2 노드그룹 ####
 ```
 eksctl get nodegroup --cluster=training-on-eks
 ```
@@ -263,7 +204,7 @@ CLUSTER         NODEGROUP       STATUS  CREATED                 MIN SIZE        
 training-on-eks ng-arm          ACTIVE  2025-12-13T13:47:35Z    2               2               2                       c7g.2xlarge     AL2023_ARM_64_STANDARD  eks-ng-arm-a2cd8bfb-ba01-1252-3342-5cabc45b0b0b    managed
 training-on-eks ng-x86          ACTIVE  2025-12-13T13:47:34Z    2               2               2                       c6i.2xlarge     AL2023_x86_64_STANDARD  eks-ng-x86-e8cd8bfb-ba1b-0f17-c83a-0db24ba49f87    managed
 ```
-#### 4.3 노드 리스트 ####
+#### 3.3 노드 리스트 ####
 ```
 kubectl get nodes -o wide 
 ```
