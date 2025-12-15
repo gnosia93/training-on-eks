@@ -234,7 +234,9 @@ spec:
           operator: In
           values: ["amd64", "arm64"]
       nodeClassRef:
-        name: cpu
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: gpu
   limits:
     cpu: 1000
     memory: 1000Gi
