@@ -8,7 +8,7 @@
 
 * [4. Training Operator 설치](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c4-training-operator.md)
 
-* [5. GPU 모니터링 하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-gpu-monitoring.md)
+* [5. GPU 모니터링 하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-gpu-monitoring.md)      <-- 작성중
 
 * [6. FSDP로 LLM 훈련하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)
 
