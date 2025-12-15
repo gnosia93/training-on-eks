@@ -5,7 +5,7 @@
  
 #### 1. kubectl 설치 #### 
 ```
-ARCH=arm64     # amd64 or arm64
+ARCH=arm64     
 curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.3/2025-08-03/bin/linux/$ARCH/kubectl
 chmod +x ./kubectl
 mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
@@ -16,7 +16,7 @@ kubectl version --client
 
 #### 2. eksctl 설치 ####
 ```
-ARCH=arm64     # amd64 or arm64
+ARCH=arm64    
 PLATFORM=$(uname -s)_$ARCH
 curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
 
