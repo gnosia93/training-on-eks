@@ -47,6 +47,7 @@ apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: gpu
+  namespace: karpenter
 spec:
   template:
     spec:
@@ -76,6 +77,7 @@ apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
 metadata:
   name: gpu
+  namespace: karpenter
 spec:
   role: "eksctl-KarpenterNodeRole-${CLUSTER_NAME}"
   amiSelectorTerms:
