@@ -21,7 +21,7 @@
    - 노드 크래쉬
    - 모델 체크 포인트
    - 특정 GPU ID 또는 노드 회피 (재시작시)
-* [8. EFA 멀티노드 분산 트레이닝] 
+* [8. 멀티노드 분산 트레이닝] 
    - efa RDMA
    - cillium CNI - https://cilium.io/
    - topoloy aware   - placement / same AZ ... ??
