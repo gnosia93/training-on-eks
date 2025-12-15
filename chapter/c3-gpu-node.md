@@ -48,9 +48,9 @@ spec:
         name: gpu
       expireAfter: 720h # 30 * 24h = 720h
       taints:
-      - key: "nvidia.com/gpu"
-        value: "present"
-        effect: NoSchedule
+      - key: "nvidia.com/gpu"            # nvidia-device-plugin 데몬은 nvidia.com/gpu=present:NoSchedule 테인트를 Tolerate 한다. 
+        value: "present"                 # value 값으로 present 와 다른값을 설정하면 nvidia-device-plugin 이 동작하지 않는다 (GPU를 찾을 수 없다)   
+        effect: NoSchedule               # nvidia-device-plugin 이 GPU 를 찾으면 Nvidia GPU 관련 각종 테인트와 레이블 등을 노드에 할당한다.  
   limits:
     cpu: 1000
   disruption:
@@ -105,15 +105,14 @@ spec:
           nvidia.com/gpu: 1
   tolerations:                                             
     - key: "nvidia.com/gpu"
-      operator: "Exists"
-      effect: "NoSchedule"                             # GPU를 요청하는 Pod만 스케줄되도록 강제합니다.
+      operator: "Exists"                      # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크  
+      effect: "NoSchedule"                             
 EOF
 ```
 
 파드를 생성하고 nvidia-smi 가 동작하는 확인한다.  
 ```
 kubectl apply -f gpu-pod.yaml
-kubectl describe pod gpu-pod
 kubectl logs gpu-pod
 ```
 [출력]
@@ -158,11 +157,7 @@ Wed Dec 10 06:44:46 2025
 |  No running processes found                                                             |
 +-----------------------------------------------------------------------------------------+
 ```
-(참고) describe 의 출력 결과중 마지막 라인의 Warning BackOff 의 경우 컨테이너는 종료하였으나 파드가 살아있기 때문에 발생하는 메시지이다. 즉 nvidia-smi 는 실행을 종료하였으나 파드는 살아있다.
 
 ## 레퍼런스 ##
 
-* [Karpenter Workshop](https://catalog.workshops.aws/karpenter/en-US)
 * [Amazon EKS optimized Amazon Linux 2023 accelerated AMIs now available](https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/)
-* https://sirzzang.github.io/dev/Dev-Kubernetes-GPU-Setting/
-* https://www.youtube.com/watch?v=dS6UIovSXpA 
