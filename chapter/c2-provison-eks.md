@@ -32,7 +32,7 @@ sh get_helm.sh
 helm version
 ``` 
 
-## 클러스터 생성 ##
+## 클러스터 생성하기 ##
 
 그라비톤 인스턴스에서 EKS를 생성할 예정이다. 그라비톤 인스턴스는 EKS 클러스터를 생성하기 위한 권한을 가지고 있어야 하는데 아래 도표는 그라비톤이 가져야 할 최소 권한 리스트이다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
@@ -40,8 +40,8 @@ helm version
 
 또한 클러스터가 생성되는 네트워크상의 위치를 정해 주기위해서 VPC ID 와 서브넷 정보가 필요한데, 보안의 강화하기 위해 EKS 클러스터 워커노드는 프라이빗 서브넷에 위치하게 된다.
 
-#### 1. 프라이빗 서브넷 조회 ####
-EKS 클러스터가 설치되는 서브넷 정보이다. 
+### 서브넷 조회 ###
+EKS 클러스터가 다음과 같은 프라이빗 서브넷에 설치된다. 
 ```
 aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
@@ -49,7 +49,7 @@ aws ec2 describe-subnets \
     --output table
 ```
 
-#### 2. 클러스터 환경 설정 ####
+### 클러스터 환경 설정 ###
 ```
 export CLUSTER_NAME="training-on-eks"
 export AWS_DEFAULT_REGION="ap-northeast-2"
@@ -75,7 +75,7 @@ for id in $SUBNET_IDS; do
 done
 ```
 
-#### 3. 클러스터 생성 #### 
+### 클러스터 생성 ### 
 ```
 eksctl create cluster -f - <<EOF
 ---
