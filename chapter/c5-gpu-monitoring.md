@@ -59,7 +59,7 @@ Prometheus Operator 사용 시 자동으로 ServiceMonitor 리소스나 PodMonit
 * 그라파나 대시보드 번호 설정.
 
 
-## helm 차트 명령어 ##
+## Helm 차트 명령어 ##
 * 차트 옵션 보기
 ```
 helm show values nvidia/dcgm-exporter
