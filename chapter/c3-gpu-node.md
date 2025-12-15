@@ -123,7 +123,7 @@ spec:
         limits:
           nvidia.com/gpu: 1
   tolerations:                                             
-    - key: "nvidia.com"
+    - key: "nvidia.com/gpu"
       operator: "Exists"
       effect: "NoSchedule"                             # GPU를 요청하는 Pod만 스케줄되도록 강제합니다.
 ```
