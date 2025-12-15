@@ -31,13 +31,6 @@ kubectl get pods -n monitoring
 kubectl get services -n monitoring
 ```
 
-
-1. Get the application URL by running these commands:
-  export POD_NAME=$(kubectl get pods -n monitoring -l "app.kubernetes.io/name=dcgm-exporter,app.kubernetes.io/instance=dcgm-exporter-1765809536" -o jsonpath="{.items[0].metadata.name}")
-  kubectl -n monitoring port-forward $POD_NAME 8080:9400 &
-  echo "Visit http://127.0.0.1:8080/metrics to use your application"
-```
-
 * 설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 **metrics**라는 이름의 Prometheus 엔드포인트로 노출하기 시작합니다 (기본 포트: 9400).
 * 이제 Prometheus 서버가 이 엔드포인트를 **스크랩(scrape)**하도록 설정해야 합니다.
 #### Prometheus Operator 사용 시: ####
