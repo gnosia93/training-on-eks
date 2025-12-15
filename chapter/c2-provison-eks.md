@@ -40,8 +40,8 @@ helm version
 ```
 export AWS_DEFAULT_REGION="ap-northeast-2"
 export CLUSTER_NAME="training-on-eks"
-export K8S_VERSION="1.33"
-export KARPENTER_VERSION="1.8.3"
+export K8S_VERSION="1.30"
+export KARPENTER_VERSION="1.0.6"
 export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values="${CLUSTER_NAME}" --query "Vpcs[].VpcId" --output text)
 ```
 
