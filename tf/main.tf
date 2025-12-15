@@ -31,7 +31,7 @@ resource "aws_subnet" "public" {
   tags = { 
       Name = "TOE-pub-subnet-${count.index + 1}"
       "kubernetes.io/role/elb" = "1"
-      "kubernetes.io/cluster/training-on-eks" = "owned"
+      "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   }
 }
 
@@ -42,7 +42,7 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.main.id
   tags = { 
     Name = "TOE-priv-subnet-${count.index + 1}"
-    "karpenter.sh/discovery" = "training-on-eks"
+    "karpenter.sh/discovery" = var.cluster_name
     "kubernetes.io/role/internal-elb" = "1"
   }
 }
