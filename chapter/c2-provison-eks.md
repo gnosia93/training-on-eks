@@ -218,11 +218,32 @@ aws ec2 describe-subnets \
 +-----------------+----------------------------+--------------------+
 ```
 
-퍼블릭 서브넷을 태깅한다 (4개중 3개만-2a/2b/2c)
+퍼블릭 서브넷을 태깅한다 
 ```
-aws ec2 create-tags --resources subnet-026bdcdeea230b1b3 subnet-0e246ca66e5c239a7 subnet-05cf75c4d41ccc74b \
-  --tags Key=kubernetes.io/role/elb,Value=1 Key=kubernetes.io/cluster/training-on-eks,Value=owned \
-  --region ap-northeast-2
+SUBNET_IDS=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=TOE-pub-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --query "Subnets[*].SubnetId" \
+    --output text)
+
+if [ -z "$SUBNET_IDS" ]; then
+  echo "경고: 조건에 맞는 서브넷을 찾을 수 없습니다. 스크립트를 종료합니다."
+fi
+
+for SUBNET_ID in $SUBNET_IDS; do
+  echo "  -> $SUBNET_ID에 태그 적용 중..."
+  
+  # create-tags 명령 실행
+  aws ec2 create-tags \
+      --resources "$SUBNET_ID" \
+      --tags Key=kubernetes.io/role/elb,Value=1 \
+             Key=kubernetes.io/cluster/"$CLUSTER_NAME",Value=owned
+
+  if [ $? -eq 0 ]; then
+    echo "     [성공] 태그가 적용되었습니다."
+  else
+    echo "     [실패] 태그 적용 중 오류 발생. 권한을 확인하세요."
+  fi
+done
 ```
 프라이빗 서브넷을 태깅한다. 
 ```
