@@ -38,7 +38,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: [YOUR_STORAGE_CLASS_NAME] # 예: gp2 또는 ebs-sc
+          storageClassName: gp2             # kubectl get storageclass 의 NAME 칼럼값
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
