@@ -32,7 +32,6 @@ sh get_helm.sh
 helm version
 ``` 
 
-
 ## 클러스터 생성 ##
 
 그라비톤 인스턴스에서 EKS를 생성할 예정이다. 그라비톤 인스턴스는 EKS 클러스터를 생성하기 위한 권한을 가지고 있어야 하는데 아래 도표는 그라비톤이 가져야 할 최소 권한 리스트이다.
@@ -41,23 +40,42 @@ helm version
 
 또한 클러스터가 생성되는 네트워크상의 위치를 정해 주기위해서 VPC ID 와 서브넷 정보가 필요한데, 보안의 강화하기 위해 EKS 클러스터 워커노드는 프라이빗 서브넷에 위치하게 된다.
 
-```
-export CLUSTER_NAME="training-on-eks"
-export AWS_DEFAULT_REGION="ap-northeast-2"
-export K8S_VERSION="1.33"
-export KARPENTER_VERSION="1.8.3"
-export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=training-on-eks --query "Vpcs[].VpcId" --output text)
-```
-
-#### 프라이빗 서브넷 조회 ####
+#### 1. 프라이빗 서브넷 조회 ####
+EKS 클러스터가 설치되는 서브넷 정보이다. 
 ```
 aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
     --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
     --output table
-```  
+```
 
+#### 2. 클러스터 환경 설정 ####
+```
+export CLUSTER_NAME="training-on-eks"
+export AWS_DEFAULT_REGION="ap-northeast-2"
+export K8S_VERSION="1.33"
+export KARPENTER_VERSION="1.8.3"
+export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values="${CLUSTER_NAME}" --query "Vpcs[].VpcId" --output text)
 
+SUBNET_IDS=$(aws ec2 describe-subnets \
+    --region "${AWS_DEFAULT_REGION}" \
+    --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --query "Subnets[*].SubnetId" \
+    --output text)
+
+if [ -z "$SUBNET_IDS" ]; then
+    echo "ERROR: No subnets found with the specified filters in VPC ${VPC_ID}."
+    exit 1
+fi
+
+# YAML 형식에 맞게 동적 문자열 생성 (각 ID 뒤에 ": {}" 추가 및 앞쪽 Identation과 줄바꿈)
+SUBNET_YAML=""
+for id in $SUBNET_IDS; do
+    SUBNET_YAML+="      ${id}: {}"$'\n'
+done
+```
+
+#### 3. 클러스터 생성 #### 
 ```
 eksctl create cluster -f - <<EOF
 ---
@@ -74,9 +92,7 @@ vpc:
   id: "${VPC_ID}"                    
   subnets:
     private:                                 # 프라이빗 서브넷에 데이터플레인 설치
-      subnet-0c5aa6962f74640ec: { }          # az-a
-      subnet-052a978810c47cc89: { }          # az-b
-      subnet-0ff15887f5579f484: { }          # az-c 
+${SUBNET_YAML}
 
 managedNodeGroups:                           # 관리형 노드 그룹
   - name: ng-arm
@@ -103,10 +119,6 @@ karpenter:
 EOF
 ```
 
-클러스터를 생성한다. 
-```
-eksctl create cluster -f cluster-config.yaml 
-```
 [결과]
 ```
 2025-12-13 13:33:19 [ℹ]  eksctl version 0.220.0
