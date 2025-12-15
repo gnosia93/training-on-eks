@@ -73,19 +73,19 @@ metadata:
 vpc:
   id: "${VPC_ID}"                    
   subnets:
-    private:                          # 프라이빗 서브넷 정보를 지정해야 합니다 (조회된 값으로 수정 - 4개의 서브넷 중 3개만 사용)
-      subnet-0c5aa6962f74640ec: { az: ap-northeast-2a }
-      subnet-052a978810c47cc89: { az: ap-northeast-2b }
-      subnet-0ff15887f5579f484: { az: ap-northeast-2c }      
+    private:                                 # 프라이빗 서브넷에 데이터플레인 설치
+      subnet-0c5aa6962f74640ec: { }          # az-a
+      subnet-052a978810c47cc89: { }          # az-b
+      subnet-0ff15887f5579f484: { }          # az-c 
 
-managedNodeGroups:                    # 관리형 노드 그룹을 정의합니다.
+managedNodeGroups:                           # 관리형 노드 그룹
   - name: ng-arm
     instanceType: c7g.2xlarge
     minSize: 1
     maxSize: 1
     desiredCapacity: 1
     amiFamily: AmazonLinux2023
-    privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
+    privateNetworking: true                  # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
    
   - name: ng-x86
     instanceType: c6i.2xlarge
