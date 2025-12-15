@@ -50,7 +50,8 @@ Prometheus Operator 사용 시 자동으로 ServiceMonitor 리소스나 PodMonit
 
 
 
-* 설정 가능한 옵션 보기
+### 차트 ###
+* 차트 옵션 보기
 ```
 helm show values nvidia/dcgm-exporter
 ```
