@@ -36,8 +36,13 @@ resource "aws_subnet" "private" {
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index + 4)
   availability_zone = data.aws_availability_zones.available.names[count.index]
   vpc_id            = aws_vpc.main.id
-  tags = { Name = "TOE-priv-subnet-${count.index + 1}" }
+  tags = { 
+    Name = "TOE-priv-subnet-${count.index + 1}"
+    "karpenter.sh/discovery" = var.cluster_name
+  }
 }
+
+karpenter.sh/discovery
 
 resource "aws_eip" "nat" {
   domain           = "vpc"
