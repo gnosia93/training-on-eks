@@ -1,7 +1,7 @@
 ## [kubectl 및 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
 
-웹브라우저를 이용하여 code-server-graviton 코드 서버로 접속한 후 터미널을 열고 kubectl, eksctl, helm 을 설치한다 (그라비톤에만 설치)
-별다른 코멘트가 없는 경우, 모든 작업은 code-server-graviton 에서 수행한다. 
+code-server-graviton 코드 서버에 웹으로 접속한 후, 터미널을 열어 kubectl, eksctl, helm 을 설치한다.
+별다른 코멘트가 없다면 모든 작업은 code-server-graviton 웹환경의 터미널에서 수행한다. 
  
 #### 1. kubectl 설치 #### 
 ```
@@ -46,7 +46,7 @@ export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values="${CLUSTER_
 ```
 
 ### 2. 서브넷 식별 ###
-클러스터의 데이터 플레인은 다음의 프라이빗 서브넷에 위치하게 된다. 
+클러스터의 데이터 플레인(워커노드 들)은 아래의 프라이빗 서브넷에 위치하게 된다. 
 ```
 aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
@@ -75,7 +75,7 @@ done
 ```
 
 ### 3. 클러스터 생성 ### 
-클러스터 생성 완료까지 약 20분 정도의 시간이 소요된다.
+클러스터 생성 완료까지 약 20 ~ 30분 정도의 시간이 소요된다.
 ```
 cat > cluster.yaml <<EOF 
 ---
@@ -141,9 +141,10 @@ eksctl create cluster -f cluster.yaml
 2025-12-15 05:09:52 [✔]  EKS cluster "training-on-eks" in "ap-northeast-2" region is ready
 ```
 
-#### 서브넷 및 시큐리티 그룹 태깅 ####
-카펜터는 신규 EC2 생성시 기존 서브넷과 시큐리티 그룹의 karpenter.sh/discovery={cluster name} 태깅값을 확인한다. 이를통해 스케줄링 대상 서브넷을 찾고 시큐리티 그룹을 할당한다. (만약 서브넷 및 시큐리티 그룹에 디스커버리에 필요한 태깅이 존재하지 않으면 노드는 생성되지 않는다)
-서브넷의 경우 테라폼 스크립트에서 이미 태깅하였다. 여기서는 시큐리티 그룹에 대해서만 태깅을 진행한다. 
+#### 시큐리티 그룹 태깅 ####
+클러스터 생성시 만들어진 시큐리티 그룹에 karpenter.sh/discovery={cluster name} 로 태깅한다.
+카펜터가 신규 노드를 프로비저닝 하면, 이 값으로 태킹된 시큐리티 그룹을 찾아 신규 노드에 할당하게 된다.  
+노드가 위치하게 되는 서브넷 역시 동일 매커니즘으로 동작하는데, 테라폼에서 이미 karpenter.sh/discovery={cluster name} 태깅을 완료하였다. 
 ```
 NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" \
     --query 'nodegroups[0]' --output text)
@@ -152,11 +153,9 @@ LAUNCH_TEMPLATE=$(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" \
     --nodegroup-name "${NODEGROUP}" --query 'nodegroup.launchTemplate.{id:id,version:version}' \
     --output text | tr -s "\t" ",")
 
-# If your EKS setup is configured to use only Cluster security group, then please execute -
 SECURITY_GROUPS=$(aws eks describe-cluster \
     --name "${CLUSTER_NAME}" --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
 
-# If your setup uses the security groups in the Launch template of a managed node group, then :
 SECURITY_GROUPS="$(aws ec2 describe-launch-template-versions \
     --launch-template-id "${LAUNCH_TEMPLATE%,*}" --versions "${LAUNCH_TEMPLATE#*,}" \
     --query 'LaunchTemplateVersions[0].LaunchTemplateData.[NetworkInterfaces[0].Groups||SecurityGroupIds]' \
@@ -167,30 +166,35 @@ aws ec2 create-tags \
     --resources "${SECURITY_GROUPS}"
 ```
 
+#### 억세스 정책 추가 설정 ####
+카펜터 버전 1.8.1 (EKS 1.3.4) 에는 아래의 두가지 설정이 누락되어 있어서 패치가 필요하다. 패치를 하지 않는 경우 카펜터가 프러비저닝한 노드가 클러스터에 조인되지 않는다.  
+* eksctl-training-on-eks-iamservice-role 정책 추가 (OIDC 정책 누락)
+``` 
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "VisualEditor0",
+			"Effect": "Allow",
+			"Action": "eks:DescribeCluster",
+			"Resource": "arn:aws:eks:${AWS_DEFAULT_REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
+		}
+	]
+}
+```
+* IAM Identity Mapping 
+```
+eksctl create iamidentitymapping \
+  --username system:node:{{EC2PrivateDNSName}} \
+  --cluster "${CLUSTER_NAME}" \
+  --arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-eks-iamservice-role" \
+  --group system:bootstrappers \
+  --group system:nodes
 
-
-### 4. 클러스터 확인 ### 
-#### 4.1 컨텍스트 ####
-```
-kubectl config current-context
-```
-[결과]
-```
-i-048265208fb345ec5@training-on-eks.ap-northeast-2.eksctl.io
-```
-#### 4.2 노드그룹 ####
-```
-eksctl get nodegroup --cluster=training-on-eks
-```
-```
-CLUSTER         NODEGROUP       STATUS  CREATED                 MIN SIZE        MAX SIZE        DESIRED CAPACITY        INSTANCE TYPE   IMAGE ID                ASG NAME                                  TYPE
-training-on-eks ng-arm          ACTIVE  2025-12-13T13:47:35Z    2               2               2                       c7g.2xlarge     AL2023_ARM_64_STANDARD  eks-ng-arm-a2cd8bfb-ba01-1252-3342-5cabc45b0b0b    managed
-training-on-eks ng-x86          ACTIVE  2025-12-13T13:47:34Z    2               2               2                       c6i.2xlarge     AL2023_x86_64_STANDARD  eks-ng-x86-e8cd8bfb-ba1b-0f17-c83a-0db24ba49f87    managed
+kubectl describe configmap aws-auth -n kube-system
 ```
 
-
-
-## nginx 실행 ##
+## nginx 실행해 보기 ##
 [nginx.yaml]
 ```
 apiVersion: apps/v1
@@ -241,97 +245,8 @@ spec:
 kubectl apply -f nginx.yaml
 ```
 
-## CPU 노드풀 설정 ###
-```
-cat <<EOF > nodepool-cpu.yaml
-apiVersion: karpenter.sh/v1
-kind: NodePool
-metadata:
-  name: cpu
-spec:
-  template:
-    spec:
-      requirements:
-        - key: karpenter.sh/capacity-type
-          operator: In
-          values: ["on-demand"]
-        - key: topology.kubernetes.io/zone
-          operator: Exists
-        - key: kubernetes.io/arch
-          operator: In
-          values: ["amd64", "arm64"]
-      nodeClassRef:
-        group: karpenter.k8s.aws
-        kind: EC2NodeClass
-        name: gpu
-  limits:
-    cpu: 1000
-    memory: 1000Gi
-  disruption:
-    consolidationPolicy: WhenEmptyOrUnderutilized
-    consolidateAfter: 1m
----
-apiVersion: karpenter.k8s.aws/v1
-kind: EC2NodeClass
-metadata:
-  name: cpu
-spec:
-  role: "eksctl-KarpenterNodeRole-${CLUSTER_NAME}"
-  amiSelectorTerms:
-    # Required; when coupled with a pod that requests NVIDIA GPUs or AWS Neuron
-    # devices, Karpenter will select the correct AL2023 accelerated AMI variant
-    # see https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/
-    - alias: al2023@latest
-  subnetSelectorTerms:
-    - tags:
-        karpenter.sh/discovery: ${CLUSTER_NAME}
-  securityGroupSelectorTerms:
-    - tags:
-        karpenter.sh/discovery: ${CLUSTER_NAME}
-  blockDeviceMappings:
-    - deviceName: /dev/xvda
-      ebs:
-        volumeSize: 300Gi
-        volumeType: gp3
-EOF
-```
-```
-kubectl apply -f nodepool-cpu.yaml
-```
-
-* 트러블 슈팅
-  
-1. 정책추가
-```
-eksctl-training-on-eks-iamservice-role 롤에 아래 정책을 추가한다.
-
-{
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Sid": "VisualEditor0",
-			"Effect": "Allow",
-			"Action": "eks:DescribeCluster",
-			"Resource": "arn:aws:eks:ap-northeast-2:499514681453:cluster/training-on-eks"
-		}
-	]
-}
-```
-2.identity mapping 
-```
-eksctl create iamidentitymapping \
-  --username system:node:{{EC2PrivateDNSName}} \
-  --cluster "${CLUSTER_NAME}" \
-  --arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-eks-iamservice-role" \
-  --group system:bootstrappers \
-  --group system:nodes
-
-kubectl describe configmap aws-auth -n kube-system
-```
-
-
 ## 레퍼런스 ##
 
 * [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
 * [eksctl EKS 설치 예제](https://www.kubeai.org/installation/eks/)
-* https://www.javierinthecloud.com/enable-an-iam-user-or-iam-role-to-access-an-eks-cluster/
+* [Enable an IAM User or IAM Role to access an EKS cluster](https://www.javierinthecloud.com/enable-an-iam-user-or-iam-role-to-access-an-eks-cluster/)
