@@ -17,13 +17,12 @@ helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
 kubectl get pod -n kube-system -l "app.kubernetes.io/name=aws-ebs-csi-driver,app.kubernetes.io/instance=aws-ebs-csi-driver"
 
 kubectl get storageclass
-kubectl patch storageclass [YOUR_STORAGE_CLASS_NAME] -p '{"volumeBindingMode": "WaitForFirstConsumer"}'
-
 ```
-* enableVolumeScheduling=true를 설정하면, 쿠버네티스는 볼륨이 생성되는 즉시 해당 볼륨이 속한 가용 영역을 파악하고, 동일한 가용 영역에 있는 노드에만 파드를 배포하도록 지시한다.
-
-* 이 StorageClass의 volumeBindingMode가 WaitForFirstConsumer로 설정되어 있어야 합니다. 이 설정이 바로 이전에 enableVolumeScheduling=true가 하려던 역할(파드가 생성될 노드의 AZ를 고려하여 볼륨을 생성)을 대신합니다. 만약 volumeBindingMode가 Immediate로 되어 있다면, 아래와 같이 패치 명령어로 수정해 줍니다.
-
+* 이 StorageClass의 volumeBindingMode가 WaitForFirstConsumer로 설정되어 있어야 합니다. 파드가 생성될 노드의 AZ를 고려하여 볼륨을 생성한다.
+만약 volumeBindingMode가 Immediate로 되어 있다면, 아래와 같이 패치 명령어로 수정한다.
+```
+kubectl patch storageclass [YOUR_STORAGE_CLASS_NAME] -p '{"volumeBindingMode": "WaitForFirstConsumer"}'
+```
 
 
 
