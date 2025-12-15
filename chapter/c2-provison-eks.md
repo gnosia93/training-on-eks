@@ -123,11 +123,6 @@ karpenter:
 EOF
 ```
 
-```
-eksctl create cluster -f cluster-config.yaml
-```
-
-
 [결과]
 ```
 2025-12-13 13:33:19 [ℹ]  eksctl version 0.220.0
