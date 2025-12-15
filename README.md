@@ -28,7 +28,7 @@
    - topoloy aware   - placement / same AZ ... ??
    - ultra cluster and capacity block 
 * [9. 병렬 분산 파일 시스템(Lustre)]
-* [10. MLOps /w Airflow]
+* [10. MLOps /w Airflow & MLflow]
    - S3 Data Upload -> trigger LLM training
    - S3 Data Upload -> trigger Spark Curation -> trigger LLM training
 
