@@ -124,6 +124,12 @@ kube-prometheus-stack           monitoring      1               2025-12-15 16:04
 nvdp                            nvidia          1               2025-12-15 11:07:53.172145499 +0000 UTC deployed        nvidia-device-plugin-0.18.0     0.18.0     
 ```
 
+* 릴리즈 삭제
+```
+helm uninstall aws-ebs-csi-driver --namespace kube-system
+``` 
+
+
 ## 레퍼런스 ##
 * [Tracking GPU Usage in K8s with Prometheus and DCGM: A Complete Guide](https://medium.com/@penkow/tracking-gpu-usage-in-k8s-with-prometheus-and-dcgm-a-complete-guide-7c8590809d7c)
 * https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
