@@ -149,11 +149,7 @@ NAME       NODECLASS   NODES   READY   AGE
 gpu-pool   default     0       False   5s
 ```
 
-## GPU 파드 스케줄링 ##
-
-[도커허브 nvidia/cuda](https://hub.docker.com/r/nvidia/cuda) 로 가서 nvidia-smi 가 설치되어 있는 컨테이너 이미지를 확인한다. 해당 페이지에서 아래로 스크롤하면 최신 컨테이너 이미지 정보를 확인할 수 있다.    
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/cuda-container.png)
-이번 워크샵에서는 13.0.2-runtime-ubuntu22.04 도커 이미지로 nvidia-smi 를 실행할 예정이다.   
+## nvidia-smi 파드 스케줄링 ##
 
 [gpu-pod.yaml]
 ```
