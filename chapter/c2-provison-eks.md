@@ -274,8 +274,14 @@ kubectl apply -f nodepool-cpu.yaml
 
 * 트러블 슈팅
 ```
-aws iam attach-role-policy --role-name eksctl-training-on-eks-iamservice-role --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+eksctl create iamidentitymapping \
+  --username system:node:{{EC2PrivateDNSName}} \
+  --cluster "${CLUSTER_NAME}" \
+  --arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-eks-iamservice-role" \
+  --group system:bootstrappers \
+  --group system:nodes
 
+kubectl describe configmap aws-auth -n kube-system
 ```
 
 
