@@ -42,7 +42,7 @@ aws ec2 describe-subnets \
     --output table
 ```
 
-### 클러스터 환경 설정 ###
+#### 1. 환경 설정 ####
 ```
 export AWS_DEFAULT_REGION="ap-northeast-2"
 export CLUSTER_NAME="training-on-eks"
@@ -72,7 +72,7 @@ for id in $SUBNET_IDS; do
 done
 ```
 
-### 클러스터 생성 ### 
+#### 2. 클러스터 생성 #### 
 ```
 cat <<EOF | eksctl create cluster -f -
 ---
