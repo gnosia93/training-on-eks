@@ -72,7 +72,7 @@ for id in $SUBNET_IDS; do
 done
 ```
 
-### 2. 클러스터 생성 ### 
+### 3. 클러스터 생성 ### 
 ```
 cat <<EOF | eksctl create cluster -f -
 ---
@@ -127,8 +127,8 @@ EOF
 ...
 ```
 
-### 3. 클러스터 확인 ### 
-#### 3.1 현재 컨텍스트 ####
+### 4. 클러스터 확인 ### 
+#### 4.1 생성된 클라스터 ####
 ```
 kubectl config current-context
 ```
@@ -136,7 +136,7 @@ kubectl config current-context
 ```
 i-048265208fb345ec5@training-on-eks.ap-northeast-2.eksctl.io
 ```
-#### 3.2 노드그룹 ####
+#### 4.2 노드그룹 ####
 ```
 eksctl get nodegroup --cluster=training-on-eks
 ```
