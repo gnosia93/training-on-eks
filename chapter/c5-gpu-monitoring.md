@@ -1,28 +1,11 @@
-
-
 ## [Prometheus Stack 설치](https://github.com/prometheus-operator/kube-prometheus) ##
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
 helm repo update
 
-cat <<EOF > prometheus-values.yaml
-# prometheus-values.yaml
-prometheus:
-  prometheusSpec:
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: gp2             # kubectl get storageclass 의 NAME 칼럼값
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 300Gi 
-EOF
-
 helm install prometheus prometheus/kube-prometheus-stack \
     --create-namespace \
-    --namespace monitoring \
-    -f prometheus-values.yaml
+    --namespace monitoring 
 ```
 
 ```
@@ -99,7 +82,8 @@ helm uninstall aws-ebs-csi-driver --namespace kube-system
 ``` 
 
 
-## EBS CSI 설치 ##
+## EBS CSI 드라이버를 이용한 프로메테우스 설치 ##
+### 1. EBS CSI 설치 ###
 ```
 eksctl create iamserviceaccount \
     --name ebs-csi-controller-sa \
@@ -124,6 +108,32 @@ kubectl get storageclass
 ```
 kubectl patch storageclass [YOUR_STORAGE_CLASS_NAME] -p '{"volumeBindingMode": "WaitForFirstConsumer"}'
 ```
+
+### [2.Prometheus Stack 설치](https://github.com/prometheus-operator/kube-prometheus) ###
+```
+helm repo add prometheus https://prometheus-community.github.io/helm-charts
+helm repo update
+
+cat <<EOF > prometheus-values.yaml
+# prometheus-values.yaml
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp2             # kubectl get storageclass 의 NAME 칼럼값
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 300Gi 
+EOF
+
+helm install prometheus prometheus/kube-prometheus-stack \
+    --create-namespace \
+    --namespace monitoring \
+    -f prometheus-values.yaml
+```
+
 
 
 
