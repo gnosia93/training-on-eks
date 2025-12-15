@@ -213,6 +213,35 @@ spec:
 EOF
 ```
 
+```
+cat <<EOF > nginx.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 30
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23.1-alpine
+        ports:
+        - containerPort: 80
+        resources:
+          # Karpenter가 새 노드를 준비하도록 리소스 요청 설정
+          requests:
+            cpu: 100m
+            memory: 100Mi
+EOF
+```
+
 
 ## 레퍼런스 ##
 
