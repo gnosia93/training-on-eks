@@ -53,6 +53,11 @@ Prometheus Operator 사용 시 자동으로 ServiceMonitor 리소스나 PodMonit
 
 * 마지막으로 Grafana에서 위에서 언급한 NVIDIA DCGM Exporter Dashboard (ID: 12239)를 가져오면 시각화가 완료됩니다. 
 
+## todo ##
+* 프로메테우스 및 그라파나 설정 - EBS (CSI 설치 필요)
+* DCGM exporter 엔드포인트 스크랩 by 프로메테우스
+* 그라파나 대시보드 번호 설정.
+
 
 ## helm 차트 명령어 ##
 * 차트 옵션 보기
