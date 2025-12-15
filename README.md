@@ -16,7 +16,8 @@
 
 * [6. FSDP로 LLM 훈련하기(싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)
 
-* [7. 복원력 테스트]
+* [7. 분산 훈련 복원력]
+   - 갱 스케줄링
    - 파드 크래쉬
    - 노드 크래쉬
    - 모델 체크 포인트
