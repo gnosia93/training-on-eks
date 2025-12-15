@@ -27,25 +27,15 @@ kubectl get daemonset -n nvidia
 
 ## 카펜터 확인 ##
 ```
-kubectl get all -n karpenter
+kubectl get deployment -n karpenter
 ```
 [결과]
 ```
-NAME                             READY   STATUS    RESTARTS   AGE
-pod/karpenter-565db98b46-4d9km   1/1     Running   0          31s
-pod/karpenter-565db98b46-pmt99   1/1     Running   0          31s
-
-NAME                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
-service/karpenter   ClusterIP   172.20.216.254   <none>        8080/TCP   19m
-
-NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/karpenter   2/2     2            2           12m
-
-NAME                                   DESIRED   CURRENT   READY   AGE
-replicaset.apps/karpenter-565db98b46   2         2         2       31s
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+karpenter   2/2     2            2           6m18s
 ```
 
-* 카펜터 출력 로그 확인
+#### 카펜터 로그 확인 ####
 ```
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
