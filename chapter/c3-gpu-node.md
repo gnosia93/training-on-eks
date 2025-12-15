@@ -49,7 +49,7 @@ spec:
       expireAfter: 720h # 30 * 24h = 720h
       taints:
       - key: "nvidia.com/gpu"
-        value: "true"
+        value: "present"
         effect: NoSchedule
   limits:
     cpu: 1000
