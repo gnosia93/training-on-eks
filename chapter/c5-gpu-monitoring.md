@@ -1,3 +1,15 @@
+## EBS CSI 설치 ##
+```
+helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver/
+helm repo update
+
+helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
+    --namespace kube-system \
+    --set enableVolumeScheduling=true
+```
+enableVolumeScheduling=true를 설정하면, 쿠버네티스는 볼륨이 생성되는 즉시 해당 볼륨이 속한 가용 영역을 파악하고, 동일한 가용 영역에 있는 노드에만 파드를 배포하도록 지시한다.
+
+
 ## [Prometheus Stack 설치](https://github.com/prometheus-operator/kube-prometheus) ##
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
