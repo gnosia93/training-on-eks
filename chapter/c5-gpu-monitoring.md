@@ -34,6 +34,8 @@ kubectl patch svc prometheus-grafana -n monitoring -p '{
 
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 ```
+* 대시보드 설정
+NVIDIA DCGM Exporter Dashboard (ID: 12239)를 가져오면 시각화가 완료됩니다. 
 
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
@@ -66,13 +68,6 @@ kubectl get all -n dcgm
 설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 **metrics** 라는 이름의 Prometheus 엔드포인트로 노출하기 시작합니다 (기본 포트: 9400).
 이제 Prometheus 서버가 이 엔드포인트를 **스크랩(scrape)** 하도록 설정해야 합니다.
 Prometheus Operator 사용 시 자동으로 ServiceMonitor 리소스나 PodMonitor 리소스를 감지하여 DCGM Exporter 서비스를 스크랩 대상에 추가하도록 구성할 수 있습니다.
-
-* 마지막으로 Grafana에서 위에서 언급한 NVIDIA DCGM Exporter Dashboard (ID: 12239)를 가져오면 시각화가 완료됩니다. 
-
-## todo ##
-* 프로메테우스 및 그라파나 설정 - EBS (CSI 설치 필요)
-* DCGM exporter 엔드포인트 스크랩 by 프로메테우스
-* 그라파나 대시보드 번호 설정.
 
 
 ## 참고 - Helm 차트 명령어 ##
