@@ -51,7 +51,7 @@ Prometheus Operator 사용 시 자동으로 ServiceMonitor 리소스나 PodMonit
 * 마지막으로 Grafana에서 위에서 언급한 NVIDIA DCGM Exporter Dashboard (ID: 12239)를 가져오면 시각화가 완료됩니다. 
 
 
-## 부연설명 - helm 차트의 이해 ##
+## helm 차트 명령어 ##
 * 차트 옵션 보기
 ```
 helm show values nvidia/dcgm-exporter
