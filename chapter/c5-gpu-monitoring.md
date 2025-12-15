@@ -9,14 +9,14 @@ helm install prometheus prometheus/kube-prometheus-stack \
 ```
 
 ```
-kubectl --namespace default get pods -l "release=prometheus"
+kubectl --namespace monitoring get pods -l "release=prometheus"
 
 # 그라파나 어드민
-kubectl --namespace default get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 
 # 그라파나 파드
-kubectl --namespace default get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname
-kubectl get service | grep grafana
+kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname
+kubectl get service -n monitoring | grep grafana
 ```
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
