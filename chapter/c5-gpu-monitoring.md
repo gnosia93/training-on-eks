@@ -21,7 +21,7 @@ kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-s
 
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
-
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/dcgm-exporter.png)
 ```
 helm repo add nvidia https://nvidia.github.io/dcgm-exporter/helm-charts
 helm repo update
