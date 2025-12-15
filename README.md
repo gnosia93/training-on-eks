@@ -18,7 +18,7 @@
    - 모델 체크 포인트  
 * [8. EFA 멀티노드 분산 트레이닝]
    - efa RDMA
-   - topoloy aware
+   - topoloy aware   - placement / same AZ ... ??
    - ultra cluster and capacity block 
 * [9. 병렬 분산 파일 시스템]
   
