@@ -141,9 +141,9 @@ eksctl create cluster -f cluster.yaml
 2025-12-15 05:09:52 [✔]  EKS cluster "training-on-eks" in "ap-northeast-2" region is ready
 ```
 
-#### 시큐리티 그룹 태깅 ####
-카펜터가 EC2 인스턴스를 새로 생성할때, 해당 인스턴스가 어느 네트워크(서브넷)에 위치해야 하고 어떤 네트워크 규칙(시큐리티 그룹)을 따라야 하는지 알고 있어야 한다. 카펜터는 기존 노드그룹(ng-arm, ng-x86)의 서브넷과 시큐리티 그룹을 그대로 사용하게 되는데, 이를 위해 karpenter.sh/discovery={cluster name} 태깅을 기존 서브넷과 시큐리티 그룹에 할당한다.
-서브넷의 경우 테라폼에서 이미 태깅하였다.
+#### 서브넷 및 시큐리티 그룹 태깅 ####
+카펜터는 신규 EC2 생성시 기존 서브넷과 시큐리티 그룹의 karpenter.sh/discovery={cluster name} 태깅값을 확인한다. 이를통해 스케줄링 대상 서브넷을 찾고 시큐리티 그룹을 할당한다. (만약 서브넷 및 시큐리티 그룹에 디스커버리에 필요한 태깅이 존재하지 않으면 노드는 생성되지 않는다)
+서브넷의 경우 테라폼 스크립트에서 이미 태깅하였다. 여기서는 시큐리티 그룹에 대해서만 태깅을 진행한다. 
 ```
 NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" \
     --query 'nodegroups[0]' --output text)
