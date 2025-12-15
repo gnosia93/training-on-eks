@@ -34,13 +34,6 @@ helm version
 
 ## 클러스터 생성하기 ##
 
-그라비톤 인스턴스에서 EKS를 생성할 예정이다. 그라비톤 인스턴스는 EKS 클러스터를 생성하기 위한 권한을 가지고 있어야 하는데 아래 도표는 그라비톤이 가져야 할 최소 권한 리스트이다.
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/previllege_For_EKS.png)
-이 워크샵에서는 TOE_EKS_EC2_ROLE 을 만들어 편의상 AdminFullAccess 권한을 부여하였고, 이를 다시 그라비톤 인스턴스에 부여하였다. (좀더 세부적인 내용은 테라폼 코드를 참조)
-
-또한 클러스터가 생성되는 네트워크상의 위치를 정해 주기위해서 VPC ID 와 서브넷 정보가 필요한데, 보안의 강화하기 위해 EKS 클러스터 워커노드는 프라이빗 서브넷에 위치하게 된다.
-
-### 서브넷 조회 ###
 EKS 클러스터가 다음과 같은 프라이빗 서브넷에 설치된다. 
 ```
 aws ec2 describe-subnets \
