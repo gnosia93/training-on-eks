@@ -4,8 +4,9 @@ helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-d
 helm repo update
 
 helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
-    --namespace kube-system \
-    --set controller.volumeScheduling.enabled=true
+    --namespace kube-system 
+
+kubectl get pod -n kube-system -l "app.kubernetes.io/name=aws-ebs-csi-driver,app.kubernetes.io/instance=aws-ebs-csi-driver"
 
 kubectl get storageclass
 kubectl patch storageclass [YOUR_STORAGE_CLASS_NAME] -p '{"volumeBindingMode": "WaitForFirstConsumer"}'
