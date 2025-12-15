@@ -56,6 +56,7 @@ kubectl --namespace default get secrets prometheus-grafana -o jsonpath="{.data.a
 
 # 그라파나 파드
 kubectl --namespace default get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname
+kubectl get service | grep grafana
 ```
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
