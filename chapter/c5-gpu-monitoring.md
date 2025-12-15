@@ -1,79 +1,22 @@
-EKS 오토모드에서는 Bottlerocket 기반의 AMI(Amazon Machine Image)를 사용하고 있다.
-GPU 메토릭 정보를 추출하기 위해서 DCGM exporter 파드를 스케줄하는 경우, 아래의 POD 로그에서 보이는 것 처럼 libdcgm.so.4 파일이 설치되어 있지 않아서 파드가 크래시 된다.
-```
-Defaulted container "nvidia-dcgm-exporter" out of: nvidia-dcgm-exporter, toolkit-validation (init)
-time=2025-12-11T06:53:46.917Z level=INFO msg="Starting dcgm-exporter" Version=4.4.2-4.7.0
-time=2025-12-11T06:53:46.918Z level=ERROR msg="the libdcgm.so.4 library was not found. Install Data Center GPU Manager (DCGM)."
-```
-
-https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks-cluster-observability-cluster-cloudwatch-ci.html
-## 어떻게 GPU 정보는 뽑아오지 ? ##
-
-* https://docs.aws.amazon.com/ko_kr/eks/latest/best-practices/aiml-observability.html
+## DCGM (Data Center GPU Monitor) 설치 ##
 
 ```
-aws eks create-addon --cluster-name training-on-eks \
-  --addon-name amazon-cloudwatch-observability 
+helm repo add nvidia helm.ngc.nvidia.com
+helm repo update
+helm install dcgm-exporter nvidia/dcgm-exporter --namespace monitoring --create-namespace
 
-aws eks describe-addon --cluster-name training-on-eks \
-  --addon-name amazon-cloudwatch-observability --query "addon.status"
-
-aws eks list-addons --cluster-name training-on-eks
-```
-[결과]
-```
-"ACTIVE"
-
-{
-    "addons": [
-        "amazon-cloudwatch-observability",
-        "metrics-server"
-    ]
-}
+kubectl get pods -n monitoring
+kubectl get services -n monitoring
 ```
 
+* 설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 **metrics**라는 이름의 Prometheus 엔드포인트로 노출하기 시작합니다 (기본 포트: 9400).
+* 이제 Prometheus 서버가 이 엔드포인트를 **스크랩(scrape)**하도록 설정해야 합니다.
+#### Prometheus Operator 사용 시: ####
+Prometheus Operator가 자동으로 ServiceMonitor 리소스나 PodMonitor 리소스를 감지하여 DCGM Exporter 서비스를 스크랩 대상에 추가하도록 구성할 수 있습니다.
+#### 수동 설정 시: ####
+Prometheus 설정 파일에 scrape_configs 섹션을 추가하여 dcgm-exporter 서비스의 엔드포인트를 명시적으로 지정해야 합니다.
 
-
-EKS Auto 모드 클러스터에서 컨테이너 인사이트(Container Insights)를 활성화하는 가장 간단하고 권장되는 방법은 Amazon CloudWatch Observability EKS 애드온을 사용하는 것입니다.
-다음은 AWS 관리 콘솔 또는 AWS CLI를 사용하여 이 애드온을 설치하는 자세한 가이드입니다.
-방법 1: AWS 관리 콘솔을 통한 활성화 (권장)
-AWS 관리 콘솔을 사용하면 몇 번의 클릭만으로 CloudWatch Observability 애드온을 설치할 수 있습니다.
-EKS 콘솔로 이동: AWS 관리 콘솔에 로그인한 후, Amazon EKS 콘솔로 이동합니다.
-클러스터 선택: 컨테이너 인사이트를 활성화하려는 EKS Auto 모드 클러스터의 이름을 클릭합니다.
-애드온 탭 선택: 클러스터 세부 정보 페이지에서 '애드온(Add-ons)' 탭을 선택합니다.
-애드온 설치: '애드온 추가(Get more add-ons)' 또는 '애드온 관리(Manage add-ons)' 버튼을 클릭합니다.
-CloudWatch 애드온 선택: 사용 가능한 애드온 목록에서 **'Amazon CloudWatch Observability'**를 찾아서 선택하고 **'다음(Next)'**을 클릭합니다.
-설정 구성: 기본 설정을 검토합니다. 일반적으로 EKS Auto 모드는 필요한 IAM 권한 및 구성을 자동으로 처리하므로 추가적인 설정 없이 **'다음'**을 클릭할 수 있습니다.
-설치 완료: 마지막으로 설정 내용을 확인하고 **'설치(Install)'**를 클릭하여 애드온 배포를 시작합니다.
-설치가 완료되면 잠시 후 CloudWatch 콘솔의 컨테이너 인사이트 섹션에서 메트릭과 로그를 확인할 수 있습니다.
-방법 2: AWS CLI를 통한 활성화
-AWS CLI를 사용하여 명령줄에서 직접 애드온을 활성화할 수도 있습니다.
-전제 조건
-AWS CLI가 설치 및 구성되어 있어야 합니다.
-kubectl이 설치되어 있고 클러스터에 액세스할 수 있어야 합니다.
-단계별 가이드
-CloudWatch 애드온 활성화: 다음 명령을 실행하여 AmazonCloudWatchObservability 애드온을 설치합니다.
-bash
-aws eks create-addon --cluster-name <YOUR_CLUSTER_NAME> --addon-name AmazonCloudWatchObservability --addon-version latest
-코드를 사용할 때는 주의가 필요합니다.
-
-<YOUR_CLUSTER_NAME>을 실제 EKS 클러스터 이름으로 대체하세요.
-latest 버전 대신 특정 버전을 지정할 수도 있습니다.
-애드온 상태 확인: 다음 명령으로 애드온 설치 상태를 확인할 수 있습니다.
-bash
-aws eks describe-addon --cluster-name <YOUR_CLUSTER_NAME> --addon-name AmazonCloudWatchObservability --query "addon.status"
-코드를 사용할 때는 주의가 필요합니다.
-
-상태가 ACTIVE가 될 때까지 기다립니다.
-확인 및 모니터링
-애드온 설치가 완료되면, AWS CloudWatch 콘솔로 이동하여 데이터를 확인할 수 있습니다.
-CloudWatch 콘솔로 이동합니다.
-왼쪽 탐색 메뉴에서 **'Container Insights'**를 선택합니다.
-**'성능 대시보드(Performance Dashboard)'**에서 클러스터의 CPU, 메모리, 네트워크 사용률 등 다양한 메트릭을 확인할 수 있습니다.
-로그 데이터는 '로그 그룹(Log groups)' 아래의 /aws/containerinsights/<YOUR_CLUSTER_NAME>/performance 경로에서 확인할 수 있습니다.
-EKS Auto 모드는 노드 인프라 관리를 AWS에 위임하므로, 사용자는 별도의 CloudWatch 에이전트 DaemonSet을 수동으로 배포할 필요가 없습니다. 애드온이 이 모든 과정을 자동으로 처리합니다.
-
-
+* 마지막으로 Grafana에서 위에서 언급한 NVIDIA DCGM Exporter Dashboard (ID: 12239)를 가져오면 시각화가 완료됩니다. 
 
 
 
