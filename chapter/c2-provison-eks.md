@@ -149,4 +149,4 @@ training-on-eks ng-x86          ACTIVE  2025-12-13T13:47:34Z    2               
 ## 레퍼런스 ##
 
 * [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
-* [Install on EKS](https://www.kubeai.org/installation/eks/)
+* [eksctl EKS 설치 예제](https://www.kubeai.org/installation/eks/)
