@@ -240,7 +240,8 @@ spec:
     memory: 1000Gi
   disruption:
     consolidationPolicy: WhenUnderutilized
-    expireAfter: 720h
+    expireAfter:
+      nodes: 720h # 30 days
 ---
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
@@ -253,10 +254,10 @@ spec:
     # devices, Karpenter will select the correct AL2023 accelerated AMI variant
     # see https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/
     - alias: al2023@latest
-  subnetSelector:
+  subnetSelectorTerms:
     - tags:
       karpenter.sh/discovery: ${CLUSTER_NAME}
-  securityGroupSelector:
+  securityGroupSelectorTerms:
     - tags:
       karpenter.sh/discovery: ${CLUSTER_NAME}
   blockDeviceMappings:
