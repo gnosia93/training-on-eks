@@ -41,8 +41,9 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 
 ## GPU 노드풀 준비 ##
+
+[nodepool.yaml]
 ```
-kubectl apply -f - <<EOF
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
@@ -72,7 +73,9 @@ spec:
   disruption:
     consolidationPolicy: WhenEmptyOrUnderutilized
     consolidateAfter: 1m
----
+```
+[nodeclass.yaml]
+```
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
 metadata:
@@ -96,8 +99,13 @@ spec:
       ebs:
         volumeSize: 300Gi
         volumeType: gp3
-EOF
 ```
+
+```
+kubectl apply -f nodeclass.yaml
+kubectl apply -f nodepool.yaml
+```
+
 
 #### GPU 노드풀 생성하기 #### 
 ```
