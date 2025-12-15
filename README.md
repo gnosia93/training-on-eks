@@ -15,7 +15,9 @@
 * [7. 복원력 테스트]
 
 * [8. EFA 멀티노드 분산 트레이닝]
-
+   - efa RDMA
+   - topoloy aware
+   - ultra cluster and capacity block 
 
 ## 레퍼런스 ## 
 
