@@ -34,14 +34,6 @@ helm version
 
 ## EKS 클러스터 생성하기 ##
 
-클러스터는 다음의 프라이빗 서브넷에 위치하게 된다.. 
-```
-aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
-    --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
-    --output table
-```
-
 ### 1. 환경 설정 ###
 ```
 export AWS_DEFAULT_REGION="ap-northeast-2"
@@ -49,6 +41,15 @@ export CLUSTER_NAME="training-on-eks"
 export K8S_VERSION="1.33"
 export KARPENTER_VERSION="1.8.3"
 export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values="${CLUSTER_NAME}" --query "Vpcs[].VpcId" --output text)
+```
+
+### 2. 서브넷 식별 ###
+클러스터의 데이터 플레인은 다음의 프라이빗 서브넷에 위치하게 된다. 
+```
+aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
+    --output table
 
 SUBNET_IDS=$(aws ec2 describe-subnets \
     --region "${AWS_DEFAULT_REGION}" \
