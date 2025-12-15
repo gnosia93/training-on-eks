@@ -25,7 +25,10 @@
    - topoloy aware   - placement / same AZ ... ??
    - ultra cluster and capacity block 
 * [9. 병렬 분산 파일 시스템(Lustre)]
-  
+* [10. MLOps /w Airflow]
+   - S3 Data Upload -> trigger LLM training
+
+
 ## 레퍼런스 ## 
 
 * [AI/ML 워크로드용 Amazon EKS 클러스터 구성](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/ml-cluster-configuration.html)
