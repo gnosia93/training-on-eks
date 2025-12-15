@@ -28,7 +28,11 @@ resource "aws_subnet" "public" {
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   vpc_id                  = aws_vpc.main.id
   map_public_ip_on_launch = true
-  tags = { Name = "TOE-pub-subnet-${count.index + 1}" }
+  tags = { 
+      Name = "TOE-pub-subnet-${count.index + 1}"
+      "kubernetes.io/role/elb" = "1"
+      "kubernetes.io/cluster/training-on-eks" = "owned"
+  }
 }
 
 resource "aws_subnet" "private" {
@@ -38,11 +42,10 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.main.id
   tags = { 
     Name = "TOE-priv-subnet-${count.index + 1}"
-    "karpenter.sh/discovery" = var.cluster_name
+    "karpenter.sh/discovery" = "training-on-eks"
+    "kubernetes.io/role/internal-elb" = "1"
   }
 }
-
-karpenter.sh/discovery
 
 resource "aws_eip" "nat" {
   domain           = "vpc"
