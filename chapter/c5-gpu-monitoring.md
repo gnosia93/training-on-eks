@@ -2,7 +2,7 @@
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
 helm repo update
-helm install kube-prometheus-stack prometheus/kube-prometheus-stack --namespace monitoring --create-namespace
+helm install prometheus prometheus/kube-prometheus-stack --namespace monitoring --create-namespace
 
 kubectl get pods -l "release=kube-prometheus-stack" --namespace monitoring
 ```
