@@ -19,7 +19,8 @@
 * [7. 복원력 테스트]
    - 파드 크래쉬
    - 노드 크래쉬
-   - 모델 체크 포인트  
+   - 모델 체크 포인트
+   - 특정 GPU ID 또는 노드 회피 (재시작시)
 * [8. EFA 멀티노드 분산 트레이닝]
    - efa RDMA
    - topoloy aware   - placement / same AZ ... ??
