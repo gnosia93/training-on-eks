@@ -272,6 +272,12 @@ EOF
 kubectl apply -f nodepool-cpu.yaml
 ```
 
+* 트러블 슈팅
+```
+aws iam attach-role-policy --role-name eksctl-training-on-eks-iamservice-role --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+
+```
+
 
 ## 레퍼런스 ##
 
