@@ -77,22 +77,23 @@ kind: EC2NodeClass
 metadata:
   name: gpu
 spec:
-  amiFamily: AL2 # Amazon Linux 2
   role: "eksctl-KarpenterNodeRole-${CLUSTER_NAME}"
+  amiSelectorTerms:
+    # Required; when coupled with a pod that requests NVIDIA GPUs or AWS Neuron
+    # devices, Karpenter will select the correct AL2023 accelerated AMI variant
+    # see https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/
+    - alias: al2023@latest
   subnetSelectorTerms:
     - tags:
         karpenter.sh/discovery: "${CLUSTER_NAME}" # replace with your cluster name
   securityGroupSelectorTerms:
     - tags:
         karpenter.sh/discovery: "${CLUSTER_NAME}" # replace with your cluster name
-  amiSelectorTerms:
-    - id: "${GPU_AMI_ID}" # <- GPU Optimized AMD AMI 
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
         volumeSize: 300Gi
         volumeType: gp3
-        encrypted: true
 EOF
 ```
 
