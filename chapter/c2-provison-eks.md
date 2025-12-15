@@ -32,9 +32,9 @@ sh get_helm.sh
 helm version
 ``` 
 
-## 클러스터 생성하기 ##
+## EKS 클러스터 생성하기 ##
 
-EKS 클러스터가 다음과 같은 프라이빗 서브넷에 설치된다. 
+클러스터는 다음의 프라이빗 서브넷에 위치하게 된다.. 
 ```
 aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
