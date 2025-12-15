@@ -42,7 +42,7 @@ aws ec2 describe-subnets \
     --output table
 ```
 
-#### 1. 환경 설정 ####
+### 1. 환경 설정 ###
 ```
 export AWS_DEFAULT_REGION="ap-northeast-2"
 export CLUSTER_NAME="training-on-eks"
@@ -72,7 +72,7 @@ for id in $SUBNET_IDS; do
 done
 ```
 
-#### 2. 클러스터 생성 #### 
+### 2. 클러스터 생성 ### 
 ```
 cat <<EOF | eksctl create cluster -f -
 ---
@@ -186,11 +186,11 @@ Error: failed to create cluster "training-on-eks"
 2025-12-13 13:36:05 [ℹ]  deploying stack "eksctl-training-on-eks-cluster"
 ```
 
-### 서브넷 태깅 ### 
+### 3. 서브넷 태깅 ### 
 
 EKS 로드 밸런서와 인그레스는 서브넷 태그 정보를 이용하여, 프로비저닝 되는 위치를 정하게 된다. 퍼블릭 서브넷에는 kubernetes.io/role/elb=1 과 kubernetes.io/cluster/{cluster name}=owned 값을 설정하도록 하고 프라이빗 서브넷에는 kubernetes.io/role/internal-elb=1 을 설정하도록 한다.   
 
-#### 퍼블릭 서브넷 ### 
+#### 3.1 퍼블릭 서브넷 ### 
 ```
 SUBNET_IDS=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-pub-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
@@ -218,7 +218,7 @@ for SUBNET_ID in $SUBNET_IDS; do
 done
 ```
 
-#### 프라이빗 서브넷 #### 
+#### 3.2 프라이빗 서브넷 #### 
 ```
 SUBNET_IDS=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
@@ -245,8 +245,8 @@ for SUBNET_ID in $SUBNET_IDS; do
 done
 ```
 
-### 클러스터 확인 ### 
-* 현재 컨텍스트(생성된 클러스터)
+### 4. 클러스터 확인 ### 
+#### 4.1 현재 컨텍스트 ####
 ```
 kubectl config current-context
 ```
@@ -254,7 +254,7 @@ kubectl config current-context
 ```
 i-048265208fb345ec5@training-on-eks.ap-northeast-2.eksctl.io
 ```
-* 노드그룹
+#### 4.2 노드그룹 ####
 ```
 eksctl get nodegroup --cluster=training-on-eks
 ```
@@ -263,7 +263,7 @@ CLUSTER         NODEGROUP       STATUS  CREATED                 MIN SIZE        
 training-on-eks ng-arm          ACTIVE  2025-12-13T13:47:35Z    2               2               2                       c7g.2xlarge     AL2023_ARM_64_STANDARD  eks-ng-arm-a2cd8bfb-ba01-1252-3342-5cabc45b0b0b    managed
 training-on-eks ng-x86          ACTIVE  2025-12-13T13:47:34Z    2               2               2                       c6i.2xlarge     AL2023_x86_64_STANDARD  eks-ng-x86-e8cd8bfb-ba1b-0f17-c83a-0db24ba49f87    managed
 ```
-* 노드 리스트
+#### 4.3 노드 리스트 ####
 ```
 kubectl get nodes -o wide 
 ```
@@ -279,9 +279,3 @@ ip-10-0-6-224.ap-northeast-2.compute.internal   Ready    <none>   7m27s   v1.33.
 
 * [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
 * [Install on EKS](https://www.kubeai.org/installation/eks/)
-
-
-
-
-
-
