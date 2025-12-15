@@ -109,7 +109,6 @@ EOF
 ```
 
 ```
-kubectl apply -f nodeclass.yaml
 kubectl apply -f nodepool.yaml
 ```
 
