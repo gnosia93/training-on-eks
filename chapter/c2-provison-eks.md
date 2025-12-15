@@ -283,3 +283,4 @@ aws iam attach-role-policy --role-name eksctl-training-on-eks-iamservice-role --
 
 * [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
 * [eksctl EKS 설치 예제](https://www.kubeai.org/installation/eks/)
+* https://www.javierinthecloud.com/enable-an-iam-user-or-iam-role-to-access-an-eks-cluster/
