@@ -131,7 +131,14 @@ eksctl create cluster -f cluster.yaml
 2025-12-13 13:33:20 [!]  Auto Mode will be enabled by default in an upcoming release of eksctl. This means managed node groups and managed networking add-ons will no longer be created by default. To maintain current behavior, explicitly set 'autoModeConfig.enabled: false' in your cluster configuration. Learn more: https://eksctl.io/usage/auto-mode/
 3:36:05 [ℹ]  using Kubernetes version 1.33
 ...
-
+...
+2025-12-15 05:09:32 [ℹ]  waiting for CloudFormation stack "eksctl-training-on-eks-addon-iamserviceaccount-karpenter-karpenter"
+2025-12-15 05:09:32 [ℹ]  created namespace "karpenter"
+2025-12-15 05:09:32 [ℹ]  created serviceaccount "karpenter/karpenter"
+2025-12-15 05:09:32 [ℹ]  adding identity "arn:aws:iam::499514681453:role/eksctl-KarpenterNodeRole-training-on-eks" to auth ConfigMap
+2025-12-15 05:09:32 [ℹ]  adding Karpenter to cluster training-on-eks
+2025-12-15 05:09:52 [ℹ]  kubectl command should work with "/home/ec2-user/.kube/config", try 'kubectl get nodes'
+2025-12-15 05:09:52 [✔]  EKS cluster "training-on-eks" in "ap-northeast-2" region is ready
 ```
 
 #### 참고 - 클러스터 삭제 ####
