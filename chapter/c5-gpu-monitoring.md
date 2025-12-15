@@ -19,7 +19,9 @@ prometheus-kube-state-metrics-66f9f5bf55-zg5bx        1/1     Running   0       
 prometheus-prometheus-node-exporter-hp42x             1/1     Running   0          10m
 prometheus-prometheus-node-exporter-hs79c             1/1     Running   0          10m
 ```
-그라파나 서비스를 외부로 노출 시킨다. 
+
+### 그라파나 ###
+그라파나 서비스를 외부로 노출 시키고, admin 패스워드를 출력한다.  
 ```
 kubectl patch svc prometheus-grafana -n monitoring -p '{
   "spec": {
@@ -30,11 +32,8 @@ kubectl patch svc prometheus-grafana -n monitoring -p '{
 
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 ```
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/prometheus-grafana.png)
 
-# 그라파나 파드
-kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname
-kubectl get service -n monitoring | grep grafana
-```
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/dcgm-exporter.png)
