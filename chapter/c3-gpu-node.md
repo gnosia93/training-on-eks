@@ -51,32 +51,59 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 
 ## GPU 노드풀 준비 ##
-
-아래 조회 결과에서 볼수 있는 것처럼 현재 클러스터에는 GPU를 스케줄링 할수 있는 카펜터 노드풀이 존재하지 않는다.
-클러스터 생성시 만들어진 노드그룹(ng-arm, ng-x86) 역시 CPU 만으로 구성되어져 있다.  
 ```
-kubectl get nodepools -n karpenter
-```
-[결과]
-```
-No resources found
-```
-
-CRD 는 사용자 정의 리소스 정의(Custom Resource Definition) 를 의미하는 것으로, 파드/서비스/디폴로이먼트와 같은 내장된 리소스 객체이외에 
-사용자가 원하는 형태의 새로운 리소스 타입을 쿠버네티스 API로 추가할 수 있게 해주는 강력한 기능이다. 
-CRD 로 필요한 리소스 타입을 정의하고, Operator 즉 쿠버네티스 컨트롤러를 사용자가 직접 그 기능을 구현하면 된다. 카펜터 역시 CRD 의 한 유형이다.   
-
-GPU 노드풀을 만들기 전에, 먼저 카펜터 CRD를 조회하여 해당 API 의 도메인를 확인하도록 한다. 
-노드 클래스는 karpenter.k8s.aws 사용하고, 노드 클레임과 노드풀은 karpenter.sh 도메인을 사용하고 있는 것을 확인할 수 있다. 
-참고로 EKS Auto 모드의 경우 오픈소스 카펜터와는 별도의 CRD 를 사용하고 있으며 API 도메인 역시 동일하지 않다. (다른 CRD 임)    
-```
-kubectl get crd -o wide | grep karpenter
-```
-[결과]
-```
-ec2nodeclasses.karpenter.k8s.aws                2025-12-14T04:26:24Z
-nodeclaims.karpenter.sh                         2025-12-14T04:26:25Z
-nodepools.karpenter.sh                          2025-12-14T04:26:23Z
+kubectl apply -f - <<EOF
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: gpu
+spec:
+  template:
+    spec:
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot", "on-demand"]
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["g", "p"]
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: gpu
+      expireAfter: 720h # 30 * 24h = 720h
+      taints:
+      - key: nvidia.com/gpu
+        value: "true"
+        effect: NoSchedule
+  limits:
+    cpu: 1000
+  disruption:
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 1m
+---
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
+metadata:
+  name: gpu
+spec:
+  amiFamily: AL2 # Amazon Linux 2
+  role: "eksctl-KarpenterNodeRole-${CLUSTER_NAME}"
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "${CLUSTER_NAME}" # replace with your cluster name
+  securityGroupSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "${CLUSTER_NAME}" # replace with your cluster name
+  amiSelectorTerms:
+    - id: "${GPU_AMI_ID}" # <- GPU Optimized AMD AMI 
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 300Gi
+        volumeType: gp3
+        encrypted: true
+EOF
 ```
 
 #### GPU 노드풀 생성하기 #### 
