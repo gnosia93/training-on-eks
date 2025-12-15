@@ -27,7 +27,7 @@ helm repo add nvidia https://nvidia.github.io/dcgm-exporter/helm-charts
 helm repo update
 helm install --generate-name nvidia/dcgm-exporter -n dcgm \
   --create-namespace \
-  --set-string nodeSelector."nvidia\.com/gpu"="true"
+  --set-string nodeSelector."karpenter.k8s.aws/instance-gpu-manufacturer"="nvidia"
 
 kubectl get all -n dcgm
 ```
