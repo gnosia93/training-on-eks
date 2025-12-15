@@ -24,8 +24,6 @@ kubectl get storageclass
 kubectl patch storageclass [YOUR_STORAGE_CLASS_NAME] -p '{"volumeBindingMode": "WaitForFirstConsumer"}'
 ```
 
-
-
 ## [Prometheus Stack 설치](https://github.com/prometheus-operator/kube-prometheus) ##
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
@@ -48,21 +46,16 @@ EOF
 helm install prometheus prometheus/kube-prometheus-stack --create-namespace
     --namespace monitoring \
     -f prometheus-values.yaml
-
-kubectl get pods -l "release=kube-prometheus-stack" --namespace monitoring
 ```
 
-#### Get Grafana 'admin' user password by running: ####
 ```
-kubectl --namespace monitoring get secrets kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
-```
+kubectl --namespace default get pods -l "release=prometheus"
 
-#### grafana ####
-```
-kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=kube-prometheus-stack" -oname
+# 그라파나 어드민
+kubectl --namespace default get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 
-kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-secret -o jsonpath="{.items[0].data.admin-password}" | base64 --decode ; echo
-```
+# 그라파나 파드
+kubectl --namespace default get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname
 
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
