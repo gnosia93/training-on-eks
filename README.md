@@ -13,12 +13,15 @@
 * [6. FSDP로 LLM 훈련하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)
 
 * [7. 복원력 테스트]
-
+   - 파드 크래쉬
+   - 노드 크래쉬
+   - 모델 체크 포인트  
 * [8. EFA 멀티노드 분산 트레이닝]
    - efa RDMA
    - topoloy aware
    - ultra cluster and capacity block 
-
+* [9. 병렬 분산 파일 시스템]
+  
 ## 레퍼런스 ## 
 
 * [AI/ML 워크로드용 Amazon EKS 클러스터 구성](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/ml-cluster-configuration.html)
