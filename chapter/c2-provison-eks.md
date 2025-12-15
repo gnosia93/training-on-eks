@@ -71,7 +71,9 @@ fi
 # YAML 형식에 맞게 동적 문자열 생성 (각 ID 뒤에 ": {}" 추가 및 앞쪽 Identation과 줄바꿈)
 SUBNET_YAML=""
 for id in $SUBNET_IDS; do
-    SUBNET_YAML+="      ${id}: {}"$'\n'
+    # printf를 사용하여 문자열 끝에 \n (줄바꿈)을 출력합니다.
+    printf -v SUBNET_YAML_LINE "      %s: {}\n" "${id}"
+    SUBNET_YAML+="${SUBNET_YAML_LINE}"
 done
 ```
 
