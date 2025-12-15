@@ -20,7 +20,7 @@
    - 갱 스케줄링
    - 컨테이너 / 파드 / 노드 크래쉬
    - 모델 체크 포인트
-   - 특정 GPU ID 또는 노드 회피 (재시작시)
+   - 특정 GPU ID 또는 노드 회피 or 제거(재시작시)
 * [C8. 멀티노드 분산 트레이닝] 
    - efa RDMA
    - cillium CNI - https://cilium.io/
