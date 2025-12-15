@@ -6,9 +6,11 @@
 
 * [3. GPU 노드 준비하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)
 
-* [6. Training Operator 설치](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-training-operator.md)
+* [4. Training Operator 설치](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c4-training-operator.md)
 
-* [7. 모니터링 환경 구축하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-monitor.md)
+* [5. GPU 모니터링 하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-gpu-monitoring.md)
+
+* [6. FSDP로 LLM 훈련하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)
 
 ## 레퍼런스 ## 
 
