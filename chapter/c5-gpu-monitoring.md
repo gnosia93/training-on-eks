@@ -5,7 +5,7 @@ helm repo update
 
 helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
     --namespace kube-system \
-    --set enableVolumeScheduling=true
+    --set controller.volumeScheduling.enabled=true
 ```
 enableVolumeScheduling=true를 설정하면, 쿠버네티스는 볼륨이 생성되는 즉시 해당 볼륨이 속한 가용 영역을 파악하고, 동일한 가용 영역에 있는 노드에만 파드를 배포하도록 지시한다.
 
@@ -14,7 +14,24 @@ enableVolumeScheduling=true를 설정하면, 쿠버네티스는 볼륨이 생성
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
 helm repo update
-helm install prometheus prometheus/kube-prometheus-stack --namespace monitoring --create-namespace
+
+cat <<EOF > prometheus-values.yaml
+# prometheus-values.yaml
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: [YOUR_STORAGE_CLASS_NAME] # 예: gp2 또는 ebs-sc
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 300Gi 
+EOF
+
+helm install prometheus prometheus/kube-prometheus-stack --create-namespace
+    --namespace monitoring \
+    -f prometheus-values.yaml
 
 kubectl get pods -l "release=kube-prometheus-stack" --namespace monitoring
 ```
