@@ -141,11 +141,6 @@ eksctl create cluster -f cluster.yaml
 2025-12-15 05:09:52 [✔]  EKS cluster "training-on-eks" in "ap-northeast-2" region is ready
 ```
 
-#### 참고 - 클러스터 삭제 ####
-```
-eksctl delete cluster -f cluster.yaml
-```
-
 ### 4. 클러스터 확인 ### 
 #### 4.1 컨텍스트 ####
 ```
@@ -164,6 +159,60 @@ CLUSTER         NODEGROUP       STATUS  CREATED                 MIN SIZE        
 training-on-eks ng-arm          ACTIVE  2025-12-13T13:47:35Z    2               2               2                       c7g.2xlarge     AL2023_ARM_64_STANDARD  eks-ng-arm-a2cd8bfb-ba01-1252-3342-5cabc45b0b0b    managed
 training-on-eks ng-x86          ACTIVE  2025-12-13T13:47:34Z    2               2               2                       c6i.2xlarge     AL2023_x86_64_STANDARD  eks-ng-x86-e8cd8bfb-ba1b-0f17-c83a-0db24ba49f87    managed
 ```
+
+### 5. 카펜터 설정 ###
+```
+cat <<EOF > nodepool-latest.yaml
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: default
+spec:
+  template:
+    spec:
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot", "on-demand"]
+        - key: topology.kubernetes.io/zone
+          operator: Exists
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+      nodeClassRef:
+        name: default
+  limits:
+    cpu: 1000
+    memory: 1000Gi
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    expireAfter: 720h
+---
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
+metadata:
+  name: default
+spec:
+  role: "eksctl-KarpenterNodeRole-${CLUSTER_NAME}"
+  amiSelectorTerms:
+    # Required; when coupled with a pod that requests NVIDIA GPUs or AWS Neuron
+    # devices, Karpenter will select the correct AL2023 accelerated AMI variant
+    # see https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/
+    - alias: al2023@latest
+  subnetSelector:
+    - tags:
+      karpenter.sh/discovery: ${CLUSTER_NAME}
+  securityGroupSelector:
+    - tags:
+      karpenter.sh/discovery: ${CLUSTER_NAME}
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 300Gi
+        volumeType: gp3
+EOF
+```
+
 
 ## 레퍼런스 ##
 
