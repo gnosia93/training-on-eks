@@ -1,9 +1,76 @@
+## Prometheus 설치 ##
+```
+helm repo add prometheus https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install kube-prometheus-stack prometheus/kube-prometheus-stack --namespace monitoring --create-namespace
+
+kubectl get pods -l "release=kube-prometheus-stack" --namespace monitoring
+```
+
+
+Get Grafana 'admin' user password by running:
+
+  kubectl --namespace monitoring get secrets kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+
+Access Grafana local instance:
+
+  export POD_NAME=$(kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=kube-prometheus-stack" -oname)
+  kubectl --namespace monitoring port-forward $POD_NAME 3000
+
+Get your grafana admin user password by running:
+
+  kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-secret -o jsonpath="{.items[0].data.admin-password}" | base64 --decode ; echo
+
+
+Visit https://github.com/prometheus-operator/kube-prometheus for instructions on how to create & configure Alertmanager and Prometheus instances using the Operato
+
+undefined
+undefined
+undefined
+사이트 4개
+Prometheus community Helm charts - GitHub
+Usage. Helm must be installed to use the charts. Please refe...
+
+GitHub
+
+Helm을 사용하여 새 Prometheus 서버에서 수집 설정
+다음 섹션의 단계를 수행하려면 Linux 또는 macOS 컴퓨터를 사용해야 합니다. * 1단계: 새 차트 H...
+
+AWS Documentation
+How to Setup Prometheus Using Helm Chart On Kubernetes?
+)
+helm repo update
+
+# Prometheus 스택 설치 (monitoring 네임스페이스에 설치하는 것이 일반적입니다)
+helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+코드를 사용할 때는 주의가 필요합니다.
+
+Prometheus Operator가 설치된 후에는 DCGM Exporter를 설치할 때 ServiceMonitor를 정상적으로 생성할 수 있습니다.
+방법 2: ServiceMonitor 생성을 비활성화하고 DCGM Exporter만 설치합니다
+만약 Prometheus Operator를 사용하지 않거나, 수동으로 Prometheus 설정을 관리하려는 경우, Helm 설치 시 ServiceMonitor 생성을 비활성화할 수 있습니다.
+bash
+helm install --generate-name nvidia/dcgm-exporter -n kube-system \
+  --set serviceMonitor.enabled=false
+코드를 사용할 때는 주의가 필요합니다.
+
+이 명령어를 실행하면 DCGM Exporter 파드와 기본 Service만 생성됩니다. 이 경우, 사용자가 직접 Prometheus 설정 파일(scrape_configs)을 수정하여 DCGM Exporter의 엔드포인트(dcgm-exporter.kube-system.svc.cluster.local:9400)를 스크랩하도록 구성해야 합니다.
+AI 대답에는 오류가 있을 수 있습니다. 자세히 알아보기
+
+
+
+
+```
+
+
+
+
+
 ## DCGM(NVIDIA Data Center GPU Manager) 설치 ##
 
 ```
-helm repo add nvidia helm.ngc.nvidia.com
+helm repo add nvidia https://nvidia.github.io/dcgm-exporter/helm-charts
 helm repo update
-helm install dcgm-exporter nvidia/dcgm-exporter --namespace monitoring --create-namespace
+helm install --generate-name nvidia/dcgm-exporter -n kube-system
 
 kubectl get pods -n monitoring
 kubectl get services -n monitoring
