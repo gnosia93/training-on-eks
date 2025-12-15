@@ -41,7 +41,7 @@ tolerations:
     effect: "NoSchedule"
 EOF
 
-helm install --generate-name nvidia/dcgm-exporter -n dcgm \
+helm install dcgm-exporter nvidia/dcgm-exporter -n dcgm \
   --create-namespace \
   -f custom-values.yaml
 
