@@ -31,6 +31,10 @@ kubectl get pods -n monitoring
 kubectl get services -n monitoring
 ```
 
+```
+helm show values nvidia/dcgm-exporter
+```
+
 * 설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 **metrics**라는 이름의 Prometheus 엔드포인트로 노출하기 시작합니다 (기본 포트: 9400).
 * 이제 Prometheus 서버가 이 엔드포인트를 **스크랩(scrape)**하도록 설정해야 합니다.
 * Prometheus Operator 사용 시:
