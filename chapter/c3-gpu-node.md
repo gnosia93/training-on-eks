@@ -47,11 +47,10 @@ kubectl get service karpenter -n karpenter -o yaml > karpenter-service.yaml
 ```
 
 
-## GPU 노드풀 준비 ##
+## GPU 노드풀 생성 ##
 
-[nodepool.yaml]
 ```
-cat > nodepool.yaml <<EOF
+cat > nodepool-gpu.yaml <<EOF
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
