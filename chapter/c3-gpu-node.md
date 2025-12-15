@@ -25,25 +25,6 @@ helm install nvdp nvdp/nvidia-device-plugin \
 kubectl get daemonset -n nvidia
 ```
 
-#### 부연설명 - GPU Operator 에 대해서 ####
-GPU Operator는 nvidia-device-plugin을 포함하는 상위 개념(슈퍼셋)으로, 이를 이용하면 직접 드라이버를 설치하거나 디바이스 플러그인을 설치할 필요가 없고, 오퍼레이터가 이 모든 작업을 대신 해준다.
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-operator.png)
-
-#### GPU Operator의 주요 역할 ####
-* 드라이버 설치 자동화: 새 노드가 클러스터에 조인되면, 오퍼레이터가 자동으로 적절한 NVIDIA GPU 드라이버를 찾아 설치합니다.
-* 디바이스 플러그인 배포: 드라이버 설치가 끝나면 자동으로 nvidia-device-plugin 데몬셋을 배포합니다.
-* 런타임 구성: 컨테이너 런타임(containerd 또는 Docker)이 GPU를 인식하도록 설정합니다.
-* 모니터링 통합: GPU 활용률 등을 모니터링할 수 있는 컴포넌트(DCGM 등)를 함께 설치합니다.
-
-본 워크샵에서는 Nvidia 디바이스 드라이버와 Nvida 컨테이너 툴킷이 설치된 Amazon EKS optimized Amazon Linux 2023 accelerated AMI 를 사용하는 관계로 위에 안내된 것 처럼 디바이스 플로그인을 설치하도록 한다. 참고로 Amazon EKS optimized Amazon Linux 2023 accelerated AMI 리눅스에서 nvidia-container 를 조회하고자 한다면 다음의 명령어를 사용하면 된다.  
-```
-sh-5.2$ rpm -qa | grep nvidia-container
-nvidia-container-toolkit-base-1.18.1-1.x86_64
-libnvidia-container1-1.18.1-1.x86_64
-libnvidia-container-tools-1.18.1-1.x86_64
-nvidia-container-toolkit-1.18.1-1.x86_64
-```
-
 ## 카펜터 확인 ##
 ```
 kubectl get all -n karpenter
