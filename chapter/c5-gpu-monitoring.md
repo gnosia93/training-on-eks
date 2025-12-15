@@ -30,6 +30,12 @@ helm repo update
 cat <<EOF > custom-values.yaml
 nodeSelector:
   karpenter.k8s.aws/instance-gpu-manufacturer: "nvidia"
+
+tolerations:
+  - key: "nvidia.com/gpu"
+    operator: "Equal"
+    value: "present"
+    effect: "NoSchedule"
 EOF
 
 helm install --generate-name nvidia/dcgm-exporter -n dcgm \
