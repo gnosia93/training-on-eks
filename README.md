@@ -20,7 +20,7 @@
    - efa RDMA
    - topoloy aware   - placement / same AZ ... ??
    - ultra cluster and capacity block 
-* [9. 병렬 분산 파일 시스템]
+* [9. 병렬 분산 파일 시스템(Lustre)]
   
 ## 레퍼런스 ## 
 
