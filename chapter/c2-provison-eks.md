@@ -82,8 +82,6 @@ metadata:
   name: "${CLUSTER_NAME}"
   version: "${K8S_VERSION}"
   region: "${AWS_DEFAULT_REGION}"
-  tags:
-    karpenter.sh/discovery: "${CLUSTER_NAME}"     
 
 vpc:
   id: "${VPC_ID}"                    
