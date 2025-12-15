@@ -122,14 +122,14 @@ eksctl create cluster -f cluster.yaml
 
 [결과]
 ```
-2025-12-13 13:33:19 [ℹ]  eksctl version 0.220.0
-2025-12-13 13:33:19 [ℹ]  using region ap-northeast-2
-2025-12-13 13:33:20 [✔]  using existing VPC (vpc-030b927274aa21417) and subnets (private:map[subnet-010db3e6a658817d6:{subnet-010db3e6a658817d6 ap-northeast-2c 10.0.6.0/24 0 } subnet-099acb450b8051d06:{subnet-099acb450b8051d06 ap-northeast-2a 10.0.4.0/24 0 } subnet-0e521bd6de96308b8:{subnet-0e521bd6de96308b8 ap-northeast-2b 10.0.5.0/24 0 }] public:map[])
-2025-12-13 13:33:20 [!]  custom VPC/subnets will be used; if resulting cluster doesn't function as expected, make sure to review the configuration of VPC/subnets
-2025-12-13 13:33:20 [ℹ]  nodegroup "ng-arm" will use "" [AmazonLinux2023/1.33]
-2025-12-13 13:33:20 [ℹ]  nodegroup "ng-x86" will use "" [AmazonLinux2023/1.33]
-2025-12-13 13:33:20 [!]  Auto Mode will be enabled by default in an upcoming release of eksctl. This means managed node groups and managed networking add-ons will no longer be created by default. To maintain current behavior, explicitly set 'autoModeConfig.enabled: false' in your cluster configuration. Learn more: https://eksctl.io/usage/auto-mode/
-3:36:05 [ℹ]  using Kubernetes version 1.33
+2025-12-15 04:51:25 [ℹ]  eksctl version 0.220.0
+2025-12-15 04:51:25 [ℹ]  using region ap-northeast-2
+2025-12-15 04:51:25 [✔]  using existing VPC (vpc-0c1d7c478d72dc9df) and subnets (private:map[ap-northeast-2a:{subnet-015e95a219d74be01 ap-northeast-2a 10.0.4.0/24 0 } ap-northeast-2b:{subnet-02ec412eb8eea970b ap-northeast-2b 10.0.1.0/24 0 } ap-northeast-2c:{subnet-0c3ccee255056c5b7 ap-northeast-2c 10.0.6.0/24 0 } ap-northeast-2d:{subnet-0c57f89f419008c4f ap-northeast-2d 10.0.3.0/24 0 }] public:map[])
+2025-12-15 04:51:25 [!]  custom VPC/subnets will be used; if resulting cluster doesn't function as expected, make sure to review the configuration of VPC/subnets
+2025-12-15 04:51:25 [ℹ]  nodegroup "ng-arm" will use "" [AmazonLinux2023/1.33]
+2025-12-15 04:51:25 [ℹ]  nodegroup "ng-x86" will use "" [AmazonLinux2023/1.33]
+2025-12-15 04:51:25 [!]  Auto Mode will be enabled by default in an upcoming release of eksctl. This means managed node groups and managed networking add-ons will no longer be created by default. To maintain current behavior, explicitly set 'autoModeConfig.enabled: false' in your cluster configuration. Learn more: https://eksctl.io/usage/auto-mode/
+2025-12-15 04:51:25 [ℹ]  using Kubernetes version 1.33
 ...
 ...
 2025-12-15 05:09:32 [ℹ]  waiting for CloudFormation stack "eksctl-training-on-eks-addon-iamserviceaccount-karpenter-karpenter"
