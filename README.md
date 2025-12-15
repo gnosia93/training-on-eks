@@ -14,7 +14,7 @@
 
 * [5. GPU 모니터링 하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-gpu-monitoring.md)      <-- 작성중
 
-* [6. FSDP로 LLM 훈련하기(싱글노드 멀티 GPU](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)
+* [6. FSDP로 LLM 훈련하기(싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)
 
 * [7. 복원력 테스트]
    - 파드 크래쉬
