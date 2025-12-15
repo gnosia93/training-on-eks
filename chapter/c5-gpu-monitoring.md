@@ -1,4 +1,4 @@
-## [Prometheus 설치](https://github.com/prometheus-operator/kube-prometheus) ##
+## [Prometheus Stack 설치](https://github.com/prometheus-operator/kube-prometheus) ##
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
 helm repo update
