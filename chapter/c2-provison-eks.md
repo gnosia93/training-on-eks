@@ -75,6 +75,7 @@ done
 ```
 
 ### 3. 클러스터 생성 ### 
+클러스터 생성 완료까지 약 20분 정도의 시간이 소요된다.
 ```
 cat <<EOF | eksctl create cluster -f -
 ---
