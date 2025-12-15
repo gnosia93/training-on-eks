@@ -4,6 +4,11 @@ variable "aws_region" {
   default     = "ap-northeast-2" # 원하는 리전으로 변경하세요 (예: "us-east-1")
 }
 
+variable "cluster_name" {
+  type        = string
+  default     = "training-on-eks"
+}
+
 variable "vpc_cidr_block" {
   description = "CIDR block for the main VPC"
   type        = string
@@ -27,12 +32,6 @@ variable "key_name" {
   type        = string
   # TODO: 이 기본값을 사용자의 실제 AWS 키페어 이름으로 변경하세요.
   default     = "aws-kp-2" 
-}
-
-variable "vscode_server_password" {
-  description = "Password for the Code Server (VS Code Server) web UI"
-  type        = string
-  default     = "code!@#" # 보안을 위해 강력한 비밀번호로 변경 권장
 }
 
 variable "allowed_ip_cidrs" {
