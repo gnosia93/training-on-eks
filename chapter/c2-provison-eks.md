@@ -301,6 +301,24 @@ kubectl apply -f nodepool-cpu.yaml
 ```
 
 * 트러블 슈팅
+  
+1. 정책추가
+```
+eksctl-training-on-eks-iamservice-role 롤에 아래 정책을 추가한다.
+
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "VisualEditor0",
+			"Effect": "Allow",
+			"Action": "eks:DescribeCluster",
+			"Resource": "arn:aws:eks:ap-northeast-2:499514681453:cluster/training-on-eks"
+		}
+	]
+}
+```
+2.identity mapping 
 ```
 eksctl create iamidentitymapping \
   --username system:node:{{EC2PrivateDNSName}} \
