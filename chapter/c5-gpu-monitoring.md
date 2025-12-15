@@ -25,9 +25,16 @@ kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-s
 ```
 helm repo add nvidia https://nvidia.github.io/dcgm-exporter/helm-charts
 helm repo update
+
+# custom-values.yaml 파일 내용
+cat <<EOF > custom-values.yaml
+nodeSelector:
+  karpenter.k8s.aws/instance-gpu-manufacturer: "nvidia"
+EOF
+
 helm install --generate-name nvidia/dcgm-exporter -n dcgm \
   --create-namespace \
-  --set-string nodeSelector."karpenter.k8s.aws/instance-gpu-manufacturer"="nvidia"
+  -f custom-values.yaml
 
 kubectl get all -n dcgm
 ```
