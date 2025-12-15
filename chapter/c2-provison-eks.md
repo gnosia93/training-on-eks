@@ -82,6 +82,10 @@ done
 ### 클러스터 생성 ### 
 ```
 eksctl create cluster -f - <<EOF
+```
+
+```
+cat > cluster-config.yaml <<EOF
 ---
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
