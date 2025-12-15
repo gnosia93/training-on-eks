@@ -21,7 +21,9 @@ prometheus-prometheus-node-exporter-hs79c             1/1     Running   0       
 ```
 
 ### 그라파나 ###
-그라파나 서비스를 외부로 노출 시키고, admin 패스워드를 출력한다.  
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/prometheus-grafana.png)
+
+그라파나 서비스를 외부로 노출 시키고, admin 패스워드를 확인후 로그인한다. 서비스의 loadBalancerSourceRanges 필드를 이용하면 출발지 주소를 제한할 수 있다.  
 ```
 kubectl patch svc prometheus-grafana -n monitoring -p '{
   "spec": {
@@ -32,7 +34,6 @@ kubectl patch svc prometheus-grafana -n monitoring -p '{
 
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 ```
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/prometheus-grafana.png)
 
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
