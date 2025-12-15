@@ -38,6 +38,17 @@ kubectl get services -n monitoring
 
 * 마지막으로 Grafana에서 위에서 언급한 NVIDIA DCGM Exporter Dashboard (ID: 12239)를 가져오면 시각화가 완료됩니다. 
 
+## DCGM 트러블 슈팅 ##
+
+* Verify GPU Node and Drivers: Ensure that the Kubernetes node where the dcgm-exporter pod is scheduled actually has an NVIDIA GPU and that the appropriate NVIDIA drivers are installed and functional. You can log into the host node and run nvidia-smi to confirm this.
+
+* Check NVIDIA Device Plugin: The NVIDIA device plugin is essential for making GPUs and their libraries visible to Kubernetes pods. Ensure it is deployed and running correctly as a DaemonSet across all your GPU nodes. The recommended way to deploy it is via Helm:
+
+* Confirm Pod Scheduling: Make sure the dcgm-exporter pod is only scheduled on nodes that have GPUs. The daemonset configuration usually handles this automatically with appropriate node selectors, but you can verify with kubectl describe pod dcgm-exporter-xxxxx -n monitoring. The pod will go into a CrashLoopBackOff state if scheduled on a non-GPU node with no drivers.
+
+* Check Driver/Library Versions: In some cases, a version mismatch between the host's NVIDIA driver and the DCGM library version in the container can cause issues. Ensure compatibility or consider deploying the entire NVIDIA GPU Operator which manages the installation and compatibility of all necessary components (drivers, device plugin, DCGM-exporter).
+
+* Verify Container Runtime Access: The configuration of the container runtime (containerd, Docker, etc.) must allow access to the NVIDIA libraries on the host (like libnvidia-ml.so.1). The NVIDIA Container Toolkit usually handles this configuration. 
 
 
 
