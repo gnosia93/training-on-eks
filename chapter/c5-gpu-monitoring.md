@@ -1,4 +1,4 @@
-## DCGM (Data Center GPU Monitor) 설치 ##
+## DCGM(NVIDIA Data Center GPU Manager) 설치 ##
 
 ```
 helm repo add nvidia helm.ngc.nvidia.com
