@@ -239,9 +239,8 @@ spec:
     cpu: 1000
     memory: 1000Gi
   disruption:
-    consolidationPolicy: WhenUnderutilized
-    expireAfter:
-      nodes: 720h # 30 days
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 1m
 ---
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
@@ -256,10 +255,10 @@ spec:
     - alias: al2023@latest
   subnetSelectorTerms:
     - tags:
-      karpenter.sh/discovery: ${CLUSTER_NAME}
+        karpenter.sh/discovery: ${CLUSTER_NAME}
   securityGroupSelectorTerms:
     - tags:
-      karpenter.sh/discovery: ${CLUSTER_NAME}
+        karpenter.sh/discovery: ${CLUSTER_NAME}
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
