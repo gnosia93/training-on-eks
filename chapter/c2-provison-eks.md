@@ -120,7 +120,6 @@ EOF
 eksctl create cluster -f cluster.yaml
 ```
 
-
 [결과]
 ```
 2025-12-13 13:33:19 [ℹ]  eksctl version 0.220.0
@@ -132,6 +131,12 @@ eksctl create cluster -f cluster.yaml
 2025-12-13 13:33:20 [!]  Auto Mode will be enabled by default in an upcoming release of eksctl. This means managed node groups and managed networking add-ons will no longer be created by default. To maintain current behavior, explicitly set 'autoModeConfig.enabled: false' in your cluster configuration. Learn more: https://eksctl.io/usage/auto-mode/
 3:36:05 [ℹ]  using Kubernetes version 1.33
 ...
+
+```
+
+#### 참고 - 클러스터 삭제 ####
+```
+eksctl delete cluster -f cluster.yaml
 ```
 
 ### 4. 클러스터 확인 ### 
