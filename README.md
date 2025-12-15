@@ -16,7 +16,7 @@
 
 * [C6. FSDP로 LLM 훈련하기(싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)
 
-* [C7. 분산 훈련 복원력]
+* [C7. 분산 훈련 스케줄링 및 복원력]
    - 갱 스케줄링
       - 잡큐 관리 / 스케줄링 우선순위 / 재시작 / 잡 파티션 관리 등등... ?? <----slurm 은 기본적으로 제공하는데.... 
    - 컨테이너 / 파드 / 노드 크래쉬
