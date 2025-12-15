@@ -1,6 +1,7 @@
 ## [kubectl 및 eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html#linux_arm64_kubectl) ##
 
-코드 서버 code-server-graviton 에 kubectl, eksctl, helm 을 설치한다 (그라비톤에만 설치)
+웹브라우저를 이용하여 code-server-graviton 코드 서버로 접속한 후 터미널을 열고 kubectl, eksctl, helm 을 설치한다 (그라비톤에만 설치)
+별다른 코멘트가 없는 경우, 모든 작업은 code-server-graviton 에서 수행한다. 
  
 #### 1. kubectl 설치 #### 
 ```
