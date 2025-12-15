@@ -197,28 +197,7 @@ Error: failed to create cluster "training-on-eks"
 
 EKS 로드 밸런서와 인그레스는 서브넷 태그 정보를 이용하여, 프로비저닝 되는 위치를 정하게 된다. 퍼블릭 서브넷에는 kubernetes.io/role/elb=1 과 kubernetes.io/cluster/{cluster name}=owned 값을 설정하도록 하고 프라이빗 서브넷에는 kubernetes.io/role/internal-elb=1 을 설정하도록 한다.   
 
-#### 퍼블릭 서브넷 리스트 조회 ####
-```
-aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=TOE-pub-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
-    --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
-    --output table
-```  
-[결과]
-```
----------------------------------------------------------------------
-|                          DescribeSubnets                          |
-+-----------------+----------------------------+--------------------+
-|       AZ        |            ID              |       Name         |
-+-----------------+----------------------------+--------------------+
-|  ap-northeast-2a|  subnet-026bdcdeea230b1b3  |  TOE-pub-subnet-1  |
-|  ap-northeast-2b|  subnet-0e246ca66e5c239a7  |  TOE-pub-subnet-2  |
-|  ap-northeast-2d|  subnet-024c415fd4c7b2ae2  |  TOE-pub-subnet-4  |
-|  ap-northeast-2c|  subnet-05cf75c4d41ccc74b  |  TOE-pub-subnet-3  |
-+-----------------+----------------------------+--------------------+
-```
-
-퍼블릭 서브넷을 태깅한다 
+#### 퍼블릭 서브넷 ### 
 ```
 SUBNET_IDS=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=TOE-pub-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
@@ -230,7 +209,7 @@ if [ -z "$SUBNET_IDS" ]; then
 fi
 
 for SUBNET_ID in $SUBNET_IDS; do
-  echo "  -> $SUBNET_ID에 태그 적용 중..."
+  echo "  -> 퍼블릭 $SUBNET_ID에 태그 적용 중..."
   
   # create-tags 명령 실행
   aws ec2 create-tags \
@@ -245,11 +224,32 @@ for SUBNET_ID in $SUBNET_IDS; do
   fi
 done
 ```
-프라이빗 서브넷을 태깅한다. 
+
+#### 프라이빗 서브넷 #### 
 ```
-aws ec2 create-tags --resources subnet-099acb450b8051d06 subnet-0e521bd6de96308b8 subnet-010db3e6a658817d6 \
-  --tags Key=kubernetes.io/role/internal-elb,Value=1 \
-  --region ap-northeast-2
+SUBNET_IDS=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --query "Subnets[*].SubnetId" \
+    --output text)
+
+if [ -z "$SUBNET_IDS" ]; then
+  echo "경고: 조건에 맞는 서브넷을 찾을 수 없습니다. 스크립트를 종료합니다."
+fi
+
+for SUBNET_ID in $SUBNET_IDS; do
+  echo "  -> 프라이빗 $SUBNET_ID에 태그 적용 중..."
+  
+  # create-tags 명령 실행
+  aws ec2 create-tags \
+      --resources "$SUBNET_ID" \
+      --tags Key=kubernetes.io/role/internal-elb,Value=1
+
+  if [ $? -eq 0 ]; then
+    echo "     [성공] 태그가 적용되었습니다."
+  else
+    echo "     [실패] 태그 적용 중 오류 발생. 권한을 확인하세요."
+  fi
+done
 ```
 
 ### 클러스터 확인 ### 
