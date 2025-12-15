@@ -27,10 +27,9 @@ kubectl patch svc prometheus-grafana -n monitoring -p '{
     "loadBalancerSourceRanges": ["122.36.213.114/32"]        
   }
 }'
-```
 
-# 그라파나 어드민
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+```
 
 # 그라파나 파드
 kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname
