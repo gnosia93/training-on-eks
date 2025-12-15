@@ -214,15 +214,13 @@ kubectl apply -f nginx.yaml
 kubectl scale deployment/nginx --replicas=30
 ```
 
-
-
-### 5. 카펜터 설정 ###
+## CPU 노드풀 설정 ###
 ```
-cat <<EOF > nodepool-default.yaml
+cat <<EOF > nodepool-cpu.yaml
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
-  name: default
+  name: cpu
 spec:
   template:
     spec:
@@ -236,7 +234,7 @@ spec:
           operator: In
           values: ["amd64", "arm64"]
       nodeClassRef:
-        name: default
+        name: cpu
   limits:
     cpu: 1000
     memory: 1000Gi
@@ -247,7 +245,7 @@ spec:
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
 metadata:
-  name: default
+  name: cpu
 spec:
   role: "eksctl-KarpenterNodeRole-${CLUSTER_NAME}"
   amiSelectorTerms:
@@ -268,7 +266,9 @@ spec:
         volumeType: gp3
 EOF
 ```
-
+```
+kubectl apply -f nodepool-cpu.yaml
+```
 
 
 ## 레퍼런스 ##
