@@ -241,6 +241,10 @@ spec:
             memory: 100Mi
 EOF
 ```
+```
+kubectl apply -f nginx.yaml
+kubectl scale deployment/nginx --replicas=1000
+```
 
 
 ## 레퍼런스 ##
