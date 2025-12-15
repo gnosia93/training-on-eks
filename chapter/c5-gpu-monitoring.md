@@ -22,7 +22,9 @@ kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-s
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/dcgm-exporter.png)
-DCGM 은 GPU가 탑재된 모든 노드에 데몬 형태로 설치된다. 아래 custome-values.yaml 에서 보는 바와 같이 DCGM 이 제대로 설치되기 위해서는 노드 라벨 설렉터와 tolerations 이 필요하다.
+
+DCGM 은 GPU가 탑재된 모든 노드에 데몬 형태로 설치된다. 노드가 신규로 생성되면 DCGM은 이를 감지하고 해당 노드에 파드를 스케줄링 한다. 
+아래 custome-values.yaml 에서 보는 바와 같이 DCGM이 제대로 설치되기 위해서는 노드 라벨 설렉터와 tolerations이 필요하다.
 ```
 helm repo add nvidia https://nvidia.github.io/dcgm-exporter/helm-charts
 helm repo update
