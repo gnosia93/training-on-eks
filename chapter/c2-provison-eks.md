@@ -173,12 +173,12 @@ spec:
       requirements:
         - key: karpenter.sh/capacity-type
           operator: In
-          values: ["spot", "on-demand"]
+          values: ["on-demand"]
         - key: topology.kubernetes.io/zone
           operator: Exists
         - key: kubernetes.io/arch
           operator: In
-          values: ["amd64"]
+          values: ["amd64", "arm64"]
       nodeClassRef:
         name: default
   limits:
