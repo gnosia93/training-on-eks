@@ -51,6 +51,7 @@ kubectl get service karpenter -n karpenter -o yaml > karpenter-service.yaml
 
 [nodepool.yaml]
 ```
+cat > nodepool.yaml <<EOF
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
@@ -80,9 +81,7 @@ spec:
   disruption:
     consolidationPolicy: WhenEmptyOrUnderutilized
     consolidateAfter: 1m
-```
-[nodeclass.yaml]
-```
+---
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
 metadata:
@@ -106,6 +105,7 @@ spec:
       ebs:
         volumeSize: 300Gi
         volumeType: gp3
+EOF
 ```
 
 ```
