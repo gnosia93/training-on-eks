@@ -43,7 +43,8 @@ prometheus:
               storage: 300Gi 
 EOF
 
-helm install prometheus prometheus/kube-prometheus-stack --create-namespace
+helm install prometheus prometheus/kube-prometheus-stack \
+    --create-namespace \
     --namespace monitoring \
     -f prometheus-values.yaml
 ```
