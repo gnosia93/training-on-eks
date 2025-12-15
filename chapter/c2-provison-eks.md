@@ -77,7 +77,7 @@ done
 ### 3. 클러스터 생성 ### 
 클러스터 생성 완료까지 약 20분 정도의 시간이 소요된다.
 ```
-cat <<EOF | eksctl create cluster -f -
+cat > cluster.yaml <<EOF 
 ---
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
@@ -116,6 +116,10 @@ karpenter:
   version: "${KARPENTER_VERSION}"
 EOF
 ```
+```
+eksctl create cluster -f cluster.yaml
+```
+
 
 [결과]
 ```
