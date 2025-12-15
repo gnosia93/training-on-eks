@@ -7,9 +7,27 @@ helm install prometheus prometheus/kube-prometheus-stack \
     --create-namespace \
     --namespace monitoring 
 ```
-
+생성된 파드들을 조회한다. 
 ```
-kubectl --namespace monitoring get pods -l "release=prometheus"
+kubectl get pods -l "release=prometheus" -n monitoring 
+```
+[결과]
+```
+NAME                                                  READY   STATUS    RESTARTS   AGE
+prometheus-kube-prometheus-operator-95f6bb89f-8957b   1/1     Running   0          10m
+prometheus-kube-state-metrics-66f9f5bf55-zg5bx        1/1     Running   0          10m
+prometheus-prometheus-node-exporter-hp42x             1/1     Running   0          10m
+prometheus-prometheus-node-exporter-hs79c             1/1     Running   0          10m
+```
+그라파나 서비스를 외부로 노출 시킨다. 
+```
+kubectl patch svc prometheus-grafana -n monitoring -p '{
+  "spec": {
+    "type": "LoadBalancer",
+    "loadBalancerSourceRanges": ["122.36.213.114/32"]        
+  }
+}'
+```
 
 # 그라파나 어드민
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
