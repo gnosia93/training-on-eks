@@ -25,11 +25,11 @@ kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-s
 ```
 helm repo add nvidia https://nvidia.github.io/dcgm-exporter/helm-charts
 helm repo update
-helm install --generate-name nvidia/dcgm-exporter -n monitoring \
-  --set nodeSelector."nvidia\.com/gpu"=true
+helm install --generate-name nvidia/dcgm-exporter -n dcgm \
+  --create-namespace \
+  --set-string nodeSelector."nvidia\.com/gpu"="true"
 
-kubectl get pods -n monitoring
-kubectl get services -n monitoring
+kubectl get all -n dcgm
 ```
 
 ```
