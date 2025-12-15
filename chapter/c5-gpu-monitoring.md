@@ -45,5 +45,5 @@ Prometheus 설정 파일에 scrape_configs 섹션을 추가하여 dcgm-exporter 
 
 ## 레퍼런스 ##
 * [Tracking GPU Usage in K8s with Prometheus and DCGM: A Complete Guide](https://medium.com/@penkow/tracking-gpu-usage-in-k8s-with-prometheus-and-dcgm-a-complete-guide-7c8590809d7c)
-* https://tech.inflab.com/20250827-bottlerocket-ami-gpu-issue/
-
+* https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+* https://github.com/NVIDIA/dcgm-exporter
