@@ -162,7 +162,7 @@ training-on-eks ng-x86          ACTIVE  2025-12-13T13:47:34Z    2               
 
 ### 5. 카펜터 설정 ###
 ```
-cat <<EOF > nodepool-latest.yaml
+cat <<EOF > nodepool-default.yaml
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
