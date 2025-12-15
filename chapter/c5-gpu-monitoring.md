@@ -44,15 +44,29 @@ helm install --generate-name nvidia/dcgm-exporter -n dcgm \
 
 kubectl get all -n dcgm
 ```
+설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 **metrics** 라는 이름의 Prometheus 엔드포인트로 노출하기 시작합니다 (기본 포트: 9400).
+이제 Prometheus 서버가 이 엔드포인트를 **스크랩(scrape)** 하도록 설정해야 합니다.
+Prometheus Operator 사용 시 자동으로 ServiceMonitor 리소스나 PodMonitor 리소스를 감지하여 DCGM Exporter 서비스를 스크랩 대상에 추가하도록 구성할 수 있습니다.
 
+
+
+* 설정 가능한 옵션 보기
 ```
 helm show values nvidia/dcgm-exporter
 ```
+* 설치된 차트 조회
+``` 
+helm list -A
+```
+[결과]
+```
+NAME                            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                           APP VERSION
+dcgm-exporter-1765815921        dcgm            2               2025-12-15 16:35:32.536365618 +0000 UTC deployed        dcgm-exporter-4.7.1             4.7.1      
+karpenter                       karpenter       1               2025-12-15 08:20:56.942361288 +0000 UTC deployed        karpenter-1.8.1                 1.8.1      
+kube-prometheus-stack           monitoring      1               2025-12-15 16:04:23.410703124 +0000 UTC deployed        kube-prometheus-stack-80.4.1    v0.87.1    
+nvdp                            nvidia          1               2025-12-15 11:07:53.172145499 +0000 UTC deployed        nvidia-device-plugin-0.18.0     0.18.0     
+```
 
-* 설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 **metrics**라는 이름의 Prometheus 엔드포인트로 노출하기 시작합니다 (기본 포트: 9400).
-* 이제 Prometheus 서버가 이 엔드포인트를 **스크랩(scrape)**하도록 설정해야 합니다.
-* Prometheus Operator 사용 시:
-  * Prometheus Operator가 자동으로 ServiceMonitor 리소스나 PodMonitor 리소스를 감지하여 DCGM Exporter 서비스를 스크랩 대상에 추가하도록 구성할 수 있습니다.
 
 * 마지막으로 Grafana에서 위에서 언급한 NVIDIA DCGM Exporter Dashboard (ID: 12239)를 가져오면 시각화가 완료됩니다. 
 
