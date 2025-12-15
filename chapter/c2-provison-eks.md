@@ -70,9 +70,12 @@ fi
 
 # YAML 형식에 맞게 동적 문자열 생성 (각 ID 뒤에 ": {}" 추가 및 앞쪽 Identation과 줄바꿈)
 SUBNET_YAML=""
+if [ -f SUBNET_IDS ]; then
+    rm SUBNET_IDS
+fi
 for id in $SUBNET_IDS; do
-   SUBNET_YAML+="      ${id}: {}
-" # 이 위치에서 엔터 키를 쳐서 실제 줄바꿈을 만듭니다.
+#   SUBNET_YAML+="      ${id}: {}" # 이 위치에서 엔터 키를 쳐서 실제 줄바꿈을 만듭니다.
+   echo "      ${id}: {}" >> SUBNET_IDS
 done
 ```
 
@@ -93,7 +96,7 @@ vpc:
   id: "${VPC_ID}"                    
   subnets:
     private:                                 # 프라이빗 서브넷에 데이터플레인 설치
-${SUBNET_YAML}
+$(cat SUBNET_IDS)
 
 managedNodeGroups:                           # 관리형 노드 그룹
   - name: ng-arm
