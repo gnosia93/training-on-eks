@@ -60,7 +60,7 @@ export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values="${CLUSTER_
 SUBNET_IDS=$(aws ec2 describe-subnets \
     --region "${AWS_DEFAULT_REGION}" \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
-    --query "Subnets[*].SubnetId" \
+    --query "Subnets[*].AvailabilityZone" \
     --output text)
 
 if [ -z "$SUBNET_IDS" ]; then
