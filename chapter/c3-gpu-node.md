@@ -168,30 +168,6 @@ NAME       NODECLASS   NODES   READY   AGE
 gpu-pool   default     0       False   5s
 ```
 
-### 부연설명 ###
-
-컨테이너 환경에서 GPU 워크로드(AI/ML)를 실행할 때, 컨테이너 이미지(Container Image)와 AMI (Amazon Machine Image)는 명확하게 역할이 구분된다
-핵심 원칙은 AMI는 하드웨어와 쿠버네티스 환경을 준비하고, 컨테이너 이미지는 애플리케이션 실행 환경을 준비한다. 
-
-#### 1. AMI 에서 담당하는 부분 ###
-* 운영 체제 (OS): Amazon Linux, Ubuntu 등 기본 OS 커널.
-* NVIDIA GPU 드라이버: 가장 중요합니다. GPU 하드웨어를 직접 제어하는 낮은 수준의 드라이버는 호스트 OS(AMI) 레벨에 설치되어야 합니다. 컨테이너 내부에서는 하드웨어에 직접 접근할 수 없기 때문입니다.
-* CUDA 런타임 라이브러리 (선택적/기본): 드라이버와 함께 설치되는 기본 CUDA 라이브러리 일부가 포함됩니다.
-* 컨테이너 런타임: Docker, containerd 등 컨테이너를 실행하는 엔진.
-* 쿠버네티스 에이전트: kubelet, aws-node (CNI), nvidia-container-runtime (Docker 대신 GPU 사용을 위한 런타임) 등 클러스터 조인을 위한 필수 소프트웨어.
-
-GPU를 인식하고 사용할 수 있도록 하드웨어 접근 권한을 설정하는 것이 AMI의 역할입니다.
-
-#### 2. 컨테이너 이미지의 역할: 애플리케이션 및 종속성 준비 ####
-컨테이너 이미지는 애플리케이션 코드와 그 실행에 필요한 모든 라이브러리 및 환경 변수를 포함하는 격리된 패키지입니다.
-* ML 프레임워크: PyTorch, TensorFlow, MXNet 등 실제 AI/ML 프레임워크.
-* CUDA 툴킷 및 호환 라이브러리: 애플리케이션이 빌드될 때 사용된 특정 버전의 cuda-toolkit, cuDNN, NCCL 라이브러리. (이 버전은 AMI의 드라이버 버전과 호환되어야 합니다.)
-* 애플리케이션 코드: 학습 스크립트 (train.py 등).
-* 파이썬 및 종속성: Python 인터프리터, pip install로 설치된 라이브러리들 (numpy, pandas 등).
-
-AMI가 제공하는 드라이버를 활용하여 애플리케이션을 실행하는 것이 컨테이너 이미지의 역할입니다.
-
-
 ## GPU 파드 스케줄링 ##
 
 [도커허브 nvidia/cuda](https://hub.docker.com/r/nvidia/cuda) 로 가서 nvidia-smi 가 설치되어 있는 컨테이너 이미지를 확인한다. 해당 페이지에서 아래로 스크롤하면 최신 컨테이너 이미지 정보를 확인할 수 있다.    
