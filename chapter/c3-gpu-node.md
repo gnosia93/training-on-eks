@@ -83,7 +83,7 @@ EOF
 ```
 
 ```
-kubectl apply -f nodepool.yaml
+kubectl apply -f nodepool-gpu.yaml
 ```
 
 ## nvidia-smi 파드 스케줄링 ##
