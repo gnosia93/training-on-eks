@@ -160,6 +160,62 @@ training-on-eks ng-arm          ACTIVE  2025-12-13T13:47:35Z    2               
 training-on-eks ng-x86          ACTIVE  2025-12-13T13:47:34Z    2               2               2                       c6i.2xlarge     AL2023_x86_64_STANDARD  eks-ng-x86-e8cd8bfb-ba1b-0f17-c83a-0db24ba49f87    managed
 ```
 
+
+
+## nginx 실행 ##
+[nginx.yaml]
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 2 # 2개의 Nginx 파드를 실행합니다.
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      # 만약 기존 노드에 리소스가 부족하다면, 
+      # 이 요청량 때문에 Karpenter가 새 노드를 띄울 수 있습니다.
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "1000m"
+          limits:
+            memory: "256Mi"
+            cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx
+  type: LoadBalancer # AWS CLB(Classic Load Balancer)를 자동으로 생성합니다.
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```
+```
+kubectl apply -f nginx.yaml
+kubectl scale deployment/nginx --replicas=100
+```
+
+
+
 ### 5. 카펜터 설정 ###
 ```
 cat <<EOF > nodepool-default.yaml
@@ -213,38 +269,6 @@ spec:
 EOF
 ```
 
-```
-cat <<EOF > nginx.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx
-spec:
-  replicas: 30
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.23.1-alpine
-        ports:
-        - containerPort: 80
-        resources:
-          # Karpenter가 새 노드를 준비하도록 리소스 요청 설정
-          requests:
-            cpu: 100m
-            memory: 100Mi
-EOF
-```
-```
-kubectl apply -f nginx.yaml
-kubectl scale deployment/nginx --replicas=1000
-```
 
 
 ## 레퍼런스 ##
