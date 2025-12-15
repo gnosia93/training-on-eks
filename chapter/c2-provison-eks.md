@@ -211,7 +211,7 @@ spec:
 ```
 ```
 kubectl apply -f nginx.yaml
-kubectl scale deployment/nginx --replicas=100
+kubectl scale deployment/nginx --replicas=30
 ```
 
 
