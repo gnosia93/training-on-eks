@@ -27,7 +27,8 @@
    - cillium CNI - https://cilium.io/
    - topoloy aware
       - export NCCL_TOPO_FILE=/path/to/system.xml  
-      - NVLINK / EFA / placement / same AZ ... ??
+      - NVLINK&Switch / EFA / ENA / PCIe  /w docker
+   - placement / same AZ ... ??
    - ultra cluster and capacity block 
 * [C9. 병렬 분산 파일 시스템(Lustre)]
 * [C10. MLOps /w Airflow]
