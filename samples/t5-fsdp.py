@@ -7,6 +7,12 @@ torchrun --nnodes=2 \
          --rdzv_backend=c10d \
          --rdzv_endpoint=MASTER_IP:29500 \
          train_fsdp.py --precision bf16
+
+샤딩 전략별 특징 
+- FULL_SHARD: 파라미터, 그라디언트, 옵티마이저 상태를 모든 GPU에 나눕니다. 메모리를 가장 많이 아낄 수 있어 LLM 학습 시 기본으로 사용됩니다.
+- SHARD_GRAD_OP: 그라디언트와 옵티마이저 상태만 샤딩합니다. 파라미터는 복제되어 있으므로 통신량은 줄어들지만 메모리 사용량은 FULL_SHARD보다 큽니다. (ZeRO-2와 유사)
+- NO_SHARD: 데이터를 나누어 학습하지만 모델 파라미터는 모든 GPU가 가집니다. 일반 DDP(Distributed Data Parallel)와 동일한 동작을 합니다.
+- HYBRID_SHARD: 노드 내부 GPU끼리는 FULL_SHARD를 수행하고, 노드 간에는 모델을 복제합니다. 통신 효율과 메모리 효율의 균형을 맞출 때 사용합니다.
 """
 import os
 import argparse
