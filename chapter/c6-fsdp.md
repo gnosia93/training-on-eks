@@ -45,8 +45,29 @@ service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456
 kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 ```
 
-#### pytorchjob 삭제 ####
+#### pytorchjob 자동 재시작 ####
+
 JOB은 backoffLimit 값까지 재시작된다. 파트는 동일하나 컨테이너가 재시작하는 것으로 생각하면 되는데 기본값은 6회 이다. 6번 재시작했는데도 작업이 오류가 발생되면, CrashBackOff 상태로 빠지고 더이상 컨테이너를 재생성하지 않는다. 
+```
+apiVersion: "kubeflow.org/v1"
+kind: "PyTorchJob"
+metadata:
+  name: "t5-fsdp-training"
+  namespace: "pytorch"
+spec:
+  # 이 부분이 재시도 횟수 설정입니다.
+  backoffLimit: 6  
+  
+  pytorchReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: OnFailure # 실패 시 재시작 정책
+      template:
+        spec:
+          containers:
+```
+
+#### Job 삭제 ####
 실패한 JOB은 명시적으로 삭제 시켜줘야한다. 
 ```
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
