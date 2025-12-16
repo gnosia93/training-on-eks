@@ -6,7 +6,8 @@ DeepSpeed의 영향을 받았으며 PyTorch 프레임워크에 네이티브 기�
 
 ## 훈련하기 ##
 
-* [t5-Small 60M 모델](https://huggingface.co/google-t5/t5-small) 훈련
+#### [t5-Small 60M 모델](https://huggingface.co/google-t5/t5-small) 훈련 ####
+  
 training-on-eks 으로 디렉토리로 이동한 후 pytorch DDP 작업을 실행한다
 ```
 git clone https://github.com/gnosia93/training-on-eks.git
