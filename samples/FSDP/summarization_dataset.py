@@ -20,8 +20,7 @@ from transformers import (
     T5Tokenizer,
     get_linear_schedule_with_warmup
 )
-from transformers.optimization import AdamW
-
+from torch.optim import AdamW
 
 class wikihow(Dataset):
     def __init__(self, tokenizer, type_path, num_samples, input_length, output_length, print_text=False):
