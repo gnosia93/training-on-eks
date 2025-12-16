@@ -46,7 +46,8 @@
       - efa + nvlink
       - pci
       - eni
-
+   - megatron
+     
 * [C11. MLOps /w Airflow]
    - MLflow
    - S3 Data Upload -> trigger LLM training
