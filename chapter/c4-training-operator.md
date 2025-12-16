@@ -40,9 +40,14 @@ pytorch 네임스페이스를 생성하고 pytorch-dist-job.yaml 을 kustomize �
 ```
 kubectl create ns pytorch
 kubectl apply -k kustomize/overlays/ddp/
+```
 
+pytorch 잡과 카펜터 상태를 확인한다.
+```
 kubectl get pytorchjobs -n pytorch
 kubectl get all -n pytorch
+
+kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 [결과]
 ```
