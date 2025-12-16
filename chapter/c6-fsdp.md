@@ -46,7 +46,7 @@ kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 ```
 
 #### pytorchjob 삭제 ####
-JOB 이 실패하거나 크래쉬가 발생하는 경우 명시적으로 삭제 시켜줘야 한다. 
+JOB 이 실패하거나 크래쉬가 발생하는 경우 명시적으로 삭제 시켜줘야 한다. 그렇지 않으면 계속 재시작한다. 
 ```
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
