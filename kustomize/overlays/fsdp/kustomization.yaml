@@ -11,6 +11,7 @@ patches:
     - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
+        sudo dnf install wget -y
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
         cd /workspace/code/samples/FSDP
         sh download_dataset.sh
@@ -25,6 +26,7 @@ patches:
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
       value: |
+        sudo dnf install wget -y
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
         cd /workspace/code/samples/FSDP
         sh download_dataset.sh
