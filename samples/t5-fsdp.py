@@ -91,8 +91,8 @@ def load_checkpoint(model, optimizer, path):
         "epoch": torch.tensor(0)  # 임시 값
     }
     
-    # 해당 경로(폴더)가 존재하는지 확인
-    if os.path.exists(path):
+    # 해당 경로(폴더)가 존재하고 비어있지 않으면.
+    if os.path.exists(path) and len(os.listdir(path)) > 0:
         dcp.load(state_dict, checkpoint_id=path)
         return state_dict["epoch"].item()
     return None
