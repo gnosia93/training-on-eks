@@ -99,14 +99,25 @@ def fsdp_main(args):
         'validation': Dataset.from_pandas(df_val)
     }) 
 
+    # 1. Pandas로 읽고 변환된 dataset의 실제 크기 확인
+    actual_train_len = len(dataset['train'])
+    actual_val_len = len(dataset['validation'])
+    
+    # 2. 사용자가 요청한 개수(1500, 300)가 실제 데이터보다 크지 않도록 조정 (방어 코드)
+    train_samples = min(1500, actual_train_len)
+    val_samples = min(300, actual_val_len)
+    
+    if rank == 0:
+        print(f"Requested 1500 samples, using {train_samples} samples for training.")
+        print(f"Requested 300 samples, using {val_samples} samples for validation.")
+
     print(dataset.keys())
     print("Size of train dataset: ", dataset['train'].shape)
     print("Size of Validation dataset: ", dataset['validation'].shape)
 
-
     #wikihow(tokenizer, type_path, num_samples, input_length, output_length, print_text=False)
-    train_dataset = wikihow(tokenizer, 'train', 1500, 512, 150, False)
-    val_dataset = wikihow(tokenizer, 'validation', 300, 512, 150, False)
+    train_dataset = wikihow(tokenizer, 'train', train_samples, 512, 150, False)
+    val_dataset = wikihow(tokenizer, 'validation', val_samples, 512, 150, False)
 
     sampler1 = DistributedSampler(train_dataset, rank=rank, num_replicas=world_size, shuffle=True)
     sampler2 = DistributedSampler(val_dataset, rank=rank, num_replicas=world_size)
