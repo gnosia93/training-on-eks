@@ -119,8 +119,8 @@ def fsdp_main(args):
     train_dataset = wikihow(tokenizer, 'train', train_samples, 512, 150, False)
     val_dataset = wikihow(tokenizer, 'validation', val_samples, 512, 150, False)
 
-    sampler1 = DistributedSampler(train_dataset, rank=rank, num_replicas=world_size, shuffle=True)
-    sampler2 = DistributedSampler(val_dataset, rank=rank, num_replicas=world_size)
+    sampler1 = DistributedSampler(train_dataset, rank=rank, num_replicas=world_size, shuffle=True, drop_last=True)
+    sampler2 = DistributedSampler(val_dataset, rank=rank, num_replicas=world_size, drop_last=True)
 
     setup()
 
