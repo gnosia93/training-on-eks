@@ -46,6 +46,14 @@ kubectl get nodes -l accelerator=nvidia-tesla-v100 -l karpenter.k8s.aws/instance
 kubectl logs -f -n karpenter -l app.kubernetes.io/instance=karpenter
 ```
 
+[결과]
+```
+NAME                                            STATUS   ROLES    AGE     VERSION
+ip-10-0-5-212.ap-northeast-2.compute.internal   Ready    <none>   9m34s   v1.34.2-eks-ecaa3a6
+
+{"level":"INFO","time":"2025-12-16T04:51:07.209Z","logger":"controller","message":"initialized nodeclaim","commit":"1ad0d78","controller":"nodeclaim.lifecycle","controllerGroup":"karpenter.sh","controllerKind":"NodeClaim","NodeClaim":{"name":"gpu-xb6gn"},"namespace":"","name":"gpu-xb6gn","reconcileID":"b8c178ca-33b0-46ba-bc47-ffe36e491929","provider-id":"aws:///ap-northeast-2b/i-00f574991d2d7d09e","Node":{"name":"ip-10-0-5-212.ap-northeast-2.compute.internal"},"allocatable":{"cpu":"95690m","ephemeral-storage":"288764809146","hugepages-1Gi":"0","hugepages-2Mi":"0","memory":"1167634904Ki","nvidia.com/gpu":"8","pods":"737"}}
+```
+
 ## 레퍼런스 ##
 
 * [DP / DDP / FSDP 간단 비교](https://velog.io/@kaiba0514/DP-DDP-FSDP-%EA%B0%84%EB%8B%A8-%EB%B9%84%EA%B5%90)
