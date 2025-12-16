@@ -36,7 +36,14 @@ kubectl patch svc prometheus-grafana -n monitoring -p '{
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 ```
 #### 2. NVIDIA DCGM Exporter Dashboard (ID: 12239) 설치 ####
-New 버튼을 크릭한 후 팝업창에서 Import 를 선택한다.
+```
+kubectl get svc -n monitoring | grep prometheus-grafana | awk '{print $4}'
+```
+[결과]
+```
+ae286c7ef5ccc461a9565b5cb7863132-369961314.ap-northeast-2.elb.amazonaws.com  
+```
+그라파나 사이트에 로그인 한 후 New 버튼을 크릭한 후 팝업창에서 Import 를 선택한다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-1.png)
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-2.png)
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-3.png)
