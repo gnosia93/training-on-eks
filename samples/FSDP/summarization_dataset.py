@@ -1,3 +1,6 @@
+import pandas as pd
+from datasets import Dataset, DatasetDict
+from datasets import load_dataset
 import argparse
 import glob
 import os
@@ -9,14 +12,9 @@ import re
 from itertools import chain
 from string import punctuation
 
-import pandas as pd
 import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
-
-import pandas as pd
-from datasets import Dataset, DatasetDict
-from datasets import load_dataset
 
 from transformers import (
     T5ForConditionalGeneration,
@@ -26,7 +24,25 @@ from transformers import (
 
 class wikihow(Dataset):
     def __init__(self, tokenizer, type_path, num_samples, input_length, output_length, print_text=False):
-        self.dataset =  load_dataset('wikihow', 'all', data_dir='data/wikihow/', split=type_path)
+        # self.dataset =  load_dataset('wikihow', 'all', data_dir='data/wikihow/', split=type_path)
+        
+        # 1. 절대 경로 설정
+        current_path = os.getcwd()
+        # data/wikihow/ 폴더의 절대 경로 생성
+        data_path = current_path + "/data/wikihow/"
+    
+        # 1. Pandas를 사용하여 CSV 로드 (파싱 에러 자동 처리)
+        # lineterminator 설정을 통해 문장 내 줄바꿈 이슈를 방지합니다.
+        df_train = pd.read_csv(data_path + 'wikihowAll.csv', on_bad_lines='skip', engine='python')
+        df_val = pd.read_csv(data_path + 'wikihowSep.csv', on_bad_lines='skip', engine='python')
+        
+        # 2. Pandas DataFrame을 Hugging Face Dataset 객체로 변환
+        self.dataset = DatasetDict({
+            'train': Dataset.from_pandas(df_train),
+            'validation': Dataset.from_pandas(df_val)
+        }) 
+        
+        
         if num_samples:
             self.dataset = self.dataset.select(list(range(0, num_samples)))
         self.input_length = input_length
