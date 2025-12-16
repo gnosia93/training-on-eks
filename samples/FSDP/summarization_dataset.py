@@ -15,13 +15,13 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 
 from nlp import load_dataset
-
 from transformers import (
-    AdamW,
     T5ForConditionalGeneration,
     T5Tokenizer,
     get_linear_schedule_with_warmup
 )
+from transformers.optimization import AdamW
+
 
 class wikihow(Dataset):
     def __init__(self, tokenizer, type_path, num_samples, input_length, output_length, print_text=False):
