@@ -42,6 +42,10 @@ class wikihow(Dataset):
             'validation': Dataset.from_pandas(df_val)
         }) 
         self.dataset = full_dataset[type_path] 
+
+         # --- 이 지점에 방어 코드 추가 ---
+        actual_size = len(self.dataset)
+        num_samples = min(num_samples, actual_size)
         
         if num_samples:
             self.dataset = self.dataset.select(list(range(0, num_samples)))
