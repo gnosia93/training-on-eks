@@ -19,7 +19,6 @@ from datasets import Dataset, DatasetDict
 from datasets import load_dataset
 
 from transformers import (
-    AdamW,
     T5ForConditionalGeneration,
     T5Tokenizer,
     get_linear_schedule_with_warmup
