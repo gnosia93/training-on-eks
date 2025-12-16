@@ -21,6 +21,16 @@ prometheus-prometheus-node-exporter-hp42x             1/1     Running   0       
 prometheus-prometheus-node-exporter-hs79c             1/1     Running   0          10m
 ```
 
+#### 0. 프로메테우스 외부 노출 ####
+```
+kubectl patch svc prometheus-kube-prometheus-prometheus -n monitoring -p '{
+  "spec": {
+    "type": "LoadBalancer",
+    "loadBalancerSourceRanges": ["122.36.213.114/32"]        
+  }
+}'
+```
+
 #### 1. 그라파나 서비스 외부 노출 #### 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/prometheus-grafana.png)
 
