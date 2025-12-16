@@ -29,7 +29,10 @@ kubectl patch svc prometheus-kube-prometheus-prometheus -n monitoring -p '{
     "loadBalancerSourceRanges": ["122.36.213.114/32"]        
   }
 }'
+
+kubectl get svc prometheus-kube-prometheus-prometheus -n monitoring | awk '{print $4,$5}'
 ```
+
 
 #### 1. 그라파나 서비스 외부 노출 #### 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/prometheus-grafana.png)
