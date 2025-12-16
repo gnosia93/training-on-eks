@@ -15,7 +15,7 @@
 * [C5. GPU 모니터링 하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-gpu-monitoring.md)    
 
 * [C6. FSDP로 LLM 훈련하기(싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)    
-   - t5-fsdpy.py 로 교체 필요
+   - t5-fsdp.py 로 교체 필요
 
 * [C7. 멀티노드 분산 트레이닝 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/7-training-otimization.md) 
    - efa RDMA
