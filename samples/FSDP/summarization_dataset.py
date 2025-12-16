@@ -37,11 +37,11 @@ class wikihow(Dataset):
         df_val = pd.read_csv(data_path + 'wikihowSep.csv', on_bad_lines='skip', engine='python')
         
         # 2. Pandas DataFrame을 Hugging Face Dataset 객체로 변환
-        self.dataset = DatasetDict({
+        full_dataset = DatasetDict({
             'train': Dataset.from_pandas(df_train),
             'validation': Dataset.from_pandas(df_val)
         }) 
-        
+        self.dataset = full_dataset[type_path] 
         
         if num_samples:
             self.dataset = self.dataset.select(list(range(0, num_samples)))
