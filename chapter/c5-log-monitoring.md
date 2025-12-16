@@ -85,7 +85,7 @@ helm repo update
 
 #### 단계 3: Loki 설치 (S3 전용 설정) ####
 분산 학습 로그는 양이 많으므로 S3 저장소 설정이 필수입니다. loki-values.yaml 파일을 만듭니다.
-````
+```
 loki:
   auth_enabled: false
   commonConfig:
