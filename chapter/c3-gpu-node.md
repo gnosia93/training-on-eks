@@ -55,7 +55,7 @@ spec:
     cpu: 1000
   disruption:
     consolidationPolicy: WhenEmptyOrUnderutilized
-    consolidateAfter: 1m
+    consolidateAfter: 30m
 ---
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
