@@ -54,6 +54,11 @@ class wikihow(Dataset):
         return self.dataset.shape[0]
 
     def clean_text(self, text):
+        # 만약 text가 리스트로 들어온다면 첫 번째 요소를 추출 (중요)
+        if isinstance(text, list):
+            text = text[0] if len(text) > 0 else ""
+    
+        # 이제 문자열이 확실하므로 replace 사용 가능
         text = text.replace('Example of text:', '')
         text = text.replace('Example of Summary:', '')
         text = text.replace('\n','')
