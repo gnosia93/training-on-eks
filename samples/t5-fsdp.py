@@ -18,6 +18,7 @@ from torch.distributed.fsdp import (
     MixedPrecision,
     ShardingStrategy,
     BackwardPrefetch,
+    CPUOffload,  # 오프로딩 라이브러리
 )
 from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (
     apply_activation_checkpointing,
@@ -40,11 +41,16 @@ def train(args, rank, device):
     
     mp_policy = MixedPrecision(param_dtype=torch.bfloat16, reduce_dtype=torch.bfloat16) if args.precision == "bf16" else None
     
+    # --- CPU 오프로딩 설정 ---
+    # offload_params=True 설정 시 모델 파라미터를 CPU에 둡니다.
+    cpu_offload_config = CPUOffload(offload_params=args.use_offload)
+
     model = FSDP(
         model,
         mixed_precision=mp_policy,
         sharding_strategy=ShardingStrategy.FULL_SHARD,
         device_id=device if device.type == "cuda" else None,
+        cpu_offload=cpu_offload_config, # 오프로딩 적용
         backward_prefetch=BackwardPrefetch.BACKWARD_PRE if args.use_prefetch else None,
         forward_prefetch=args.use_prefetch,
         limit_all_gathers=True
@@ -53,20 +59,16 @@ def train(args, rank, device):
     if args.use_checkpointing:
         apply_activation_checkpointing(model, checkpoint_wrapper_fn=checkpoint_wrapper, check_fn=lambda m: isinstance(m, T5Block))
 
-    # 데이터 로드
+    # 데이터 로딩부 (Pin Memory 포함)
     dataset = load_dataset("billsum", split=f"train[:{args.train_size}]")
     tokenized_ds = dataset.map(lambda ex: tokenizer(["summarize: " + d for d in ex["text"]], max_length=512, truncation=True, padding="max_length"), batched=True).with_format("torch")
-    
     sampler = DistributedSampler(tokenized_ds, shuffle=True)
-    
-    # --- DataLoader에 Pin Memory 적용 ---
     loader = DataLoader(
         tokenized_ds, 
         batch_size=args.batch_size, 
-        sampler=sampler,
-        num_workers=args.num_workers,  # 데이터 로딩 병렬화
-        pin_memory=args.pin_memory,    # CPU -> GPU 전송 최적화
-        pin_memory_device=str(device) if args.pin_memory and device.type == "cuda" else "" # PyTorch 최신 기능
+        sampler=sampler, 
+        num_workers=args.num_workers, 
+        pin_memory=args.pin_memory
     )
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
@@ -75,12 +77,10 @@ def train(args, rank, device):
     for epoch in range(args.epochs):
         sampler.set_epoch(epoch)
         optimizer.zero_grad()
-        
         for i, batch in enumerate(loader):
             is_accumulation_step = (i + 1) % args.grad_acc_steps != 0
-            
             with model.no_sync() if is_accumulation_step else torch.enable_grad():
-                # Pin Memory 사용 시 non_blocking=True로 설정하면 전송과 연산을 겹칠 수 있음
+                # Pin Memory 활용을 위해 non_blocking 활성화
                 batch = {k: v.to(device, non_blocking=args.pin_memory) for k, v in batch.items()}
                 loss = model(**batch).loss / args.grad_acc_steps
                 loss.backward()
@@ -90,13 +90,12 @@ def train(args, rank, device):
                 optimizer.zero_grad()
             
             if i % 10 == 0 and rank == 0:
-                print(f"Epoch {epoch} | Step {i} | Loss: {loss.item() * args.grad_acc_steps:.4f}")
+                print(f"Epoch {epoch} | Step {i} | Loss: {loss.item() * args.grad_acc_steps:.4f} | Offload: {args.use_offload}")
 
     save_checkpoint(model, optimizer, args.epochs, "checkpoint_final", rank)
 
 def main():
     parser = argparse.ArgumentParser()
-    # 기본 및 최적화 파라미터
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--grad_acc_steps", type=int, default=1)
@@ -104,13 +103,15 @@ def main():
     parser.add_argument("--train_size", type=int, default=1000)
     parser.add_argument("--model_id", type=str, default="google-t5/t5-small")
     parser.add_argument("--precision", type=str, default="bf16", choices=["bf16", "fp32"])
+    
+    # 최적화 옵션들
     parser.add_argument("--use_checkpointing", action="store_true")
     parser.add_argument("--use_prefetch", action="store_true")
+    parser.add_argument("--pin_memory", type=bool, default=True)
+    parser.add_argument("--num_workers", type=int, default=4)
     
-    # --- Pin Memory 및 Worker 설정 추가 ---
-    parser.add_argument("--pin_memory", action="store_false", help="Pin Memory 비활성화 시 사용 (기본은 활성)")
-    parser.set_defaults(pin_memory=True) # 기본값을 True로 설정
-    parser.add_argument("--num_workers", type=int, default=4, help="DataLoader 병렬 워커 수")
+    # --- CPU 오프로딩 파라미터 ---
+    parser.add_argument("--use_offload", action="store_true", help="CPU 파라미터 오프로딩 활성화")
     
     args = parser.parse_args()
 
