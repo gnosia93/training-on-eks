@@ -5,7 +5,7 @@ DeepSpeed의 영향을 받았으며 PyTorch 프레임워크에 네이티브 기�
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/fsdp-arch.webp)
 
 ## 훈련하기 ##
-* T5 fsdp ..
+* 대상 모델 [T5-Small](https://huggingface.co/google-t5/t5-small): 60M 파라미터
 
 
 
