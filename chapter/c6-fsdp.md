@@ -40,10 +40,13 @@ service/pytorch-dist-job-worker-1   ClusterIP   None         <none>        23456
 service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456/TCP   2m57s
 ```
 
-로그를 스트리밍 한다 (-f) 
+실시간 로그를 확인한다. (-f) 
 ```
 kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 ```
+
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-gpu-dashboard.png)
+
 
 #### pytorchjob 자동 재시작 ####
 
