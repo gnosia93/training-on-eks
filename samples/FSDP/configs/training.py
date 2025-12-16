@@ -4,7 +4,7 @@ from typing import ClassVar
 
 @dataclass
 class train_config:
-    model_name: str="t5-base"
+    model_name: str="t5-small"
     run_validation: bool=True
     batch_size_training: int=4
     num_workers_dataloader: int=2
