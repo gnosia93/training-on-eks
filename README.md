@@ -12,7 +12,7 @@
 
 * [C4. Pytorch Training Operator 설치](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c4-training-operator.md)
 
-* C5.Observability 
+* C5. Observability 
    * [C5-1. GPU 모니터링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-gpu-monitoring.md)    
    
    * [C5-2. 훈련 로그 모니터링]
