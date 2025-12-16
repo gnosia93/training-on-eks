@@ -40,18 +40,15 @@ service/pytorch-dist-job-worker-1   ClusterIP   None         <none>        23456
 service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456/TCP   2m57s
 ```
 
-GPU 노드가 스케줄링 되었는지 확인한다. 
+로그를 스트리밍 한다 (-f) 
 ```
-kubectl get nodes -l accelerator=nvidia-tesla-v100 -l karpenter.k8s.aws/instance-gpu-manufacturer=nvidia
-kubectl logs -f -n karpenter -l app.kubernetes.io/instance=karpenter
+kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 ```
 
-[결과]
+#### pytorchjob 삭제 ####
+JOB 이 실패하거나 크래쉬가 발생하는 경우 명시적으로 삭제 시켜줘야 한다. 
 ```
-NAME                                            STATUS   ROLES    AGE     VERSION
-ip-10-0-5-212.ap-northeast-2.compute.internal   Ready    <none>   9m34s   v1.34.2-eks-ecaa3a6
-
-{"level":"INFO","time":"2025-12-16T04:51:07.209Z","logger":"controller","message":"initialized nodeclaim","commit":"1ad0d78","controller":"nodeclaim.lifecycle","controllerGroup":"karpenter.sh","controllerKind":"NodeClaim","NodeClaim":{"name":"gpu-xb6gn"},"namespace":"","name":"gpu-xb6gn","reconcileID":"b8c178ca-33b0-46ba-bc47-ffe36e491929","provider-id":"aws:///ap-northeast-2b/i-00f574991d2d7d09e","Node":{"name":"ip-10-0-5-212.ap-northeast-2.compute.internal"},"allocatable":{"cpu":"95690m","ephemeral-storage":"288764809146","hugepages-1Gi":"0","hugepages-2Mi":"0","memory":"1167634904Ki","nvidia.com/gpu":"8","pods":"737"}}
+kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
 
 ## 레퍼런스 ##
