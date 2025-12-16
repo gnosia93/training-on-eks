@@ -1,3 +1,5 @@
+import pandas as pd
+from datasets import Dataset, DatasetDict
 import os
 import argparse
 import torch
@@ -85,22 +87,18 @@ def fsdp_main(args):
     current_path = os.getcwd()
     # data/wikihow/ 폴더의 절대 경로 생성
     data_path = current_path + "/data/wikihow/"
-    
-    # 2. 'wikihow' 이름 대신 'csv'를 직접 사용하여 로컬 파일 로드
-    # 이렇게 하면 인터넷(GitHub)에 접속하지 않고 로컬의 csv 파일만 읽습니다.
-    dataset = load_dataset(
-        'csv', 
-        data_files={
-            'train': data_path + 'wikihowAll.csv',
-            'validation': data_path + 'wikihowSep.csv'
-        },
-        # 쉼표가 포함된 텍스트를 제대로 읽기 위한 설정
-        quotechar='"',          # 따옴표로 감싸진 텍스트 내부의 쉼표 무시
-        quoting=1,              # csv.QUOTE_ALL (또는 필요시 0, 2 등으로 조정)
-        on_bad_lines='skip'     # 파싱 에러가 나는 줄은 일단 건너뛰고 진행
-    )
 
-    # dataset = load_dataset('wikihow', 'all', data_dir='data/wikihow/')
+    # 1. Pandas를 사용하여 CSV 로드 (파싱 에러 자동 처리)
+    # lineterminator 설정을 통해 문장 내 줄바꿈 이슈를 방지합니다.
+    df_train = pd.read_csv(data_path + 'wikihowAll.csv', on_bad_lines='skip', engine='python')
+    df_val = pd.read_csv(data_path + 'wikihowSep.csv', on_bad_lines='skip', engine='python')
+    
+    # 2. Pandas DataFrame을 Hugging Face Dataset 객체로 변환
+    dataset = DatasetDict({
+        'train': Dataset.from_pandas(df_train),
+        'validation': Dataset.from_pandas(df_val)
+    }) 
+
     print(dataset.keys())
     print("Size of train dataset: ", dataset['train'].shape)
     print("Size of Validation dataset: ", dataset['validation'].shape)
