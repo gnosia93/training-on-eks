@@ -30,15 +30,9 @@ patches:
         sh download_dataset.sh
         pip install -r requirements.txt
         torchrun --nnodes 4 --nproc_per_node 1 T5_training.py
-  target:
-    kind: PyTorchJob
-    name: pytorch-dist-job
-
-# Worker의 replicas 수를 3으로 변경 (추가된 부분)
-- patch: |-
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/replicas
-      value: 3
+      value: 3        
   target:
     kind: PyTorchJob
     name: pytorch-dist-job
