@@ -40,18 +40,20 @@
      
 * [C9. 병렬 분산 파일 시스템(Lustre)]
   
-* [C10. MLOps /w Airflow]
-   - MLflow
-   - S3 Data Upload -> trigger LLM training
-   - S3 Data Upload -> trigger Spark Curation on AWS Graviton4 -> trigger LLM training
-
-* [C11. 훈련 방식에 따른 성능 비교]
+* [C10. 훈련 방식에 따른 성능 비교]
    - fsdp
       - nvlink
       - efa + nvlink
       - pci
       - eni
+
+* [C11. MLOps /w Airflow]
+   - MLflow
+   - S3 Data Upload -> trigger LLM training
+   - S3 Data Upload -> trigger Spark Curation on AWS Graviton4 -> trigger LLM training
          
+* [C12. CPU 분산 훈련]
+   
 ## 레퍼런스 ## 
 
 * [AI/ML 워크로드용 Amazon EKS 클러스터 구성](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/ml-cluster-configuration.html)
