@@ -49,9 +49,6 @@ ae286c7ef5ccc461a9565b5cb7863132-369961314.ap-northeast-2.elb.amazonaws.com
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-4.png)
 
 
-
-
-
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/dcgm-exporter.png)
 
@@ -71,6 +68,14 @@ tolerations:
     operator: "Equal"
     value: "present"
     effect: "NoSchedule"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 256Mi
 EOF
 
 helm install dcgm-exporter nvidia/dcgm-exporter -n dcgm \
