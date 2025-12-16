@@ -1,3 +1,4 @@
+본 워크샵에서는 EBS CSI 드라이버를 설치하지 않는다. 실제 프로덕션 환경에서는 EBS CSI 드라이버를 먼저 설치한 후 PVC 위에 프로메테우스 스택을 설치해야 한다.  
 ## [Prometheus Stack 설치](https://github.com/prometheus-operator/kube-prometheus) ##
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
@@ -103,62 +104,6 @@ nvdp                            nvidia          1               2025-12-15 11:07
 ```
 helm uninstall aws-ebs-csi-driver --namespace kube-system
 ``` 
-
-
-## EBS CSI 드라이버를 이용한 프로메테우스 설치 ##
-### 1. EBS CSI 설치 ###
-```
-eksctl create iamserviceaccount \
-    --name ebs-csi-controller-sa \
-    --namespace kube-system \
-    --cluster ${CLUSTER_NAME} \
-    --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
-    --override-existing-serviceaccounts \
-    --approve
-
-helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver/
-helm repo update
-
-helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
-    --namespace kube-system 
-
-kubectl get pod -n kube-system -l "app.kubernetes.io/name=aws-ebs-csi-driver,app.kubernetes.io/instance=aws-ebs-csi-driver"
-
-kubectl get storageclass
-```
-* 이 StorageClass의 volumeBindingMode가 WaitForFirstConsumer로 설정되어 있어야 합니다. 파드가 생성될 노드의 AZ를 고려하여 볼륨을 생성한다.
-만약 volumeBindingMode가 Immediate로 되어 있다면, 아래와 같이 패치 명령어로 수정한다.
-```
-kubectl patch storageclass [YOUR_STORAGE_CLASS_NAME] -p '{"volumeBindingMode": "WaitForFirstConsumer"}'
-```
-
-### [2.Prometheus Stack 설치](https://github.com/prometheus-operator/kube-prometheus) ###
-```
-helm repo add prometheus https://prometheus-community.github.io/helm-charts
-helm repo update
-
-cat <<EOF > prometheus-values.yaml
-# prometheus-values.yaml
-prometheus:
-  prometheusSpec:
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: gp2             # kubectl get storageclass 의 NAME 칼럼값
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 300Gi 
-EOF
-
-helm install prometheus prometheus/kube-prometheus-stack \
-    --create-namespace \
-    --namespace monitoring \
-    -f prometheus-values.yaml
-```
-
-
-
 
 ## 레퍼런스 ##
 * [Tracking GPU Usage in K8s with Prometheus and DCGM: A Complete Guide](https://medium.com/@penkow/tracking-gpu-usage-in-k8s-with-prometheus-and-dcgm-a-complete-guide-7c8590809d7c)
