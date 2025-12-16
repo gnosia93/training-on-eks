@@ -17,9 +17,32 @@ kubectl create ns pytorch
 kubectl apply -k kustomize/overlays/fsdp/
 ```
 
-GPU 노드 스케이링 및 파드 상태를 조회한다.  
+pytorchjob 을 조회한다.  
 ```
+kubectl get pytorchjob -n pytorch
 kubectl get all -n pytorch
+```
+[결과]
+```
+NAME               STATE     AGE
+pytorch-dist-job   Created   3m59s
+
+NAME                            READY   STATUS              RESTARTS   AGE
+pod/pytorch-dist-job-master-0   0/1     ContainerCreating   0          2m56s
+pod/pytorch-dist-job-worker-0   0/1     Init:0/1            0          2m56s
+pod/pytorch-dist-job-worker-1   0/1     Init:0/1            0          2m56s
+pod/pytorch-dist-job-worker-2   0/1     Init:0/1            0          2m56s
+
+NAME                                TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)     AGE
+service/pytorch-dist-job-master-0   ClusterIP   None         <none>        23456/TCP   2m57s
+service/pytorch-dist-job-worker-0   ClusterIP   None         <none>        23456/TCP   2m57s
+service/pytorch-dist-job-worker-1   ClusterIP   None         <none>        23456/TCP   2m57s
+service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456/TCP   2m57s
+```
+
+카펜터 노드 스케일을 관찰한다. 
+```
+kubectl get nodes -l accelerator=nvidia-tesla-v100 -l karpenter.k8s.aws/instance-gpu-manufacturer=nvidia
 kubectl logs -f -n karpenter -l app.kubernetes.io/instance=karpenter
 ```
 
