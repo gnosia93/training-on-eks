@@ -16,9 +16,10 @@ kubectl create ns pytorch
 kubectl apply -k kustomize/overlays/fsdp/
 ```
 
+GPU 노드 스케이링 및 파드 상태를 조회한다.  
 ```
-kubectl get all
-
+kubectl get all -n pytorch
+kubectl logs -f -n karpenter -l app.kubernetes.io/instance=karpenter
 ```
 
 ## 레퍼런스 ##
