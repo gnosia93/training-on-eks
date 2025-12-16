@@ -145,6 +145,17 @@ URL에 http://loki.monitoring.svc.cluster.local:3100 입력 후 Save & Test
 * 분산 학습용 레이블: 학습 스크립트 작성 시 파드 이름에 rank-ID를 포함시키면 Loki에서 개별 노드의 상태를 추적하기 매우 쉬워집니다.
 * S3 비용: S3에 로그가 무한정 쌓이지 않도록 S3 Lifecycle Policy를 설정하여 오래된 로그는 자동 삭제되도록 하세요.
 
+#### Loki에서 왜 추적이 쉬워지나요? ####
+Loki는 로그를 저장할 때 파드 이름(pod)을 자동으로 인덱스(색인)로 사용합니다. 이렇게 이름에 Rank가 들어 있으면 Grafana 검색창에서 다음과 같은 작업을 할 수 있습니다.
+* 특정 Rank만 보기: "2번 워커가 자꾸 죽는데, 2번 로그만 보여줘"
+쿼리: {pod="training-job-worker-2"}
+* 전체 워커 로그 합쳐서 시간순으로 보기: "모든 워커의 로그를 한 화면에 섞어서 시간순으로 정렬해줘"
+쿼리: {pod=~"training-job-worker-.*"}
+* 특정 에러 비교: "0번(마스터)은 멀쩡한데 1번 워커에만 Connection Timeout이 뜨는지 확인해줘"
+
+## 레퍼런스 ##
+* [Loki Architecture: A Log Aggregation Journey with Grafana](https://sujayks007.medium.com/loki-architecture-a-log-aggregation-journey-with-grafana-bde6d9df6a04)
+
 
 
 
