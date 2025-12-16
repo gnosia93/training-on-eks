@@ -13,8 +13,12 @@ import argparse
 import torch
 import torch.distributed as dist
 import torch.distributed.checkpoint as dcp
-from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
-from torch.distributed.fsdp import MixedPrecision, ShardingStrategy
+from torch.distributed.fsdp import (
+    FullyShardedDataParallel as FSDP,
+    MixedPrecision,
+    ShardingStrategy,
+    BackwardPrefetch,
+)
 from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (
     apply_activation_checkpointing,
     checkpoint_wrapper,
@@ -25,103 +29,97 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer
 from transformers.models.t5.modeling_t5 import T5Block
 from datasets import load_dataset
 
-# [서브 루틴 1] DCP 체크포인트 저장
 def save_checkpoint(model, optimizer, epoch, path, rank):
     state_dict = {"model": model, "optimizer": optimizer, "epoch": torch.tensor(epoch)}
     dcp.save(state_dict, checkpoint_id=path)
-    if rank == 0:
-        print(f"--- 체크포인트 저장 완료: {path} ---")
+    if rank == 0: print(f"--- 체크포인트 저장 완료: {path} ---")
 
-# [서브 루틴 2] 실제 학습 루틴
 def train(args, rank, device):
-    # 모델 및 토크나이저 로드
     tokenizer = T5Tokenizer.from_pretrained(args.model_id)
     model = T5ForConditionalGeneration.from_pretrained(args.model_id).to(device)
     
-    # 정밀도(Precision) 설정
-    mp_policy = None
-    if args.precision == "bf16":
-        mp_policy = MixedPrecision(param_dtype=torch.bfloat16, reduce_dtype=torch.bfloat16)
-    elif args.precision == "fp16":
-        mp_policy = MixedPrecision(param_dtype=torch.float16, reduce_dtype=torch.float16)
-
-    # FSDP 래핑
+    mp_policy = MixedPrecision(param_dtype=torch.bfloat16, reduce_dtype=torch.bfloat16) if args.precision == "bf16" else None
+    
     model = FSDP(
         model,
         mixed_precision=mp_policy,
         sharding_strategy=ShardingStrategy.FULL_SHARD,
-        device_id=device if device.type == "cuda" else None
+        device_id=device if device.type == "cuda" else None,
+        backward_prefetch=BackwardPrefetch.BACKWARD_PRE if args.use_prefetch else None,
+        forward_prefetch=args.use_prefetch,
+        limit_all_gathers=True
     )
 
-    # 메모리 절약을 위한 Activation Checkpointing
     if args.use_checkpointing:
-        check_fn = lambda submodule: isinstance(submodule, T5Block)
-        apply_activation_checkpointing(model, checkpoint_wrapper_fn=checkpoint_wrapper, check_fn=check_fn)
+        apply_activation_checkpointing(model, checkpoint_wrapper_fn=checkpoint_wrapper, check_fn=lambda m: isinstance(m, T5Block))
 
-    # 데이터 로드 (학습용만 사용)
+    # 데이터 로드
     dataset = load_dataset("billsum", split=f"train[:{args.train_size}]")
-    def preprocess(ex):
-        inputs = tokenizer(["summarize: " + d for d in ex["text"]], max_length=512, truncation=True, padding="max_length")
-        labels = tokenizer(text_target=ex["summary"], max_length=128, truncation=True, padding="max_length")
-        inputs["labels"] = labels["input_ids"]
-        return inputs
-
-    tokenized_ds = dataset.map(preprocess, batched=True).with_format("torch")
+    tokenized_ds = dataset.map(lambda ex: tokenizer(["summarize: " + d for d in ex["text"]], max_length=512, truncation=True, padding="max_length"), batched=True).with_format("torch")
+    
     sampler = DistributedSampler(tokenized_ds, shuffle=True)
-    loader = DataLoader(tokenized_ds, batch_size=args.batch_size, sampler=sampler)
+    
+    # --- DataLoader에 Pin Memory 적용 ---
+    loader = DataLoader(
+        tokenized_ds, 
+        batch_size=args.batch_size, 
+        sampler=sampler,
+        num_workers=args.num_workers,  # 데이터 로딩 병렬화
+        pin_memory=args.pin_memory,    # CPU -> GPU 전송 최적화
+        pin_memory_device=str(device) if args.pin_memory and device.type == "cuda" else "" # PyTorch 최신 기능
+    )
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
     model.train()
     for epoch in range(args.epochs):
         sampler.set_epoch(epoch)
+        optimizer.zero_grad()
+        
         for i, batch in enumerate(loader):
-            optimizer.zero_grad()
-            batch = {k: v.to(device) for k, v in batch.items()}
-            loss = model(**batch).loss
-            loss.backward()
-            optimizer.step()
+            is_accumulation_step = (i + 1) % args.grad_acc_steps != 0
             
-            if i % 50 == 0 and rank == 0:
-                print(f"에포크 {epoch} | 단계 {i} | 손실 {loss.item():.4f} | 정밀도 {args.precision}")
+            with model.no_sync() if is_accumulation_step else torch.enable_grad():
+                # Pin Memory 사용 시 non_blocking=True로 설정하면 전송과 연산을 겹칠 수 있음
+                batch = {k: v.to(device, non_blocking=args.pin_memory) for k, v in batch.items()}
+                loss = model(**batch).loss / args.grad_acc_steps
+                loss.backward()
 
-    save_checkpoint(model, optimizer, args.epochs, f"checkpoint_{args.precision}", rank)
+            if (i + 1) % args.grad_acc_steps == 0:
+                optimizer.step()
+                optimizer.zero_grad()
+            
+            if i % 10 == 0 and rank == 0:
+                print(f"Epoch {epoch} | Step {i} | Loss: {loss.item() * args.grad_acc_steps:.4f}")
 
-# [메인 함수]
+    save_checkpoint(model, optimizer, args.epochs, "checkpoint_final", rank)
+
 def main():
     parser = argparse.ArgumentParser()
-    # 학습 하이퍼파라미터
+    # 기본 및 최적화 파라미터
     parser.add_argument("--lr", type=float, default=1e-5)
-    parser.add_argument("--batch_size", type=int, default=8)
+    parser.add_argument("--batch_size", type=int, default=4)
+    parser.add_argument("--grad_acc_steps", type=int, default=1)
     parser.add_argument("--epochs", type=int, default=1)
-    parser.add_argument("--train_size", type=int, default=100000)
+    parser.add_argument("--train_size", type=int, default=1000)
     parser.add_argument("--model_id", type=str, default="google-t5/t5-small")
-    
-    # 메모리 및 성능 최적화
-    parser.add_argument("--precision", type=str, default="bf16", choices=["bf16", "fp16", "fp32"])
+    parser.add_argument("--precision", type=str, default="bf16", choices=["bf16", "fp32"])
     parser.add_argument("--use_checkpointing", action="store_true")
+    parser.add_argument("--use_prefetch", action="store_true")
+    
+    # --- Pin Memory 및 Worker 설정 추가 ---
+    parser.add_argument("--pin_memory", action="store_false", help="Pin Memory 비활성화 시 사용 (기본은 활성)")
+    parser.set_defaults(pin_memory=True) # 기본값을 True로 설정
+    parser.add_argument("--num_workers", type=int, default=4, help="DataLoader 병렬 워커 수")
     
     args = parser.parse_args()
 
-    # torchrun이 주입한 환경 변수 읽기
-    rank = int(os.environ.get("RANK", 0))
+    dist.init_process_group(backend="nccl" if torch.cuda.is_available() else "gloo")
     local_rank = int(os.environ.get("LOCAL_RANK", 0))
-    world_size = int(os.environ.get("WORLD_SIZE", 1))
-    
-    # 분산 환경 초기화
-    backend = "nccl" if torch.cuda.is_available() else "gloo"
-    dist.init_process_group(backend=backend)
-    
     device = torch.device(f"cuda:{local_rank}" if torch.cuda.is_available() else "cpu")
-    if torch.cuda.is_available():
-        torch.cuda.set_device(local_rank)
+    if torch.cuda.is_available(): torch.cuda.set_device(local_rank)
 
-    if rank == 0:
-        print(f"--- 2025 FSDP 훈련 시작 ---")
-        print(f"월드 사이즈(총 프로세스): {world_size}")
-        print(f"백엔드: {backend} | 정밀도: {args.precision}")
-
-    train(args, rank, device)
+    train(args, int(os.environ.get("RANK", 0)), device)
     dist.destroy_process_group()
 
 if __name__ == "__main__":
