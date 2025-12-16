@@ -4,5 +4,5 @@
 mkdir -p data
 
 # Download the files into the "data" folder
-wget -P data https://public-nlp-datasets.s3.us-west-2.amazonaws.com/wikihowAll.csv
-wget -P data https://public-nlp-datasets.s3.us-west-2.amazonaws.com/wikihowSep.csv
+wget -P data/wikihow https://public-nlp-datasets.s3.us-west-2.amazonaws.com/wikihowAll.csv
+wget -P data/wikihow https://public-nlp-datasets.s3.us-west-2.amazonaws.com/wikihowSep.csv
