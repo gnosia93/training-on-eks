@@ -105,14 +105,8 @@ helm install dcgm-exporter nvidia/dcgm-exporter -n dcgm \
 
 kubectl get all -n dcgm
 ```
-설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 **metrics** 라는 이름의 Prometheus 엔드포인트로 노출하기 시작합니다 (기본 포트: 9400).
-이제 Prometheus 서버가 이 엔드포인트를 **스크랩(scrape)** 하도록 설정해야 합니다.
-Prometheus Operator 사용 시 자동으로 ServiceMonitor 리소스나 PodMonitor 리소스를 감지하여 DCGM Exporter 서비스를 스크랩 대상에 추가하도록 구성할 수 있습니다.
-
-<< >>  
-<< >>  
-<< LLM 트레이닝 돌리면서 수정한다. 현재는 GPU 데이터가 잡히지 않는 듯 하다 >>
-
+설치가 완료되면, DCGM Exporter는 쿠버네티스 노드의 GPU 메트릭을 metrics 라는 이름의 Prometheus 엔드포인트로 노출하기 시작한다. (기본 포트: 9400).
+이후 Prometheus 서버가 이 엔드포인트를 스크랩(scrape) 하게 된다.
 
 ## 참고 - Helm 차트 명령어 ##
 * 차트 옵션 보기
