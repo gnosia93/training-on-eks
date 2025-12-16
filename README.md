@@ -44,7 +44,7 @@
    - S3 Data Upload -> trigger LLM training
    - S3 Data Upload -> trigger Spark Curation on AWS Graviton4 -> trigger LLM training
 
-* [C11. 훈련 방식에 따른 성능 비교 자료]
+* [C11. 훈련 방식에 따른 성능 비교]
    - fsdp
       - nvlink
       - efa + nvlink
