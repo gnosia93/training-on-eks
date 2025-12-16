@@ -98,8 +98,3 @@ spec:
 ```
 
 
-
-## 레퍼런스 ##
-
-* [Getting Started with Karpenter](https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/)
-* [EKS Auto Mode에 대해서](https://devops-james.tistory.com/m/514#:~:text=AWS%EC%97%90%EC%84%9C%20%EA%B4%80%EB%A6%AC%20%2D%20SSH%EC%99%80%20SSM%20%EC%97%91%EC%84%B8%EC%8A%A4%EA%B9%8C%EC%A7%80%20%EA%B8%88%EC%A7%80%ED%95%98%EA%B3%A0,pod%EB%93%A4%EC%9D%B4%20%EC%97%86%EC%8A%B5%EB%8B%88%EB%8B%A4.%20%2D%20GPU%EB%8F%84%20%EB%82%B4%EC%9E%A5%20%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8%EC%9D%84%20%EC%82%AC%EC%9A%A9%ED%95%A9%EB%8B%88%EB%8B%A4.)
