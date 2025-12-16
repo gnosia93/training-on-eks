@@ -93,7 +93,11 @@ def fsdp_main(args):
         data_files={
             'train': data_path + 'wikihowAll.csv',
             'validation': data_path + 'wikihowSep.csv'
-        }
+        },
+        # 쉼표가 포함된 텍스트를 제대로 읽기 위한 설정
+        quotechar='"',          # 따옴표로 감싸진 텍스트 내부의 쉼표 무시
+        quoting=1,              # csv.QUOTE_ALL (또는 필요시 0, 2 등으로 조정)
+        on_bad_lines='skip'     # 파싱 에러가 나는 줄은 일단 건너뛰고 진행
     )
 
     # dataset = load_dataset('wikihow', 'all', data_dir='data/wikihow/')
