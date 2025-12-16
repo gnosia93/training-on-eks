@@ -63,6 +63,14 @@ cat <<EOF > custom-values.yaml
 nodeSelector:
   karpenter.k8s.aws/instance-gpu-manufacturer: "nvidia"
 
+serviceMonitor:
+  enabled: true
+  # 중요: 프로메테우스가 찾을 수 있도록 레이블을 추가합니다.
+  additionalLabels:
+    release: prometheus  # 'kubectl get prometheus -n [네임스페이스]'로 확인한 이름 입력
+  interval: 30s
+  scrapeTimeout: 10s
+
 tolerations:
   - key: "nvidia.com/gpu"
     operator: "Equal"
