@@ -30,17 +30,27 @@
 * [C8. 분산 훈련 스케줄링/배제 및 복원력](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-scheduling-resiliency.md)
    - 갱 스케줄링 - Kueue 권장
       - 잡큐 관리 / 스케줄링 우선순위 / 재시작 / 잡 파티션 관리 등등...
-   - 스케줄링 배제 - 노드, GPU 레벨 (훈련중 배제, 훈련전 배제)  
-   - 컨테이너 / 파드 / 노드 크래쉬
-   - 모델 체크 포인팅
-   - 특정 GPU ID 또는 노드 회피 or 제거(재시작시)
+   - 스케줄링 배제 
+      - 노드, GPU 레벨 배제 (훈련전 또는 훈련중 배제)  
+      - 특정 GPU ID 또는 노드 배제 or 제거(재시작시)
+   - 복원
+      - 컨테이너 / 파드 / 노드 크래쉬
+      - 모델 체크 포인팅
 
 * [C9. 병렬 분산 파일 시스템(Lustre)]
+  
 * [C10. MLOps /w Airflow]
    - MLflow
    - S3 Data Upload -> trigger LLM training
    - S3 Data Upload -> trigger Spark Curation on AWS Graviton4 -> trigger LLM training
 
+* [C11. 훈련 방식에 따른 성능 비교 자료]
+   - fsdp
+      - nvlink
+      - efa + nvlink
+      - pci
+      - eni
+         
 ## 레퍼런스 ## 
 
 * [AI/ML 워크로드용 Amazon EKS 클러스터 구성](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/ml-cluster-configuration.html)
