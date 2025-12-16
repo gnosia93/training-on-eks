@@ -22,13 +22,13 @@
    - 컨테이너 / 파드 / 노드 크래쉬
    - 모델 체크 포인팅
    - 특정 GPU ID 또는 노드 회피 or 제거(재시작시)
-* [C8. 멀티노드 분산 트레이닝] 
+* [C8. 멀티노드 분산 트레이닝 최적화] 
    - efa RDMA
    - cillium CNI - https://cilium.io/
    - topoloy aware
       - export NCCL_TOPO_FILE=/path/to/system.xml  
       - NVLINK&Switch / EFA / ENA / PCIe  /w docker
-   - placement / same AZ ... ??
+   - placement group / same AZ 
    - ultra cluster and capacity block 
 * [C9. 병렬 분산 파일 시스템(Lustre)]
 * [C10. MLOps /w Airflow]
