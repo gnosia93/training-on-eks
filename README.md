@@ -25,7 +25,9 @@
 * [C8. 멀티노드 분산 트레이닝] 
    - efa RDMA
    - cillium CNI - https://cilium.io/
-   - topoloy aware   - placement / same AZ ... ??
+   - topoloy aware
+      - export NCCL_TOPO_FILE=/path/to/system.xml  
+      - NVLINK / EFA / placement / same AZ ... ??
    - ultra cluster and capacity block 
 * [C9. 병렬 분산 파일 시스템(Lustre)]
 * [C10. MLOps /w Airflow]
