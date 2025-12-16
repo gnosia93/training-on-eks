@@ -7,3 +7,6 @@ DeepSpeed의 영향을 받았으며 PyTorch 프레임워크에 네이티브 기�
 
 
 
+## 레퍼런스 ##
+
+* [DP / DDP / FSDP 간단 비교](https://velog.io/@kaiba0514/DP-DDP-FSDP-%EA%B0%84%EB%8B%A8-%EB%B9%84%EA%B5%90)
