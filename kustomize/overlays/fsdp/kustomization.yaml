@@ -12,8 +12,10 @@ patches:
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
-        cd /workspace/code/samples
-        torchrun --nproc_per_node=1 mnist-ddp.py
+        cd /workspace/code/samples/FSDP
+        sh download_dataset.sh
+        pip install -r requirements.txt
+        torchrun --nnodes 4 --nproc_per_node 1 T5_training.py
   target:
     kind: PyTorchJob
     name: pytorch-dist-job
@@ -24,8 +26,10 @@ patches:
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
       value: |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
-        cd /workspace/code/samples
-        torchrun --nproc_per_node=1 mnist-ddp.py
+        cd /workspace/code/samples/FSDP
+        sh download_dataset.sh
+        pip install -r requirements.txt
+        torchrun --nnodes 4 --nproc_per_node 1 T5_training.py
   target:
     kind: PyTorchJob
     name: pytorch-dist-job
