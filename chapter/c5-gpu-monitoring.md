@@ -20,7 +20,7 @@ prometheus-prometheus-node-exporter-hp42x             1/1     Running   0       
 prometheus-prometheus-node-exporter-hs79c             1/1     Running   0          10m
 ```
 
-### 그라파나 ###
+#### 1. 그라파나 서비스 외부 노출 #### 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/prometheus-grafana.png)
 
 그라파나 서비스를 외부로 노출 시키고, admin 패스워드를 확인후 로그인한다. 서비스의 loadBalancerSourceRanges 필드를 이용하면 출발지 주소를 제한할 수 있다.  
@@ -34,8 +34,14 @@ kubectl patch svc prometheus-grafana -n monitoring -p '{
 
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 ```
-* 대시보드 설정
-NVIDIA DCGM Exporter Dashboard (ID: 12239)를 가져오면 시각화가 완료됩니다. 
+#### 2. NVIDIA DCGM Exporter Dashboard (ID: 12239) 설치 ####
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-1.png)
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-2.png)
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-3.png)
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-4.png)
+
+
+
 
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
