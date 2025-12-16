@@ -40,7 +40,7 @@ service/pytorch-dist-job-worker-1   ClusterIP   None         <none>        23456
 service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456/TCP   2m57s
 ```
 
-카펜터 노드 스케일을 관찰한다. 
+GPU 노드가 스케줄링 되었는지 확인한다. 
 ```
 kubectl get nodes -l accelerator=nvidia-tesla-v100 -l karpenter.k8s.aws/instance-gpu-manufacturer=nvidia
 kubectl logs -f -n karpenter -l app.kubernetes.io/instance=karpenter
