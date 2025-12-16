@@ -1,4 +1,6 @@
 ## grafana loki ## 
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-loki.webp)
+
 분산 학습(Distributed Training) 환경에서 각 파드(Pod)가 출력하는 실시간 로그를 추적하고 검색하는 데 Loki는 최적의 솔루션이다 
 
 ### 1. 장점 ###
