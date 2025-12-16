@@ -14,7 +14,7 @@ import torch.multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data.distributed import DistributedSampler
 from transformers.models.t5.modeling_t5 import T5Block
-from nlp import load_dataset
+#from nlp import load_dataset
 
 from torch.distributed.fsdp import (
     FullyShardedDataParallel as FSDP,
@@ -81,8 +81,14 @@ def fsdp_main(args):
     rank = int(os.environ['RANK'])
     world_size = int(os.environ['WORLD_SIZE'])
 
-
-    dataset = load_dataset('wikihow', 'all', data_dir='data/')
+    from datasets import load_dataset
+    dataset = load_dataset(
+        'csv', 
+        data_files={
+            'train': 'data/wikihowAll.csv', # 실제 파일 경로
+        }
+    )
+ #   dataset = load_dataset('wikihow', 'all', data_dir='data/')
     print(dataset.keys())
     print("Size of train dataset: ", dataset['train'].shape)
     print("Size of Validation dataset: ", dataset['validation'].shape)
