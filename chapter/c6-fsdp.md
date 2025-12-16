@@ -11,6 +11,8 @@ training-on-eks 으로 디렉토리로 이동한 후 pytorch DDP 작업을 실�
 ```
 git clone https://github.com/gnosia93/training-on-eks.git
 cd training-on-eks
+
+kubectl create ns pytorch
 kubectl apply -k kustomize/overlays/fsdp/
 ```
 
