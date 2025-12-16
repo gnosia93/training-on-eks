@@ -3,4 +3,4 @@ datasets
 tqdm
 protobuf
 SentencePiece
-nlp
+pandas
