@@ -46,7 +46,8 @@ kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 ```
 
 #### pytorchjob 삭제 ####
-JOB 이 실패하거나 크래쉬가 발생하는 경우 명시적으로 삭제 시켜줘야 한다. 그렇지 않으면 계속 재시작한다. 
+JOB은 backoffLimit 값까지 재시작된다. 파트는 동일하나 컨테이너가 재시작하는 것으로 생각하면 되는데 기본값은 6회 이다. 6번 재시작했는데도 작업이 오류가 발생되면, CrashBackOff 상태로 빠지고 더이상 컨테이너를 재생성하지 않는다. 
+실패한 JOB은 명시적으로 삭제 시켜줘야한다. 
 ```
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
