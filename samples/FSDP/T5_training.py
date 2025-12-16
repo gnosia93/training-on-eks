@@ -81,8 +81,22 @@ def fsdp_main(args):
     rank = int(os.environ['RANK'])
     world_size = int(os.environ['WORLD_SIZE'])
 
-    print("Current:" + os.getcwd())
-    dataset = load_dataset('wikihow', 'all', data_dir='data/wikihow/')
+    # 1. 절대 경로 설정
+    current_path = os.getcwd()
+    # data/wikihow/ 폴더의 절대 경로 생성
+    data_path = current_path + "/data/wikihow/"
+    
+    # 2. 'wikihow' 이름 대신 'csv'를 직접 사용하여 로컬 파일 로드
+    # 이렇게 하면 인터넷(GitHub)에 접속하지 않고 로컬의 csv 파일만 읽습니다.
+    dataset = load_dataset(
+        'csv', 
+        data_files={
+            'train': data_path + 'wikihowAll.csv',
+            'validation': data_path + 'wikihowSep.csv'
+        }
+    )
+
+    # dataset = load_dataset('wikihow', 'all', data_dir='data/wikihow/')
     print(dataset.keys())
     print("Size of train dataset: ", dataset['train'].shape)
     print("Size of Validation dataset: ", dataset['validation'].shape)
