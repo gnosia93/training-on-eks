@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create the "data" folder if it doesn't exist
-mkdir -p data
+mkdir -p data/wikihow
 
 # Download the files into the "data" folder
 wget -P data/wikihow https://public-nlp-datasets.s3.us-west-2.amazonaws.com/wikihowAll.csv
