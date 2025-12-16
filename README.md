@@ -16,13 +16,8 @@
 
 * [C6. FSDP로 LLM 훈련하기(싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)    
    - t5 프로그램 버그 수정 필요.
-* [C7. 분산 훈련 스케줄링 및 복원력]
-   - 갱 스케줄링
-      - 잡큐 관리 / 스케줄링 우선순위 / 재시작 / 잡 파티션 관리 등등... ?? <----slurm 은 기본적으로 제공하는데.... 
-   - 컨테이너 / 파드 / 노드 크래쉬
-   - 모델 체크 포인팅
-   - 특정 GPU ID 또는 노드 회피 or 제거(재시작시)
-* [C8. 멀티노드 분산 트레이닝 최적화] 
+
+* [C7. 멀티노드 분산 트레이닝 최적화] 
    - efa RDMA
    - cillium CNI - https://cilium.io/
    - topoloy aware
@@ -31,6 +26,14 @@
          - PCIe 속도 - https://blog.naver.com/techref/223777086733    
    - placement group / same AZ 
    - ultra cluster and capacity block 
+
+* [C8. 분산 훈련 스케줄링 및 복원력]
+   - 갱 스케줄링
+      - 잡큐 관리 / 스케줄링 우선순위 / 재시작 / 잡 파티션 관리 등등... ?? <----slurm 은 기본적으로 제공하는데.... 
+   - 컨테이너 / 파드 / 노드 크래쉬
+   - 모델 체크 포인팅
+   - 특정 GPU ID 또는 노드 회피 or 제거(재시작시)
+
 * [C9. 병렬 분산 파일 시스템(Lustre)]
 * [C10. MLOps /w Airflow]
    - MLflow
