@@ -94,9 +94,11 @@ class wikihow(Dataset):
 
     def __getitem__(self, index):
         # 하드 코딩 ... [rank0]: IndexError: index 150 is out of bounds for dimension 0 with size 150 ....
-        if index >= 150 then 
-            index = 140
-        source, targets = self.convert_to_features(self.dataset[index])
+        # 1. 실제 데이터셋 크기에 맞춰 인덱스를 순환시킴 (에러 방지 + 데이터 활용)
+        actual_size = len(self.dataset)
+        safe_index = index % actual_size
+        
+        source, targets = self.convert_to_features(self.dataset[safe_index])
 
         source_ids = source["input_ids"].squeeze()
         target_ids = targets["input_ids"].squeeze()
