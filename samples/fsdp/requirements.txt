@@ -1,3 +1,4 @@
+# pip install -r requirements.txt
 # PyTorch 핵심 라이브러리 (CUDA 12.x 호환 기준)
 torch>=2.4.0
 torchvision
