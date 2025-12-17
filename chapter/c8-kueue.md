@@ -20,16 +20,7 @@ helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
   -f kueue-values.yaml
 ```
 
-```
-# 1. PyTorchJob 제출
-kubectl apply -f pytorch-job.yaml
 
-# 2. Kueue 워크로드 상태 확인 (Admitted: true가 되면 실행 시작)
-kubectl get workloads -n team-a
-
-# 3. PyTorchJob 상태 확인 (ALL-OR-NOTHING 확인)
-kubectl get pytorchjob pytorch-dist-mnist -n team-a
-```
 
 
 ## PytorchJob ##
@@ -81,6 +72,16 @@ spec:
                   nvidia.com: "1"
 ```
 
+```
+# 1. PyTorchJob 제출
+kubectl apply -f pytorch-job.yaml
+
+# 2. Kueue 워크로드 상태 확인 (Admitted: true가 되면 실행 시작)
+kubectl get workloads -n team-a
+
+# 3. PyTorchJob 상태 확인 (ALL-OR-NOTHING 확인)
+kubectl get pytorchjob pytorch-dist-mnist -n team-a
+```
 
 
 
