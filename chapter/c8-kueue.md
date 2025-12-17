@@ -184,3 +184,4 @@ Kueue가 "언제 작업을 실행할지" 결정하는 작업 관리(Queueing) �
 ## 레퍼런스 ##
 * https://kueue.sigs.k8s.io/docs/overview/
 * https://www.redhat.com/ko/blog/openshift-joining-kueue
+* https://thenewstack.io/kueue-can-now-schedule-kubernetes-batch-jobs-across-clusters/
