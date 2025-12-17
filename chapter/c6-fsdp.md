@@ -73,7 +73,7 @@ service/pytorch-dist-job-master-0   ClusterIP   None         <none>        23456
 service/pytorch-dist-job-worker-0   ClusterIP   None         <none>        23456/TCP   13m
 service/pytorch-dist-job-worker-1   ClusterIP   None         <none>        23456/TCP   13m
 service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456/TCP   13m
-
+```
 
 #### Job 삭제 ####
 pytorchjob 은 실패 및 성공여부와 상관없이 명시적으로 꼭 삭제 시켜줘야한다. 그렇지 않으면 파드가 삭제되지 않고, 이는 GPU 자원을 IDLE 상태에서 계속 점유 하는 주요 원인으로 동작한다. 
