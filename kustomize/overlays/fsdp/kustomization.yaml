@@ -12,7 +12,10 @@ patches:
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        pwd
         cd /workspace/code/samples/fsdp
+        pwd
+        ls -la 
         pip install -r requirements.txt
         torchrun --nnodes 4 --nproc_per_node 1 t5_fsdp.py
   target:
