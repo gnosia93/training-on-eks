@@ -51,10 +51,10 @@
         * eni (ena)
         * nvlink
         * efa  
-    * grace hopper / blackwell --> CPU/GPU Link
+    * Grace Hopper / Blackwell --> CPU/GPU NVLink 
         * Parameter CPU Offloading 성능
         * PCIe(System Interconnect) 대역폭 병목 (Bottleneck) 회피.
-        * DeepSpeed vs FSDP 동시 테스트.
+        * DeepSpeed and FSDP 테스트.
            
 
 * [C10. 병렬 분산 파일 시스템(Lustre)]
