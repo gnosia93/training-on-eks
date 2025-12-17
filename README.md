@@ -30,7 +30,7 @@
    - placement group / same AZ 
    - ultra cluster and capacity block 
 
-* [C8. 훈련 스케줄링 및 복원력](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-scheduling-resiliency.md)
+* [C8. 분산 훈련 스케줄링 및 복원력](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-scheduling-resiliency.md)
    - 갱 스케줄링 - Kueue 권장
       - 잡큐 관리 / 스케줄링 우선순위 / 재시작 / 잡 파티션 관리 등등...
    - 스케줄링 배제 
