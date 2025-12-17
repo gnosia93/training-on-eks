@@ -47,6 +47,34 @@ kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-gpu-dashboard-1.png)
 
+#### Job 완료 ###
+JOB 을 조회해 보면 완료로 표시되고 총 12분이 경과된 것을 확인할 수 있다. 
+```
+kubectl get pytorchjob -n pytorch
+```
+```
+NAME               STATE       AGE
+pytorch-dist-job   Succeeded   12m
+```
+
+하지만 작업에 사용된 파드와 서비스는 여전히 살아 있다. 명시적으로 삭제 시켜줘야 한다. 
+```
+kubectl get all -n pytorch
+```
+```
+NAME                            READY   STATUS      RESTARTS   AGE
+pod/pytorch-dist-job-master-0   0/1     Completed   0          13m
+pod/pytorch-dist-job-worker-0   0/1     Completed   0          13m
+pod/pytorch-dist-job-worker-1   0/1     Completed   0          13m
+pod/pytorch-dist-job-worker-2   0/1     Completed   0          13m
+
+NAME                                TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)     AGE
+service/pytorch-dist-job-master-0   ClusterIP   None         <none>        23456/TCP   13m
+service/pytorch-dist-job-worker-0   ClusterIP   None         <none>        23456/TCP   13m
+service/pytorch-dist-job-worker-1   ClusterIP   None         <none>        23456/TCP   13m
+service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456/TCP   13m
+
+
 #### Job 삭제 ####
 pytorchjob 은 실패 및 성공여부와 상관없이 명시적으로 꼭 삭제 시켜줘야한다. 그렇지 않으면 파드가 삭제되지 않고, 이는 GPU 자원을 IDLE 상태에서 계속 점유 하는 주요 원인으로 동작한다. 
 ```
