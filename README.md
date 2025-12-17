@@ -47,9 +47,11 @@
         * efa 
     * p 타입
         * eni (ena)
-        * pci
-        * efa  
         * nvlink
+        * efa  
+    * grace hopper / blackwell --> CPU/GPU Link
+        * Parameter CPU Offloading 성능
+           
 
 * [C10. 병렬 분산 파일 시스템(Lustre)]
    
