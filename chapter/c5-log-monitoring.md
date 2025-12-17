@@ -9,7 +9,7 @@ Grafana Loki는 Grafana Labs에서 개발한 오픈소스 로그 집계 시스�
 
 ### 1. 설치하기 ###
 
-#### 단계 1: S3 버킷 및 IAM 설정 (Terraform 예시) ####
+#### S3 버킷 생성 ####
 Loki가 로그를 저장할 S3 버킷을 생성하고, EKS 노드가 이 버킷에 쓰기 권한을 가질 수 있도록 태그를 추가하거나 IAM 정책을 연결합니다.
 
 ```
@@ -52,7 +52,7 @@ aws iam create-policy \
     --policy-document file://loki-s3-policy.json
 ```
 
-#### 단계 2: Helm 으로 Loki 설치 ####
+#### Helm 으로 Loki 설치 ####
 ```
 helm repo add grafana grafana.github.io
 helm repo update
@@ -90,7 +90,7 @@ EOF
 helm install loki grafana/loki -f loki-values.yaml -n monitoring --create-namespace
 ```
 
-#### 단계 4: Promtail 설치 (로그 수집기) ####
+#### Promtail 설치 (로그 수집기) ####
 각 노드에서 분산 학습 파드의 Raw Text 로그를 긁어 Loki로 쏘아주는 역할입니다.
 ```
 helm install promtail grafana/promtail \
@@ -98,7 +98,7 @@ helm install promtail grafana/promtail \
   -n monitoring
 ```
 
-#### 단계 5: Grafana 연동 ####
+#### Grafana 연동 ####
 * Connections -> Data Sources -> Add Loki
 URL에 http://loki.monitoring.svc.cluster.local:3100 입력 후 Save & Test
 
