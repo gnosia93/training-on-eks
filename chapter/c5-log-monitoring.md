@@ -13,40 +13,51 @@ Grafana Loki는 Grafana Labs에서 개발한 오픈소스 로그 집계 시스�
 Loki가 로그를 저장할 S3 버킷을 생성하고, EKS 노드가 이 버킷에 쓰기 권한을 가질 수 있도록 태그를 추가하거나 IAM 정책을 연결합니다.
 
 ```
-# 1. S3 버킷 생성
-resource "aws_s3_bucket" "loki_storage" {
-  bucket = "dh-eks-loki-storage" # 고유한 이름으로 수정
-}
+# S3 버킷 생성
+aws s3api create-bucket \
+    --bucket dh-eks-loki-storage \
+    --region ap-northeast-2 \
+    --create-bucket-configuration LocationConstraint=ap-northeast-2
 
-# 2. IAM 정책 (이 정책을 노드 그룹의 IAM 역할에 연결)
-resource "aws_iam_policy" "loki_s3_policy" {
-  name        = "EKS-Loki-S3-Access"
-  description = "Allow Loki to access S3 for log storage"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = ["s3:ListBucket", "s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
-        Effect   = "Allow"
-        Resource = [
-          "${aws_s3_bucket.loki_storage.arn}",
-          "${aws_s3_bucket.loki_storage.arn}/*"
-        ]
-      }
+aws s3api put-public-access-block \
+    --bucket dh-eks-loki-storage \
+    --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+
+# Policy 파일 생성
+cat <<EOF > loki-s3-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::dh-eks-loki-storage",
+                "arn:aws:s3:::dh-eks-loki-storage/*"
+            ]
+        }
     ]
-  })
 }
+EOF
+
+# IAM 정책 생성
+aws iam create-policy \
+    --policy-name EKSLokiS3AccessPolicy \
+    --description "Allow Loki to access S3 for log storage" \
+    --policy-document file://loki-s3-policy.json
 ```
 
-#### 단계 2: Helm 저장소 추가 ####
+#### 단계 2: Helm 으로 Loki 설치 ####
 ```
 helm repo add grafana grafana.github.io
 helm repo update
-```
 
-#### 단계 3: Loki 설치 (S3 전용 설정) ####
-분산 학습 로그는 양이 많으므로 S3 저장소 설정이 필수입니다. loki-values.yaml 파일을 만듭니다.
-```
+cat <<EOF > loki-values.yaml
 loki:
   auth_enabled: false
   commonConfig:
@@ -74,9 +85,8 @@ deploymentMode: SingleBinary
 # (옵션) 로그 보관 주기 설정 (예: 30일)
 # limits_config:
 #   retention_period: 720h
-```
+EOF
 
-```
 helm install loki grafana/loki -f loki-values.yaml -n monitoring --create-namespace
 ```
 
