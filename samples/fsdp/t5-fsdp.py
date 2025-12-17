@@ -227,7 +227,7 @@ def main():
     parser.add_argument("--grad_acc_steps", type=int, default=1)
     parser.add_argument("--epochs", type=int, default=5) # 테스트를 위해 에폭 상향
     parser.add_argument("--train_size", type=int, default=1000)
-    parser.add_argument("--model_id", type=str, default="google-t5/t5-small")
+    parser.add_argument("--model_id", type=str, default="google-t5/t5-large")
     
     parser.add_argument("--sharding_strategy", type=str, default="FULL_SHARD", 
                         choices=["FULL_SHARD", "SHARD_GRAD_OP", "NO_SHARD", "HYBRID_SHARD"])
