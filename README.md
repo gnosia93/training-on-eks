@@ -51,7 +51,7 @@
         * nvlink
         * efa  
     * Grace Hopper / Blackwell --> CPU/GPU NVLink 
-        * Parameter CPU Offloading 성능
+        * Parameter CPU Offloading 성능 (NVLink vs PCIe)
         * PCIe(System Interconnect) 대역폭 병목 (Bottleneck) 회피.
         * DeepSpeed and FSDP 테스트.
 
