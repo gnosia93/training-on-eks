@@ -16,7 +16,18 @@ spec:
           # --- [수정] NodeSelector 추가 (gpu 강제 지정) ---
           nodeSelector:
             karpenter.sh/nodepool: gpu
+            node.kubernetes.io/instance-type: p4d.24xlarge 
           # -----------------------------------------------------
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                   matchExpressions:
+                   - key: training.kubeflow.org/job-name
+                     operator: In
+                     values:
+                     - pytorch-dist-job
+                topologyKey: "kubernetes.io/hostname"
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
@@ -42,7 +53,18 @@ spec:
           # --- [수정] NodeSelector 추가 (gpu 강제 지정) ---
           nodeSelector:
             karpenter.sh/nodepool: gpu
+            node.kubernetes.io/instance-type: p4d.24xlarge 
           # -----------------------------------------------------
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                   matchExpressions:
+                   - key: training.kubeflow.org/job-name
+                     operator: In
+                     values:
+                     - pytorch-dist-job
+                topologyKey: "kubernetes.io/hostname"
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
