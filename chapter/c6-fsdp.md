@@ -47,8 +47,15 @@ kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-gpu-dashboard.png)
 
+#### Job 삭제 ####
+pytorchjob 은 실패 및 성공여부와 상관없이 명시적으로 꼭 삭제 시켜줘야한다. 그렇지 않으면 파드가 삭제되지 않고, 이는 GPU 자원을 IDLE 상태에서 계속 점유 하는 주요 원인으로 동작한다. 
+```
+kubectl delete pytorchjob pytorch-dist-job -n pytorch
+```
 
-#### pytorchjob 자동 재시작 ####
+
+
+## 참고 - pytorchjob 자동 재시작 ##
 
 JOB은 backoffLimit 값까지 재시작된다. 파트는 동일하나 컨테이너가 재시작하는 것으로 생각하면 되는데 기본값은 6회 이다. 6번 재시작했는데도 작업이 오류가 발생되면, CrashLoopBackOff 상태로 빠지고 더이상 컨테이너를 재생성하지 않는다. 
 ```
@@ -68,12 +75,6 @@ spec:
       template:
         spec:
           containers:
-```
-
-#### Job 삭제 ####
-실패한 JOB은 명시적으로 삭제 시켜줘야한다. 
-```
-kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
 
 ## 레퍼런스 ##
