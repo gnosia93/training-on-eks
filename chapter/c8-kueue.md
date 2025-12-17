@@ -81,6 +81,12 @@ spec:
   clusterQueue: cluster-queue-a
 ```
 
+#### 4. 주의해야 할 점 (매칭 확인) ####
+설정이 꼬이지 않으려면 다음 사항만 일치시키면 됩니다.
+* 카펜터의 NodePool 설정: 카펜터의 NodePool (또는 Provisioner)이 Kueue Flavor에서 지정한 레이블(예: GPU 타입, 인스턴스 타입)을 생성할 수 있는 권한과 범위 내에 있어야 합니다.
+* 레이블 일치: Flavor에서 nvidia-a100을 지정했는데 카펜터 설정에는 g4dn.xlarge(T4 GPU)만 허용되어 있다면, 카펜터가 노드를 띄우지 못해 포드가 Pending 상태로 남게 됩니다.
+
+
 ## PytorchJob ##
 
 ```
