@@ -20,7 +20,18 @@ helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
   -f kueue-values.yaml
 ```
 
-### 작업 제출 ###
+### PytorchJob 고려사항 ###
+
+#### 1. 갱 스케줄링 (Gang Scheduling) 보장 ####
+PyTorchJob과 같은 분산 학습은 모든 워커(Worker)가 동시에 실행되지 않으면 학습이 진행되지 않고 자원만 점유하는 상황이 발생합니다.
+* Kueue의 역할: Kueue는 All-or-nothing 방식을 지원합니다. 설정된 모든 레플리카(Master + Workers)를 수용할 수 있는 자원이 있을 때만 작업을 승인(Admit)합니다.
+* 주의: 만약 Kueue 없이 일반 스케줄러만 사용하면, 일부 워커만 생성되어 GPU 자원을 점유한 채 나머지 워커를 무한정 기다리는 '교착 상태(Deadlock)'에 빠질 수 있습니다.
+
+
+#### 2. Suspend 모드 필수 사용 ####
+Kueue가 작업을 제어하게 하려면 제출 시점에 작업이 중단된 상태여야 합니다.
+* 설정: PyTorchJob의 spec.runPolicy.suspend 필드를 true로 설정하여 제출하세요.
+* 동작: Kueue가 자원을 할당하는 순간 이 값을 false로 바꿔주며 학습이 시작됩니다. 만약 false로 제출하면 Kueue의 관리 기능을 우회하여 즉시 실행을 시도하므로 쿼터 관리가 무너집니다.
 
 #### 3. Resource Flavor와 노드 선택 (카펜터 연동 시) ####
 분산 학습 시 노드 간 통신 속도가 매우 중요합니다.
