@@ -12,12 +12,10 @@ patches:
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
-        pwd
         cd /workspace/code/samples/fsdp
-        pwd
-        ls -la 
+        echo "working directory: "$(pwd)
         pip install -r requirements.txt
-        torchrun --nnodes 4 --nproc_per_node 1 t5_fsdp.py
+        torchrun --nnodes 4 --nproc_per_node 1 t5-fsdp.py
   target:
     kind: PyTorchJob
     name: pytorch-dist-job
@@ -28,8 +26,10 @@ patches:
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
       value: |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        cd /workspace/code/samples/fsdp
+        echo "working directory: "$(pwd)
         pip install -r requirements.txt
-        torchrun --nnodes 4 --nproc_per_node 1 t5_fsdp.py
+        torchrun --nnodes 4 --nproc_per_node 1 t5-fsdp.py
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/replicas
       value: 3        
