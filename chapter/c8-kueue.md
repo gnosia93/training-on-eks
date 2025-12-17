@@ -1,4 +1,5 @@
 ## Kueue ##
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/Kueue-Arch.svg)
 
 ### 1. 설치 ###
 ```
