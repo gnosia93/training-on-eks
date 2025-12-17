@@ -41,6 +41,8 @@
    - 연산 속도가 느린 GPU / 네트워크 카드 / 노드 식별 방법???
   
 * [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-interconnect-perf.md)
+테스트는 fsdp FULL Shard.. 최대 통신량 방식 선택.. 트레이닝 시간 측정.. 스크립트 제공... 
+
     * g 타입
         * eni (ena)
         * pci
