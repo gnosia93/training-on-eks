@@ -2,6 +2,7 @@
 
 ### 1. 설치 ###
 ```
+cat <<EOF > kueue-values.yaml
 controllerManager:
   manager:
     configuration:
@@ -9,13 +10,36 @@ controllerManager:
         frameworks:
         - "batch/job"
         - "kubeflow.org/pytorchjob"
-        - "kubeflow.org/tfjob"   # 필요한 경우 추가
-        - "ray.io/rayjob"      # 필요한 경우 추가
-
+#        - "kubeflow.org/tfjob"   
+#        - "ray.io/rayjob"      
+EOF
 
 helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
-  --create-namespace --namespace kueue-system
+  --namespace kueue-system \
+  --create-namespace \
+  -f kueue-values.yaml
 ```
+
+### 작업 제출 ###
+
+#### 3. Resource Flavor와 노드 선택 (카펜터 연동 시) ####
+분산 학습 시 노드 간 통신 속도가 매우 중요합니다.
+* Flavor 설정: ResourceFlavor를 사용하여 특정 노드 그룹(예: NVIDIA A100 등)이나 가용 영역(AZ)을 지정할 수 있습니다.
+* 카펜터 최적화: 카펜터(Karpenter)를 함께 사용한다면, 분산 학습 포드들이 가급적 동일한 서브넷이나 물리적 위치에 배치되도록 topologySpreadConstraints나 nodeSelector를 PyTorchJob 템플릿 내에 설정하는 것이 네트워크 지연 시간을 줄이는 데 도움이 됩니다.
+
+#### 4. 선점(Preemption) 정책 설계 ####
+중요도가 낮은 학습이 자원을 점유하고 있을 때, 우선순위가 높은 학습이 들어오는 경우를 대비해야 합니다.
+* PriorityClass: PyTorchJob에 적절한 priorityClassName을 부여하세요.
+* Kueue 설정: ClusterQueue의 preemption 정책을 통해 낮은 우선순위의 작업을 중단시키고 고우선순위 작업을 먼저 실행할지 결정해야 합니다. (단, 학습 중단 시 체크포인트가 저장되도록 코드가 작성되어 있어야 합니다.)
+
+
+
+
+
+
+
+---
+
 ### 2. 리소스 관리 구조 설정 ###
 Kueue를 작동시키려면 리소스의 종류와 사용량을 정의하는 3가지 설정 파일이 필요합니다. 
 * ResourceFlavor: 노드 풀의 특성(예: GPU 종류, Spot 인스턴스 여부)을 정의합니다.
