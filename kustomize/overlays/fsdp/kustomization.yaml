@@ -11,12 +11,10 @@ patches:
     - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
-        sudo dnf install wget -y
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
-        cd /workspace/code/samples/FSDP
-        sh download_dataset.sh
+        cd /workspace/code/samples/fsdp
         pip install -r requirements.txt
-        torchrun --nnodes 4 --nproc_per_node 1 T5_training.py
+        torchrun --nnodes 4 --nproc_per_node 1 t5_fsdp.py
   target:
     kind: PyTorchJob
     name: pytorch-dist-job
@@ -26,12 +24,9 @@ patches:
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
       value: |
-        sudo dnf install wget -y
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
-        cd /workspace/code/samples/FSDP
-        sh download_dataset.sh
         pip install -r requirements.txt
-        torchrun --nnodes 4 --nproc_per_node 1 T5_training.py
+        torchrun --nnodes 4 --nproc_per_node 1 t5_fsdp.py
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/replicas
       value: 3        
