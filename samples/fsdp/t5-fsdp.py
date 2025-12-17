@@ -129,13 +129,58 @@ def train(args, rank, device):
     if args.use_checkpointing:
         apply_activation_checkpointing(model, checkpoint_wrapper_fn=checkpoint_wrapper, check_fn=lambda m: isinstance(m, T5Block))
 
-    # 데이터 로딩
-    dataset = load_dataset("billsum", split=f"train[:{args.train_size}]", trust_remote_code=True)
-    tokenized_ds = dataset.map(lambda ex: tokenizer(["summarize: " + d for d in ex["text"]], max_length=512, truncation=True, padding="max_length"), batched=True).with_format("torch")
-    
-    sampler = DistributedSampler(tokenized_ds, shuffle=True)
-    loader = DataLoader(tokenized_ds, batch_size=args.batch_size, sampler=sampler, num_workers=args.num_workers, pin_memory=args.pin_memory)
 
+
+
+         
+    # 데이터 로딩
+    #dataset = load_dataset("billsum", split=f"train[:{args.train_size}]", trust_remote_code=True)
+    #tokenized_ds = dataset.map(lambda ex: tokenizer(["summarize: " + d for d in ex["text"]], max_length=512, truncation=True, padding="max_length"), batched=True).with_format("torch")
+    
+    #sampler = DistributedSampler(tokenized_ds, shuffle=True)
+    #loader = DataLoader(tokenized_ds, batch_size=args.batch_size, sampler=sampler, num_workers=args.num_workers, pin_memory=args.pin_memory)
+
+     
+    # --- [수정 부분 시작] ---
+    # 1. 데이터셋 로드
+    dataset = load_dataset("billsum", split=f"train[:{args.train_size}]", trust_remote_code=True)
+
+    # 2. 토크나이징 함수 정의
+    def tokenize_fn(ex):
+        # T5는 입력(input_ids)과 정답(labels)이 모두 필요합니다.
+        inputs = tokenizer(["summarize: " + d for d in ex["text"]], max_length=512, truncation=True, padding="max_length")
+        targets = tokenizer(ex["summary"], max_length=128, truncation=True, padding="max_length")
+        
+        # 모델에 넣을 수 있게 dict 형태로 반환
+        return {
+            "input_ids": inputs["input_ids"],
+            "attention_mask": inputs["attention_mask"],
+            "labels": targets["input_ids"]
+        }
+
+    # 3. 데이터셋 변환 (기존 텍스트 컬럼 삭제 및 텐서 형식 지정)
+    tokenized_ds = dataset.map(
+        tokenize_fn, 
+        batched=True, 
+        remove_columns=dataset.column_names # text, summary 등 문자열 컬럼을 삭제해야 에러가 안 납니다.
+    ).with_format("torch") # 명확하게 torch 텐서로 변환
+    
+    # 4. DataLoader 설정 (기존과 동일하지만 이제는 텐서가 들어옵니다)
+    sampler = DistributedSampler(tokenized_ds, shuffle=True)
+    loader = DataLoader(
+        tokenized_ds, 
+        batch_size=args.batch_size, 
+        sampler=sampler, 
+        num_workers=args.num_workers, 
+        pin_memory=args.pin_memory
+    )
+    # --- [수정 부분 끝] ---     
+
+
+
+
+
+         
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
     # --- [재시작 로직 추가] ---
