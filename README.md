@@ -42,13 +42,12 @@
      
 * [C9. 병렬 분산 파일 시스템(Lustre)]
   
-* [C10. 훈련 방식에 따른 성능 비교]
+* [C10. 연결 방식에 따른 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-training-perf.md)
    - fsdp
       - nvlink
       - efa + nvlink
       - pci
       - eni
-   - megatron
      
 * [C11. MLOps /w Airflow]
    - MLflow
