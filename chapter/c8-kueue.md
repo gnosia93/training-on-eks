@@ -182,4 +182,5 @@ Kueue가 "언제 작업을 실행할지" 결정하는 작업 관리(Queueing) �
 * 작업 실행: 노드가 준비되면 포드들이 배치되어 작업을 시작합니다. 
 
 ## 레퍼런스 ##
+* https://kueue.sigs.k8s.io/docs/overview/
 * https://www.redhat.com/ko/blog/openshift-joining-kueue
