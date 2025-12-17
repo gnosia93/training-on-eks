@@ -41,7 +41,7 @@
    - 연산 속도가 느린 GPU / 네트워크 카드 / 노드 식별 방법???
   
 * [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-interconnect-perf.md)
-  * 테스트 아키텍처 
+  * 테스트 아키텍처 ( 8GPU 1대 vs 1GPU 8대, 최대 통신량 방식, 트레이닝 시간 측정 )
     * g 타입
         * eni (ena)
         * pci
@@ -54,7 +54,6 @@
         * Parameter CPU Offloading 성능
         * PCIe(System Interconnect) 대역폭 병목 (Bottleneck) 회피.
         * DeepSpeed and FSDP 테스트.
- * 테스트 환경 - 테스트는 fsdp FULL Shard.. 최대 통신량 방식 선택.. 트레이닝 시간 측정.. 스크립트 제공... GPU 8개 (개발서버 8대 vs GPU 8장 1서버)    
 
 * [C10. 병렬 분산 파일 시스템(Lustre)]
    
