@@ -88,7 +88,7 @@ helm install promtail grafana/promtail \
   -n monitoring
 ```
 
-#### 단계 5: Grafana 설치 및 로그 확인 ####
+#### 단계 5: Grafana 연동 ####
 * Connections -> Data Sources -> Add Loki
 URL에 http://loki.monitoring.svc.cluster.local:3100 입력 후 Save & Test
 
