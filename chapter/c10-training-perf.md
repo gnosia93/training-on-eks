@@ -59,4 +59,25 @@ export WORKERS=4
 kustomize build . | envsubst | kubectl apply -f -
 ```
 
+## 인터케넥트 타입별 ## 
+
+분산 학습 및 고성능 컴퓨팅(HPC) 환경에서 NVLINK, EFA, PCIe, ENI 등을 통칭할 때는 목적에 따라 다음과 같은 용어들을 사용합니다.
+
+### 1. 하드웨어적 인터페이스 측면: 상호 연결 기술 (Interconnects) ###
+가장 일반적으로 사용되는 기술 용어입니다. 서버 내부 또는 서버 간에 데이터를 주고받기 위한 하드웨어적 통로를 의미합니다.
+* Node Interconnect: 서버와 서버 사이의 연결 (EFA, ENI, InfiniBand 등)
+* GPU Interconnect: GPU와 GPU 사이의 연결 (NVLink)
+* System Interconnect: CPU, GPU, 메모리 간의 연결 (PCIe) 
+
+### 2. 물리적 연결 체계: 네트워크 패브릭 (Network Fabric) ###
+단순한 선 연결을 넘어, 수많은 노드가 거대한 그물망처럼 얽혀 고속으로 데이터를 주고받는 전체적인 구조를 부를 때 사용합니다.
+* 예: "AWS는 EFA 패브릭을 통해 수천 개의 GPU를 하나로 묶는다."
+
+### 3. 논리적/물리적 구성: 네트워크 토폴로지 (Network Topology) ### 
+이러한 장치들이 어떤 모양(링, 트리, 메시 등)으로 연결되어 있는지를 말할 때 사용합니다. 분산 학습 효율을 결정짓는 핵심 요소입니다. 
+* 예: "NVLink 토폴로지를 확인하여 올바른 프로세스 매핑을 수행한다."
+
+### 4. 데이터 전송 통로: 입출력 계층 (I/O Hierarchy / I/O Path) ###
+데이터가 CPU에서 메모리를 거쳐 GPU나 네트워크 카드로 흘러가는 경로를 통칭할 때 사용합니다
+
 
