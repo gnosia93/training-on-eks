@@ -87,7 +87,7 @@ spec:
 * 레이블 일치: Flavor에서 nvidia-a100을 지정했는데 카펜터 설정에는 g4dn.xlarge(T4 GPU)만 허용되어 있다면, 카펜터가 노드를 띄우지 못해 포드가 Pending 상태로 남게 됩니다.
 
 
-## PytorchJob ##
+## PytorchJob 수정 및 실행 ##
 
 ```
 apiVersion: "kubeflow.org/v1"
@@ -107,37 +107,7 @@ spec:
     Master:
       replicas: 1
       template:
-        spec:
-          containers:
-            - name: pytorch
-              image: kubeflow/pytorch-dist-mnist-test:latest
-              imagePullPolicy: IfNotPresent
-              resources:
-                requests:
-                  cpu: "2"
-                  memory: "4Gi"
-                  nvidia.com: "1"
-                limits:
-                  nvidia.com: "1"
-    Worker:
-      replicas: 2
-      template:
-        spec:
-          containers:
-            - name: pytorch
-              image: kubeflow/pytorch-dist-mnist-test:latest
-              imagePullPolicy: IfNotPresent
-              resources:
-                requests:
-                  cpu: "2"
-                  memory: "4Gi"
-                  nvidia.com: "1"
-                limits:
-                  nvidia.com: "1"
-```
-
-```
-# 1. PyTorchJob 제출
+        ...chJob 제출
 kubectl apply -f pytorch-job.yaml
 
 # 2. Kueue 워크로드 상태 확인 (Admitted: true가 되면 실행 시작)
