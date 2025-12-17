@@ -20,13 +20,76 @@ helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
   -f kueue-values.yaml
 ```
 
+```
+# 1. PyTorchJob 제출
+kubectl apply -f pytorch-job.yaml
+
+# 2. Kueue 워크로드 상태 확인 (Admitted: true가 되면 실행 시작)
+kubectl get workloads -n team-a
+
+# 3. PyTorchJob 상태 확인 (ALL-OR-NOTHING 확인)
+kubectl get pytorchjob pytorch-dist-mnist -n team-a
+```
+
+
+## PytorchJob ##
+
+```
+apiVersion: "kubeflow.org/v1"
+kind: "PyTorchJob"
+metadata:
+  name: pytorch-dist-mnist
+  namespace: team-a  # LocalQueue가 생성된 네임스페이스
+  labels:
+    # 1. 이 레이블이 있어야 Kueue가 작업을 관리합니다.
+    kueue.x-k8s.io/queue-name: team-a-queue
+spec:
+  # 2. 제출 시점에 true로 설정해야 Kueue가 쿼터를 확인한 뒤 실행합니다.
+  runPolicy:
+    suspend: true
+    cleanPodPolicy: Running
+  pytorchReplicaSpecs:
+    Master:
+      replicas: 1
+      template:
+        spec:
+          containers:
+            - name: pytorch
+              image: kubeflow/pytorch-dist-mnist-test:latest
+              imagePullPolicy: IfNotPresent
+              resources:
+                requests:
+                  cpu: "2"
+                  memory: "4Gi"
+                  nvidia.com: "1"
+                limits:
+                  nvidia.com: "1"
+    Worker:
+      replicas: 2
+      template:
+        spec:
+          containers:
+            - name: pytorch
+              image: kubeflow/pytorch-dist-mnist-test:latest
+              imagePullPolicy: IfNotPresent
+              resources:
+                requests:
+                  cpu: "2"
+                  memory: "4Gi"
+                  nvidia.com: "1"
+                limits:
+                  nvidia.com: "1"
+```
+
+
+
+
 ### PytorchJob 고려사항 ###
 
 #### 1. 갱 스케줄링 (Gang Scheduling) 보장 ####
 PyTorchJob과 같은 분산 학습은 모든 워커(Worker)가 동시에 실행되지 않으면 학습이 진행되지 않고 자원만 점유하는 상황이 발생합니다.
 * Kueue의 역할: Kueue는 All-or-nothing 방식을 지원합니다. 설정된 모든 레플리카(Master + Workers)를 수용할 수 있는 자원이 있을 때만 작업을 승인(Admit)합니다.
 * 주의: 만약 Kueue 없이 일반 스케줄러만 사용하면, 일부 워커만 생성되어 GPU 자원을 점유한 채 나머지 워커를 무한정 기다리는 '교착 상태(Deadlock)'에 빠질 수 있습니다.
-
 
 #### 2. Suspend 모드 필수 사용 ####
 Kueue가 작업을 제어하게 하려면 제출 시점에 작업이 중단된 상태여야 합니다.
