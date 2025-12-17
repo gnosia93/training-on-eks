@@ -1,3 +1,17 @@
+## Kueue ##
+
+### 1. 설치 ###
+```
+helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
+  --create-namespace --namespace kueue-system
+```
+### 2. 리소스 관리 구조 설정 ###
+Kueue를 작동시키려면 리소스의 종류와 사용량을 정의하는 3가지 설정 파일이 필요합니다. 
+* ResourceFlavor: 노드 풀의 특성(예: GPU 종류, Spot 인스턴스 여부)을 정의합니다.
+* ClusterQueue: 클러스터 전체에서 팀들이 공유할 수 있는 리소스 할당량(Quota)을 정의합니다.
+* LocalQueue: 특정 네임스페이스 사용자가 작업을 제출할 수 있는 통로입니다.
+
+
 ### 주요 특징 및 작동 방식 ###
 * 작업 큐잉 및 할당량 관리
 Kueue는 작업 수준 관리자 역할을 합니다. 리소스가 충분하지 않을 경우 작업을 대기열에 넣고, 리소스가 확보되면 작업을 클러스터에 제출하여 Pod가 생성되도록 합니다.
