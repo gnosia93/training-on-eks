@@ -15,8 +15,8 @@ spec:
         spec:
           # --- [수정] NodeSelector 추가 (gpu 강제 지정) ---
           nodeSelector:
-            karpenter.sh/nodepool: gpu
-            node.kubernetes.io/instance-type: p4d.24xlarge 
+            karpenter.sh/nodepool: ${NODEPOOL}
+            node.kubernetes.io/instance-type: ${INSTANCE_TYPE} 
           # -----------------------------------------------------
           affinity:
             podAffinity:
@@ -27,7 +27,7 @@ spec:
                      operator: In
                      values:
                      - pytorch-dist-job
-                topologyKey: "kubernetes.io/hostname"
+                topologyKey: "kubernetes.io/hostname"     # 멀티 GPU 인스턴스를 할당시 유지, 싱글 GPU 인스턴스인 경우는 kubernetes.io/zone 으로 수정
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
@@ -52,8 +52,8 @@ spec:
         spec:
           # --- [수정] NodeSelector 추가 (gpu 강제 지정) ---
           nodeSelector:
-            karpenter.sh/nodepool: gpu
-            node.kubernetes.io/instance-type: p4d.24xlarge 
+            karpenter.sh/nodepool: ${NODEPOOL}
+            node.kubernetes.io/instance-type: ${INSTANCE_TYPE} 
           # -----------------------------------------------------
           affinity:
             podAffinity:
@@ -64,7 +64,7 @@ spec:
                      operator: In
                      values:
                      - pytorch-dist-job
-                topologyKey: "kubernetes.io/hostname"
+                topologyKey: "kubernetes.io/hostname"      # 멀티 GPU 인스턴스를 할당시 유지, 싱글 GPU 인스턴스인 경우는 kubernetes.io/zone 으로 수정
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
