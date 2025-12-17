@@ -2,6 +2,17 @@
 
 ### 1. 설치 ###
 ```
+controllerManager:
+  manager:
+    configuration:
+      integrations:
+        frameworks:
+        - "batch/job"
+        - "kubeflow.org/pytorchjob"
+        - "kubeflow.org/tfjob"   # 필요한 경우 추가
+        - "ray.io/rayjob"      # 필요한 경우 추가
+
+
 helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
   --create-namespace --namespace kueue-system
 ```
