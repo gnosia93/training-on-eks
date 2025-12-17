@@ -20,8 +20,66 @@ helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
   -f kueue-values.yaml
 ```
 
+### 2. Kueue가 설정 ###
+PyTorchJob을 실행하기 전에 Kueue가 해당 작업을 인식하고 리소스를 할당할 수 있도록 ResourceFlavor, ClusterQueue, 그리고 LocalQueue 세 가지 핵심 리소스가 설정되어 있어야 합니다
 
+#### 1. ResourceFlavor 정의 ####
+클러스터에 존재하는 실제 리소스(여기서는 GPU)의 종류와 레이블을 정의합니다. 
+```
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: ResourceFlavor
+metadata:
+  name: nvidia-gpu-flavor
+spec:
+  nodeSelector:
+    # 이 레이블은 GPU 노드에 실제로 있어야 합니다.
+    # 예: "cloud.provider.com": "nvidia-a100"
+    # 또는 간단한 예시로 "karpenter.sh/capacity-type": "on-demand"
+    kueue.x-k8s.io/default-flavor: "true" 
+  tolerations:
+  - key: "kueue.x-k8s.io/gpu"
+    operator: "Exists"
+    effect: "NoSchedule"
+```
 
+#### 2. ClusterQueue 정의 (cluster-queue.yaml) #### 
+클러스터 전체의 리소스 할당량과 정책을 정의합니다. queue-a라는 이름으로 총 GPU 10개까지 할당할 수 있도록 설정합니다.
+```
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: ClusterQueue
+metadata:
+  name: cluster-queue-a
+spec:
+  resourceGroups:
+    - flavors:
+        - name: nvidia-gpu-flavor
+          resources:
+            - name: nvidia.com/gpu
+              nominalQuota: 10  # 총 GPU 10개 할당 가능
+            - name: cpu
+              nominalQuota: 40
+            - name: memory
+              nominalQuota: 100Gi
+      # 갱 스케줄링(Gang Scheduling)을 위한 설정
+      # 모든 파드가 준비될 때까지 기다릴지 여부 (선택 사항, v0.3.0 이후)
+      # waitForPodsReady:
+      #   enable: true
+  # 이 ClusterQueue를 사용할 수 있는 LocalQueue의 네임스페이스 제약 (선택 사항)
+  namespaceSelector: {} 
+```
+
+#### 3. LocalQueue 정의 (local-queue.yaml) ####
+특정 네임스페이스(team-a) 내 사용자들이 작업을 제출하는 통로를 정의합니다. 이 LocalQueue가 위의 ClusterQueue를 참조합니다.
+```
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: LocalQueue
+metadata:
+  name: team-a-queue
+  namespace: team-a
+spec:
+  # 위에서 정의한 ClusterQueue 이름
+  clusterQueue: cluster-queue-a
+```
 
 ## PytorchJob ##
 
