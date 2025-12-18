@@ -36,7 +36,6 @@ spec:
           nodeSelector:
             karpenter.sh/nodepool: ${NODEPOOL}
             node.kubernetes.io/instance-type: ${INSTANCE_TYPE} 
-            topology.kubernetes.io/zone: ${ZONE}                  # 단일 값만 가능, 멀티라인 쓸려면 nodeAffinity 사용
           # -----------------------------------------------------
           affinity:
             podAffinity:
@@ -47,7 +46,7 @@ spec:
                        operator: In
                        values:
                        - pytorch-dist-job
-                  topologyKey: kubernetes.io/zone          
+                  topologyKey: kubernetes.io/region          
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
@@ -74,7 +73,6 @@ spec:
           nodeSelector:
             karpenter.sh/nodepool: ${NODEPOOL}
             node.kubernetes.io/instance-type: ${INSTANCE_TYPE} 
-            topology.kubernetes.io/zone: ${ZONE}                  # 단일 값만 가능, 멀티라인 쓸려면 nodeAffinity 사용
           # -----------------------------------------------------
           affinity:
             podAffinity:
@@ -85,7 +83,7 @@ spec:
                        operator: In
                        values:
                        - pytorch-dist-job
-                  topologyKey: kubernetes.io/zone      
+                  topologyKey: kubernetes.io/region      
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
