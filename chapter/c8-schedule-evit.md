@@ -40,9 +40,17 @@ System UUID 값을 노드의 레이블로 등록해두면, 특정 노드를 타�
 
 
 ## GPU 배제 ##
+
 * GPU ID(UUID)를 보려면 노드에서 nvidia-smi -L 명령어를 실행해야 한다.
 * kubectl exec -it <파드이름> -- env | grep NVIDIA_VISIBLE_DEVICES
-
+```
+kubectl exec -it pytorch-dist-job-worker-1 -n pytorch -- env | grep NVIDIA_VISIBLE_DEVICES
+```
+[결과]
+```
+Defaulted container "pytorch" out of: pytorch, init-pytorch (init)
+NVIDIA_VISIBLE_DEVICES=GPU-5c126807-49db-0b13-1200-87ce24163cc9
+```
 
 
 
