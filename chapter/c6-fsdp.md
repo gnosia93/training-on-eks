@@ -45,6 +45,12 @@ service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456
 kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 ```
 
+카펜터 노드 프로비저닝 확인
+```
+kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
+```
+
+
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-gpu-dashboard-1.png)
 
 #### Job 완료 ###
