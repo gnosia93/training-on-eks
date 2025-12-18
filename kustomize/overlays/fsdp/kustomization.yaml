@@ -15,9 +15,6 @@ patches:
       path: /spec/pytorchReplicaSpecs/Master/template/spec/nodeSelector/node.kubernetes.io~1instance-type
       value: p4d.24xlarge
     - op: replace
-      path: /spec/pytorchReplicaSpecs/Master/template/spec/nodeSelector/topology.kubernetes.io~1zone
-      value: ap-northeast-2a
-    - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
@@ -37,9 +34,6 @@ patches:
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/nodeSelector/node.kubernetes.io~1instance-type
       value: p4d.24xlarge
-    - op: replace
-      path: /spec/pytorchReplicaSpecs/Worker/template/spec/nodeSelector/topology.kubernetes.io~1zone
-      value: ap-northeast-2  
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
       value: |
