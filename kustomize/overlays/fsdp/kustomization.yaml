@@ -17,9 +17,9 @@ patches:
     - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/nodeSelector/ topology.kubernetes.io~1zone
       value: ap-northeast-2a
-    - op: replace
-      path: /spec/pytorchReplicaSpecs/Master/template/spec/affinity/podAffinity/requiredDuringSchedulingIgnoredDuringExecution/0/topologyKey
-      value: kubernetes.io/hostname
+#    - op: replace
+#      path: /spec/pytorchReplicaSpecs/Master/template/spec/affinity/podAffinity/requiredDuringSchedulingIgnoredDuringExecution/0/topologyKey
+#      value: kubernetes.io/hostname
     - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
@@ -43,9 +43,9 @@ patches:
     - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/nodeSelector/ topology.kubernetes.io~1zone
       value: ap-northeast-2  
-    - op: replace
-      path: /spec/pytorchReplicaSpecs/Worker/template/spec/affinity/podAffinity/requiredDuringSchedulingIgnoredDuringExecution/0/topologyKey
-      value: kubernetes.io/hostname
+ #   - op: replace
+ #     path: /spec/pytorchReplicaSpecs/Worker/template/spec/affinity/podAffinity/requiredDuringSchedulingIgnoredDuringExecution/0/topologyKey
+ #     value: kubernetes.io/hostname
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
       value: |
