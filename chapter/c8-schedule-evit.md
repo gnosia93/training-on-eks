@@ -40,7 +40,7 @@ System UUID 값을 노드의 레이블로 등록해두면, 특정 노드를 타�
 
 
 ## GPU 배제 ##
-GPU UUID 를 알기위해서는 다음과 같이 두가지 방법이 가능하다. 하지만 결론부터 말하자면 특정 GPU 에 대한 배제 기법은 쿠버네티스에서 제공하지 않는다.  
+GPU UUID 를 알기위해서는 다음과 같이 두가지 방법이 가능하다.   
 * GPU ID(UUID)를 보려면 노드에서 nvidia-smi -L 명령어를 실행해야 한다.
 * kubectl exec -it <파드이름> -- env | grep NVIDIA_VISIBLE_DEVICES
 
@@ -51,6 +51,25 @@ kubectl exec -it pytorch-dist-job-worker-1 -n pytorch -- env | grep NVIDIA_VISIB
 ```
 Defaulted container "pytorch" out of: pytorch, init-pytorch (init)
 NVIDIA_VISIBLE_DEVICES=GPU-5c126807-49db-0b13-1200-87ce24163cc9
+```
+
+nvidia-smi -L 로 확인한 UUID 값을 NVIDIA_VISIBLE_DEVICES 환경 변수값으로 주입하면 특정 GPU 들만 선택적으로 사용할 수 있다.    <---- 테스트 필요함..      
+```
+spec:
+  pytorchReplicaSpecs:
+    Worker:
+      template:
+        spec:
+          containers:
+          - name: pytorch
+            env:
+            # 특정 UUID의 GPU만 사용하도록 명시 (나머지는 배제됨)
+            # nvidia-smi -L 로 확인한 UUID 입력
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "GPU-8e3d6f21-...,GPU-f2a3b4c5-..." 
+            # 또는 특정 GPU 인덱스만 제외하고 싶을 때 (예: 0번 제외)
+            # - name: CUDA_VISIBLE_DEVICES
+            #   value: "1,2,3"
 ```
 
 
