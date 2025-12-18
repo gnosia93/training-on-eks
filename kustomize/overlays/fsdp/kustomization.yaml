@@ -2,7 +2,7 @@
 
 # 베이스 파일 지정
 resources:
-- ../../base/kustomization-2.yaml
+- ../../base/kustomization-v2.yaml
 
 # 패치 적용
 patches:
