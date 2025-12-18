@@ -1,6 +1,6 @@
 # kustomize/base/kustomization.yaml 파일 내용
 resources:
-- pytorch-dist-job.yaml
+- pytorch-dist-job-v2.yaml
 # 필요한 경우 여기에 다른 베이스 파일들을 추가합니다.
 # - service.yaml
 # - configmap.yaml 
