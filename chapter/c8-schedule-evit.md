@@ -224,7 +224,7 @@ Events:
   Normal   NodeHasSufficientPID     80s (x3 over 81s)  kubelet                Node ip-10-0-5-152.ap-northeast-2.compute.internal status is now: NodeHasSufficientPID
   Normal   RegisteredNode           78s                node-controller        Node ip-10-0-5-152.ap-northeast-2.compute.internal event: Registered Node ip-10-0-5-152.ap-northeast-2.compute.internal in Controller
   Normal   Synced                   78s                cloud-node-controller  Node synced successfully
-```
   Normal   DisruptionBlocked        74s                karpenter              Node isn't initialized
   Normal   Ready                    49s                karpenter              Status condition transitioned, Type: Ready, Status: False -> True, Reason: KubeletReady, Message: kubelet is posting ready status
   Normal   NodeReady                49s                kubelet                Node 
+```
