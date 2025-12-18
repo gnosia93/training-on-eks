@@ -47,7 +47,7 @@ spec:
                        operator: In
                        values:
                        - pytorch-dist-job
-                  topologyKey: ${TOPOLOGY_KEY}          
+                  topologyKey: kubernetes.io/zone          
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
@@ -85,7 +85,7 @@ spec:
                        operator: In
                        values:
                        - pytorch-dist-job
-                  topologyKey: ${TOPOLOGY_KEY}            
+                  topologyKey: kubernetes.io/zone      
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
