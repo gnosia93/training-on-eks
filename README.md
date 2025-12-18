@@ -40,14 +40,14 @@
   
 * [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
 
-          
-* [C10. 병렬 분산 파일 시스템(Lustre)]
+* [C10. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
    
 * [C11. MLOps /w Airflow]
    - MLflow
    - S3 Data Upload -> trigger LLM training
    - S3 Data Upload -> trigger Spark Curation on AWS Graviton4 -> trigger LLM training
-         
+   - 데이터 전처리 단계와 방법에 대해서 다룬다.
+     
 * [C12. CPU 분산 훈련]
    
 ## 레퍼런스 ## 
