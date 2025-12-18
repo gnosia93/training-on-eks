@@ -39,7 +39,6 @@
    - [연산 속도가 느린 GPU / 네트워크 카드 / 노드 식별](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-detect-perf-drop.md)
   
 * [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-interconnect-perf.md)
-  * 테스트 아키텍처 ( 8GPU 1대 vs 1GPU 8대, 최대 통신량 방식, 트레이닝 시간 측정 )
 
           
 * [C10. 병렬 분산 파일 시스템(Lustre)]
