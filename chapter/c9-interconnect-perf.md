@@ -7,7 +7,8 @@
 
 
 ## 성능 측정 ##
-
+* g6.48xlarge / 8 GPU
+* g6.4xlarge / 1 CPU * 8EA
 
 
 
