@@ -25,7 +25,6 @@
    - topoloy aware
       - export NCCL_TOPO_FILE=/path/to/system.xml  
       - NVLINK&Switch / EFA / ENA / PCIe  /w docker
-         - PCIe 속도 - https://blog.naver.com/techref/223777086733    
    - placement group / same AZ 
    - ultra cluster and capacity block 
 
