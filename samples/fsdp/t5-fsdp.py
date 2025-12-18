@@ -248,8 +248,23 @@ def main():
     if torch.cuda.is_available(): 
         torch.cuda.set_device(local_rank)
 
-    train(args, rank, device)
-    dist.destroy_process_group()
+    if rank == 0:
+       # GPU 작업이 모두 끝날 때까지 대기 후 측정 시작
+       if torch.cuda.is_available():
+          torch.cuda.synchronize()    
+       start_time = time.perf_counter()
 
+    train(args, rank, device)
+
+    if rank == 0:
+       # GPU 작업이 모두 끝날 때까지 대기 후 측정 시작
+       if torch.cuda.is_available():
+          torch.cuda.synchronize()             
+       end_time = time.perf_counter()
+       elapsed_time = end_time - start_time
+       print(f"코드 블록 실행 시간: {rank 0 - elapsed_time:.4f} 초")
+    
+    dist.destroy_process_group()
+         
 if __name__ == "__main__":
     main()
