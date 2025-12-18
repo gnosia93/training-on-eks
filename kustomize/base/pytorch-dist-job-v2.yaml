@@ -11,6 +11,9 @@
 # 
 # 파드는 NodeSelector + PodAffinity + Toleration 이렇게 3가지의 AND 조건으로 실행될 노드를 할당 받는다. 이 세가지 조건을 동시에 충족시키지 못하면 스케줄링은 Pending 된다.  
 #
+# runPolicy.cleanPodPolicy: 
+#   Running / ALL / None 이렇게 3가지 파라미터가 있다. 자세한 설명은 메뉴얼 참조 
+#      
 apiVersion: kubeflow.org/v1
 kind: PyTorchJob
 metadata:
