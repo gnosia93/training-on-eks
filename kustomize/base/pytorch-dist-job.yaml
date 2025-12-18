@@ -35,6 +35,7 @@ spec:
           nodeSelector:
             karpenter.sh/nodepool: ${NODEPOOL}
             node.kubernetes.io/instance-type: ${INSTANCE_TYPE} 
+            topology.kubernetes.io/zone: ${ZONE}                  # 단일 값만 가능, 멀티라인 쓸려면 nodeAffinity 사용
           # -----------------------------------------------------
           affinity:
             podAffinity:
@@ -72,6 +73,7 @@ spec:
           nodeSelector:
             karpenter.sh/nodepool: ${NODEPOOL}
             node.kubernetes.io/instance-type: ${INSTANCE_TYPE} 
+            topology.kubernetes.io/zone: ${ZONE}                  # 단일 값만 가능, 멀티라인 쓸려면 nodeAffinity 사용
           # -----------------------------------------------------
           affinity:
             podAffinity:
