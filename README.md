@@ -32,7 +32,7 @@
 * [C8. 분산 훈련 스케줄링 및 복원력](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-scheduling-resiliency.md)
    - [갱 스케줄링 /w Kueue](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
 
-   - 스케줄링 배제 
+   - [스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md) 
       - 노드, GPU 레벨 배제 (훈련전 또는 훈련중 배제)  
       - 특정 GPU ID 또는 노드 배제 or 제거(재시작시)
    - 복원
