@@ -21,7 +21,7 @@ spec:
     cleanPodPolicy: Running
   
   pytorchReplicaSpecs:
-    Master:                       # 마스터는 GPU 연산 작업에는 참여하지 않는다. GPU Toleration 설정 불필요
+    Master:                       
       replicas: 1
       restartPolicy: OnFailure
       template:
@@ -40,7 +40,7 @@ spec:
                      operator: In
                      values:
                      - pytorch-dist-job
-                topologyKey: ${TOPOLOGY_KEY}          # 멀티 GPU 인스턴스를 할당시 유지, 싱글 GPU 인스턴스인 경우는 kubernetes.io/zone 으로 수정
+                topologyKey: ${TOPOLOGY_KEY}          
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
@@ -77,7 +77,7 @@ spec:
                      operator: In
                      values:
                      - pytorch-dist-job
-                topologyKey: ${TOPOLOGY_KEY}            # 멀티 GPU 인스턴스를 할당시 유지, 싱글 GPU 인스턴스인 경우는 kubernetes.io/zone 으로 수정
+                topologyKey: ${TOPOLOGY_KEY}            
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
