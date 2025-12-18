@@ -38,14 +38,14 @@ spec:
           # -----------------------------------------------------
           affinity:
             podAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-              - labelSelector:
-                   matchExpressions:
-                   - key: training.kubeflow.org/job-name
-                     operator: In
-                     values:
-                     - pytorch-dist-job
-                topologyKey: ${TOPOLOGY_KEY}          
+              -requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                     matchExpressions:
+                     - key: training.kubeflow.org/job-name
+                       operator: In
+                       values:
+                       - pytorch-dist-job
+                  topologyKey: ${TOPOLOGY_KEY}          
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
@@ -75,14 +75,14 @@ spec:
           # -----------------------------------------------------
           affinity:
             podAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-              - labelSelector:
-                   matchExpressions:
-                   - key: training.kubeflow.org/job-name
-                     operator: In
-                     values:
-                     - pytorch-dist-job
-                topologyKey: ${TOPOLOGY_KEY}            
+              -requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                     matchExpressions:
+                     - key: training.kubeflow.org/job-name
+                       operator: In
+                       values:
+                       - pytorch-dist-job
+                  topologyKey: ${TOPOLOGY_KEY}            
           tolerations:            # GPU Toleration 설정 
           - key: "nvidia.com/gpu"
             operator: "Exists"
