@@ -52,6 +52,8 @@ Defaulted container "pytorch" out of: pytorch, init-pytorch (init)
 NVIDIA_VISIBLE_DEVICES=GPU-5c126807-49db-0b13-1200-87ce24163cc9
 ```
 
+쿠버네티스에서 특정 GPU UUID(GPU-5c126807-49db-0b13-1200-87ce24163cc9)를 스케줄링에서 배제하는 표준적인 직접적인 방법은 없습니다. 쿠버네티스 기본 스케줄러는 GPU를 개별 장치(디바이스 플러그인을 통해 nvidia.com/gpu와 같은 확장 리소스로 노출됨)로 관리하며, 특정 UUID별로 세분화된 스케줄링 제어 기능은 기본적으로 제공하지 않습니다. 
+대신, 노드 레이블(Node Labels) 및 테인트(Taints)를 활용하여 특정 GPU가 포함된 노드 자체를 제어하거나, NVIDIA Device Plugin의 고급 설정을 이용해야 합니다.
 
 
 
