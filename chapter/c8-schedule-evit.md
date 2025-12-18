@@ -40,9 +40,9 @@ System UUID 값을 노드의 레이블로 등록해두면, 특정 노드를 타�
 
 
 ## GPU 배제 ##
-* kubectl describe node는 GPU의 개수만 보여줍니다. 구체적인 GPU ID(UUID)를 보려면 노드에서 nvidia-smi -L 명령어를 실행
+* GPU ID(UUID)를 보려면 노드에서 nvidia-smi -L 명령어를 실행해야 한다.
 * kubectl exec -it <파드이름> -- env | grep NVIDIA_VISIBLE_DEVICES
-* kubectl get node <노드이름> -o json | jq '.metadata.labels' | grep "nvidia.com"
+
 
 
 
