@@ -22,29 +22,27 @@ System Info:
 
 #### 1. 노드에 "Cordon" 설정 (가장 확실한 방법) ####
 재부팅 전에 해당 노드를 미리 제외하고 싶다면, UUID를 확인한 뒤 해당 노드 이름에 uncschedulable 마킹을 하는 것입니다.
-방법: kubectl cordon <노드이름>
-효과: 노드가 재부팅되어 다시 클러스터에 붙더라도, SchedulingDisabled 상태가 유지되어 새로운 Pod가 배치되지 않습니다.
-복구: 점검이 끝난 후 kubectl uncordon <노드이름>을 해야 다시 사용 가능합니다.
+```
+kubectl cordon <노드이름>
+```
+* 효과: 노드가 재부팅되어 다시 클러스터에 붙더라도, SchedulingDisabled 상태가 유지되어 새로운 Pod가 배치되지 않습니다.
+* 복구: 점검이 끝난 후 kubectl uncordon <노드이름>을 해야 다시 사용 가능합니다.
 
 #### 2. 고유 식별자를 레이블(Label)로 활용 ####
 System UUID 값을 노드의 레이블로 등록해두면, 특정 노드를 타겟팅하거나 제외하는 스케줄링이 가능합니다.
-설정: kubectl label nodes <노드이름> hardware-id=ec2f7360-c2f7-b4c4-1b83-04f57e0dee91
-활용: Pod를 배포할 때 nodeAffinity를 사용하여 해당 ID를 가진 노드를 피하도록(DoesNotExist) 설정할 수 있습니다.
+* 설정: kubectl label nodes <노드이름> hardware-id=ec2f7360-c2f7-b4c4-1b83-04f57e0dee91
+* 활용: Pod를 배포할 때 nodeAffinity를 사용하여 해당 ID를 가진 노드를 피하도록(DoesNotExist) 설정할 수 있습니다.
 
 #### 3. Taints (Node Taints) 사용 ####
 특정 노드에 "오염(Taint)"을 표시하여, 일반적인 Pod들이 들어오지 못하게 막을 수 있습니다.
-명령: kubectl taint nodes <노드이름> maintenance=true:NoSchedule
-효과: 이 노드는 재부팅 후에도 maintenance=true라는 속성을 가지고 있으므로, 이 Taint를 견딜 수 있는(Toleration) 특별한 Pod 외에는 배치되지 않습니다.
-
-#### 4. 자동화 스크립트 활용 ####
-만약 재부팅 시 자동으로 특정 노드를 제외하고 싶다면, 노드 내부의 시작 스크립트(systemd unit 등)에 다음 로직을 넣을 수 있습니다.
-부팅 시 자신의 System UUID를 확인.
-대상 UUID 목록(Blacklist)에 포함되어 있다면, API 서버에 접속해 자신을 cordon 처리.
+* 명령: kubectl taint nodes <노드이름> maintenance=true:NoSchedule
+* 효과: 이 노드는 재부팅 후에도 maintenance=true라는 속성을 가지고 있으므로, 이 Taint를 견딜 수 있는(Toleration) 특별한 Pod 외에는 배치되지 않습니다.
 
 
 
 
 
+## 참고 - 노드 레이블 ##
 $ kubectl describe node ip-10-0-5-152.ap-northeast-2.compute.internal
 ```
 Name:               ip-10-0-5-152.ap-northeast-2.compute.internal
