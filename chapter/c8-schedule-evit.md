@@ -2,9 +2,9 @@
 ```
 node.kubernetes.io/instance-type=p4d.24xlarge
 topology.ebs.csi.aws.com/zone=ap-northeast-2b
-topology.k8s.aws/network-node-layer-1=nn-c79422f4e61deb9ca              TOR 스위치
-topology.k8s.aws/network-node-layer-2=nn-6ff5053c3a4d86db7              어그리게이션 스위치
-topology.k8s.aws/network-node-layer-3=nn-dcbcca51aebf4c95b              백본 스위치
+topology.k8s.aws/network-node-layer-1=nn-c79422f4e61deb9ca                 # TOR 스위치
+topology.k8s.aws/network-node-layer-2=nn-6ff5053c3a4d86db7                 # 어그리게이션 스위치
+topology.k8s.aws/network-node-layer-3=nn-dcbcca51aebf4c95b                 # 백본 스위치
 topology.k8s.aws/zone-id=apne2-az2
 topology.kubernetes.io/region=ap-northeast-2
 topology.kubernetes.io/zone=ap-northeast-2b
@@ -14,8 +14,8 @@ Capacity:
 Allocatable:
   nvidia.com/gpu:     8
 System Info:
-  Machine ID:                 ec2f7360c2f7b4c41b8304f57e0dee91             	동일 하드웨어/VM 이라도 OS 재설치 시 바뀜
-  System UUID:                ec2f7360-c2f7-b4c4-1b83-04f57e0dee91          노드(호스트)의 하드웨어나 가상 머신(VM)을 전 세계적으로 고유하게 식별하기 위해 부여된 128비트 길이의 식별자
+  Machine ID:                 ec2f7360c2f7b4c41b8304f57e0dee91             	# 동일 하드웨어/VM 이라도 OS 재설치 시 바뀜
+  System UUID:                ec2f7360-c2f7-b4c4-1b83-04f57e0dee91          # 노드(호스트)의 하드웨어나 가상 머신(VM)을 전 세계적으로 고유하게 식별하기 위해 부여된 128비트 길이의 식별자
 ```
 
 #### 1. 노드에 "Cordon" 설정 (가장 확실한 방법) ####
