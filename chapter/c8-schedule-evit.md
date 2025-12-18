@@ -1,4 +1,4 @@
-## 노드 주요 레이블 ##
+### 노드 주요 레이블 ###
 ```
 node.kubernetes.io/instance-type=p4d.24xlarge
 topology.ebs.csi.aws.com/zone=ap-northeast-2b
@@ -17,6 +17,8 @@ System Info:
   Machine ID:                 ec2f7360c2f7b4c41b8304f57e0dee91             	# 동일 하드웨어/VM 이라도 OS 재설치 시 바뀜
   System UUID:                ec2f7360-c2f7-b4c4-1b83-04f57e0dee91          # 노드(호스트)의 하드웨어나 가상 머신(VM)을 전 세계적으로 고유하게 식별하기 위해 부여된 128비트 길이의 식별자
 ```
+
+### 스케줄링 배제 ###
 
 #### 1. 노드에 "Cordon" 설정 (가장 확실한 방법) ####
 재부팅 전에 해당 노드를 미리 제외하고 싶다면, UUID를 확인한 뒤 해당 노드 이름에 uncschedulable 마킹을 하는 것입니다.
