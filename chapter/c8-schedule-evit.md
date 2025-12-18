@@ -39,6 +39,7 @@ System UUID 값을 노드의 레이블로 등록해두면, 특정 노드를 타�
 * 효과: 이 노드는 재부팅 후에도 maintenance=true라는 속성을 가지고 있으므로, 이 Taint를 견딜 수 있는(Toleration) 특별한 Pod 외에는 배치되지 않습니다.
 
 
+## GPU 배제 ##
 
 
 
