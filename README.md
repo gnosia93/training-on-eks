@@ -29,8 +29,8 @@
    - placement group / same AZ 
    - ultra cluster and capacity block 
 
-* [C8. 분산 훈련 스케줄링 및 복원력](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-scheduling-resiliency.md)
-   - [갱 스케줄링 /w Kueue](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
+* [C8. 분산 훈련 스케줄링 및 복원력]
+   - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
 
    - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)
       
