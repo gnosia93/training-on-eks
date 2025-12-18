@@ -1,8 +1,13 @@
-## 네트워크 토폴로지 인식 ##
+## 노드 주요 레이블 ##
 ```
-topology.k8s.aws/network-node-layer-1: 네트워크의 최하위 계층(보통 서버가 직접 연결된 스위치나 랙 단위)의 고유 ID입니다.
-topology.k8s.aws/network-node-layer-2: 중간 계층 네트워크 장비 또는 집선 장치(Aggregation layer)의 ID입니다.
-topology.k8s.aws/network-node-layer-3: 최상위 또는 백본 네트워크 계층의 ID입니
+node.kubernetes.io/instance-type=p4d.24xlarge
+topology.ebs.csi.aws.com/zone=ap-northeast-2b
+topology.k8s.aws/network-node-layer-1=nn-c79422f4e61deb9ca
+topology.k8s.aws/network-node-layer-2=nn-6ff5053c3a4d86db7
+topology.k8s.aws/network-node-layer-3=nn-dcbcca51aebf4c95b
+topology.k8s.aws/zone-id=apne2-az2
+topology.kubernetes.io/region=ap-northeast-2
+topology.kubernetes.io/zone=ap-northeast-2b
 ```
 
 
