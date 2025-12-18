@@ -8,6 +8,33 @@ topology.k8s.aws/network-node-layer-3=nn-dcbcca51aebf4c95b
 topology.k8s.aws/zone-id=apne2-az2
 topology.kubernetes.io/region=ap-northeast-2
 topology.kubernetes.io/zone=ap-northeast-2b
+
+Capacity:
+  cpu:                96
+  ephemeral-storage:  314494956Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             1176300008Ki
+  nvidia.com/gpu:     8
+  pods:               737
+Allocatable:
+  cpu:                95690m
+  ephemeral-storage:  288764809146
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             1167634920Ki
+  nvidia.com/gpu:     8
+  pods:               737
+System Info:
+  Machine ID:                 ec2f7360c2f7b4c41b8304f57e0dee91
+  System UUID:                ec2f7360-c2f7-b4c4-1b83-04f57e0dee91
+  Boot ID:                    ab8e96c3-b4b3-445a-b258-ab9833e179eb
+  Kernel Version:             6.12.58-82.121.amzn2023.x86_64
+  OS Image:                   Amazon Linux 2023.9.20251208
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://2.1.5
+  Kubelet Version:            v1.34.2-eks-ecaa3a6
 ```
 
 
