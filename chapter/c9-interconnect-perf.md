@@ -1,3 +1,9 @@
+```
+cd training-on-eks
+
+kubectl apply -k kustomize/overlays/fsdp/
+```
+
 ## PCIe / ENA / EFA Performance ##
 ### Nitro V4 / NVIDIA L4 ###
 * g6.48xlarge / 24GB * 8 GPU / PCIe / 1 Node - Elapsed Time 30m
