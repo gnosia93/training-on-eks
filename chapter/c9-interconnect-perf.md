@@ -7,8 +7,8 @@
 
 
 ## 성능 측정 ##
-* g6.48xlarge / 8 GPU
-* g6.4xlarge / 1 CPU * 8EA
+* g6.48xlarge / 24GB * 8 GPU / 1 Node
+* g6.16xlarge / 24GB * 1 GPU / 8 Node
 
 
 
