@@ -8,3 +8,6 @@
 
 
 
+## 레퍼런스 ##
+* https://aws.amazon.com/ko/ec2/instance-types/
+
