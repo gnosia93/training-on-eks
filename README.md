@@ -38,7 +38,7 @@
       - 모델 체크 포인팅
    - [연산 속도가 느린 GPU / 네트워크 카드 / 노드 식별](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-detect-perf-drop.md)
   
-* [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-interconnect-perf.md)
+* [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
 
           
 * [C10. 병렬 분산 파일 시스템(Lustre)]
