@@ -65,4 +65,6 @@ spec:
 
 ## 사용시 주의점 또는 고려사항 ##
 
+## 레퍼런스 ##
+* https://aws.amazon.com/ko/blogs/tech/lustre/
 
