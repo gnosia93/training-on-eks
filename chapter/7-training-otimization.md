@@ -1,5 +1,14 @@
 ## EFA ##
 
+아래와 같은 이유는 기존에 gpu 풀이 있지만, EFA 용으로 별도의 카펜터 풀을 생성한다. 
+* 기존 GPU 풀은 "추론 및 일반 연산(g4dn, g5)"용으로 유지하고, "대규모 분산 학습(p4d, p5)"을 위한 전용 EFA 풀을 만드는 것이 논리적으로나 성능적으로 훨씬 깔끔합니다.
+* 분산 학습 성능을 극대화하려면 EFA 노드들을 물리적으로 가까운 곳에 배치하는 'Cluster' 전략의 Placement Group에 묶어야 합니다. 
+* AMI 및 OS 설정 (AL2 vs Bottlerocket vs DLAMI)  
+EFA 기능을 100% 활용하려면 커널 최적화와 libfabric, NCCL 라이브러리가 사전 설치된 Deep Learning AMI 또는 특정 버전의 AMI를 사용해야 할 때가 많습니다. 일반 서비스용 노드와 OS 이미지를 분리하는 것이 관리상 유리합니다.
+* 보안 그룹(Security Group) 정책의 차이 
+EFA 통신(OS bypass 방식)을 위해 해당 보안 그룹 자기 자신(Self-referencing)으로부터 들어오고 나가는 모든 트래픽을 허용하는 매우 개방적인 규칙이 필수입니다. 이를 일반 노드에 적용하면 보안 위협이 될 수 있습니다 
+
+
 #### 1. EFA를 지원하는 GPU 인스턴스 유형 ####
 ```
 aws ec2 describe-instance-types \
