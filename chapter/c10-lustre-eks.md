@@ -186,11 +186,6 @@ spec:
         claimName: fsx-pvc # 위에서 생성한 PVC 이름
 ```
 
-## 버전별 특징 및 성능 ##
-
-
-## 사용시 주의점 및 고려사항 ##
-
 ## 레퍼런스 ##
 * https://aws.amazon.com/ko/blogs/tech/lustre/
 
