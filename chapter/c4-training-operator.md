@@ -138,7 +138,7 @@ spec:
 ```
 
 ### [kustomization](https://github.com/gnosia93/training-on-eks/blob/main/kustomize/overlays/ddp/kustomization.yaml) ###
-이 예제에서는 쿠버네티스 kustomize 를 이용하여 base 가 되는 yaml 설정을 overlay 의 ddp 디렉토리의 yaml로 덮어쓴 후 실행하는데, 원본의 command args 값을 torchrun 으로 덮어쓰게 된다.   
+이 예제에서는 쿠버네티스가 제공하는 kustomize 를 이용하여 base 가 되는 yaml 설정을 overlay 의 ddp 디렉토리의 yaml로 덮어쓴 후 실행하는데, 원본의 command args 값을 torchrun 으로 덮어쓰게 된다.   
 ```
 # overlays/custom-url/kustomization.yaml
 
