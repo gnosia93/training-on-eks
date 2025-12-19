@@ -9,7 +9,7 @@ AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완�
 [lustre.tf]
 ```
 # 1. FSx for Lustre 생성
-resource "aws_fsx_lustre_file_system" "example" {
+resource "aws_fsx_lustre_file_system" "lustre_file_system" {
   storage_capacity            = 1200 # 용량 (단위: GiB, 최소 1200 또는 2400)
   subnet_ids                  = ["subnet-12345678"] # 설치할 서브넷 ID
   security_group_ids          = [aws_security_group.fsx_sg.id]
@@ -19,7 +19,7 @@ resource "aws_fsx_lustre_file_system" "example" {
 #  per_unit_storage_throughput = 200 # PERSISTENT 타입일 때 설정 (MB/s/TiB)
 
   tags = {
-    Name = "MyLustreFileSystem"
+    Name = "trainng-on-eks"
   }
 }
 
@@ -42,14 +42,21 @@ resource "aws_security_group" "fsx_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "trainng-on-eks"
+  }
 }
 
+# 현재 AWS 계정 정보를 가져오는 데이터 소스
+data "aws_caller_identity" "current" {}
+
 # (선택) S3와 데이터 동기화를 위한 설정
-resource "aws_fsx_data_repository_association" "example" {
-  file_system_id       = aws_fsx_lustre_file_system.example.id
-  data_repository_path = "s3://my-data-bucket-name"
-  file_system_path     = "/"
-  batch_import_meta_data_on_create = true
+resource "aws_fsx_data_repository_association" "lustre_file_system_s3" {
+  file_system_id       = aws_fsx_lustre_file_system.lustre_file_system.id
+  data_repository_path = "s3://training-on-eks-lustre-${data.aws_caller_identity.current.account_id}"
+  file_system_path     = "/"                  # S3 버킷을 Lustre 파일 시스템에 마운트 했을때의 최상위 경로
+  batch_import_meta_data_on_create = true     # 파일 시스템이 생성되는 즉시 S3에 있는 파일들의 메타데이터를 Lustre 인덱스에 등록
 }
 ```
 #### 주요 설정 항목 설명 ####
