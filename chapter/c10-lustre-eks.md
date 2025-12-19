@@ -59,13 +59,6 @@ resource "aws_fsx_data_repository_association" "lustre_file_system_s3" {
   batch_import_meta_data_on_create = true     # 파일 시스템이 생성되는 즉시 S3에 있는 파일들의 메타데이터를 Lustre 인덱스에 등록
 }
 ```
-#### 주요 설정 항목 설명 ####
-* deployment_type:
-  * SCRATCH: 임시 데이터 처리용 (데이터 복제 없음, 비용 저렴).
-  * PERSISTENT: 장기 보관용 (고가용성 및 데이터 복제 지원).
-* storage_capacity: SSD 기준 최소 1,200 GiB부터 시작하며, 1,200 또는 2,400 단위로 증설해야 합니다.
-* 네트워크(Port 988): Lustre 클라이언트(EC2 등)와 FSx 사이에는 TCP 988 포트가 반드시 열려 있어야 통신이 가능합니다. AWS 공식 문서에서 보안 그룹 요구 사항을 더 확인할 수 있습니다.
-* S3 연동 (import_path / export_path): 기존 S3 버킷의 데이터를 Lustre로 불러오거나 결과를 다시 S3로 저장할 때 사용합니다.
 
 #### deployment_type ####
 #### 1. Scratch (임시 작업용) ####
@@ -79,7 +72,6 @@ resource "aws_fsx_data_repository_association" "lustre_file_system_s3" {
 * PERSISTENT_2 (성능 최적화): 현재 AWS에서 가장 권장하는 고성능 모드입니다. 최신 아키텍처를 사용하여 지연 시간이 더 낮고 처리량이 높습니다.
 * 용도: 대규모 GPU 클러스터를 이용한 장기 AI 모델 학습, 고성능 컴퓨팅(HPC) 운영 환경.
 
-
 ### 2단계: IAM 역할 생성 및 연결 ###
 FSx CSI 드라이버 컨트롤러가 AWS API를 호출할 수 있도록 적절한 권한을 가진 IAM 역할이 필요한데, AWS 관리형 정책인 
 AmazonFSxLustreCSIDriverPolicy를 사용하면 된다
@@ -87,15 +79,14 @@ AmazonFSxLustreCSIDriverPolicy를 사용하면 된다
 ### 3단계: Amazon FSx CSI 드라이버 설치 ### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
 ```
-# EKS 클러스터에 CSI 드라이버 배포를 위한 네임스페이스 생성
 kubectl create namespace fsx-csi-driver
-
-# Helm 차트 추가 및 업데이트
 helm repo add aws-fsx-csi-driver kubernetes-sigs.github.io
 helm repo update
 
-# CSI 드라이버 설치 (서비스 계정에 IAM 역할을 연결해야 함)
-helm install fsx-csi-driver --namespace fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver --set image.repository=<이미지_레포지토리_URL>,controller.serviceAccount.name=fsx-csi-driver-controller-sa,controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=<IAM_역할_ARN>
+helm install fsx-csi-driver --namespace fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
+--set image.repository=<이미지_레포지토리_URL>, \
+controller.serviceAccount.name=fsx-csi-driver-controller-sa, \
+controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=<IAM_역할_ARN>
 ```
 
 ### 4단계: StorageClass 및 Persistent Volume Claim (PVC) 배포 ###
