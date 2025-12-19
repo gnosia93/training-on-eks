@@ -11,10 +11,10 @@ DeepSpeed의 영향을 받았으며 PyTorch 프레임워크에 네이티브 기�
 training-on-eks 으로 디렉토리로 이동한 후 pytorch fsdp 작업을 실행한다 (p4d.24xlarge, 4 pods, 데이터 건수 1000건, epoch 5)
 ```
 git clone https://github.com/gnosia93/training-on-eks.git
-cd training-on-eks
+cd /home/ec2-user/training-on-eks/kustomize/overlays/fsdp
 
-kubectl create ns pytorch
-kubectl apply -k kustomize/overlays/fsdp/
+kubectl kustomize .
+kubectl kustomize . | kubectl apply -f -
 ```
 
 pytorchjob 을 조회한다.  
