@@ -37,7 +37,7 @@ aws ec2 describe-instance-types \
 +--------------+---------------+------------------------+----------------------+
 ```
 * 최대 60개의 ENI 사용가능
-* 100Gbps의 EFA 4개(SRD - Scalable Reliable Datagram) 사용 가능
+* 100Gbp의 EFA 4개
 
 
 ## 설정하기 ##
