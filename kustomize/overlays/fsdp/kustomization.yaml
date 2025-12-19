@@ -9,8 +9,17 @@ patches:
 # Master 스펙의 args 필드를 덮어씁니다.
 - patch: |-
     - op: add
-      path: /spec/pytorchReplicaSpecs/Master/template/spec/nodeSelector/node.kubernetes.io~1instance-type
-      value: p4d.24xlarge
+      path: /spec/pytorchReplicaSpecs/Master/template/spec/affinity
+      value:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: training.kubeflow.org/job-name
+                    operator: In
+                    values:
+                      - pytorch-dist-job
+              topologyKey: kubernetes.io/hostname
     - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
@@ -26,8 +35,17 @@ patches:
 # Worker 스펙의 args 필드를 덮어씁니다.
 - patch: |-
     - op: add
-      path: /spec/pytorchReplicaSpecs/Worker/template/spec/nodeSelector/node.kubernetes.io~1instance-type
-      value: p4d.24xlarge
+      path: /spec/pytorchReplicaSpecs/Master/template/spec/affinity
+      value:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: training.kubeflow.org/job-name
+                    operator: In
+                    values:
+                      - pytorch-dist-job
+              topologyKey: kubernetes.io/hostname 
     - op: replace
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
       value: |
