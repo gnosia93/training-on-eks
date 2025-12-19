@@ -11,6 +11,29 @@ patches:
     - op: add
       path: /spec/pytorchReplicaSpecs/Master/template/spec/affinity
       value:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node.kubernetes.io/instance-type
+                    operator: In
+                    values:
+                      # P 시리즈 (최고 성능, 인트라 노드 통신 최적화)
+                      - p4d.24xlarge   # A100 8장
+                      - p4de.24xlarge  # A100 8장 (메모리 확장형)
+                      - p5.48xlarge    # H100 8장
+                
+                      # G 시리즈 (가성비 추론/학습용)
+                      - g4dn.12xlarge  # T4 4장
+                      - g4dn.metal     # T4 8장
+                      - g5.12xlarge    # A10G 4장
+                      - g5.48xlarge    # A10G 8장
+                      - g6.12xlarge    # L4 4장 (2025년 최신 가성비)
+                      - g6.48xlarge    # L4 8장
+                
+                      # 최신 G6e 시리즈 (H100 기반 가성비 모델)
+                      - g6e.12xlarge   # L40S 4장
+                      - g6e.48xlarge   # L40S 8장
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
@@ -19,7 +42,7 @@ patches:
                     operator: In
                     values:
                       - pytorch-dist-job
-              topologyKey: kubernetes.io/hostname
+              topologyKey: kubernetes.io/hostname 
     - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
@@ -37,6 +60,29 @@ patches:
     - op: add
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/affinity
       value:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node.kubernetes.io/instance-type
+                    operator: In
+                    values:
+                      # P 시리즈 (최고 성능, 인트라 노드 통신 최적화)
+                      - p4d.24xlarge   # A100 8장
+                      - p4de.24xlarge  # A100 8장 (메모리 확장형)
+                      - p5.48xlarge    # H100 8장
+                
+                      # G 시리즈 (가성비 추론/학습용)
+                      - g4dn.12xlarge  # T4 4장
+                      - g4dn.metal     # T4 8장
+                      - g5.12xlarge    # A10G 4장
+                      - g5.48xlarge    # A10G 8장
+                      - g6.12xlarge    # L4 4장 (2025년 최신 가성비)
+                      - g6.48xlarge    # L4 8장
+                
+                      # 최신 G6e 시리즈 (H100 기반 가성비 모델)
+                      - g6e.12xlarge   # L40S 4장
+                      - g6e.48xlarge   # L40S 8장
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
