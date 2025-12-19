@@ -34,9 +34,11 @@ kubeflow 의 경우 SDK 를 이용하여 분산 훈련 작업을 실행하는 �
 training-on-eks 으로 디렉토리로 이동한 후 pytorch DDP 작업을 실행한다 
 ```
 git clone https://github.com/gnosia93/training-on-eks.git
-cd training-on-eks
+cd /home/ec2-user/training-on-eks/kustomize/overlays/ddp
 kubectl create ns pytorch
-kubectl apply -k kustomize/overlays/ddp/
+
+kubectl kustomize .
+kubectl kustomize . | kubectl apply -f -
 ```
 
 pytorch 잡과 카펜터 상태를 확인한다.
@@ -68,6 +70,7 @@ kubectl logs pytorch-dist-job-worker-1 -n pytorch
 ```
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
+
 
 ## 부연설명 ##
 
