@@ -7,6 +7,20 @@ DeepSpeed의 영향을 받았으며 PyTorch 프레임워크에 네이티브 기�
 ## 훈련하기 ##
 
 #### [t5-small 모델 훈련](https://github.com/gnosia93/training-on-eks/blob/main/samples/fsdp/t5-fsdp.py) ####
+워크샵에서 google t5 트랜스포머 모델을 FSDP full sharding 으로 4개의 파드를 띄워 훈련 작업을 수행하고 있다. (총 4개의 GPU 사용). 
+full sharding 방식의 경우 파라미터, 그래디언트, 옵티마이저 상태값이 T5Block 을 Unit 으로 수평으로 분할되는데, GPU 연산시 노드 또는 파드간의 통신량이 많이 발생한다. 
+이를 최적화 하기 위해서는 동일 노드에 띄우는 것이 필요적이며, 이를 위해서 아래와 같이 파드 어피니티(hostnaame 기반의 토플로지)를 활용하고 있다. 
+```
+podAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+          - key: training.kubeflow.org/job-name
+            operator: In
+            values:
+              - pytorch-dist-job
+       topologyKey: kubernetes.io/hostname 
+```
   
 training-on-eks 으로 디렉토리로 이동한 후 pytorch fsdp 작업을 실행한다 (4 pods, 데이터 건수 1000건, epoch 1)
 ```
