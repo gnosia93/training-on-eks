@@ -74,7 +74,9 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## pytorch-dist-job 의 이해 ##
 * https://github.com/gnosia93/training-on-eks/blob/main/kustomize/base/pytorch-dist-job.yaml
+* https://github.com/gnosia93/training-on-eks/blob/main/kustomize/overlays/ddp/kustomization.yaml
 
+ 
 
 ## 레퍼런스 ##
 * https://www.kubeflow.org/docs/components/trainer/legacy-v1/installation/
