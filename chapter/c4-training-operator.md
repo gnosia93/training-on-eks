@@ -73,7 +73,7 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 
 ## pytorch-dist-job 의 이해 ##
-
+* https://github.com/gnosia93/training-on-eks/blob/main/kustomize/base/pytorch-dist-job.yaml
 
 
 ## 레퍼런스 ##
