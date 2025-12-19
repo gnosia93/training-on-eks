@@ -45,8 +45,6 @@ pytorch 잡과 카펜터 상태를 확인한다.
 ```
 kubectl get pytorchjobs
 kubectl get all
-
-kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 [결과]
 ```
@@ -63,9 +61,13 @@ kubectl logs pytorch-dist-job-master-0
 kubectl logs pytorch-dist-job-worker-0 
 ```
 
-#### 참고 - pytorchjob 삭제하기 ####
+pytorchjob 삭제한다.
 ```
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
+```
+
+```
+kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 
 
