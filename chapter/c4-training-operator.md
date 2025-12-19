@@ -31,17 +31,16 @@ kubeflow 의 경우 SDK 를 이용하여 분산 훈련 작업을 실행하는 �
 
 ## 트레이닝 작업 실행하기 ##
 
-training-on-eks 으로 디렉토리로 이동한 후 pytorch DDP 작업을 실행한다 
+training-on-eks 의 ddp 디렉토리로 이동하여 pytorch DDP 작업을 실행한다 
 ```
 git clone https://github.com/gnosia93/training-on-eks.git
 cd /home/ec2-user/training-on-eks/kustomize/overlays/ddp
-kubectl create ns pytorch
 
-kubectl kustomize .
-kubectl kustomize . | kubectl apply -f -
+kubectl kustomize .                          # pytorhjob yaml 확인
+kubectl kustomize . | kubectl apply -f -     # 실행
 ```
 
-pytorch 잡과 카펜터 상태를 확인한다.
+pytorch job 과 관련 파드 정보를 조회한다. 
 ```
 kubectl get pytorchjobs
 kubectl get all
@@ -52,6 +51,7 @@ NAME                        READY   STATUS            RESTARTS   AGE
 pytorch-dist-job-master-0   1/1     Running           0          3m34s
 pytorch-dist-job-worker-0   0/1     PodInitializing   0          3m34s
 ```
+
 마스터와 워커로드의 세부 정보를 조회한다. 
 ```
 kubectl describe pod pytorch-dist-job-master-0
@@ -61,35 +61,20 @@ kubectl logs pytorch-dist-job-master-0
 kubectl logs pytorch-dist-job-worker-0 
 ```
 
-pytorchjob 삭제한다.
+트레이닝 작업이 완료 되면 pytorchjob 삭제한다.
 ```
-kubectl delete pytorchjob pytorch-dist-job -n pytorch
+kubectl delete pytorchjob pytorch-dist-job
 ```
 
+#### 카펜터 노드 로그 확인 ####
+카펜터의 노드 프로비저닝 상태를 조회하고자 하는 경우 아래 명령어로 가능하다.
 ```
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 
-
-## 부연설명 ##
-
-#### 1. EC2 보다 초기화 시간이 긴 이유 ####
-
-torchrun을 일반 EC2에서 실행할 때는 이미 환경이 구성된 상태에서 프로세스만 띄우면 되지만, PyTorchJob를 활용하게 되는 경우 노드 확보, 이미지 다운로드, 네트워크 설정, 데이터 준비 등 모든 과정을 포함하므로 시작하는 데 시간이 더 오래 걸리게 된다.
-초기화 속도를 높이려면 GPU 이미지를 노드에 미리 캐시해두거나, 데이터셋을 PVC에 미리 준비해두는 등의 최적화가 필요합니다.
+## pytorch-dist-job 의 이해 ##
 
 
-#### 2. cleanPodPolicy ####
-cleanPodPolicy는 Job이 성공하거나 실패했을 때 워커 Pod들을 어떻게 처리할지 Kubernetes 오퍼레이터에게 지시하는 정책입니다. 설정 가능한 값은 다음과 같습니다.
-* 디폴트 (None): 작업 완료 후 모든 Pod 유지 (로그/디버깅 용이)
-* 사용자 설정 (Running): 완료된 Pod는 유지, 실행 중인 Pod만 종료
-* 권장 설정 (All): 작업 완료 후 모든 Pod 삭제 (리소스 정리 자동화)
-
-#### 3. restartPolicy ####
-
-#### 4. pytorch-dist-job.yaml 이해하기 ####
-
-#### 5. kustomize ####
 
 ## 레퍼런스 ##
 * https://www.kubeflow.org/docs/components/trainer/legacy-v1/installation/
