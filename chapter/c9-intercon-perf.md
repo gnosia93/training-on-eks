@@ -1,8 +1,6 @@
 ```
 cd training-on-eks
-
 kubectl apply -k kustomize/overlays/fsdp/
-
 kubectl get nodes -L node.kubernetes.io/instance-type
 ```
 
