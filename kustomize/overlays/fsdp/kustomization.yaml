@@ -33,16 +33,7 @@ patches:
                 
                       # 최신 G6e 시리즈 (H100 기반 가성비 모델)
                       - g6e.12xlarge   # L40S 4장
-                      - g6e.48xlarge   # L40S 8장
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: training.kubeflow.org/job-name
-                    operator: In
-                    values:
-                      - pytorch-dist-job
-              topologyKey: kubernetes.io/hostname 
+                      - g6e.48xlarge   # L40S 8장     
     - op: replace
       path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
       value: |
