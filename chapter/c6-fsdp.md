@@ -19,8 +19,8 @@ kubectl kustomize . | kubectl apply -f -
 
 pytorchjob 을 조회한다.  
 ```
-kubectl get pytorchjob -n pytorch
-kubectl get all -n pytorch
+kubectl get pytorchjob
+kubectl get all 
 ```
 [결과]
 ```
@@ -50,63 +50,12 @@ kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 
-
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-gpu-dashboard-1.png)
 
-#### Job 완료 ###
-JOB 을 조회해 보면 완료로 표시되고 총 12분이 경과된 것을 확인할 수 있다. 
-```
-kubectl get pytorchjob -n pytorch
-```
-```
-NAME               STATE       AGE
-pytorch-dist-job   Succeeded   12m
-```
 
-하지만 작업에 사용된 파드와 서비스는 여전히 살아 있다. 명시적으로 삭제 시켜줘야 한다. 
-```
-kubectl get all -n pytorch
-```
-```
-NAME                            READY   STATUS      RESTARTS   AGE
-pod/pytorch-dist-job-master-0   0/1     Completed   0          13m
-pod/pytorch-dist-job-worker-0   0/1     Completed   0          13m
-pod/pytorch-dist-job-worker-1   0/1     Completed   0          13m
-pod/pytorch-dist-job-worker-2   0/1     Completed   0          13m
-
-NAME                                TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)     AGE
-service/pytorch-dist-job-master-0   ClusterIP   None         <none>        23456/TCP   13m
-service/pytorch-dist-job-worker-0   ClusterIP   None         <none>        23456/TCP   13m
-service/pytorch-dist-job-worker-1   ClusterIP   None         <none>        23456/TCP   13m
-service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456/TCP   13m
-```
-
-#### Job 삭제 ####
-pytorchjob 은 실패 및 성공여부와 상관없이 명시적으로 꼭 삭제 시켜줘야한다. 
+#### Job 삭제 #### 
 ```
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
-```
-
-## 참고 - pytorchjob 자동 재시작 ##
-
-JOB은 backoffLimit 값까지 재시작된다. 파트는 동일하나 컨테이너가 재시작하는 것으로 생각하면 되는데 기본값은 6회 이다. 6번 재시작했는데도 작업이 오류가 발생되면, CrashLoopBackOff 상태로 빠지고 더이상 컨테이너를 재생성하지 않는다. 
-```
-apiVersion: "kubeflow.org/v1"
-kind: "PyTorchJob"
-metadata:
-  name: "t5-fsdp-training"
-  namespace: "pytorch"
-spec:
-  # 이 부분이 재시도 횟수 설정입니다.
-  backoffLimit: 6  
-  
-  pytorchReplicaSpecs:
-    Master:
-      replicas: 1
-      restartPolicy: OnFailure # 실패 시 재시작 정책
-      template:
-        spec:
-          containers:
 ```
 
 ## 레퍼런스 ##
