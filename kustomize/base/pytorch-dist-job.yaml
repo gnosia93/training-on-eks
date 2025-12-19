@@ -33,7 +33,7 @@ spec:
               requests:
                 nvidia.com/gpu: "1"    
     Worker:
-      replicas: 2
+      replicas: 1
       restartPolicy: OnFailure
       template:
         spec:
