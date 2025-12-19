@@ -16,6 +16,34 @@ g6.48xlarge     g4dn.metal      g6e.16xlarge    g4dn.12xlarge   g6.8xlarge      
 g6e.12xlarge    g5.12xlarge
 p5en.48xlarge   g6.16xlarge     g6.12xlarge     g4dn.16xlarge
 ```
+
+#### 2. 인스턴스별 EFA 상세정보 ####
+```
+aws ec2 describe-instance-types \
+    --instance-types p4d.24xlarge \
+    --query "InstanceTypes[*].{InstanceType:InstanceType, EfaSupported:NetworkInfo.EfaSupported, MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, NetworkPerformance:NetworkInfo.NetworkPerformance}"
+```
+
+```
+aws ec2 describe-instance-types     --instance-types p4d.24xlarge     --query "InstanceTypes[*].{InstanceType:InstanceType, EfaSupported:NetworkInfo.EfaSupported, MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, NetworkPerformance:NetworkInfo.NetworkPerformance}" --output table
+```
+```
+--------------------------------------------------------------------------------
+|                             DescribeInstanceTypes                            |
++--------------+---------------+------------------------+----------------------+
+| EfaSupported | InstanceType  | MaxNetworkInterfaces   | NetworkPerformance   |
++--------------+---------------+------------------------+----------------------+
+|  True        |  p4d.24xlarge |  60                    |  4x 100 Gigabit      |
++--------------+---------------+------------------------+----------------------+
+```
+```
+aws ec2 describe-instance-types \
+    --instance-types p4d.24xlarge \
+    --query "InstanceTypes[*].NetworkInfo.EfaInfo.MaximumEfaInterfaces"
+```
+
+
+## 설정하기 ##
 #### 2. 시큐리티 그룹 설정 ####
 동일한 보안 그룹 내의 인스턴스 간 EFA 트래픽(모든 트래픽 허용)을 허용하도록 보안 그룹 인바운드 및 아웃바운드 규칙을 구성해야 합니다.
 
