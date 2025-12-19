@@ -20,9 +20,11 @@ p5en.48xlarge   g6.16xlarge     g6.12xlarge     g4dn.16xlarge
 동일한 보안 그룹 내의 인스턴스 간 EFA 트래픽(모든 트래픽 허용)을 허용하도록 보안 그룹 인바운드 및 아웃바운드 규칙을 구성해야 합니다.
 
 
-#### 2. 디바이스 플러그인 배포 #### 
-클러스터에 aws-efa-k8s-device-plugin이 DaemonSet으로 배포되어 실행 중이어야 합니다. 이 플러그인이 aws.amazon.com 리소스를 노출시킵니다.
-
+#### 3. 디바이스 플러그인 배포 #### 
+```
+helm repo add eks https://aws.github.io/eks-charts
+helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
+```
 
 ## fi_getinfo: -61 (No data available) ##
 
