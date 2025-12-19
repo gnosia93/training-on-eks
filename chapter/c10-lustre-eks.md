@@ -1,4 +1,6 @@
-AWS 에서 Lustre 파일 시스템을 AI 시스템에 사용하는 가장 빠른 방법은 완전 관리형 서비스인 Amazon FSx for Lustre 와 FSx for Lustre CSI(Container Storage Interface) 드라이버를 활용하여 쿠버네티스 클러스터에 통합하는 것이다.
+## 러스터(Lustre) ##
+러스터(Lustre) 파일 시스템은 높은 처리량, 낮은 지연 시간, 뛰어난 확장성을 제공하는 병렬 분산 파일 시스템으로, 대규모 데이터셋을 처리해야 하는 AI 시스템에 필수적입니다
+AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완전 관리형 서비스인 Amazon FSx for Lustre 와 FSx for Lustre CSI(Container Storage Interface) 드라이버를 활용하여 쿠버네티스 클러스터에 통합하는 것이다.
 
 ### 1단계: FSx for Lustre 파일 시스템 생성 ##
 EKS 클러스터와 동일한 VPC 내에 Amazon FSx for Lustre 파일 시스템을 생성합니다. S3 버킷과 연결하여 데이터를 자동으로 가져오거나 내보낼 수 있다.
