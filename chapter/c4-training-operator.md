@@ -74,6 +74,7 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## pytorch-dist-job 의 이해 ##
 * [pytorch-dist-job](https://github.com/gnosia93/training-on-eks/blob/main/kustomize/base/pytorch-dist-job.yaml)
+pytorchjob 은 마스터와 워커로 나뉘어 지고 각각의 컨테이너에서 torchrun 을 실행하도록 구성이 되어져 있다. nodeSelector 필드에서 카펜터가 프로비저닝 하는 대상 노드풀(gpu) 를 설정하고 있으며, 마스터는 1개의 리클라카를 워커의 경우 1 개 이상의 리플리카를 설정하게 된다. torchrun 기준으로 --nnodes 의 값이 2 인 경우 마스터 1, 워커 1 을 설정한다. 3 인 경우는 마스터 1, 워커 2 를 설정하면 된다.
 ```
 apiVersion: kubeflow.org/v1
 kind: PyTorchJob
@@ -137,6 +138,7 @@ spec:
 ```
 
 * [kustomization](https://github.com/gnosia93/training-on-eks/blob/main/kustomize/overlays/ddp/kustomization.yaml)
+이 예제에서는 쿠버네티스 kustomize 를 base 가 되는 yaml 설정을 overlay 의 ddp 에서 덮어쓴 후 실행하고 있는데, 원본 컨테이너의 command args 값을 kustomize 를 이용하여 torchrun 으로 덮으쓴 후 실행하게 된다.   
 ```
 # overlays/custom-url/kustomization.yaml
 
