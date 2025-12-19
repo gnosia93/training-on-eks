@@ -262,7 +262,7 @@ def main():
           torch.cuda.synchronize()             
        end_time = time.perf_counter()
        elapsed_time = end_time - start_time
-       print(f"코드 블록 실행 시간: {rank 0 - elapsed_time:.4f} 초")
+       print(f"코드 블록 실행 시간: {elapsed_time:.4f} 초")
     
     dist.destroy_process_group()
          
