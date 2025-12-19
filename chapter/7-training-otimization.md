@@ -18,14 +18,14 @@ p5en.48xlarge   g6.16xlarge     g6.12xlarge     g4dn.16xlarge
 ```
 
 #### 2. 인스턴스별 EFA 상세정보 ####
+
 ```
 aws ec2 describe-instance-types \
     --instance-types p4d.24xlarge \
-    --query "InstanceTypes[*].{InstanceType:InstanceType, EfaSupported:NetworkInfo.EfaSupported, MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, NetworkPerformance:NetworkInfo.NetworkPerformance}"
-```
-
-```
-aws ec2 describe-instance-types     --instance-types p4d.24xlarge     --query "InstanceTypes[*].{InstanceType:InstanceType, EfaSupported:NetworkInfo.EfaSupported, MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, NetworkPerformance:NetworkInfo.NetworkPerformance}" --output table
+    --query "InstanceTypes[*].{InstanceType:InstanceType, \
+        EfaSupported:NetworkInfo.EfaSupported, \
+        MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, \
+        NetworkPerformance:NetworkInfo.NetworkPerformance}" --output table
 ```
 ```
 --------------------------------------------------------------------------------
@@ -36,11 +36,8 @@ aws ec2 describe-instance-types     --instance-types p4d.24xlarge     --query "I
 |  True        |  p4d.24xlarge |  60                    |  4x 100 Gigabit      |
 +--------------+---------------+------------------------+----------------------+
 ```
-```
-aws ec2 describe-instance-types \
-    --instance-types p4d.24xlarge \
-    --query "InstanceTypes[*].NetworkInfo.EfaInfo.MaximumEfaInterfaces"
-```
+* 최대 60개의 ENI 사용가능
+* 100Gb/s의 EFA 4개 사용 가능
 
 
 ## 설정하기 ##
