@@ -106,6 +106,10 @@ helm install promtail grafana/promtail \
   --set config.lokiAddress=http://loki:3100/loki/api/v1/push \
   -n monitoring
 ```
+* 오류 발생시
+```
+kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
 
 #### Grafana 연동 ####
 * Connections -> Data Sources -> Add Loki
