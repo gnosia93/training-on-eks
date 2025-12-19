@@ -91,7 +91,7 @@ deploymentMode: SingleBinary
 #   retention_period: 720h
 EOF
 
-helm install loki grafana/loki -f loki-values.yaml -n monitoring --create-namespace
+helm install loki grafana/loki -f loki-values.yaml -n loki --create-namespace
 ```
 
 #### Promtail 설치 (로그 수집기) ####
