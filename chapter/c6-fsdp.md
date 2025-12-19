@@ -56,14 +56,120 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 {"level":"INFO","time":"2025-12-19T08:48:37.858Z","logger":"controller","message":"initialized nodeclaim","commit":"1ad0d78","controller":"nodeclaim.lifecycle","controllerGroup":"karpenter.sh","controllerKind":"NodeClaim","NodeClaim":{"name":"gpu-845rb"},"namespace":"","name":"gpu-845rb","reconcileID":"00f80e60-fda7-4699-bc0a-7ce8b2ba11f6","provider-id":"aws:///ap-northeast-2d/i-0379b9b05def0f920","Node":{"name":"ip-10-0-7-27.ap-northeast-2.compute.internal"},"allocatable":{"cpu":"47810m","ephemeral-storage":"288764809146","hugepages-1Gi":"0","hugepages-2Mi":"0","memory":"187596060Ki","nvidia.com/gpu":"4","pods":"234"}}
 ```
 
-
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-gpu-dashboard-1.png)
-
 
 #### Job 삭제 #### 
 ```
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
+
+## kustmizd yaml ##
+멀티 GPU 를 가진 한대의 서버에 파드를 스케줄링 시키기 위해서 마스터에는 노드 어피니티만, 워커에는 노드와 파드 어피니티 모두를 사용하고 있다. 
+단 특정 인스턴스 타입 하나만 필요한 경우는 NodeSelector 를 사용하는 것이 훨씬 쉽고 간결하다. 
+```
+# overlays/custom-url/kustomization.yaml
+
+# 베이스 파일 지정
+resources:
+- ../../base
+
+# 패치 적용
+patches:
+# Master 스펙의 args 필드를 덮어씁니다.
+# << 주의 >>
+# 마스터파드 및 워커파드간의 Node 안착 교착 상태를 방지하기 위해서 마스터에는 노드 어피니티만을 워커에는 노드와 파드 어피니티 모두를 설정한다.
+# 이렇게 하지 않는 경우 노드풀에 GPU 4장 짜리 서버가 없으면, 노드 프로비저닝시 파드들이 교착상태에 빠져서 무기한 pending 상태로 빠진다. 
+- patch: |-
+    - op: add
+      path: /spec/pytorchReplicaSpecs/Master/template/spec/affinity
+      value:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node.kubernetes.io/instance-type
+                    operator: In
+                    values:
+                      # P 시리즈 (최고 성능, 인트라 노드 통신 최적화)
+                      - p4d.24xlarge   # A100 8장
+                      - p4de.24xlarge  # A100 8장 (메모리 확장형)
+                      - p5.48xlarge    # H100 8장
+                
+                      # G 시리즈 (가성비 추론/학습용)
+                      - g4dn.12xlarge  # T4 4장
+                      - g4dn.metal     # T4 8장
+                      - g5.12xlarge    # A10G 4장
+                      - g5.48xlarge    # A10G 8장
+                      - g6.12xlarge    # L4 4장 (2025년 최신 가성비)
+                      - g6.48xlarge    # L4 8장
+                
+                      # 최신 G6e 시리즈 (H100 기반 가성비 모델)
+                      - g6e.12xlarge   # L40S 4장
+                      - g6e.48xlarge   # L40S 8장     
+    - op: replace
+      path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
+      value: |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        cd /workspace/code/samples/fsdp
+        echo "working directory: "$(pwd)
+        pip install -r requirements.txt
+        torchrun --nnodes 4 --nproc_per_node 1 t5-fsdp.py
+  target:
+    kind: PyTorchJob
+    name: pytorch-dist-job
+
+# Worker 스펙의 args 필드를 덮어씁니다.
+- patch: |-
+    - op: add
+      path: /spec/pytorchReplicaSpecs/Worker/template/spec/affinity
+      value:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node.kubernetes.io/instance-type
+                    operator: In
+                    values:
+                      # P 시리즈 (최고 성능, 인트라 노드 통신 최적화)
+                      - p4d.24xlarge   # A100 8장
+                      - p4de.24xlarge  # A100 8장 (메모리 확장형)
+                      - p5.48xlarge    # H100 8장
+                
+                      # G 시리즈 (가성비 추론/학습용)
+                      - g4dn.12xlarge  # T4 4장
+                      - g4dn.metal     # T4 8장
+                      - g5.12xlarge    # A10G 4장
+                      - g5.48xlarge    # A10G 8장
+                      - g6.12xlarge    # L4 4장 (2025년 최신 가성비)
+                      - g6.48xlarge    # L4 8장
+                
+                      # 최신 G6e 시리즈 (H100 기반 가성비 모델)
+                      - g6e.12xlarge   # L40S 4장
+                      - g6e.48xlarge   # L40S 8장
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: training.kubeflow.org/job-name
+                    operator: In
+                    values:
+                      - pytorch-dist-job
+              topologyKey: kubernetes.io/hostname 
+    - op: replace
+      path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
+      value: |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        cd /workspace/code/samples/fsdp
+        echo "working directory: "$(pwd)
+        pip install -r requirements.txt
+        torchrun --nnodes 4 --nproc_per_node 1 t5-fsdp.py
+    - op: replace
+      path: /spec/pytorchReplicaSpecs/Worker/replicas
+      value: 3        
+  target:
+    kind: PyTorchJob
+    name: pytorch-dist-job
+``` 
 
 ## 레퍼런스 ##
 
