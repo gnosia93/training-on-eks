@@ -26,6 +26,19 @@ helm repo add eks https://aws.github.io/eks-charts
 helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
 ```
 
+#### 4. 파드 스펙(Pod Spec) 구성 #### 
+```
+resources:
+  limits:
+    vpc.amazonaws.com/efa: 1  # 요청할 EFA 장치 수
+  requests:
+    vpc.amazonaws.com/efa: 1
+```
+
+컨테이너 이미지에는 EFA를 활용할 수 있는 MPI, NCCL과 같은 고성능 컴퓨팅(HPC) 라이브러리 및 도구가 설치되어 있어야 합니다. 컨테이너 내에서 FI_PROVIDER 환경 변수를 efa로 설정하는 것이 좋습니다. 
+
+
+
 ## fi_getinfo: -61 (No data available) ##
 
 #### 1. EC2 인스턴스의 EFA 활성화 여부 확인 ####
