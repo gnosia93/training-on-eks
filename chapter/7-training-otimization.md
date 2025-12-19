@@ -108,5 +108,23 @@ aws ec2 describe-instances --filters "Name=tag:Name,Values=노드이름" \
 ```
 만약 ["efa"]가 출력되지 않고 ["interface"]만 나온다면, 인스턴스 레벨에서 EFA가 비활성화된 것입니다
 
+#### 2. 보안 그룹(Security Group) 설정 (가장 흔한 원인) ####
+EFA는 통신을 위해 보안 그룹 내의 모든 트래픽이 자기 자신(Self-referencing)에게 허용되어야 합니다.
 
+해결 방법: 노드가 속한 보안 그룹의 Inbound와 Outbound 규칙에 다음을 추가하세요.
+* Type: All Traffic
+* Protocol: All
+* Port Range: All
+Source/Destination: 현재 보안 그룹 ID (예: sg-123456)를 그대로 입력
 
+#### 3. Kubernetes Pod에 EFA 장치 할당 (Device Plugin) ####
+EFA 장치가 노드에 있더라도, Pod가 해당 장치를 사용할 수 있도록 Kubernetes Device Plugin이 설정되어야 하며, Pod 스펙에도 리소스 요청이 포함되어야 합니다.
+```
+resources:
+  limits:
+    vpc.amazonaws.com: 1 # EFA 장치를 Pod에 할당
+    nvidia.com: 8
+```
+Device Plugin 확인: 클러스터에 aws-efa-k8s-device-plugin이 실행 중인지 확인하세요.
+
+* EFA 설정이 복잡하다면, 테스트를 위해 우선 NCCL_DEBUG=INFO와 함께 NCCL_P2P_DISABLE=1 또는 NCCL_IB_DISABLE=1을 설정하여 TCP 모드로 통신이 되는지 먼저 확인해 볼 수도 있습니다. (단, 성능은 저하됩니다.)
