@@ -71,8 +71,11 @@ loki:
     type: 's3'
     s3:
       region: ${REGION}
-      bucketnames: ${BUCKET_NAME} # 위에서 만든 S3 이름
-  
+      bucketNames:
+        chunks: ${BUCKET_NAME}
+        admin: ${BUCKET_NAME}  # 보통 동일한 버킷을 사용해도 무방합니다.
+      s3forcepathstyle: true
+
   schemaConfig:
     configs:
       - from: "2025-12-19"
