@@ -19,9 +19,9 @@ kubectl get nodes -L node.kubernetes.io/instance-type
 * p4d.24xlarge.24xlarge / 40GB * 1 GPU / EFA / 8 Node (VISIBLE_DEVICES=0)
 
 ## Grace Hopper / Blackwell --> CPU/GPU NVLink ## 
-    * Parameter CPU Offloading 성능 (NVLink vs PCIe)
-    * PCIe(System Interconnect) 대역폭 병목 (Bottleneck) 회피.
-    * DeepSpeed and FSDP 테스트.
+* Parameter CPU Offloading 성능 (NVLink vs PCIe)
+* PCIe(System Interconnect) 대역폭 병목 (Bottleneck) 회피.
+* DeepSpeed and FSDP 테스트.
     
 ## 싱글 GPU 연산성능 측정 ##
 * Bert Base 110M with G/P Types, CUDA_VISIBLE_DEVICES = 0 (멀티 GPU인 경우)
