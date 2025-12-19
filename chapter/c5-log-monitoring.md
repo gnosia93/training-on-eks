@@ -1,3 +1,7 @@
+<<>>
+<< 제대로 설치가 되지 않는다.. 디버깅 필요. >>
+<<>>
+
 ## grafana loki ## 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-loki.webp)
 
