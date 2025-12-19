@@ -43,8 +43,8 @@ kubectl kustomize . | kubectl apply -f -
 
 pytorch 잡과 카펜터 상태를 확인한다.
 ```
-kubectl get pytorchjobs -n pytorch
-kubectl get all -n pytorch
+kubectl get pytorchjobs
+kubectl get all
 
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
@@ -53,17 +53,14 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 NAME                        READY   STATUS            RESTARTS   AGE
 pytorch-dist-job-master-0   1/1     Running           0          3m34s
 pytorch-dist-job-worker-0   0/1     PodInitializing   0          3m34s
-pytorch-dist-job-worker-1   0/1     PodInitializing   0          3m33s
 ```
 마스터와 워커로드의 세부 정보를 조회한다. 
 ```
-kubectl describe pod pytorch-dist-job-master-0 -n pytorch
-kubectl describe pod pytorch-dist-job-worker-0 -n pytorch
-kubectl describe pod pytorch-dist-job-worker-1 -n pytorch
+kubectl describe pod pytorch-dist-job-master-0
+kubectl describe pod pytorch-dist-job-worker-0
 
-kubectl logs pytorch-dist-job-master-0 -n pytorch
-kubectl logs pytorch-dist-job-worker-0 -n pytorch
-kubectl logs pytorch-dist-job-worker-1 -n pytorch
+kubectl logs pytorch-dist-job-master-0 
+kubectl logs pytorch-dist-job-worker-0 
 ```
 
 #### 참고 - pytorchjob 삭제하기 ####
