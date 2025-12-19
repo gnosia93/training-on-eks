@@ -58,7 +58,7 @@ aws iam create-policy \
 
 #### Helm 으로 Loki 설치 ####
 ```
-helm repo add grafana grafana.github.io
+helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 
 cat <<EOF > loki-values.yaml
