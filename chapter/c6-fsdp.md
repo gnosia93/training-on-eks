@@ -63,7 +63,7 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 kubectl delete pytorchjob pytorch-dist-job -n pytorch
 ```
 
-## kustmize yaml 구성 ##
+## kustmize yaml 구성 설명 ##
 멀티 GPU를 가진 한대의 서버에 모든 파드를 스케줄링 시키기 위해서, 마스터에는 노드 어피니티만 워커에는 노드와 파드 어피니티 모두를 사용하고 있다. 
 하지만 특정 인스턴스 타입이 사전에 정의된 경우는 어피니티를 사용하는 대신에 NodeSelector 사용하는 것이 훨씬 쉽고 간결하다. 
 ```
