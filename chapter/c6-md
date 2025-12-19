@@ -152,7 +152,7 @@ Events:
 * 리소스 불일치: "2 node(s) didn't match Pod's node affinity/selector"는 기존에 떠 있는 노드들이 GPU가 없거나, nodeSelector에 정의된 라벨을 가지고 있지 않음을 의미합니다. [5]
 
 ### 해결방법 ### 
-#### Pod Affinity 조건 완화 ####
+#### 1. Pod Affinity 조건 완화 ####
 requiredDuringScheduling... (강제) 대신 preferredDuringScheduling... (선호)를 사용하면, 노드가 없는 상태에서도 첫 번째 Pod가 노드 생성을 트리거할 수 있게 된다.
 
 ```
@@ -170,4 +170,10 @@ affinity:
         topologyKey: kubernetes.io/hostname
 ```
 
+#### 2. 노드 셀렉터 확인 ####
+Pod에 nodeSelector가 설정되어 있다면, Karpenter의 NodePool이 해당 라벨을 가진 노드를 생성할 수 있는지 확인하세요.
+예: accelerator: nvidia-gpu 등의 라벨이 노드에 부여되도록 NodePool 설정을 확인해야 합니다. [2]
+
+#### 3. 마스터 Pod에 어피니티 제외 ####
+마스터 Pod는 어피니티 없이 먼저 뜨게 하고, 워커들만 마스터를 따라가도록 설정하면 교착 상태를 피할 수 있습니다.
   
