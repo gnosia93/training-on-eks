@@ -72,12 +72,11 @@ loki:
     s3:
       region: ${REGION}
       # 기존 bucket 또는 bucketnames 대신 아래 형식을 사용해야 합니다.
-      bucketNames:
-        chunks: ${BUCKET_NAME}
-        ruler: ${BUCKET_NAME}
-        admin: ${BUCKET_NAME}
-      s3ForcePathStyle: true # AWS S3 표준 연결을 위해 권장
-      insecure: false
+    bucketNames:
+      chunks: ${BUCKET_NAME}
+      ruler: ${BUCKET_NAME}
+      admin: ${BUCKET_NAME}
+    s3ForcePathStyle: true # AWS S3 표준 연결을 위해 권장
 
   schemaConfig:
     configs:
