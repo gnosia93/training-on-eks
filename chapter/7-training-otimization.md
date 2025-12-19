@@ -40,18 +40,18 @@ aws ec2 describe-instance-types \
 * 100Gbp의 EFA 4개
 
 
-## 설정하기 ##
-#### 2. 시큐리티 그룹 설정 ####
+## EFA 설정하기 ##
+#### 1. 시큐리티 그룹 설정 ####
 동일한 보안 그룹 내의 인스턴스 간 EFA 트래픽(모든 트래픽 허용)을 허용하도록 보안 그룹 인바운드 및 아웃바운드 규칙을 구성해야 합니다.
 
 
-#### 3. 디바이스 플러그인 배포 #### 
+#### 2. 디바이스 플러그인 배포 #### 
 ```
 helm repo add eks https://aws.github.io/eks-charts
 helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
 ```
 
-#### 4. 파드 스펙(Pod Spec) 구성 #### 
+#### 3. 파드 스펙(Pod Spec) 구성 #### 
 ```
 resources:
   limits:
@@ -63,7 +63,7 @@ resources:
 컨테이너 이미지에는 EFA를 활용할 수 있는 MPI, NCCL과 같은 고성능 컴퓨팅(HPC) 라이브러리 및 도구가 설치되어 있어야 합니다. 컨테이너 내에서 FI_PROVIDER 환경 변수를 efa로 설정하는 것이 좋습니다. 
 
 
-#### 5. 동작 확인 ####
+#### 4. 동작 확인 ####
 * fi_info -p efa
 * nccl-tests (예: all_reduce_perf)를 실행할 때 NCCL_DEBUG=INFO를 함께 설정하여 노드 간 트래픽이 EFA 인터페이스를 타는지 확인
 * pytorch 에서 확인
