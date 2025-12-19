@@ -58,6 +58,70 @@ resource "aws_fsx_data_repository_association" "lustre_file_system_s3" {
   file_system_path     = "/"                  # S3 버킷을 Lustre 파일 시스템에 마운트 했을때의 최상위 경로
   batch_import_meta_data_on_create = true     # 파일 시스템이 생성되는 즉시 S3에 있는 파일들의 메타데이터를 Lustre 인덱스에 등록
 }
+
+# 1. IAM 역할 생성 (EKS OIDC와 연동)
+resource "aws_iam_role" "fsx_csi_role" {
+  name = "AmazonEKS_FSx_Lustre_CSI_Driver_Role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.oidc_url}"
+        }
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "${local.oidc_url}:sub": "system:serviceaccount:fsx-csi-driver:fsx-csi-driver-controller-sa"
+          }
+        }
+      }
+    ]
+  })
+}
+
+# 2. 관리형 정책(AmazonFSxLustreCSIDriverPolicy) 연결
+resource "aws_iam_role_policy_attachment" "fsx_csi_policy_attach" {
+  role       = aws_iam_role.fsx_csi_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonFSxLustreCSIDriverPolicy"
+}
+
+# 1. S3 접근을 위한 커스텀 정책 생성
+resource "aws_iam_policy" "fsx_s3_integration_policy" {
+  name        = "FSxLustreS3IntegrationPolicy"
+  description = "Allows FSx for Lustre to sync with specific S3 bucket"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetBucketLocation",
+          "s3:ListBucket",
+          "s3:GetBucketAcl",
+          "s3:GetObject",
+          "s3:GetObjectTagging",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ]
+        # 위에서 만든 버킷 경로와 일치시켜야 함
+        Resource = [
+          "arn:aws:s3:::training-on-eks-lustre-s3-${data.aws_caller_identity.current.account_id}",
+          "arn:aws:s3:::training-on-eks-lustre-s3-${data.aws_caller_identity.current.account_id}/*"
+        ]
+      }
+    ]
+  })
+}
+
+# 2. 기존 역할(Role)에 이 정책을 연결
+resource "aws_iam_role_policy_attachment" "fsx_s3_attach" {
+  role       = aws_iam_role.fsx_csi_role.name # 이전에 만든 Role 이름
+  policy_arn = aws_iam_policy.fsx_s3_integration_policy.arn
+}
 ```
 
 #### deployment_type ####
@@ -72,24 +136,21 @@ resource "aws_fsx_data_repository_association" "lustre_file_system_s3" {
 * PERSISTENT_2 (성능 최적화): 현재 AWS에서 가장 권장하는 고성능 모드입니다. 최신 아키텍처를 사용하여 지연 시간이 더 낮고 처리량이 높습니다.
 * 용도: 대규모 GPU 클러스터를 이용한 장기 AI 모델 학습, 고성능 컴퓨팅(HPC) 운영 환경.
 
-### 2단계: IAM 역할 생성 및 연결 ###
-FSx CSI 드라이버 컨트롤러가 AWS API를 호출할 수 있도록 적절한 권한을 가진 IAM 역할이 필요한데, AWS 관리형 정책인 
-AmazonFSxLustreCSIDriverPolicy를 사용하면 된다
-
-### 3단계: Amazon FSx CSI 드라이버 설치 ### 
+### 2단계: Amazon FSx CSI 드라이버 설치 ### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
+AWS FSx CSI 드라이버의 이미지는 각 리전별 AWS 전용 ECR 레포지토리에서 가져와야 한다.(image.repository)
 ```
 kubectl create namespace fsx-csi-driver
 helm repo add aws-fsx-csi-driver kubernetes-sigs.github.io
 helm repo update
 
 helm install fsx-csi-driver --namespace fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
---set image.repository=<이미지_레포지토리_URL>, \
+--set image.repository=602401143452.dkr.ecr.ap-northeast-2.amazonaws.com, \
 controller.serviceAccount.name=fsx-csi-driver-controller-sa, \
 controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=<IAM_역할_ARN>
 ```
 
-### 4단계: StorageClass 및 Persistent Volume Claim (PVC) 배포 ###
+### 3단계: StorageClass 및 Persistent Volume Claim (PVC) 배포 ###
 동적 프로비저닝을 위해 StorageClass를 정의하고, 워크로드에서 사용할 PersistentVolumeClaim을 생성합니다.  
 ```
 # storageclass.yaml 예시 (동적 프로비저닝)
@@ -104,7 +165,7 @@ parameters:
   # ... 기타 FSx 생성 옵션 ...
 ```
 
-### 5단계: 애플리케이션 파드에서 사용 ###
+### 4단계: 애플리케이션 파드에서 사용 ###
 ```
 # pod-with-fsx.yaml 예시
 apiVersion: v1
