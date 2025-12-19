@@ -15,7 +15,7 @@ spec:
         spec:
           nodeSelector:
             karpenter.sh/nodepool: gpu
-            node.kubernetes.io/instance-type: g6.2xlarge     
+#            node.kubernetes.io/instance-type: g6.2xlarge     
           tolerations:             
           - key: "nvidia.com/gpu"
             operator: "Exists"
@@ -40,7 +40,7 @@ spec:
         spec:
           nodeSelector:
             karpenter.sh/nodepool: gpu
-            node.kubernetes.io/instance-type: g6.2xlarge   
+#            node.kubernetes.io/instance-type: g6.2xlarge   
           tolerations:            
           - key: "nvidia.com/gpu"
             operator: "Exists"
