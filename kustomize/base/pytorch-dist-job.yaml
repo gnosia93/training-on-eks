@@ -2,7 +2,6 @@ apiVersion: kubeflow.org/v1
 kind: PyTorchJob
 metadata:
   name: pytorch-dist-job
-  namespace: pytorch 
 spec:
   runPolicy:
     cleanPodPolicy: Running
