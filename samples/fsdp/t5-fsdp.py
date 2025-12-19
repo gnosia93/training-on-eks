@@ -48,6 +48,7 @@ Worker 활용: num_workers 설정을 통해 여러 개의 CPU 프로세스를 �
 데이터 로딩은 "CPU가 쉬지 않고 데이터를 가공해서 가장 빠른 경로(Pin Memory)로 GPU에게 끊임없이 먹이를 주는 과정"이라고 이해하시면 됩니다. 이 과정에서 DistributedSampler는 중복 학습을 방지하고, num_workers와 pin_memory는 전송 속도를 책임집니다. [1, 3, 4]
 """
 import os
+import time
 import argparse
 import torch
 import torch.distributed as dist
