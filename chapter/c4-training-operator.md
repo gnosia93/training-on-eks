@@ -73,7 +73,7 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
 
 ## pytorch-dist-job 의 이해 ##
-* https://github.com/gnosia93/training-on-eks/blob/main/kustomize/base/pytorch-dist-job.yaml
+* [pytorch-dist-job](https://github.com/gnosia93/training-on-eks/blob/main/kustomize/base/pytorch-dist-job.yaml)
 ```
 apiVersion: kubeflow.org/v1
 kind: PyTorchJob
@@ -136,8 +136,40 @@ spec:
                 nvidia.com/gpu: "1"
 ```
 
-* https://github.com/gnosia93/training-on-eks/blob/main/kustomize/overlays/ddp/kustomization.yaml
+* [kustomization](https://github.com/gnosia93/training-on-eks/blob/main/kustomize/overlays/ddp/kustomization.yaml)
+```
+# overlays/custom-url/kustomization.yaml
 
+# 베이스 파일 지정
+resources:
+- ../../base
+
+# 패치 적용
+patches:
+# Master 스펙의 args 필드를 덮어씁니다.
+- patch: |-
+    - op: replace
+      path: /spec/pytorchReplicaSpecs/Master/template/spec/containers/0/args/0
+      value: |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        cd /workspace/code/samples
+        torchrun --nnodes 2 --nproc_per_node=1 mnist-ddp.py
+  target:
+    kind: PyTorchJob
+    name: pytorch-dist-job
+
+# Worker 스펙의 args 필드를 덮어씁니다.
+- patch: |-
+    - op: replace
+      path: /spec/pytorchReplicaSpecs/Worker/template/spec/containers/0/args/0
+      value: |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        cd /workspace/code/samples
+        torchrun --nnodes 2 --nproc_per_node=1 mnist-ddp.py
+  target:
+    kind: PyTorchJob
+    name: pytorch-dist-job
+```
  
 
 ## 레퍼런스 ##
