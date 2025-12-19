@@ -33,7 +33,7 @@ class Net(nn.Module):
         output = F.log_softmax(x, dim=1)
         return output
     
-def train(rank, device):
+def train(rank, device, device_id):
     # 데이터 로드 및 변환
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -80,6 +80,6 @@ if __name__ == '__main__':
     if torch.cuda.is_available(): 
         torch.cuda.set_device(local_rank)
     
-    train(rank, device)
+    train(rank, device, local_rank)
     dist.destroy_process_group()
 
