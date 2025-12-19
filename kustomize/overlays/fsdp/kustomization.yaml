@@ -8,10 +8,7 @@ resources:
 patches:
 # Master 스펙의 args 필드를 덮어씁니다.
 - patch: |-
-    - op: replace
-      path: /spec/pytorchReplicaSpecs/Master/template/spec/nodeSelector/karpenter.sh~1nodepool
-      value: gpu
-    - op: replace
+    - op: add
       path: /spec/pytorchReplicaSpecs/Master/template/spec/nodeSelector/node.kubernetes.io~1instance-type
       value: p4d.24xlarge
     - op: replace
@@ -28,10 +25,7 @@ patches:
 
 # Worker 스펙의 args 필드를 덮어씁니다.
 - patch: |-
-    - op: replace
-      path: /spec/pytorchReplicaSpecs/Worker/template/spec/nodeSelector/karpenter.sh~1nodepool
-      value: gpu
-    - op: replace
+    - op: add
       path: /spec/pytorchReplicaSpecs/Worker/template/spec/nodeSelector/node.kubernetes.io~1instance-type
       value: p4d.24xlarge
     - op: replace
