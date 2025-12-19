@@ -57,8 +57,8 @@ def train(rank, device, device_id):
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     model.train()
   
-    for epoch in range(1, 3):        # 예제에서는 3 에폭만 실행
-        sampler.set_epoch(epoch)     # Epoch마다 셔플링 시드 설정
+    for epoch in range(1, 11):        # 예제에서는 10 에폭만 실행
+        sampler.set_epoch(epoch)      # Epoch마다 셔플링 시드 설정
         for batch_idx, (data, target) in enumerate(train_loader):
             data, target = data.to(device), target.to(device)
             optimizer.zero_grad()
