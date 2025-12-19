@@ -169,7 +169,15 @@ patches:
   target:
     kind: PyTorchJob
     name: pytorch-dist-job
-``` 
+```
+
+```
+$ kubectl get nodes -L nvidia.com/gpu.machine
+NAME                                            STATUS   ROLES    AGE    VERSION               GPU.MACHINE
+ip-10-0-3-244.ap-northeast-2.compute.internal   Ready    <none>   4d1h   v1.34.2-eks-ecaa3a6   
+ip-10-0-6-88.ap-northeast-2.compute.internal    Ready    <none>   4d1h   v1.34.2-eks-ecaa3a6   
+ip-10-0-7-177.ap-northeast-2.compute.internal   Ready    <none>   10m    v1.34.2-eks-ecaa3a6   g6.12xlarge
+```
 
 ## 레퍼런스 ##
 
