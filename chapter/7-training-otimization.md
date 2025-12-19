@@ -98,3 +98,15 @@ spec:
 ```
 
 
+## fi_getinfo: -61 (No data available) ##
+
+#### 1. EC2 인스턴스의 EFA 활성화 여부 확인 ####
+p4d.24xlarge 인스턴스라고 해서 자동으로 EFA가 켜지는 것은 아닙니다. 인스턴스 생성 시 네트워크 인터페이스(ENI) 설정에서 EFA가 'Enabled' 되어 있어야 합니다.
+```
+aws ec2 describe-instances --filters "Name=tag:Name,Values=노드이름" \
+--query "Reservations[*].Instances[*].NetworkInterfaces[*].InterfaceType"
+```
+만약 ["efa"]가 출력되지 않고 ["interface"]만 나온다면, 인스턴스 레벨에서 EFA가 비활성화된 것입니다
+
+
+
