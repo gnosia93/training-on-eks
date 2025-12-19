@@ -70,18 +70,18 @@ loki:
   storage:
     type: 's3'
     s3:
-      region: ap-northeast-2
-      bucketnames: dh-eks-loki-storage # 위에서 만든 S3 이름
+      region: ${REGION}
+      bucketnames: ${BUCKET_NAME} # 위에서 만든 S3 이름
   
   schemaConfig:
     configs:
-      - from: "2024-01-01"
+      - from: "2025-12-19"
         index:
           period: 24h
           prefix: index_
         object_store: s3
         schema: v13
-        store: tsdb # 2025년 표준 인덱스 형식
+        store: tsdb         # 2025년 표준 인덱스 형식
 
 # 학습 로그의 원활한 처리를 위해 단일 바이너리 모드로 설치
 deploymentMode: SingleBinary 
