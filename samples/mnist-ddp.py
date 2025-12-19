@@ -44,7 +44,7 @@ def train():
     ])
     
     train_dataset = datasets.MNIST('../data', train=True, download=True, transform=transform)
-    sampler = DistributedSampler(train_dataset) if use_ddp else None  
+    sampler = DistributedSampler(train_dataset)  
     train_loader = DataLoader(
         train_dataset,
         batch_size=64,
