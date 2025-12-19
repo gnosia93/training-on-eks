@@ -122,7 +122,7 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     # 학습 시작
-    for epoch in range(1, 1000): # 예제에서는 1000 에폭만 실행
+    for epoch in range(1, 30):       # 예제에서는 30 에폭만 실행
         if use_ddp:
             sampler.set_epoch(epoch) # Epoch마다 셔플링 시드 설정
         train(model, device, train_loader, optimizer, epoch)
