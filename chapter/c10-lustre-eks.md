@@ -3,7 +3,61 @@ AWS 에서 Lustre 파일 시스템을 AI 시스템에 사용하는 가장 빠른
 #### 1단계: FSx for Lustre 파일 시스템 생성 ###
 EKS 클러스터와 동일한 VPC 내에 Amazon FSx for Lustre 파일 시스템을 생성합니다. S3 버킷과 연결하여 데이터를 자동으로 가져오거나 내보낼 수 있다.
 
-<<< 러스터 설치하는 방범 추가 >>>
+[lustre.tf]
+```
+# 1. FSx for Lustre 생성
+resource "aws_fsx_lustre_file_system" "example" {
+  storage_capacity            = 1200 # 용량 (단위: GiB, 최소 1200 또는 2400)
+  subnet_ids                  = ["subnet-12345678"] # 설치할 서브넷 ID
+  security_group_ids          = [aws_security_group.fsx_sg.id]
+  deployment_type             = "SCRATCH_2" # SCRATCH_1, SCRATCH_2, PERSISTENT_1, PERSISTENT_2 중 선택
+  import_path                 = "s3://my-data-bucket-name" # 연동할 S3 버킷 (선택 사항)
+  export_path                 = "s3://my-data-bucket-name/export" # 결과 내보낼 S3 경로
+  per_unit_storage_throughput = 200 # PERSISTENT 타입일 때 설정 (MB/s/TiB)
+
+  tags = {
+    Name = "MyLustreFileSystem"
+  }
+}
+
+# 2. 보안 그룹 설정 (Lustre 전용 포트 988 오픈)
+resource "aws_security_group" "fsx_sg" {
+  name        = "fsx-lustre-sg"
+  description = "Allow Lustre traffic"
+  vpc_id      = "vpc-12345678" # VPC ID 입력
+
+  ingress {
+    from_port   = 988
+    to_port     = 988
+    protocol    = "tcp"
+    self        = true # 동일 보안 그룹 내 통신 허용
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# (선택) S3와 데이터 동기화를 위한 설정
+resource "aws_fsx_data_repository_association" "example" {
+  file_system_id       = aws_fsx_lustre_file_system.example.id
+  data_repository_path = "s3://my-data-bucket-name"
+  file_system_path     = "/"
+  batch_import_meta_data_on_create = true
+}
+```
+#### 주요 설정 항목 설명 ####
+* deployment_type:
+  * SCRATCH: 임시 데이터 처리용 (데이터 복제 없음, 비용 저렴).
+  * PERSISTENT: 장기 보관용 (고가용성 및 데이터 복제 지원).
+* storage_capacity: SSD 기준 최소 1,200 GiB부터 시작하며, 1,200 또는 2,400 단위로 증설해야 합니다.
+* 네트워크(Port 988): Lustre 클라이언트(EC2 등)와 FSx 사이에는 TCP 988 포트가 반드시 열려 있어야 통신이 가능합니다. AWS 공식 문서에서 보안 그룹 요구 사항을 더 확인할 수 있습니다.
+* S3 연동 (import_path / export_path): 기존 S3 버킷의 데이터를 Lustre로 불러오거나 결과를 다시 S3로 저장할 때 사용합니다.
+
+
 
 
 #### 2단계: IAM 역할 생성 및 연결 ####
