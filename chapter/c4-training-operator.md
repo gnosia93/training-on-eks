@@ -74,6 +74,68 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## pytorch-dist-job 의 이해 ##
 * https://github.com/gnosia93/training-on-eks/blob/main/kustomize/base/pytorch-dist-job.yaml
+```
+apiVersion: kubeflow.org/v1
+kind: PyTorchJob
+metadata:
+  name: pytorch-dist-job
+spec:
+  runPolicy:
+    cleanPodPolicy: Running
+  
+  pytorchReplicaSpecs:
+    Master:                       
+      replicas: 1
+      restartPolicy: OnFailure
+      template:
+        spec:
+          nodeSelector:
+            karpenter.sh/nodepool: gpu
+#            node.kubernetes.io/instance-type: g6.2xlarge     
+          tolerations:             
+          - key: "nvidia.com/gpu"
+            operator: "Exists"
+            effect: "NoSchedule"
+          containers:
+          - name: pytorch
+            image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
+            command: ["/bin/bash", "-c"] 
+            args: 
+              - |
+                git clone github.com /workspace/code    
+                python /workspace/code/training.py
+            resources:
+              limits:
+                nvidia.com/gpu: "1"
+              requests:
+                nvidia.com/gpu: "1"    
+    Worker:
+      replicas: 1
+      restartPolicy: OnFailure
+      template:
+        spec:
+          nodeSelector:
+            karpenter.sh/nodepool: gpu
+#            node.kubernetes.io/instance-type: g6.2xlarge   
+          tolerations:            
+          - key: "nvidia.com/gpu"
+            operator: "Exists"
+            effect: "NoSchedule"
+          containers:
+          - name: pytorch
+            image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
+            command: ["/bin/bash", "-c"] 
+            args: 
+              - |
+                git clone github.com /workspace/code    
+                python /workspace/code/training.py
+            resources:
+              limits:
+                nvidia.com/gpu: "1"
+              requests:
+                nvidia.com/gpu: "1"
+```
+
 * https://github.com/gnosia93/training-on-eks/blob/main/kustomize/overlays/ddp/kustomization.yaml
 
  
