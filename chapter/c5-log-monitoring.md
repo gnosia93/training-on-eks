@@ -14,13 +14,17 @@ Loki가 로그를 저장할 S3 버킷을 생성하고, EKS 노드가 이 버킷�
 
 ```
 # S3 버킷 생성
+ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+UUID=$(cat /proc/sys/kernel/random/uuid)
+REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
+BUCKET_NAME="training-on-eks-${ACCOUNT_ID}-`date +%Y-%m-%d`"
+
 aws s3api create-bucket \
-    --bucket dh-eks-loki-storage \
-    --region ap-northeast-2 \
-    --create-bucket-configuration LocationConstraint=ap-northeast-2
+    --bucket ${BUCKET_NAME} \
+    --create-bucket-configuration LocationConstraint=${REGION}
 
 aws s3api put-public-access-block \
-    --bucket dh-eks-loki-storage \
+    --bucket ${BUCKET_NAME} \
     --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
 
 # Policy 파일 생성
