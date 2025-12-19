@@ -104,7 +104,7 @@ helm install loki grafana/loki -f loki-values.yaml -n loki --create-namespace
 ```
 helm install promtail grafana/promtail \
   --set config.lokiAddress=http://loki:3100/loki/api/v1/push \
-  -n monitoring
+  -n loki
 ```
 * 오류 발생시
 ```
