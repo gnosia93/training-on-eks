@@ -35,7 +35,7 @@ patches:
 # Worker 스펙의 args 필드를 덮어씁니다.
 - patch: |-
     - op: add
-      path: /spec/pytorchReplicaSpecs/Master/template/spec/affinity
+      path: /spec/pytorchReplicaSpecs/Worker/template/spec/affinity
       value:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
