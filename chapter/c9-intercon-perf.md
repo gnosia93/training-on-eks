@@ -24,7 +24,8 @@ kubectl get nodes -L node.kubernetes.io/instance-type
 * DeepSpeed and FSDP 테스트.
     
 ## 싱글 GPU 연산성능 측정 ##
-* Bert Base 110M with G/P Types, CUDA_VISIBLE_DEVICES = 0 (멀티 GPU인 경우)
+* Bert Base 110M with G/P Types
+* CUDA_VISIBLE_DEVICES = 0 (멀티 GPU인 경우)
 * 연산 속도, OOM, 최대 배치사이즈, GPU Utilization.
 
 ## 레퍼런스 ##
