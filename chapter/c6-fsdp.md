@@ -45,10 +45,17 @@ service/pytorch-dist-job-worker-2   ClusterIP   None         <none>        23456
 kubectl logs -f pod/pytorch-dist-job-master-0 -n pytorch
 ```
 
-카펜터 노드 프로비저닝 확인
+#### 카펜터 노드 프로비저닝 확인 ####
 ```
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 ```
+```
+{"level":"INFO","time":"2025-12-19T08:46:17.537Z","logger":"controller","message":"created nodeclaim","commit":"1ad0d78","controller":"provisioner","namespace":"","name":"","reconcileID":"5f3acae3-d315-4da0-9164-a622db9b5e17","NodePool":{"name":"gpu"},"NodeClaim":{"name":"gpu-845rb"},"requests":{"cpu":"465m","memory":"590Mi","nvidia.com/gpu":"4","pods":"11"},"instance-types":"g4dn.12xlarge, g4dn.metal, g5.12xlarge, g5.24xlarge, g5.48xlarge and 10 other(s)"}
+{"level":"INFO","time":"2025-12-19T08:46:20.354Z","logger":"controller","message":"launched nodeclaim","commit":"1ad0d78","controller":"nodeclaim.lifecycle","controllerGroup":"karpenter.sh","controllerKind":"NodeClaim","NodeClaim":{"name":"gpu-845rb"},"namespace":"","name":"gpu-845rb","reconcileID":"689003c4-f700-4b71-aa42-24591fbebe4e","provider-id":"aws:///ap-northeast-2d/i-0379b9b05def0f920","instance-type":"g6.12xlarge","zone":"ap-northeast-2d","capacity-type":"spot","allocatable":{"cpu":"47810m","ephemeral-storage":"269Gi","memory":"187596052Ki","nvidia.com/gpu":"4","pods":"234","vpc.amazonaws.com/pod-eni":"114"}}
+{"level":"INFO","time":"2025-12-19T08:47:36.854Z","logger":"controller","message":"registered nodeclaim","commit":"1ad0d78","controller":"nodeclaim.lifecycle","controllerGroup":"karpenter.sh","controllerKind":"NodeClaim","NodeClaim":{"name":"gpu-845rb"},"namespace":"","name":"gpu-845rb","reconcileID":"01bf0192-3ee3-42bc-a79b-cb4d87e5f206","provider-id":"aws:///ap-northeast-2d/i-0379b9b05def0f920","Node":{"name":"ip-10-0-7-27.ap-northeast-2.compute.internal"}}
+{"level":"INFO","time":"2025-12-19T08:48:37.858Z","logger":"controller","message":"initialized nodeclaim","commit":"1ad0d78","controller":"nodeclaim.lifecycle","controllerGroup":"karpenter.sh","controllerKind":"NodeClaim","NodeClaim":{"name":"gpu-845rb"},"namespace":"","name":"gpu-845rb","reconcileID":"00f80e60-fda7-4699-bc0a-7ce8b2ba11f6","provider-id":"aws:///ap-northeast-2d/i-0379b9b05def0f920","Node":{"name":"ip-10-0-7-27.ap-northeast-2.compute.internal"},"allocatable":{"cpu":"47810m","ephemeral-storage":"288764809146","hugepages-1Gi":"0","hugepages-2Mi":"0","memory":"187596060Ki","nvidia.com/gpu":"4","pods":"234"}}
+```
+
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-gpu-dashboard-1.png)
 
