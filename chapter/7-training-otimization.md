@@ -41,8 +41,20 @@ resources:
 #### 5. 동작 확인 ####
 * fi_info -p efa
 * nccl-tests (예: all_reduce_perf)를 실행할 때 NCCL_DEBUG=INFO를 함께 설정하여 노드 간 트래픽이 EFA 인터페이스를 타는지 확인
+* pytorch 에서 확인
+   * 환경변수 설정 
+   ```
+   export NCCL_DEBUG=INFO
+   export NCCL_DEBUG_SUBSYS=INIT,NET
+   ```
+   * 출력로그
+   ```
+   NCCL INFO NET/OFI Selected Provider is efa
+   NCCL INFO NET/OFI Running on P4d platform (P4d 등 특정 플랫폼 사용 시)
+   NCCL INFO NET/OFI Forcing AWS OFI ndev ... 
+   ```
 
-
+----
 
 ## fi_getinfo: -61 (No data available) ##
 
