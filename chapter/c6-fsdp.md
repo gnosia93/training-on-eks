@@ -6,7 +6,7 @@ DeepSpeed의 영향을 받았으며 PyTorch 프레임워크에 네이티브 기�
 
 ## 훈련하기 ##
 
-#### t5-small 모델 훈련 ####
+#### [t5-small 모델 훈련](https://github.com/gnosia93/training-on-eks/blob/main/samples/fsdp/t5-fsdp.py) ####
   
 training-on-eks 으로 디렉토리로 이동한 후 pytorch fsdp 작업을 실행한다 (4 pods, 데이터 건수 1000건, epoch 1)
 ```
