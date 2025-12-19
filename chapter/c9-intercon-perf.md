@@ -9,7 +9,7 @@ kubectl get nodes -L node.kubernetes.io/instance-type
 ## PCIe / ENA / EFA Performance ##
 
 ### Nitro V4 / NVIDIA L4 ###
-* g6.48xlarge / 24GB * 8 GPU / PCIe / 1 Node - Elapsed Time 30m
+* g6.48xlarge / 24GB * 8 GPU / PCIe / 1 Node 
 * g6.16xlarge / 24GB * 1 GPU / ENA / 8 Node
 * g6.16xlarge / 24GB * 1 GPU / EFA / 8 Node
 
