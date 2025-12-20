@@ -25,7 +25,6 @@
    - topoloy aware
       - export NCCL_TOPO_FILE=/path/to/system.xml  
       - NVLINK&Switch / EFA / ENA / PCIe  /w docker
-   - placement group / same AZ 
    - ultra cluster and capacity block 
 
 * [C8. 분산 훈련 스케줄링 및 복원력]
