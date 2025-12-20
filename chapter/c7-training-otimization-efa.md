@@ -136,7 +136,7 @@ spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-category"
           operator: In
-          values: ["c", "p", "g"]                        # c, p 와 g 타입
+          values: ["p", "g"]                        # p 와 g 타입
         - key: "karpenter.k8s.aws/instance-size"
           operator: In
           values: ["8xlarge", "12xlarge", "16xlarge", "24xlarge", "32xlarge", "48xlarge", "metal"]
