@@ -62,7 +62,7 @@ kind: EC2NodeClass
 metadata:
   name: gpu
 spec:
-  role: "eksctl-KarpenterNodeRole-${CLUSTER_NAME}"
+  role: "eksctl-KarpenterNodeRole-training-on-eks"
   amiSelectorTerms:
     # Required; when coupled with a pod that requests NVIDIA GPUs or AWS Neuron
     # devices, Karpenter will select the correct AL2023 accelerated AMI variant
@@ -70,10 +70,10 @@ spec:
     - alias: al2023@latest
   subnetSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "${CLUSTER_NAME}" # replace with your cluster name
+        karpenter.sh/discovery: "training-on-eks" # replace with your cluster name
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "${CLUSTER_NAME}" # replace with your cluster name
+        karpenter.sh/discovery: "training-on-eks" # replace with your cluster name
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
