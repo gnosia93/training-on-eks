@@ -212,7 +212,7 @@ NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE  
 aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
 ```
 
-#### 2-4. VPC CNI 설정 ####       <-------------- 이 설정은 보류하도록 한다... 이 설정이 필요한가?
+#### 2-4. VPC CNI 설정 (Optional) ####       
 ```
 kubectl set env daemonset/aws-node -n kube-system ENABLE_EFA_SUPPORT=true
 kubectl get daemonset aws-node -n kube-system -o yaml | grep ENABLE_EFA_SUPPORT
