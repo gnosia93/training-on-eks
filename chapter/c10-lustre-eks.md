@@ -32,11 +32,44 @@ provisioner: fsx.csi.aws.com
 reclaimPolicy: Retain # PVC 삭제 시 FSx는 유지 (안전)
 volumeBindingMode: Immediate
 ```
-워크로드에서 사용할 PersistentVolumeClaim을 생성한다.
+
+PersistentVolume (PV) 생성한다.
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: fsx-pv
+spec:
+  capacity:
+    storage: 1200Gi # FSx 생성 용량과 일치시킴
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: fsx-sc
+  csi:
+    driver: fsx.csi.aws.com
+    volumeHandle: fs-xxxxxxxxxxxxxxxxx # 테라폼 결과물인 FSx ID
+    volumeAttributes:
+      dnsname: fs-xxxxxxxxxxxxxxxxx.fsx.ap-northeast-2.amazonaws.com # DNS 주소
+      mountname: "xxxxxxxx" # 테라폼 output에서 확인 가능한 Mount Name
 ```
 
+PersistentVolumeClaim을 생성한다. Pod는 이 PVC를 통해 볼륨을 요청합니다.
 ```
-
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fsx-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: fsx-sc
+  resources:
+    requests:
+      storage: 1200Gi
+  volumeName: fsx-pv # 위에서 정의한 PV와 수동 연결
+```
 
 ### 4단계: 애플리케이션 파드에서 사용 ###
 ```
