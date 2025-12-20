@@ -160,7 +160,7 @@ Wed Dec 10 06:44:46 2025
 
 ## 참고 - Role List ##
 
-### 1. eksctl 에 의해서 생성되는 전체 Role ###
+### 1. eksctl 클러스터 생성시 만들어 지는 전체 Role ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/training-on-eks-roles.png)
 
 ### 2. eksctl-training-on-eks-iamservice-role (관리자/컨트롤러) ###
