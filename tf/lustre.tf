@@ -15,6 +15,8 @@ resource "aws_fsx_lustre_file_system" "lustre_file_system" {
   import_path                 = "s3://${aws_s3_bucket.data_bucket.bucket}"
   export_path                 = "s3://${aws_s3_bucket.data_bucket.bucket}/export"
 #  per_unit_storage_throughput = 200                                       # PERSISTENT 타입일 때 설정 (MB/s/TiB)
+  # 자동 가져오기 설정 - S3에서 새로 생성(NEW)되거나 변경(CHANGED)된 파일을 자동으로 감지합니다.
+  auto_import_policy = "NEW_CHANGED" 
 
   tags = {
     Name = "trainng-on-eks"
