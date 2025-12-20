@@ -33,7 +33,7 @@
    - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)
       
    - 복원
-      - 컨테이너 / 파드 / 노드 크래쉬
+      - 컨테이너 / 노드 크래쉬
       - 모델 체크 포인팅
    - [연산 속도가 느린 GPU / 네트워크 카드 / 노드 식별](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-detect-perf-drop.md)
   
