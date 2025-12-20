@@ -62,3 +62,36 @@
 
 ## 관련자료 ##
 * https://learn.microsoft.com/en-us/azure/databricks/machine-learning/sgc-examples/gpu-distributed-training
+
+----
+## 파이토치 튜닝 ##
+파이토치(PyTorch)의 분산 학습 라이브러리인 DDP(DistributedDataParallel)에서 통신과 연산의 중첩(Overlap)을 최적화하는 핵심 설정은 bucket_cap_mb입니다.
+
+#### 1. bucket_cap_mb 조절 원리 ####
+DDP는 모든 그래디언트를 개별적으로 전송하지 않고, 일정 크기의 '버킷(Bucket)'에 모아서 한꺼번에 all-reduce 통신을 수행한다.
+* 버킷 크기가 너무 작을 때: 통신 횟수가 잦아져 네트워크 오버헤드가 증가하고, GPU 연산과 통신을 겹칠 시간이 부족해 진다.
+* 버킷 크기가 너무 클 때: 마지막 버킷이 채워질 때까지 기다려야 하므로, 역전파(Backpropagation) 연산이 끝나도 통신이 시작되지 않아 중첩 효과가 떨어진다.
+
+#### 2. 튜닝 방법 (PyTorch 기준) ####
+2025년 대규모 모델 학습 환경에서는 기본값(25MB)보다 모델의 크기와 네트워크 대역폭에 맞춰 이 값을 조정하는 것이 일반적입니다.
+```
+import torch.nn as nn
+from torch.nn.parallel import DistributedDataParallel as DDP
+
+model = MyModel().to(device)
+ddp_model = DDP(model, 
+                device_ids=[rank],
+                # bucket_cap_mb: 버킷 하나당 메가바이트(MB) 단위 크기
+                # 보통 25MB ~ 64MB 사이에서 최적점을 찾습니다.
+                bucket_cap_mb=25) 
+```
+
+#### 3. 최적화 팁 ####
+* PyTorch Profiler를 사용하여 Communication과 Computation의 타임라인을 확인한다. 통신 바(bar)와 연산 바가 수직으로 겹치는 구간이 많을수록 최적화가 잘 된 것이다.
+* Gradient Accumulation과 병행: 배치 사이즈가 작아 버킷이 채워지는 속도가 느리다면, 그래디언트 누적(Accumulation) 단계를 조절하여 통신 빈도를 낮추는 것도 방법이다.
+* 고속 네트워크 활용: InfiniBand와 같은 고속 네트워크를 사용 중이라면 bucket_cap_mb를 64MB 또는 그 이상으로 늘려 대역폭을 최대한 활용하는 것이 유리할 수 있습니다.
+
+#### 4. FSDP (Fully Sharded Data Parallel)의 경우 ####
+만약 DDP가 아닌 FSDP를 사용한다면 bucket_cap_mb 대신 limit_all_gathers나 backward_prefetch 옵션을 통해 유사한 중첩 제어를 수행합니다. PyTorch FSDP 가이드에서 더 자세한 파라미터를 확인할 수 있습니다.
+
+
