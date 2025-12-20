@@ -164,6 +164,7 @@ EOF
 
 kubectl apply -f efa-nodepool.yaml
 ```
+* 노드 클래스를 확인한다. 
 ```
 kubectl get ec2nodeclass
 ```
@@ -173,6 +174,8 @@ NAME      READY   AGE
 cpu       True    5d1h
 gpu       True    4d22h
 gpu-efa   True    21m
+```
+* 노드풀을 확인한다. 
 ```
 kubectl get nodepool
 ```
