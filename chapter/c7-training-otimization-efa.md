@@ -187,7 +187,7 @@ EKS 클러스터의 aws-node (VPC CNI)가 EFA를 지원하도록 설정되어야
 ### 3. EFA 테스트 ### 
 nodeSelector 를 이용하여 Karpenter가 관리하는 gpu-efa 노드풀을 사용하여 파드가 스케줄링되도록 한다 (특정 노드풀을 쓰도록 강제하는 방식)
 ```
-cat <EOF >> efa-test-pod.yaml
+cat <<EOF > efa-test-pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
