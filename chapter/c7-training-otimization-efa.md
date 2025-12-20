@@ -90,7 +90,9 @@ kind: EC2NodeClass
 metadata:
   name: gpu-efa
 spec:
-  role: "eksctl-KarpenterNodeRole-training-on-eks"
+  # role: "eksctl-KarpenterNodeRole-training-on-eks"       # 인스턴스 프로파일을 설정하는 경우 주식처리한다. 
+  # --- 배치 그룹 설정 부분 ---
+  instanceProfile: "EFAInstanceProfile"
   amiSelectorTerms:
     # Required; when coupled with a pod that requests NVIDIA GPUs or AWS Neuron
     # devices, Karpenter will select the correct AL2023 accelerated AMI variant
@@ -102,8 +104,6 @@ spec:
   securityGroupSelectorTerms:
     - tags:
         karpenter.sh/discovery: "training-on-eks"
-  # --- 배치 그룹 설정 부분 ---
-  instanceProfile: "EFAInstanceProfile"
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
