@@ -59,13 +59,14 @@ aws ec2 authorize-security-group-egress \
 
 #### 2. 카펜터 노드풀 생성 ####
 
-분산 학습 성능을 극대화하려면 EFA 노드들을 물리적으로 가까운 곳에 배치하는 'Cluster' 전략의 Placement Group에 묶을 필요가 있다.
+분산 학습 성능을 극대화하려면 EFA 지원 노드들을 물리적으로 가까운 곳에 배치하는 'Cluster' 전략의 Placement Group 이 필요하다. 
+EC2 생성시 ENI 설정에서 InterfaceType=efa를 설정해야 하나 카펜터의 경우 EFA 전용 옵션 필드는 제공하지 않는다.
+별도의 체크박스 옵션은 없으며, 지원 인스턴스 타입 선택 + 배치 그룹 지정 + (필요시) EFA 전용 AMI 사용의 조합으로 EFA 사용 환경을 완성한다.
 
 [efa-nodepool.yaml]
 ```
-## 현재의 VPC AZ 정보를 받아온다.
-## 
-
+VPC_AZ=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].ZoneName" --output text)
+aws ec2 create-placement-group --group-name "training-on-eks" --strategy cluster
 
 cat <<EOF > efa-nodepool.yaml
 apiVersion: karpenter.k8s.aws/v1
@@ -83,6 +84,12 @@ spec:
         karpenter.sh/discovery: "training-on-eks"
   # --- 배치 그룹 설정 부분 ---
   placementGroupName: "training-on-eks"
+  spec:
+  userData: |
+    #!/bin/bash
+    # EFA 드라이버 확인 및 로드 (필요시)
+    # EKS 최적화 AMI는 보통 드라이버가 포함되어 있지만, 
+    # 인식 확인을 위해 fi_info -p efa 같은 명령을 사전에 체크할 수 있음
 ---
 apiVersion: karpenter.sh/v1
 kind: NodePool
@@ -98,15 +105,21 @@ spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-category"
           operator: In
-          values: ["c", "p", "g"]       # 클러스터 그룹에 적합한 컴퓨팅/GPU 인스턴스   <---- 좀더 명확하게 수정해야 한다.
+          values: ["c", "p", "g"]                   # capacity를 고려하여 c 타입도 포함
+        - key: "karpenter.k8s.aws/instance-size"
+          operator: In
+          values: ["8xlarge", "12xlarge", "16xlarge", "24xlarge", "32xlarge", "48xlarge", "metal"]
+        - key: "karpenter.k8s.aws/instance-generation"
+          operator: Gt
+          values: ["3"]                             # 4세대 이상(g4, g5, g6 등)만 사용 
         - key: "karpenter.sh/capacity-type"
           operator: In
-          values: ["on-demand"]         # 클러스터 배치는 안정성을 위해 온디맨드 권장
+          values: ["on-demand"]                     # 클러스터 배치는 안정성을 위해 온디맨드 권장
         # 중요: 클러스터 배치 그룹은 단일 AZ 내에서만 작동하므로 하나만 지정
         - key: "topology.kubernetes.io/zone"
           operator: In
-          values: ["ap-northeast-2a"]     # 이거 환경 변수 수정 필요..바뀔수 있다.    
-      taints:
+          values: [${VPC_AZ}]                       # ${VPC_AZ} 환경변수 값으로 대체    
+      taints:                                       # efa-workload 테인트 생성
         - key: "efa-workload"
           value: "true"
           effect: NoSchedule
