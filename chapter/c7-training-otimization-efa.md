@@ -165,6 +165,7 @@ EOF
 kubectl apply -f efa-nodepool.yaml
 ```
 ```
+kubectl get ec2nodeclass
 kubectl get nodepool
 ```
 [결과] gpu-efa 노드풀의 READY 필드값이 True 이어야 한다. 
