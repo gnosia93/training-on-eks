@@ -32,10 +32,10 @@
    - 복원
       - 컨테이너 / 노드 크래쉬
       - 모델 체크 포인팅
-   
-* [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
+* [C9. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
 
-* [C10. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
+* [C10. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
+
 
 ---   
 * [C11. MLOps /w Airflow]
