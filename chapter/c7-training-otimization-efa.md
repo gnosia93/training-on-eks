@@ -48,6 +48,13 @@ EFA는 일반적인 TCP/UDP 스택을 우회하여 하드웨어 수준에서 통
 # EFA 노드들이 사용할 보안 그룹 ID
 NODE_SG_ID="sg-xxxxxxxxxxxx"                <-------- aws cli 로 찾아야 한다..
 
+aws ec2 describe-security-groups \
+    --filters "Name=tag:karpenter.sh/discovery,Values=training-on-eks" \
+    --query "SecurityGroups[*].GroupId" \
+    --output text
+
+
+
 # 아웃바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
 aws ec2 authorize-security-group-egress \
     --group-id $NODE_SG_ID \
