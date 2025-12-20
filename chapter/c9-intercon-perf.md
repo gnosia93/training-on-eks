@@ -26,6 +26,8 @@ kubectl get nodes -L node.kubernetes.io/instance-type
 * CUDA_VISIBLE_DEVICES = 0 (멀티 GPU인 경우)
 * 연산 속도, OOM, 최대 배치사이즈, GPU Utilization.
 
+## 메가트론 사용해 보기 ##
+
 ## 레퍼런스 ##
 * https://aws.amazon.com/ko/ec2/instance-types/
 
