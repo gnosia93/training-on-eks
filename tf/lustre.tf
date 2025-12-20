@@ -1,12 +1,12 @@
-# 1. 현재 계정 정보 가져오기
+# 현재 계정 정보 가져오기
 data "aws_caller_identity" "current" {}
 
-# 2. S3 버킷 생성 (계정 ID 포함)
+# S3 버킷 생성 (계정 ID 포함)
 resource "aws_s3_bucket" "data_bucket" {
   bucket = "training-on-eks-lustre-${data.aws_caller_identity.current.account_id}"
 }
 
-# 1. FSx for Lustre 생성
+# FSx for Lustre 생성
 resource "aws_fsx_lustre_file_system" "lustre_file_system" {
   storage_capacity            = 1200                                       # 용량 (단위: GiB, 최소 1200 또는 2400)
   subnet_ids                  = [aws_subnet.private[0].id]                 # 설치할 서브넷 ID
@@ -21,7 +21,7 @@ resource "aws_fsx_lustre_file_system" "lustre_file_system" {
   }
 }
 
-# 2. 보안 그룹 설정 (Lustre 전용 포트 988 오픈)
+# 보안 그룹 설정 (Lustre 전용 포트 988 오픈)
 resource "aws_security_group" "fsx_sg" {
   name        = "fsx-lustre-sg"
   description = "Allow Lustre traffic"
@@ -60,7 +60,7 @@ locals {
   oidc_url = replace(aws_eks_cluster.training-on-eks.identity[0].oidc[0].issuer, "https://", "")
 }
 
-# 1. IAM 역할 생성 (EKS OIDC와 연동)
+# IAM 역할 생성 (EKS OIDC와 연동)
 resource "aws_iam_role" "fsx_csi_role" {
   name = "AmazonEKS_FSx_Lustre_CSI_Driver_Role"
 
@@ -83,13 +83,13 @@ resource "aws_iam_role" "fsx_csi_role" {
   })
 }
 
-# 2. 관리형 정책(AmazonFSxLustreCSIDriverPolicy) 연결
+# 관리형 정책(AmazonFSxLustreCSIDriverPolicy) 연결
 resource "aws_iam_role_policy_attachment" "fsx_csi_policy_attach" {
   role       = aws_iam_role.fsx_csi_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonFSxLustreCSIDriverPolicy"
 }
 
-# 1. S3 접근을 위한 커스텀 정책 생성
+# S3 접근을 위한 커스텀 정책 생성
 resource "aws_iam_policy" "fsx_s3_integration_policy" {
   name        = "FSxLustreS3IntegrationPolicy"
   description = "Allows FSx for Lustre to sync with specific S3 bucket"
@@ -118,7 +118,7 @@ resource "aws_iam_policy" "fsx_s3_integration_policy" {
   })
 }
 
-# 2. 기존 역할(Role)에 이 정책을 연결
+# 기존 역할(Role)에 이 정책을 연결
 resource "aws_iam_role_policy_attachment" "fsx_s3_attach" {
   role       = aws_iam_role.fsx_csi_role.name # 이전에 만든 Role 이름
   policy_arn = aws_iam_policy.fsx_s3_integration_policy.arn
