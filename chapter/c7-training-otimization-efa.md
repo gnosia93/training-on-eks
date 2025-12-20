@@ -285,12 +285,9 @@ provider: efa
 ```
 * 성공 시: provider: efa, fabric: efa와 같은 정보가 상세하게 출력됩니다.
 * 실패 시: fi_info 결과에 아무것도 나오지 않거나 에러가 발생합니다. (이 경우 보안 그룹의 아웃바운드 셀프 참조나 배치 그룹 설정을 다시 점검해야 합니다.)
-
-### 4. NCCL 통신 테스트 (다중 노드 시) ###
-* https://github.com/NVIDIA/nccl-tests
   
-
 ## 레퍼런스 ##
 
+* [NCCL 테스트](https://github.com/NVIDIA/nccl-tests)
 * https://github.com/aws/deep-learning-containers/blob/master/available_images.md
 * https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/node-efa.html
