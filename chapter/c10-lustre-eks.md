@@ -59,6 +59,12 @@ resource "aws_fsx_data_repository_association" "lustre_file_system_s3" {
   batch_import_meta_data_on_create = true     # 파일 시스템이 생성되는 즉시 S3에 있는 파일들의 메타데이터를 Lustre 인덱스에 등록
 }
 
+
+locals {
+  # 생성되는 리소스의 속성에서 직접 추출
+  oidc_url = replace(aws_eks_cluster.training-on-eks.identity[0].oidc[0].issuer, "https://", "")
+}
+
 # 1. IAM 역할 생성 (EKS OIDC와 연동)
 resource "aws_iam_role" "fsx_csi_role" {
   name = "AmazonEKS_FSx_Lustre_CSI_Driver_Role"
