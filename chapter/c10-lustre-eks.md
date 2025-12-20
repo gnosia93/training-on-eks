@@ -2,12 +2,13 @@
 러스터(Lustre) 파일 시스템은 높은 처리량, 낮은 지연 시간, 뛰어난 확장성을 제공하는 병렬 분산 파일 시스템으로, 대규모 데이터셋을 처리해야 하는 AI 시스템에 필수적이다.
 AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완전 관리형 서비스인 Amazon FSx for Lustre 와 FSx for Lustre CSI(Container Storage Interface) 드라이버를 활용하여 쿠버네티스 클러스터에 통합하는 것이다.
 
-### 1단계 Amazon FSx for Lustre 설치 확인 ### 
+### 1. 구성하기 ###
+#### 1-1. Amazon FSx for Lustre 설치 확인 #### 
 ```
 aws cli... 
 ```
 
-### 2단계: Amazon FSx CSI 드라이버 설치 ### 
+#### 1-2. Amazon FSx CSI 드라이버 설치 #### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
 AWS FSx CSI 드라이버의 이미지는 각 리전별 AWS 전용 ECR 레포지토리에서 가져와야 한다.(image.repository)
 ```
@@ -21,7 +22,7 @@ controller.serviceAccount.name=fsx-csi-driver-controller-sa, \
 controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=<IAM_역할_ARN>
 ```
 
-### 3단계: StorageClass 및 Persistent Volume Claim (PVC) 배포 ###
+#### 1-3. StorageClass 및 Persistent Volume Claim (PVC) 배포 ####
 동적 프로비저닝을 위해 StorageClass를 정의한다.  
 ```
 apiVersion: storage.k8s.io/v1
@@ -71,7 +72,8 @@ spec:
   volumeName: fsx-pv # 위에서 정의한 PV와 수동 연결
 ```
 
-### 4단계: 애플리케이션 파드에서 사용 ###
+### 2. 테스트 하기 ###
+#### 2-1. 애플리케이션 파드에서 사용 ####
 ```
 # pod-with-fsx.yaml 예시
 apiVersion: v1
@@ -91,6 +93,21 @@ spec:
       persistentVolumeClaim:
         claimName: fsx-pvc # 위에서 생성한 PVC 이름
 ```
+
+#### 2-2. S3 연동 테스트 ####
+```
+echo "Hello FSx Lustre" > test-file.txt
+aws s3 cp test-file.txt s3://사용자-버킷-이름/
+
+# Pod 내부 접속
+kubectl exec -it <pod-name> -- /bin/bash
+
+# 마운트된 경로로 이동 (예: /data)
+cd /data
+ls -l
+
+```
+
 
 ## 레퍼런스 ##
 * https://aws.amazon.com/ko/blogs/tech/lustre/
