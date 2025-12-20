@@ -46,16 +46,14 @@ aws ec2 describe-instance-types \
 EFA는 일반적인 TCP/UDP 스택을 우회하여 하드웨어 수준에서 통신하기 때문에 훨씬 엄격하고 명확한 규칙을 요구하는데, 아웃바운드 '셀프' 명시와 모든 프로토콜(All Traffic) 허용이 필수적 이다.
 ```
 # EFA 노드들이 사용할 보안 그룹 ID
-NODE_SG_ID="sg-xxxxxxxxxxxx"                <-------- aws cli 로 찾아야 한다..
-
-aws ec2 describe-security-groups \
+NODE_SG_ID=$(aws ec2 describe-security-groups \
     --filters "Name=tag:karpenter.sh/discovery,Values=training-on-eks" \
     --query "SecurityGroups[*].GroupId" \
-    --output text
-
-
+    --output text)
+echo $NODE_SG_ID
 
 # 아웃바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
+# cf) 인바운드의 경우 클러스터를 생성하는 시점에 자동으로 설정되어 진다. 
 aws ec2 authorize-security-group-egress \
     --group-id $NODE_SG_ID \
     --protocol all \                # 모든 프로토콜 - FA가 사용하는 커스텀 프로토콜(SRD 등)이 일반적인 포트 번호 개념과 다르게 동작
