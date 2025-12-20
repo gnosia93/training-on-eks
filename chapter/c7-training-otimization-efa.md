@@ -59,6 +59,9 @@ aws ec2 authorize-security-group-egress --group-id $SG_ID \
     --source-group $SG_ID
 ```
 
+* 클러스터 컨토롤 플레인과 통신할 수 있는 포트 추가.... 콘솔에서 확인하거나.. 기존 코드 수정해서..
+* karpenter.sh/discovery: "my-cluster" 태깅
+
 #### 2. 카펜터 노드풀 생성 ####
 
 분산 학습 성능을 극대화하려면 EFA 노드들을 물리적으로 가까운 곳에 배치하는 'Cluster' 전략의 Placement Group에 묶을 필요가 있다.
@@ -67,34 +70,38 @@ aws ec2 authorize-security-group-egress --group-id $SG_ID \
 
 [efa-nodepool.yaml]
 ```
+## 현재의 VPC AZ 정보를 받아온다.
+## 
+
+
 cat <<EOF > efa-nodepool.yaml
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
 metadata:
-  name: hpc-node-class
+  name: gpu-efa
 spec:
   amiFamily: AL2
   role: "KarpenterNodeRole-MyCluster" # 실제 역할 이름으로 변경
   subnetSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "my-cluster"
+        karpenter.sh/discovery: "training-on-eks"
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "my-cluster"
+        karpenter.sh/discovery: "training-on-eks"
   # --- 배치 그룹 설정 부분 ---
-  placementGroupName: "karpenter-hpc-group"
+  placementGroupName: "training-on-eks"
 ---
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
-  name: hpc-nodepool
+  name: gpu-efa
 spec:
   template:
     spec:
       nodeClassRef:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
-        name: hpc-node-class
+        name: gpu-efa
       requirements:
         - key: "karpenter.k8s.aws/instance-category"
           operator: In
@@ -105,7 +112,7 @@ spec:
       # 중요: 클러스터 배치 그룹은 단일 AZ 내에서만 작동하므로 하나만 지정
       - key: "topology.kubernetes.io/zone"
         operator: In
-        values: ["ap-northeast-2a"]
+        values: ["ap-northeast-2a"]     # 이거 환경 변수 수정 필요..바뀔수 있다.    
 EOF
 
 kubectl apply -f efa-nodepool.yaml
