@@ -25,7 +25,6 @@
    - topoloy aware
       - export NCCL_TOPO_FILE=/path/to/system.xml  
       - NVLINK&Switch / EFA / ENA / PCIe  /w docker
-   - ultra cluster and capacity block 
 
 * [C8. 분산 훈련 스케줄링 및 복원력]
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
