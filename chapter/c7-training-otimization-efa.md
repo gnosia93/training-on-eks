@@ -1,7 +1,3 @@
-<<>>
-<< 제대로 동작하지 않는다.>>
-<< 노드는 생성되고, 클러스터에 조인하는 것처럼 보이나, 파드는 pending 되어 있다>>
-
 ## EFA ##
 
 ### 1. EFA 지원 GPU 인스턴스 ###
@@ -291,3 +287,7 @@ provider: efa
 * [NCCL 테스트](https://github.com/NVIDIA/nccl-tests)
 * https://github.com/aws/deep-learning-containers/blob/master/available_images.md
 * https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/node-efa.html
+
+## todo ##
+* placement 그룹 설정.
+* nodepool to all az..
