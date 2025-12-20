@@ -227,11 +227,10 @@ metadata:
 spec:
   nodeSelector:
     karpenter.sh/nodepool: gpu-efa                      # 앞에서 생성한 EFA 노드풀에 배치되도록 설정
-  tolerations:                                          # 노드풀에 설정한 테인트 허용(무력화)
-    - key: "efa-workload"
-      operator: "Equal"
-      value: "true"
-      effect: "NoSchedule"
+  tolerations:                                             
+    - key: "nvidia.com/gpu"
+      operator: "Exists"                      # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크  
+      effect: "NoSchedule"        
   containers:
     - name: efa-container
       image: nvcr.io/nvidia/pytorch:24.01-py3           # EFA 드라이버와 NCCL 테스트 도구가 포함된 이미지 사용 (NVIDIA 공식 이미지 권장)
