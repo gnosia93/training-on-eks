@@ -184,7 +184,7 @@ kubectl get daemonset aws-node -n kube-system -o yaml | grep ENABLE_EFA_SUPPORT
 ```
 EKS 클러스터의 aws-node (VPC CNI)가 EFA를 지원하도록 설정되어야 한다.
 
-#### 4. 파드 테스트 #### 
+### 3. EFA 테스트 ### 
 nodeSelector 를 이용하여 Karpenter가 관리하는 gpu-efa 노드풀을 사용하여 파드가 스케줄링되도록 한다 (특정 노드풀을 쓰도록 강제하는 방식)
 ```
 apiVersion: v1
@@ -226,7 +226,7 @@ fi_info -p efa
 * 실패 시: fi_info 결과에 아무것도 나오지 않거나 에러가 발생합니다. (이 경우 보안 그룹의 아웃바운드 셀프 참조나 배치 그룹 설정을 다시 점검해야 합니다.)
 
 
-### 3. NCCL 통신 테스트 (다중 노드 시) ###
+### 4. NCCL 통신 테스트 (다중 노드 시) ###
 만약 노드를 2대 이상 띄웠다면, AWS NCCL Test 도구를 사용하여 실제 노드 간 네트워크 대역폭(Bandwidth)을 측정할 수 있습니다.
 
 ## 참고 ##
