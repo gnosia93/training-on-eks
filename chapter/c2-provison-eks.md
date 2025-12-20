@@ -198,12 +198,7 @@ aws ec2 create-tags \
 }
 ```
 
-### 3. 적용 방법 ###
-* AWS Console: IAM 대시보드에서 eksctl-training-on-eks-iamservice-role 역할을 찾아 인라인 정책을 추가하거나 기존 정책을 수정하세요.
-* eksctl 사용 시: iamServiceAccounts 설정 파일에 필요한 권한을 추가한 후 eksctl update iamserviceaccount 명령어를 실행하세요.
-
-
-* IAM Identity Mapping 
+* IAM Identity Mapping (이 부분은 필요한 설정인지 확인이 필요하다) 
 ```
 eksctl create iamidentitymapping \
   --username system:node:{{EC2PrivateDNSName}} \
@@ -274,7 +269,7 @@ kubectl apply -f nginx.yaml
 
 
  ## todo ##
- * eksctl 로 클러스터를 생성하기 전에 시큐리티 그룹을 만들고, 그것으로 eks 에 부틴다.
+ * eksctl 로 클러스터를 생성하기 전에 시큐리티 그룹을 만들고, 그것으로 eks 에 붙인다.
  * discovery.sh.. 설정도 넣어야 한다.. 그렇게 하면 태깅이 불필요하게 된다. 
 
 
