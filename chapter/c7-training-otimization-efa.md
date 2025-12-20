@@ -53,14 +53,13 @@ NODE_SG_ID=$(aws ec2 describe-security-groups \
 echo $NODE_SG_ID
 
 # 아웃바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
-# cf) 인바운드의 경우 클러스터를 생성하는 시점에 자동으로 설정되어 진다. 
+# cf) 인바운드의 경우 클러스터를 생성하는 시점에 자동으로 설정되어져 있다. 
 aws ec2 authorize-security-group-egress \
     --group-id $NODE_SG_ID \
-    --protocol all \                # 모든 프로토콜 - FA가 사용하는 커스텀 프로토콜(SRD 등)이 일반적인 포트 번호 개념과 다르게 동작
-    --port -1 \                     # 모든 포트
-    --source-group $NODE_SG_ID      # 자기 자신을 명시
+    --protocol all \                  # 모든 프로토콜 - FA가 사용하는 커스텀 프로토콜(SRD 등)이 일반적인 포트 번호 개념과 다르게 동작
+    --port -1 \                       # 모든 포트
+    --source-group ${NODE_SG_ID}      # 자기 자신을 명시
 ```
-
 
 #### 2. 카펜터 노드풀 생성 ####
 
