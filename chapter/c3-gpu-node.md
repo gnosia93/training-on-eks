@@ -160,13 +160,16 @@ Wed Dec 10 06:44:46 2025
 
 ## 참고 ##
 
-### 1. eksctl-training-on-eks-iamservice-role (관리자/컨트롤러) ###
+### 1. eksctl 에 의해서 생성되는 전체 Role ###
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/training-on-eks-roles.png)
+
+### 2. eksctl-training-on-eks-iamservice-role (관리자/컨트롤러) ###
 * 주체: EKS 클러스터 안에서 실행 중인 Karpenter 포드(Pod)가 사용합니다.
 * 용도: Karpenter가 AWS API를 호출하여 "노드를 만들고, 삭제하고, 인스턴스 프로파일을 생성"할 수 있게 해주는 권한입니다.
 * 핵심 권한: ec2:RunInstances, iam:PassRole, iam:CreateInstanceProfile 등.
 * 특징: IRSA(IAM Roles for Service Accounts)를 통해 Karpenter 서비스 어카운트에 연결됩니다.
 
-### 2. 카펜터 노드 롤 (노동자/Worker Node) ###
+### 3. 카펜터 노드 롤 (노동자/Worker Node) ###
 * 주체: Karpenter에 의해 새롭게 생성된 EC2 인스턴스(노드) 자체가 사용합니다.
 * 용도: 생성된 노드가 EKS 클러스터에 접속하고, ECR에서 이미지를 풀(Pull)하거나, VPC CNI와 통신하는 등 "K8s 워커 노드로서 동작"하기 위해 필요한 권한입니다.
 * 핵심 권한: AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy, AmazonEC2ContainerRegistryReadOnly 등.
@@ -175,6 +178,8 @@ Wed Dec 10 06:44:46 2025
 ```
 aws iam list-roles --query 'Roles[?contains(RoleName, `KarpenterNodeRole`)].RoleName'
 ```  
+
+
 
 ## 레퍼런스 ##
 
