@@ -110,8 +110,8 @@ resource "aws_iam_policy" "fsx_s3_integration_policy" {
         ]
         # 위에서 만든 버킷 경로와 일치시켜야 함
         Resource = [
-          "arn:aws:s3:::training-on-eks-lustre-s3-${data.aws_caller_identity.current.account_id}",
-          "arn:aws:s3:::training-on-eks-lustre-s3-${data.aws_caller_identity.current.account_id}/*"
+          "arn:aws:s3:::training-on-eks-lustre-${data.aws_caller_identity.current.account_id}",
+          "arn:aws:s3:::training-on-eks-lustre-${data.aws_caller_identity.current.account_id}/*"
         ]
       }
     ]
