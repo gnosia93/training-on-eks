@@ -290,4 +290,4 @@ provider: efa
 
 ## todo ##
 * placement 그룹 설정.
-* nodepool to all az..
+* placement 가 지원되지 않으면 nodepool 을 모든 AZ 로 수정..
