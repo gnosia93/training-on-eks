@@ -162,9 +162,21 @@ kubectl apply -f efa-nodepool.yaml
 ```
 helm repo add eks https://aws.github.io/eks-charts
 helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
+
+kubectl get ds -n kube-system
+```
+[결과]
+``` 
+NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR              AGE
+aws-efa-k8s-device-plugin   0         0         0       0            0           <none>                     31m
+aws-node                    2         2         2       2            2           <none>                     4d22h
+ebs-csi-node                2         2         2       2            2           kubernetes.io/os=linux     4d10h
+ebs-csi-node-windows        0         0         0       0            0           kubernetes.io/os=windows   4d10h
+kube-proxy                  2         2         2       2            2           <none>                     4d22h
 ```
 
-#### 4. 파드 생성 #### 
+#### 4. 파드 테스트 #### 
+nodeSelector 를 이용하여 Karpenter가 관리하는 gpu-efa 노드풀을 사용하여 파드가 스케줄링되도록 한다 (특정 노드풀을 쓰도록 강제하는 방식)
 ```
 apiVersion: v1
 kind: Pod
@@ -173,30 +185,23 @@ metadata:
   labels:
     app: efa-test
 spec:
-  # 1. 앞에서 생성한 EFA 노드풀에 배치되도록 설정
   nodeSelector:
-    karpenter.sh/nodepool: gpu-efa
-  
-  # 2. 노드풀에 설정한 테인트 허용
-  tolerations:
+    karpenter.sh/nodepool: gpu-efa                      # 앞에서 생성한 EFA 노드풀에 배치되도록 설정
+  tolerations:                                          # 노드풀에 설정한 테인트 허용(무력화)
     - key: "efa-workload"
       operator: "Equal"
       value: "true"
       effect: "NoSchedule"
-
   containers:
     - name: efa-container
-      # EFA 드라이버와 NCCL 테스트 도구가 포함된 이미지 사용 (NVIDIA 공식 이미지 권장)
-      image: nvcr.io/nvidia/pytorch:24.01-py3 
+      image: nvcr.io/nvidia/pytorch:24.01-py3           # EFA 드라이버와 NCCL 테스트 도구가 포함된 이미지 사용 (NVIDIA 공식 이미지 권장)
       command: ["/bin/bash", "-c", "sleep infinity"]
       resources:
         limits:
-          # 3. EFA 장치를 파드에 직접 할당 (VPC CNI가 이 장치를 인식함)
-          vpc.amazonaws.com: 1
-          nvidia.com: 1 # GPU 인스턴스인 경우
+          vpc.amazonaws.com/efa: 1                      # EFA 장치를 파드에 직접 할당 (VPC CNI가 이 장치를 인식함)
+          nvidia.com/gpu: 1                             # GPU 인스턴스인 경우
       securityContext:
-        # EFA 통신을 위해 메모리 잠금 권한 필요
-        capabilities:
+        capabilities:                                   # EFA 통신을 위해 메모리 잠금 권한 필요
           add: ["IPC_LOCK"]
 ```
 
