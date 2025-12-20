@@ -28,9 +28,7 @@
 
 * [C8. 분산 훈련 스케줄링 및 복원력]
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
-
-   - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)
-      
+   - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)      
    - 복원
       - 컨테이너 / 노드 크래쉬
       - 모델 체크 포인팅
@@ -38,7 +36,8 @@
 * [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
 
 * [C10. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
-   
+
+---   
 * [C11. MLOps /w Airflow]
    - MLflow
    - S3 Data Upload -> trigger LLM training
@@ -46,10 +45,9 @@
    - 데이터 전처리 단계와 방법에 대해서 다룬다.
      - /w spark job 
 
-* 커스텀 커테이너 이미지 만들기
-* 모델 성능 평가
+* [C12. 커스텀 컨테이너 이미지 만들기]
        
-* [C12. CPU 분산 훈련]
+* [C13. CPU 분산 훈련]
    
 ## 레퍼런스 ## 
 
