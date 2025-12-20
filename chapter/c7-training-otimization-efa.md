@@ -43,43 +43,23 @@ aws ec2 describe-instance-types \
 
 #### 1. EKS 노드 시큐리티 그룹 수정 #### 
 
-#### 1. 일반 EKS 노드 보안 그룹 ####
-* 인바운드: 노드 간 Pod 통신을 위해 보통 자기 자신(Self)에 대해 모든 트래픽을 허용합니다.
-* 아웃바운드: 보통 0.0.0.0/0 (모든 곳)으로 열려 있습니다. 이 규칙 덕분에 자기 자신에게 나가는 트래픽도 자동으로 허용됩니다.
-* 특징: 표준 TCP/UDP 통신 위주이므로 아웃바운드에 굳이 '자기 자신'을 별도로 명시하지 않아도 인터넷 허용 규칙(0.0.0.0/0)으로 충분합니다.
-
-#### 2. EFA 사용 EKS 노드 (차이점) ####
-EFA는 일반적인 TCP/UDP 스택을 우회하여 하드웨어 수준에서 통신하기 때문에 훨씬 엄격하고 명확한 규칙을 요구합니다.
-* 아웃바운드 '셀프' 명시: 보안 정책상 아웃바운드를 제한하는 환경에서도 EFA는 반드시 자기 자신의 보안 그룹 ID를 목적지로 하는 모든 프로토콜(-1) 규칙이 있어야 합니다.
-* 프로토콜의 범위: 일반 노드는 TCP/UDP만 잘 되면 문제가 없지만, EFA는 모든 프로토콜(All Traffic) 허용이 필수입니다. 이는 EFA가 사용하는 커스텀 프로토콜(SRD 등)이 일반적인 포트 번호 개념과 다르게 동작하기 때문입니다.
-
-요약하자면 "나(우리 노드들)에게 가는 트래픽"을 명시적으로, 그리고 "모든 프로토콜"에 대해 허용하느냐가 가장 큰 차이입니다.
-
-
-
+EFA는 일반적인 TCP/UDP 스택을 우회하여 하드웨어 수준에서 통신하기 때문에 훨씬 엄격하고 명확한 규칙을 요구하는데, 아웃바운드 '셀프' 명시와 모든 프로토콜(All Traffic) 허용이 필수적 이다.
 ```
-SG_ID=$(aws ec2 create-security-group --group-name "EFASecurityGroup" \
-    --description "EFA self-referencing SG" \
-    --vpc-id "vpc-xxxxxxxx" \
-    --query 'GroupId' --output text)
+# EFA 노드들이 사용할 보안 그룹 ID
+NODE_SG_ID="sg-xxxxxxxxxxxx"                <-------- aws cli 로 찾아야 한다..
 
-aws ec2 authorize-security-group-ingress --group-id $SG_ID \
-    --protocol all --port all \
-    --source-group $SG_ID
-
-aws ec2 authorize-security-group-egress --group-id $SG_ID \
-    --protocol all --port all \
-    --source-group $SG_ID
+# 아웃바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
+aws ec2 authorize-security-group-egress \
+    --group-id $NODE_SG_ID \
+    --protocol all \                # 모든 프로토콜 - FA가 사용하는 커스텀 프로토콜(SRD 등)이 일반적인 포트 번호 개념과 다르게 동작
+    --port -1 \                     # 모든 포트
+    --source-group $NODE_SG_ID      # 자기 자신을 명시
 ```
 
-* 클러스터 컨토롤 플레인과 통신할 수 있는 포트 추가.... 콘솔에서 확인하거나.. 기존 코드 수정해서..
-* karpenter.sh/discovery: "my-cluster" 태깅
 
 #### 2. 카펜터 노드풀 생성 ####
 
 분산 학습 성능을 극대화하려면 EFA 노드들을 물리적으로 가까운 곳에 배치하는 'Cluster' 전략의 Placement Group에 묶을 필요가 있다.
-또한 EFA 통신(OS bypass 방식)을 위해 해당 시큐리티 그룹은 자기 자신(Self-referencing)으로부터 들어오고 나가는 모든 트래픽을 허용해야 한다.
-이를 적용한 노드풀과 노드클래스를 아래와 같이 생성한다. 
 
 [efa-nodepool.yaml]
 ```
