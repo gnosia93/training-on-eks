@@ -221,6 +221,7 @@ EFA는 하드웨어가 시스템 메모리에 직접 접근하여 데이터를 �
     * ulimit -l unlimited는 프로세스가 물리적 메모리에 고정(Lock)할 수 있는 메모리의 크기 제한을 해제
 
 ```
+kubectl apply -f efa-test-pod.yaml
 kubectl exec -it efa-test-pod -- /bin/bash
 fi_info -p efa
 ```
