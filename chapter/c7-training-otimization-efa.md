@@ -155,10 +155,10 @@ spec:
           operator: In
           values: ["${VPC_AZ}"]                       # ${VPC_AZ} 환경변수 값으로 대체    
       taints:                                       # efa-workload 테인트 생성
-        - key: "efa-workload"
-          value: "true"
-          effect: NoSchedule
-      expireAfter: 720h 
+        - key: "nvidia.com/gpu"            # nvidia-device-plugin 데몬은 nvidia.com/gpu=present:NoSchedule 테인트를 Tolerate 한다. 
+          value: "present"                 # value 값으로 present 와 다른값을 설정하면 nvidia-device-plugin 이 동작하지 않는다 (GPU를 찾을 수 없다)   
+          effect: NoSchedule               # nvidia-device-plugin 이 GPU 를 찾으면 Nvidia GPU 관련 각종 테인트와 레이블 등을 노드에 할당한다.  
+      expireAfter: 720h    
   limits:
     cpu: 1000
   disruption:
