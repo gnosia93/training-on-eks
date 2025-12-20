@@ -164,6 +164,15 @@ EOF
 
 kubectl apply -f efa-nodepool.yaml
 ```
+```
+kubectl get nodepool
+```
+[결과] gpu-efa 노드풀의 READY 필드값이 True 이어야 한다. 
+```
+NAME      NODECLASS   NODES   READY   AGE
+gpu       gpu         0       True    4d20h
+gpu-efa   gpu-efa     0       False   153m
+```
 
 #### 2-3. 디바이스 플러그인 배포 #### 
 ```
