@@ -111,11 +111,16 @@ spec:
         volumeType: gp3
   userData: |
     #!/bin/bash
-    # EFA 드라이버 확인 및 로드 (필요시)
-    # EKS 최적화 AMI는 보통 드라이버가 포함되어 있지만, 
-    # 인식 확인을 위해 fi_info -p efa 같은 명령을 사전에 체크할 수 있음
-    sudo ulimit -s unlimited
-    ulimit -l unlimited 
+    # 런타임 ulimit 설정은 세션이 종료되면 사라지므로 설정 파일에 직접 기록.
+    cat <<EOF > /etc/security/limits.d/99-efa.conf
+    * soft memlock unlimited
+    * hard memlock unlimited
+    * soft stack unlimited
+    * hard stack unlimited
+    EOF
+    # 즉시 적용을 위해 현재 세션에도 적용
+    ulimit -l unlimited
+    ulimit -s unlimited
 ---
 apiVersion: karpenter.sh/v1
 kind: NodePool
@@ -145,11 +150,11 @@ spec:
         - key: "topology.kubernetes.io/zone"
           operator: In
           values: [${VPC_AZ}]                       # ${VPC_AZ} 환경변수 값으로 대체    
-      expireAfter: 720h # 30 * 24h = 720h
       taints:                                       # efa-workload 테인트 생성
         - key: "efa-workload"
           value: "true"
           effect: NoSchedule
+      expireAfter: 720h 
   limits:
     cpu: 1000
   disruption:
