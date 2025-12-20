@@ -1,12 +1,20 @@
+# 1. 현재 계정 정보 가져오기
+data "aws_caller_identity" "current" {}
+
+# 2. S3 버킷 생성 (계정 ID 포함)
+resource "aws_s3_bucket" "data_bucket" {
+  bucket = "training-data-${data.aws_caller_identity.current.account_id}"
+}
+
 # 1. FSx for Lustre 생성
 resource "aws_fsx_lustre_file_system" "lustre_file_system" {
-  storage_capacity            = 1200 # 용량 (단위: GiB, 최소 1200 또는 2400)
-  subnet_ids                  = ["subnet-12345678"] # 설치할 서브넷 ID
+  storage_capacity            = 1200                                       # 용량 (단위: GiB, 최소 1200 또는 2400)
+  subnet_ids                  = [aws_subnet.private[0].id]                 # 설치할 서브넷 ID
   security_group_ids          = [aws_security_group.fsx_sg.id]
-  deployment_type             = "SCRATCH_2" # SCRATCH_1, SCRATCH_2, PERSISTENT_1, PERSISTENT_2 중 선택
-  import_path                 = "s3://my-data-bucket-name" # 연동할 S3 버킷 (선택 사항)
-  export_path                 = "s3://my-data-bucket-name/export" # 결과 내보낼 S3 경로
-#  per_unit_storage_throughput = 200 # PERSISTENT 타입일 때 설정 (MB/s/TiB)
+  deployment_type             = "SCRATCH_2"                                # SCRATCH_1, SCRATCH_2, PERSISTENT_1, PERSISTENT_2 중 선택
+  import_path                 = "s3://${aws_s3_bucket.data_bucket.bucket}"
+  export_path                 = "s3://${aws_s3_bucket.data_bucket.bucket}/export"
+#  per_unit_storage_throughput = 200                                       # PERSISTENT 타입일 때 설정 (MB/s/TiB)
 
   tags = {
     Name = "trainng-on-eks"
