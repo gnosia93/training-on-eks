@@ -41,7 +41,7 @@ aws ec2 describe-instance-types \
 
 ### 2. EFA 설정하기 ###
 
-#### 1. EKS 노드 시큐리티 그룹 수정 #### 
+#### 2-1. EKS 노드 시큐리티 그룹 수정 #### 
 
 EFA는 일반적인 TCP/UDP 스택을 우회하여 하드웨어 수준에서 통신하기 때문에 훨씬 엄격하고 명확한 규칙을 요구하는데, 아웃바운드 '셀프' 명시와 모든 프로토콜(All Traffic) 허용이 필수적 이다.
 ```
@@ -63,7 +63,7 @@ aws ec2 authorize-security-group-egress \
 An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecurityGroupEgress operation: the specified rule "peer: sg-0856697271a3b5fad, ALL, ALLOW" already exists
 ```
 
-#### 2. 카펜터 노드풀 생성 ####
+#### 2-2. 카펜터 노드풀 생성 ####
 
 분산 학습 성능을 극대화하려면 EFA 지원 노드들을 물리적으로 가까운 곳에 배치하는 'Cluster' 전략의 Placement Group 이 필요하다. 
 EC2 생성시 ENI 설정에서 InterfaceType=efa를 설정해야 하나 카펜터의 경우 EFA 전용 옵션 필드는 제공하지 않는다.
@@ -160,7 +160,7 @@ EOF
 kubectl apply -f efa-nodepool.yaml
 ```
 
-#### 3. 디바이스 플러그인 배포 #### 
+#### 2-3. 디바이스 플러그인 배포 #### 
 ```
 helm repo add eks https://aws.github.io/eks-charts
 helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
@@ -177,7 +177,7 @@ ebs-csi-node-windows        0         0         0       0            0          
 kube-proxy                  2         2         2       2            2           <none>                     4d22h
 ```
 
-#### 4. VPC CNI 설정 ####
+#### 2-4. VPC CNI 설정 ####
 ```
 kubectl set env daemonset/aws-node -n kube-system ENABLE_EFA_SUPPORT=true
 kubectl get daemonset aws-node -n kube-system -o yaml | grep ENABLE_EFA_SUPPORT
