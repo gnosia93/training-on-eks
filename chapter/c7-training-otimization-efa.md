@@ -69,11 +69,20 @@ An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecuri
 EC2 생성시 ENI 설정에서 InterfaceType=efa를 설정해야 하나 카펜터의 경우 EFA 전용 옵션 필드는 제공하지 않는다.
 별도의 체크박스 옵션은 없으며, 지원 인스턴스 타입 선택 + 배치 그룹 지정 + (필요시) EFA 전용 AMI 사용의 조합으로 EFA 사용 환경을 완성한다.
 
-[efa-nodepool.yaml]
+먼저 placement 그룹과 인스턴스 프로파일을 아래와 같이 생성한다. 
 ```
 VPC_AZ=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].ZoneName" --output text)
 echo "placement-group az: ${VPC_AZ}"
 aws ec2 create-placement-group --group-name "training-on-eks" --strategy cluster
+
+aws iam create-instance-profile --instance-profile-name EFAInstanceProfile
+aws iam add-role-to-instance-profile \
+    --instance-profile-name EFAInstanceProfile \
+    --role-name eksctl-KarpenterNodeRole-training-on-eks
+```
+
+efa 노드풀을 생성한다.
+```
 
 cat <<EOF > efa-nodepool.yaml
 apiVersion: karpenter.k8s.aws/v1
@@ -94,7 +103,7 @@ spec:
     - tags:
         karpenter.sh/discovery: "training-on-eks"
   # --- 배치 그룹 설정 부분 ---
-  placementGroupName: "training-on-eks"
+  instanceProfile: "EFAInstanceProfile"
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
