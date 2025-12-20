@@ -203,7 +203,7 @@ ebs-csi-node-windows        0         0         0       0            0          
 kube-proxy                  2         2         2       2            2           <none>                     4d22h
 ```
 
-#### 2-4. VPC CNI 설정 ####
+#### 2-4. VPC CNI 설정 ####       <-------------- 이 설정은 보류하도록 한다... 
 ```
 kubectl set env daemonset/aws-node -n kube-system ENABLE_EFA_SUPPORT=true
 kubectl get daemonset aws-node -n kube-system -o yaml | grep ENABLE_EFA_SUPPORT
