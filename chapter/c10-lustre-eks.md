@@ -22,19 +22,21 @@ controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=<IAM_역할
 ```
 
 ### 3단계: StorageClass 및 Persistent Volume Claim (PVC) 배포 ###
-동적 프로비저닝을 위해 StorageClass를 정의하고, 워크로드에서 사용할 PersistentVolumeClaim을 생성합니다.  
+동적 프로비저닝을 위해 StorageClass를 정의한다.  
 ```
-# storageclass.yaml 예시 (동적 프로비저닝)
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: fsx-sc
 provisioner: fsx.csi.aws.com
-parameters:
-  subnetId: "subnet-xxxxxxxxxxxxxxxxx" # EKS 클러스터 서브넷 ID
-  securityGroupIds: "sg-xxxxxxxxxxxxxxxxx" # FSx 접근 허용 보안 그룹 ID
-  # ... 기타 FSx 생성 옵션 ...
+reclaimPolicy: Retain # PVC 삭제 시 FSx는 유지 (안전)
+volumeBindingMode: Immediate
 ```
+워크로드에서 사용할 PersistentVolumeClaim을 생성한다.
+```
+
+```
+
 
 ### 4단계: 애플리케이션 파드에서 사용 ###
 ```
