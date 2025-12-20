@@ -202,3 +202,8 @@ fi_info -p efa
 ### 3. NCCL 통신 테스트 (다중 노드 시) ###
 만약 노드를 2대 이상 띄웠다면, AWS NCCL Test 도구를 사용하여 실제 노드 간 네트워크 대역폭(Bandwidth)을 측정할 수 있습니다.
 
+## 참고 ##
+* ec2nodeclass yaml 스팩 확인
+``` 
+kubectl explain ec2nodeclass.spec
+```
