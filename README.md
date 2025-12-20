@@ -47,6 +47,9 @@
    - S3 Data Upload -> trigger Spark Curation on AWS Graviton4 -> trigger LLM training
    - 데이터 전처리 단계와 방법에 대해서 다룬다.
      - /w spark job 
+
+* 커스텀 커테이너 이미지 만들기
+* 모델 성능 평가
        
 * [C12. CPU 분산 훈련]
    
