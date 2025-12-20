@@ -3,7 +3,7 @@ data "aws_caller_identity" "current" {}
 
 # 2. S3 버킷 생성 (계정 ID 포함)
 resource "aws_s3_bucket" "data_bucket" {
-  bucket = "training-data-${data.aws_caller_identity.current.account_id}"
+  bucket = "training-on-eks-lustre-${data.aws_caller_identity.current.account_id}"
 }
 
 # 1. FSx for Lustre 생성
@@ -25,7 +25,7 @@ resource "aws_fsx_lustre_file_system" "lustre_file_system" {
 resource "aws_security_group" "fsx_sg" {
   name        = "fsx-lustre-sg"
   description = "Allow Lustre traffic"
-  vpc_id      = "vpc-12345678" # VPC ID 입력
+  vpc_id      = aws_vpc.main.id
 
   ingress {
     from_port   = 988
@@ -46,15 +46,12 @@ resource "aws_security_group" "fsx_sg" {
   }
 }
 
-# 현재 AWS 계정 정보를 가져오는 데이터 소스
-data "aws_caller_identity" "current" {}
-
 # (선택) S3와 데이터 동기화를 위한 설정
 resource "aws_fsx_data_repository_association" "lustre_file_system_s3" {
   file_system_id       = aws_fsx_lustre_file_system.lustre_file_system.id
   data_repository_path = "s3://training-on-eks-lustre-${data.aws_caller_identity.current.account_id}"
-  file_system_path     = "/"                  # S3 버킷을 Lustre 파일 시스템에 마운트 했을때의 최상위 경로
-  batch_import_meta_data_on_create = true     # 파일 시스템이 생성되는 즉시 S3에 있는 파일들의 메타데이터를 Lustre 인덱스에 등록
+  file_system_path     = "/"                  # S3 버킷의 Lustre 파일 시스템 마운트 경로
+  batch_import_meta_data_on_create = true     # S3에 있는 파일들의 메타데이터를 Lustre 인덱스에 등록
 }
 
 
