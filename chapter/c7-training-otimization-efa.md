@@ -262,6 +262,27 @@ kubectl apply -f efa-test-pod.yaml
 kubectl exec -it efa-test-pod -- /bin/bash
 fi_info -p efa
 ```
+[결과]
+```
+provider: efa
+    fabric: efa-direct
+    domain: rdmap47s0-rdm
+    version: 201.0
+    type: FI_EP_RDM
+    protocol: FI_PROTO_EFA
+provider: efa
+    fabric: efa
+    domain: rdmap47s0-rdm
+    version: 201.0
+    type: FI_EP_RDM
+    protocol: FI_PROTO_EFA
+provider: efa
+    fabric: efa
+    domain: rdmap47s0-dgrm
+    version: 201.0
+    type: FI_EP_DGRAM
+    protocol: FI_PROTO_EFA
+```
 * 성공 시: provider: efa, fabric: efa와 같은 정보가 상세하게 출력됩니다.
 * 실패 시: fi_info 결과에 아무것도 나오지 않거나 에러가 발생합니다. (이 경우 보안 그룹의 아웃바운드 셀프 참조나 배치 그룹 설정을 다시 점검해야 합니다.)
 
