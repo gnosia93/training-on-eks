@@ -65,17 +65,59 @@ aws ec2 authorize-security-group-egress --group-id $SG_ID \
 또한 EFA 통신(OS bypass 방식)을 위해 해당 시큐리티 그룹은 자기 자신(Self-referencing)으로부터 들어오고 나가는 모든 트래픽을 허용해야 한다.
 이를 적용한 노드풀과 노드클래스를 아래와 같이 생성한다. 
 
+[efa-nodepool.yaml]
+```
+cat <<EOF > efa-nodepool.yaml
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
+metadata:
+  name: hpc-node-class
+spec:
+  amiFamily: AL2
+  role: "KarpenterNodeRole-MyCluster" # 실제 역할 이름으로 변경
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "my-cluster"
+  securityGroupSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "my-cluster"
+  # --- 배치 그룹 설정 부분 ---
+  placementGroupName: "karpenter-hpc-group"
+---
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: hpc-nodepool
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: hpc-node-class
+      requirements:
+        - key: "karpenter.k8s.aws/instance-category"
+          operator: In
+          values: ["c", "p", "g"]       # 클러스터 그룹에 적합한 컴퓨팅/GPU 인스턴스
+        - key: "karpenter.sh/capacity-type"
+          operator: In
+          values: ["on-demand"]         # 클러스터 배치는 안정성을 위해 온디맨드 권장
+      # 중요: 클러스터 배치 그룹은 단일 AZ 내에서만 작동하므로 하나만 지정
+      - key: "topology.kubernetes.io/zone"
+        operator: In
+        values: ["ap-northeast-2a"]
+EOF
 
+kubectl apply -f efa-nodepool.yaml
+```
 
-
-
-#### 2. 디바이스 플러그인 배포 #### 
+#### 3. 디바이스 플러그인 배포 #### 
 ```
 helm repo add eks https://aws.github.io/eks-charts
 helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
 ```
 
-#### 3. 파드 스펙(Pod Spec) 구성 #### 
+#### 4. 파드 스펙(Pod Spec) 구성 #### 
 ```
 resources:
   limits:
@@ -86,8 +128,7 @@ resources:
 
 컨테이너 이미지에는 EFA를 활용할 수 있는 MPI, NCCL과 같은 고성능 컴퓨팅(HPC) 라이브러리 및 도구가 설치되어 있어야 합니다. 컨테이너 내에서 FI_PROVIDER 환경 변수를 efa로 설정하는 것이 좋습니다. 
 
-
-#### 4. 동작 확인 ####
+#### 5. 동작 확인 ####
 * fi_info -p efa
 * nccl-tests (예: all_reduce_perf)를 실행할 때 NCCL_DEBUG=INFO를 함께 설정하여 노드 간 트래픽이 EFA 인터페이스를 타는지 확인
 * pytorch 에서 확인
