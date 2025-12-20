@@ -180,10 +180,28 @@ aws ec2 create-tags \
 			"Effect": "Allow",
 			"Action": "eks:DescribeCluster",
 			"Resource": "arn:aws:eks:${AWS_DEFAULT_REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
-		}
+		},
+ 		{
+            "Effect": "Allow",
+            "Action": [
+		        "iam:ListInstanceProfiles",
+		        "iam:GetInstanceProfile",
+		        "iam:CreateInstanceProfile",
+		        "iam:AddRoleToInstanceProfile",
+		        "iam:RemoveRoleFromInstanceProfile",
+		        "iam:DeleteInstanceProfile"
+		    ],
+            "Resource": "*"
+        }
 	]
 }
 ```
+
+### 3. 적용 방법 ###
+* AWS Console: IAM 대시보드에서 eksctl-training-on-eks-iamservice-role 역할을 찾아 인라인 정책을 추가하거나 기존 정책을 수정하세요.
+* eksctl 사용 시: iamServiceAccounts 설정 파일에 필요한 권한을 추가한 후 eksctl update iamserviceaccount 명령어를 실행하세요.
+
+
 * IAM Identity Mapping 
 ```
 eksctl create iamidentitymapping \
