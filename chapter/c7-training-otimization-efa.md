@@ -71,7 +71,7 @@ EC2 생성시 ENI 설정에서 InterfaceType=efa를 설정해야 하나 카펜�
 
 먼저 placement 그룹과 인스턴스 프로파일을 아래와 같이 생성한다. 
 ```
-VPC_AZ=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].ZoneName" --output text)
+export VPC_AZ=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].ZoneName" --output text)
 echo "placement-group az: ${VPC_AZ}"
 aws ec2 create-placement-group --group-name "training-on-eks" --strategy cluster
 
@@ -149,7 +149,7 @@ spec:
         # 중요: 클러스터 배치 그룹은 단일 AZ 내에서만 작동하므로 하나만 지정
         - key: "topology.kubernetes.io/zone"
           operator: In
-          values: [${VPC_AZ}]                       # ${VPC_AZ} 환경변수 값으로 대체    
+          values: ["${VPC_AZ}"]                       # ${VPC_AZ} 환경변수 값으로 대체    
       taints:                                       # efa-workload 테인트 생성
         - key: "efa-workload"
           value: "true"
