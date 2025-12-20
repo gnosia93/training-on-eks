@@ -184,12 +184,13 @@ aws ec2 create-tags \
  		{
             "Effect": "Allow",
             "Action": [
-		        "iam:ListInstanceProfiles",
-		        "iam:GetInstanceProfile",
 		        "iam:CreateInstanceProfile",
-		        "iam:AddRoleToInstanceProfile",
-		        "iam:RemoveRoleFromInstanceProfile",
-		        "iam:DeleteInstanceProfile"
+                "iam:DeleteInstanceProfile",
+                "iam:GetInstanceProfile",
+                "iam:TagInstanceProfile",
+                "iam:AddRoleToInstanceProfile",
+                "iam:RemoveRoleFromInstanceProfile",
+                "iam:ListInstanceProfiles"
 		    ],
             "Resource": "*"
         }
