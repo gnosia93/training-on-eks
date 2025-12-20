@@ -194,23 +194,25 @@ gpu-efa   gpu-efa     0       True    22m
 ```
 
 #### 2-3. 디바이스 플러그인 배포 #### 
+노드의 Taint 설정으로 인해서 데몬 파드가 랜딩하지 못하는 경우 있는 관계로 아래와 같이 모든 테인트를 무력화 시키는 오퍼레이터를 추가해 준다. (- operator: Exists)
+실제 해당 노드에서는 nvidia.com/gpu 및 vpc.amazonaws.com/efa 테인트가 존재한다. 
 ```
 helm repo add eks https://aws.github.io/eks-charts
 helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
 
-kubectl get ds -n kube-system
+kubectl patch ds aws-efa-k8s-device-plugin -n kube-system --type='json' -p='[
+  {"op": "add", "path": "/spec/template/spec/tolerations/-", "value": {"operator": "Exists"}}
+]'
+
+kubectl get ds aws-efa-k8s-device-plugin -n kube-system
 ```
 [결과]
 ``` 
-NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR              AGE
-aws-efa-k8s-device-plugin   0         0         0       0            0           <none>                     31m
-aws-node                    2         2         2       2            2           <none>                     4d22h
-ebs-csi-node                2         2         2       2            2           kubernetes.io/os=linux     4d10h
-ebs-csi-node-windows        0         0         0       0            0           kubernetes.io/os=windows   4d10h
-kube-proxy                  2         2         2       2            2           <none>                     4d22h
+NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
 ```
 
-#### 2-4. VPC CNI 설정 ####       <-------------- 이 설정은 보류하도록 한다... 
+#### 2-4. VPC CNI 설정 ####       <-------------- 이 설정은 보류하도록 한다... 이 설정이 필요한가?
 ```
 kubectl set env daemonset/aws-node -n kube-system ENABLE_EFA_SUPPORT=true
 kubectl get daemonset aws-node -n kube-system -o yaml | grep ENABLE_EFA_SUPPORT
