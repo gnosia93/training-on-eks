@@ -141,62 +141,51 @@ helm repo add eks https://aws.github.io/eks-charts
 helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
 ```
 
-#### 4. 파드 스펙(Pod Spec) 구성 #### 
+#### 4. 파드 생성 #### 
 ```
-resources:
-  limits:
-    vpc.amazonaws.com/efa: 1  # 요청할 EFA 장치 수
-  requests:
-    vpc.amazonaws.com/efa: 1
+apiVersion: v1
+kind: Pod
+metadata:
+  name: efa-test-pod
+  labels:
+    app: efa-test
+spec:
+  # 1. 앞에서 생성한 EFA 노드풀에 배치되도록 설정
+  nodeSelector:
+    karpenter.sh/nodepool: efa-nodepool
+    topology.kubernetes.io/zone: ap-northeast-2a # 배치 그룹 AZ 지정
+  
+  # 2. 노드풀에 설정한 테인트 허용
+  tolerations:
+    - key: "efa-workload"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+  containers:
+    - name: efa-container
+      # EFA 드라이버와 NCCL 테스트 도구가 포함된 이미지 사용 (NVIDIA 공식 이미지 권장)
+      image: nvcr.io/nvidia/pytorch:24.01-py3 
+      command: ["/bin/bash", "-c", "sleep infinity"]
+      resources:
+        limits:
+          # 3. EFA 장치를 파드에 직접 할당 (VPC CNI가 이 장치를 인식함)
+          vpc.amazonaws.com: 1
+          nvidia.com: 1 # GPU 인스턴스인 경우
+      securityContext:
+        # EFA 통신을 위해 메모리 잠금 권한 필요
+        capabilities:
+          add: ["IPC_LOCK"]
 ```
 
-컨테이너 이미지에는 EFA를 활용할 수 있는 MPI, NCCL과 같은 고성능 컴퓨팅(HPC) 라이브러리 및 도구가 설치되어 있어야 합니다. 컨테이너 내에서 FI_PROVIDER 환경 변수를 efa로 설정하는 것이 좋습니다. 
-
-#### 5. 동작 확인 ####
-* fi_info -p efa
-* nccl-tests (예: all_reduce_perf)를 실행할 때 NCCL_DEBUG=INFO를 함께 설정하여 노드 간 트래픽이 EFA 인터페이스를 타는지 확인
-* pytorch 에서 확인
-   * 환경변수 설정 
-   ```
-   export NCCL_DEBUG=INFO
-   export NCCL_DEBUG_SUBSYS=INIT,NET
-   ```
-   * 출력로그
-   ```
-   NCCL INFO NET/OFI Selected Provider is efa
-   NCCL INFO NET/OFI Running on P4d platform (P4d 등 특정 플랫폼 사용 시)
-   NCCL INFO NET/OFI Forcing AWS OFI ndev ... 
-   ```
-
-----
-
-## fi_getinfo: -61 (No data available) ##
-
-#### 1. EC2 인스턴스의 EFA 활성화 여부 확인 ####
-p4d.24xlarge 인스턴스라고 해서 자동으로 EFA가 켜지는 것은 아닙니다. 인스턴스 생성 시 네트워크 인터페이스(ENI) 설정에서 EFA가 'Enabled' 되어 있어야 합니다.
 ```
-aws ec2 describe-instances --filters "Name=tag:Name,Values=노드이름" \
---query "Reservations[*].Instances[*].NetworkInterfaces[*].InterfaceType"
+kubectl exec -it efa-test-pod -- /bin/bash
+fi_info -p efa
 ```
-만약 ["efa"]가 출력되지 않고 ["interface"]만 나온다면, 인스턴스 레벨에서 EFA가 비활성화된 것입니다
+* 성공 시: provider: efa, fabric: efa와 같은 정보가 상세하게 출력됩니다.
+* 실패 시: fi_info 결과에 아무것도 나오지 않거나 에러가 발생합니다. (이 경우 보안 그룹의 아웃바운드 셀프 참조나 배치 그룹 설정을 다시 점검해야 합니다.)
 
-#### 2. 보안 그룹(Security Group) 설정 (가장 흔한 원인) ####
-EFA는 통신을 위해 보안 그룹 내의 모든 트래픽이 자기 자신(Self-referencing)에게 허용되어야 합니다.
 
-해결 방법: 노드가 속한 보안 그룹의 Inbound와 Outbound 규칙에 다음을 추가하세요.
-* Type: All Traffic
-* Protocol: All
-* Port Range: All
-Source/Destination: 현재 보안 그룹 ID (예: sg-123456)를 그대로 입력
+#### 5. NCCL 통신 테스트 (다중 노드 시) ####
+만약 노드를 2대 이상 띄웠다면, AWS NCCL Test 도구를 사용하여 실제 노드 간 네트워크 대역폭(Bandwidth)을 측정할 수 있습니다.
 
-#### 3. Kubernetes Pod에 EFA 장치 할당 (Device Plugin) ####
-EFA 장치가 노드에 있더라도, Pod가 해당 장치를 사용할 수 있도록 Kubernetes Device Plugin이 설정되어야 하며, Pod 스펙에도 리소스 요청이 포함되어야 합니다.
-```
-resources:
-  limits:
-    vpc.amazonaws.com: 1 # EFA 장치를 Pod에 할당
-    nvidia.com: 8
-```
-Device Plugin 확인: 클러스터에 aws-efa-k8s-device-plugin이 실행 중인지 확인하세요.
-
-* EFA 설정이 복잡하다면, 테스트를 위해 우선 NCCL_DEBUG=INFO와 함께 NCCL_P2P_DISABLE=1 또는 NCCL_IB_DISABLE=1을 설정하여 TCP 모드로 통신이 되는지 먼저 확인해 볼 수도 있습니다. (단, 성능은 저하됩니다.)
