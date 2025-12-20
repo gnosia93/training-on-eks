@@ -112,7 +112,7 @@ spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-category"
           operator: In
-          values: ["c", "p", "g"]                   # capacity를 고려하여 c 타입도 포함
+          values: ["p", "g"]                        # p 와 g 타입
         - key: "karpenter.k8s.aws/instance-size"
           operator: In
           values: ["8xlarge", "12xlarge", "16xlarge", "24xlarge", "32xlarge", "48xlarge", "metal"]
@@ -121,7 +121,7 @@ spec:
           values: ["3"]                             # 4세대 이상(g4, g5, g6 등)만 사용 
         - key: "karpenter.sh/capacity-type"
           operator: In
-          values: ["on-demand"]                     # 클러스터 배치는 안정성을 위해 온디맨드 권장
+          values: ["on-demand", "spot"]                     
         # 중요: 클러스터 배치 그룹은 단일 AZ 내에서만 작동하므로 하나만 지정
         - key: "topology.kubernetes.io/zone"
           operator: In
@@ -152,8 +152,7 @@ metadata:
 spec:
   # 1. 앞에서 생성한 EFA 노드풀에 배치되도록 설정
   nodeSelector:
-    karpenter.sh/nodepool: efa-nodepool
-    topology.kubernetes.io/zone: ap-northeast-2a # 배치 그룹 AZ 지정
+    karpenter.sh/nodepool: gpu-efa
   
   # 2. 노드풀에 설정한 테인트 허용
   tolerations:
