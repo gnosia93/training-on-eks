@@ -75,11 +75,11 @@ spec:
 ### 2. 테스트 하기 ###
 #### 2-1. 애플리케이션 파드에서 사용 ####
 ```
-# pod-with-fsx.yaml 예시
+cat <<EOF > pod-fsx.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: app-using-fsx
+  name: pod-fsx
 spec:
   containers:
   - name: app
@@ -92,6 +92,9 @@ spec:
     - name: fsx-volume
       persistentVolumeClaim:
         claimName: fsx-pvc # 위에서 생성한 PVC 이름
+EOF
+
+kubectl apply -f pod-fsx.yaml
 ```
 
 #### 2-2. S3 연동 테스트 ####
@@ -100,12 +103,10 @@ echo "Hello FSx Lustre" > test-file.txt
 aws s3 cp test-file.txt s3://사용자-버킷-이름/
 
 # Pod 내부 접속
-kubectl exec -it <pod-name> -- /bin/bash
+kubectl exec -it pod-fsx -- /bin/bash
 
-# 마운트된 경로로 이동 (예: /data)
-cd /data
+cd /
 ls -l
-
 ```
 
 
