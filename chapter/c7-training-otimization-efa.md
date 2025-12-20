@@ -1,6 +1,6 @@
 ## EFA ##
 
-### 1. EFA를 지원하는 GPU 인스턴스 유형 ###
+### 1. EFA 지원 GPU 인스턴스 ###
 ```
 aws ec2 describe-instance-types \
     --filters Name=network-info.efa-supported,Values=true \
