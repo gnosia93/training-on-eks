@@ -276,4 +276,6 @@ kubectl explain ec2nodeclass.spec
 ```
 
 ## 레퍼런스 ##
+
+* https://github.com/aws/deep-learning-containers/blob/master/available_images.md
 * https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/node-efa.html
