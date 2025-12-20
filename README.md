@@ -14,8 +14,9 @@
 
 * C5. Observability 
    * [C5-1. GPU 모니터링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-gpu-monitoring.md)    
-   
    * [C5-2. 훈련 로그 모니터링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-log-monitoring.md)
+   * [C5-3. 연산 속도가 느린 GPU / 네트워크 카드 / 노드 식별](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-detect-perf-drop.md)
+  
      
 * [C6. FSDP로 LLM 훈련하기(싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)    
 
@@ -34,8 +35,7 @@
    - 복원
       - 컨테이너 / 노드 크래쉬
       - 모델 체크 포인팅
-   - [연산 속도가 느린 GPU / 네트워크 카드 / 노드 식별](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-detect-perf-drop.md)
-  
+   
 * [C9. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
 
 * [C10. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
