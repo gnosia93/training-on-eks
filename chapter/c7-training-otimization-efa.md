@@ -187,6 +187,7 @@ EKS 클러스터의 aws-node (VPC CNI)가 EFA를 지원하도록 설정되어야
 ### 3. EFA 테스트 ### 
 nodeSelector 를 이용하여 Karpenter가 관리하는 gpu-efa 노드풀을 사용하여 파드가 스케줄링되도록 한다 (특정 노드풀을 쓰도록 강제하는 방식)
 ```
+cat <EOF >> efa-test-pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -212,6 +213,7 @@ spec:
       securityContext:
         capabilities:                                   # EFA 통신을 위해 메모리 잠금 권한 필요
           add: ["IPC_LOCK"]
+EOF
 ```
 EFA는 하드웨어가 시스템 메모리에 직접 접근하여 데이터를 읽고 쓰는 RDMA(Remote Direct Memory Access) 기술을 사용한다. 통신에 사용되는 메모리 주소가 스왑 처리되어 디스크로 이동해버리면 하드웨어가 메모리를 찾지 못해 시스템 장애나 통신 에러가 발생합니다. IPC_LOCK은 해당 메모리를 RAM에 "고정"시켜 이 문제를 방지한다. 학습 데이터가 메모리에서 스왑 영역으로 넘어가면 다시 읽어올 때 엄청난 속도 저하(Latency)가 발생함으로 실시간으로 수 기가바이트의 파라미터를 교환해야 하는 FSDP 학습에서 메모리 고정은 일관된 고성능을 유지하기 위한 필수 조건이다. 
 * 메모리 제한: IPC_LOCK 권한을 주더라도 시스템의 ulimit (memlock) 제한이 낮으면 학습 중 오류가 발생할 수 있다. Karpenter의 EC2NodeClass에서 사용자 데이터(UserData)를 통해 sudo ulimit -s unlimited 및 ulimit -l unlimited 설정을 추가하는 것이 안전하다. 
