@@ -241,7 +241,7 @@ spec:
       effect: "NoSchedule"        
   containers:
     - name: efa-container                               # public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0 
-      image: public.ecr.aws/hpc-cloud/cuda-efa-nccl-tests           # EFA 드라이버와 NCCL 테스트 도구가 포함된 이미지 사용 (NVIDIA 공식 이미지 권장)
+      image: public.ecr.aws/hpc-cloud/nccl-tests:latest           # EFA 드라이버와 NCCL 테스트 도구가 포함된 이미지 사용 (NVIDIA 공식 이미지 권장)
       command: ["/bin/bash", "-c", "sleep infinity"]
       resources:
         limits:
