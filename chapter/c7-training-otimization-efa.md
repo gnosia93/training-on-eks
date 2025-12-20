@@ -72,7 +72,7 @@ EC2 생성시 ENI 설정에서 InterfaceType=efa를 설정해야 하나 카펜�
 [efa-nodepool.yaml]
 ```
 VPC_AZ=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].ZoneName" --output text)
-echo "vpc az:${VPC_AZ}"
+echo "placement-group az: ${VPC_AZ}"
 aws ec2 create-placement-group --group-name "training-on-eks" --strategy cluster
 
 cat <<EOF > efa-nodepool.yaml
