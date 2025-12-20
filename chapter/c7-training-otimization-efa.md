@@ -55,10 +55,12 @@ echo $NODE_SG_ID
 # 아웃바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
 # cf) 인바운드의 경우 클러스터를 생성하는 시점에 자동으로 설정되어져 있다. 
 aws ec2 authorize-security-group-egress \
-    --group-id $NODE_SG_ID \
-    --protocol all \                  # 모든 프로토콜 - FA가 사용하는 커스텀 프로토콜(SRD 등)이 일반적인 포트 번호 개념과 다르게 동작
-    --port -1 \                       # 모든 포트
-    --source-group ${NODE_SG_ID}      # 자기 자신을 명시
+    --group-id $NODE_SG_ID --protocol all \
+    --source-group ${NODE_SG_ID}
+```
+아래와 같은 오류가 발생하는 경우, EFA를 위한 아웃 바운드 규칙이 이미 eks 클러스터의 노드 시큐리티 그룹에 설정되어져 있다는 의미로, 다음단계로 진행하면 된다. 
+```
+An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecurityGroupEgress operation: the specified rule "peer: sg-0856697271a3b5fad, ALL, ALLOW" already exists
 ```
 
 #### 2. 카펜터 노드풀 생성 ####
