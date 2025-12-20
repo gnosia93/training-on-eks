@@ -98,14 +98,18 @@ spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-category"
           operator: In
-          values: ["c", "p", "g"]       # 클러스터 그룹에 적합한 컴퓨팅/GPU 인스턴스
+          values: ["c", "p", "g"]       # 클러스터 그룹에 적합한 컴퓨팅/GPU 인스턴스   <---- 좀더 명확하게 수정해야 한다.
         - key: "karpenter.sh/capacity-type"
           operator: In
           values: ["on-demand"]         # 클러스터 배치는 안정성을 위해 온디맨드 권장
-      # 중요: 클러스터 배치 그룹은 단일 AZ 내에서만 작동하므로 하나만 지정
-      - key: "topology.kubernetes.io/zone"
-        operator: In
-        values: ["ap-northeast-2a"]     # 이거 환경 변수 수정 필요..바뀔수 있다.    
+        # 중요: 클러스터 배치 그룹은 단일 AZ 내에서만 작동하므로 하나만 지정
+        - key: "topology.kubernetes.io/zone"
+          operator: In
+          values: ["ap-northeast-2a"]     # 이거 환경 변수 수정 필요..바뀔수 있다.    
+      taints:
+        - key: "efa-workload"
+          value: "true"
+          effect: NoSchedule
 EOF
 
 kubectl apply -f efa-nodepool.yaml
