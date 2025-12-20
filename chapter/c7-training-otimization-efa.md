@@ -81,8 +81,12 @@ kind: EC2NodeClass
 metadata:
   name: gpu-efa
 spec:
-  amiFamily: AL2
-  role: "KarpenterNodeRole-MyCluster" # 실제 역할 이름으로 변경
+  role: "eksctl-KarpenterNodeRole-training-on-eks"
+  amiSelectorTerms:
+    # Required; when coupled with a pod that requests NVIDIA GPUs or AWS Neuron
+    # devices, Karpenter will select the correct AL2023 accelerated AMI variant
+    # see https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/
+    - alias: al2023@latest
   subnetSelectorTerms:
     - tags:
         karpenter.sh/discovery: "training-on-eks"
@@ -91,7 +95,11 @@ spec:
         karpenter.sh/discovery: "training-on-eks"
   # --- 배치 그룹 설정 부분 ---
   placementGroupName: "training-on-eks"
-  spec:
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 300Gi
+        volumeType: gp3
   userData: |
     #!/bin/bash
     # EFA 드라이버 확인 및 로드 (필요시)
@@ -126,10 +134,16 @@ spec:
         - key: "topology.kubernetes.io/zone"
           operator: In
           values: [${VPC_AZ}]                       # ${VPC_AZ} 환경변수 값으로 대체    
+      expireAfter: 720h # 30 * 24h = 720h
       taints:                                       # efa-workload 테인트 생성
         - key: "efa-workload"
           value: "true"
           effect: NoSchedule
+  limits:
+    cpu: 1000
+  disruption:
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 30m
 EOF
 
 kubectl apply -f efa-nodepool.yaml
