@@ -240,8 +240,8 @@ spec:
       operator: "Exists"                      # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크  
       effect: "NoSchedule"        
   containers:
-    - name: efa-container
-      image: nvcr.io/nvidia/pytorch:24.01-py3           # EFA 드라이버와 NCCL 테스트 도구가 포함된 이미지 사용 (NVIDIA 공식 이미지 권장)
+    - name: efa-container                               # public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0 
+      image: public.ecr.aws/hpc-cloud/cuda-efa-nccl-tests           # EFA 드라이버와 NCCL 테스트 도구가 포함된 이미지 사용 (NVIDIA 공식 이미지 권장)
       command: ["/bin/bash", "-c", "sleep infinity"]
       resources:
         limits:
