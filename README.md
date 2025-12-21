@@ -34,18 +34,6 @@
 
 * [C10. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
 
-
----   
-* [C11. MLOps /w Airflow]
-   - MLflow
-   - S3 Data Upload -> trigger LLM training
-   - S3 Data Upload -> trigger Spark Curation on AWS Graviton4 -> trigger LLM training
-   - 데이터 전처리 단계와 방법에 대해서 다룬다.
-     - /w spark job 
-
-* [C12. 커스텀 컨테이너 이미지 만들기]
-       
-* [C13. CPU 분산 훈련]
    
 ## 레퍼런스 ## 
 
