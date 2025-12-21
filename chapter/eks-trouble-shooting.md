@@ -1,9 +1,10 @@
 ## 로드밸런서 비정상적인 동작 - Timeout / 작동은 하나 Headlth 상태 Not Applicable ##
 #### 현상 ####
-로드 밸런서 타입의 서비스가 생성된 후, 상당히 오랜 시간이 흘러야 CLB 의 타겟노드들이 In-Service 상태로 바뀜, 하지만 Health status description 칼럼의 값은 Not applicable 상태, 즉 헬스 체킹이 실패하고 있는 상태로 유지됨.. 하지만 서비스는 가능한 상태..
+* OIDC 만 설정된 클러스터에서 로드 밸런서 타입의 서비스가 생성된 후, 상당히 오랜 시간이 흘러야 CLB 의 타겟노드들이 In-Service 상태로 바뀜, 하지만 Health status description 칼럼의 값은 Not applicable 상태, 즉 헬스 체킹이 실패하고 있는 상태로 유지됨.. 하지만 서비스는 가능한 상태..
 * In-tree 방식(현재 작동 중): 이 방식은 로드밸런서를 만들 때 "워커 노드의 IAM 역할(Node Role)"을 가로채서 사용합니다. Pod Identity 설정 여부와 상관없이 노드 자체에 권한이 있으면 작동합하는중. Deprecated 예정.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/clb-target.png)
-
+* POD Identity 방식에서는 아예 동작하지 않는다. 아래 해결책으로 해결해야 한다.
+  
 #### 해결책 (2025년 권장 아키텍처) ####
 Pod Identity 모드에서 정상적으로 로드밸런서를 쓰시려면 아래 단계를 밟으세요.
 * 애드온 설치: eks-pod-identity-agent 설치.
