@@ -39,7 +39,7 @@ helm version
 
 ### 1. 환경 설정 ###
 ```
-export REGION=$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].RegionName' --output text)
+export AWS_REGION=$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].RegionName' --output text)
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export CLUSTER_NAME="training-on-eks"
 export K8S_VERSION="1.34"
@@ -56,7 +56,7 @@ aws ec2 describe-subnets \
     --output table
 
 SUBNET_IDS=$(aws ec2 describe-subnets \
-    --region "${REGION}" \
+    --region "${AWS_REGION}" \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
     --query "Subnets[*].AvailabilityZone" \
     --output text)
@@ -86,7 +86,7 @@ kind: ClusterConfig
 metadata:
   name: "${CLUSTER_NAME}"
   version: "${K8S_VERSION}"
-  region: "${REGION}"
+  region: "${AWS_REGION}"
 
 vpc:
   id: "${VPC_ID}"                    
@@ -193,7 +193,7 @@ aws ec2 create-tags \
 			"Sid": "VisualEditor0",
 			"Effect": "Allow",
 			"Action": "eks:DescribeCluster",
-			"Resource": "arn:aws:eks:${REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
+			"Resource": "arn:aws:eks:${AWS_REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
 		},
  		{
             "Effect": "Allow",
