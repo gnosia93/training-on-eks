@@ -101,3 +101,36 @@ spec:
     maxRestarts: 3
 ```
 
+## worker 노드만 구성 ##
+PyTorchJob에서 Master와 Worker를 구분하여 설정하는 방식은 과거의 mpirun이나 구형 분산 학습 방식의 유산이며, torchrun과 ElasticPolicy를 사용하는 현대적인 방식에서는 모든 노드를 Worker로만 구성하는 것이 권장됩니다.
+그 이유는 다음과 같습니다.
+
+#### 1. torchrun의 랑데뷰 시스템 때문 ####
+torchrun 기반의 탄력적 학습(Elastic Training)에서는 특정 노드가 고정된 마스터 역할을 수행하지 않습니다. 대신, 랑데뷰 백엔드(c10d 또는 etcd)를 통해 어떤 노드가 'Rank 0'이 될지 동적으로 결정합니다.
+Worker 5개로 구성 시: 5개의 포드가 모두 동일한 권한을 가지며, 그중 먼저 랑데뷰에 도달하거나 선정된 노드가 자동으로 Rank 0 역할을 수행합니다.
+* 이점: 특정 '마스터 포드'가 죽었을 때 전체 작업이 불능 상태에 빠지는 것을 방지하고, 어떤 포드가 죽더라도 남은 포드들끼리 재결합이 가능합니다.
+
+#### 2. PyTorchJob 설정 가이드 ####
+Kubeflow 공식 문서에 따르면, elasticPolicy를 사용할 때는 다음과 같이 구성하는 것이 정석입니다.
+* Master 섹션: 생략합니다.
+* Worker 섹션: 전체 노드 수(replicas: 5)를 입력합니다.
+* 결과: Kubernetes는 동일한 사양의 포드 5개를 생성하며, 이들은 torchrun을 통해 하나의 그룹으로 묶입니다.
+
+```
+spec:
+  pytorchReplicaSpecs:
+    Worker:              # Master 없이 Worker만 정의
+      replicas: 5        # 총 5개의 노드 사용
+      template:
+        spec:
+          containers:
+            - name: pytorch
+              image: your-training-image
+              command: ["torchrun"] # torchrun이 내부적으로 Rank 할당
+  elasticPolicy:
+    minReplicas: 5
+    maxReplicas: 5
+    rdzvBackend: c10d     # Pod 간 통신을 위해 Kubernetes Service 활용
+```
+
+
