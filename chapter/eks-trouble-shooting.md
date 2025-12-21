@@ -1,5 +1,8 @@
 ## EKS 보안 그룹 ##
 
+eksctl 로 클러스터를 생성하는 경우 EKS 클러스터 보안 그룹에 karpenter.sh/discovery 와 kubernetes.io/cluster/${CLUSTER_NAME} 모두 자동으로 기록되어 진다.
+카펜터에서 시큐리티 그룹 참조시 둘 중 하나를 사용하면 된다. 
+
 ### 1. eksctl에서 아무 설정도 안 하면 생기는 일 ###
 * 클러스터 보안 그룹(Shared SG) 자동 생성: eksctl이 443, 10250 및 노드 간 통신 규칙이 완벽히 세팅된 보안 그룹을 만듭니다 [1, 2].
 * 태그 자동 부여: 이 보안 그룹에는 kubernetes.io/cluster/<name>: owned 태그가 자동으로 붙습니다 [2].
@@ -20,6 +23,36 @@ cluster.yaml에서 보안 그룹 관련 코드를 추가하지 않는 것은 "AW
 * 장점: 설정 오류로 인해 노드가 NotReady에 빠질 위험이 거의 없습니다.
 * 추가 작업: 나중에 특정 DB나 외부 서비스에 접속해야 할 때만 별도의 보안 그룹을 만들어 attachIDs로 추가해 주시면 됩니다.
 결론적으로, 보안 그룹 부분은 아무것도 건드리지 않고 owned 태그로 카펜터를 연결하는 것이 2025년 현재 가장 깔끔한 베스트 프랙티스입니다.
+
+### 4. 부연설명 ###
+
+혹시나 클러스터 시큐리티 그룹에 karpenter.sh/discovery 태깅이 없는 경우 아래 스크립트를 돌리면 된다.
+
+* karpenter.sh/discovery 태깅
+클러스터 생성시 만들어진 시큐리티 그룹에 karpenter.sh/discovery={cluster name} 로 태깅한다.
+카펜터가 신규 노드를 프로비저닝 하면, 이 값으로 태킹된 시큐리티 그룹을 찾아 신규 노드에 할당하게 된다.  
+노드가 위치하게 되는 서브넷 역시 동일 매커니즘으로 동작하는데, 테라폼에서 이미 karpenter.sh/discovery={cluster name} 태깅을 완료하였다. 
+```
+NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" \
+    --query 'nodegroups[0]' --output text)
+
+LAUNCH_TEMPLATE=$(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" \
+    --nodegroup-name "${NODEGROUP}" --query 'nodegroup.launchTemplate.{id:id,version:version}' \
+    --output text | tr -s "\t" ",")
+
+SECURITY_GROUPS=$(aws eks describe-cluster \
+    --name "${CLUSTER_NAME}" --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
+
+SECURITY_GROUPS="$(aws ec2 describe-launch-template-versions \
+    --launch-template-id "${LAUNCH_TEMPLATE%,*}" --versions "${LAUNCH_TEMPLATE#*,}" \
+    --query 'LaunchTemplateVersions[0].LaunchTemplateData.[NetworkInterfaces[0].Groups||SecurityGroupIds]' \
+    --output text)"
+
+aws ec2 create-tags \
+    --tags "Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}" \
+    --resources "${SECURITY_GROUPS}"
+```
+```
 
 
 
