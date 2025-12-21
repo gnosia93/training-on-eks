@@ -5,14 +5,14 @@ AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완�
 ### 1. 구성하기 ###
 #### 1-1. Amazon FSx for Lustre 설치 #### 
 ```
-CLUSTER_NAME="training-on-eks"
-REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
-ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
+export CLUSTER_NAME="training-on-eks"
+export REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
 
 # 첫 번째 프라이빗 서브넷 ID 가져오기
-SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" "Name=tag:Name,Values=*priv-subnet-1*" --query "Subnets[0].SubnetId" --output text)
-BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
+export SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" "Name=tag:Name,Values=*priv-subnet-1*" --query "Subnets[0].SubnetId" --output text)
+export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
 
 echo "Using VPC: ${VPC_ID}, Subnet: ${SUBNET_ID}, Bucket: ${BUCKET_NAME}"
 
@@ -78,9 +78,9 @@ helm repo add aws-fsx-csi-driver kubernetes-sigs.github.io
 helm repo update
 
 helm install fsx-csi-driver --namespace fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
---set image.repository=602401143452.dkr.ecr.ap-northeast-2.amazonaws.com, \
+--set image.repository=602401143452.dkr.ecr.${REGION}.amazonaws.com/eks/aws-fsx-csi-driver, \
 controller.serviceAccount.name=fsx-csi-driver-controller-sa, \
-controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=FSx_Lustre_CSI_Driver_Role
+controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"==arn:aws:iam::${ACCOUNT_ID}:role/AmazonEKS_FSx_Lustre_CSI_Driver_Role
 ```
 
 #### 1-3. StorageClass 및 Persistent Volume Claim (PVC) 배포 ####
