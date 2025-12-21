@@ -199,6 +199,13 @@ cd /
 ls -l
 ```
 
+```
+nc -zv fs-04cb64a224a31f75d.fsx.ap-northeast-2.amazonaws.com 988
+```
+
+
+
+
 #### 오류메시지 ####
 ```
 Warning  FailedMount  25s (x2 over 2m6s)  kubelet            MountVolume.SetUp failed for volume "fsx-pv" : rpc error: code = Internal desc = Could not mount "fs-04cb64a224a31f75d.fsx.ap-northeast-2.amazonaws.com@tcp:/ddyezbev" at "/var/lib/kubelet/pods/54547989-658e-4990-90f5-e98ef9634e87/volumes/kubernetes.io~csi/fsx-pv/mount": mount failed: exit status 22
