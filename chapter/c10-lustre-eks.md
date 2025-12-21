@@ -81,7 +81,7 @@ helm repo update
 helm install fsx-csi-driver --namespace fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
 --set image.repository=602401143452.dkr.ecr.${AWS_REGION}.amazonaws.com/eks/aws-fsx-csi-driver, \
 controller.serviceAccount.name=fsx-csi-driver-controller-sa, \
-controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"==arn:aws:iam::${ACCOUNT_ID}:role/AmazonEKS_FSx_Lustre_CSI_Driver_Role
+controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"==arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}
 ```
 
 #### 1-3. StorageClass 및 Persistent Volume Claim (PVC) 배포 ####
