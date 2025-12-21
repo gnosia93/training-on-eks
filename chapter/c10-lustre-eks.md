@@ -3,9 +3,66 @@
 AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완전 관리형 서비스인 Amazon FSx for Lustre 와 FSx for Lustre CSI(Container Storage Interface) 드라이버를 활용하여 쿠버네티스 클러스터에 통합하는 것이다.
 
 ### 1. 구성하기 ###
-#### 1-1. Amazon FSx for Lustre 설치 확인 #### 
+#### 1-1. Amazon FSx for Lustre 설치 #### 
 ```
-aws cli... 
+CLUSTER_NAME="training-on-eks"
+REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
+
+# 첫 번째 프라이빗 서브넷 ID 가져오기
+SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" "Name=tag:Name,Values=*priv-subnet-1*" --query "Subnets[0].SubnetId" --output text)
+BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
+
+echo "Using VPC: ${VPC_ID}, Subnet: ${SUBNET_ID}, Bucket: ${BUCKET_NAME}"
+
+# S3 버킷 생성
+aws s3 mb s3://${BUCKET_NAME} --region ${REGION}
+
+# 시큐리티 그룹 생성 및 포트 오픈
+FSX_SG_ID=$(aws ec2 create-security-group --group-name fsx-lustre-sg --description "Allow Lustre traffic" --vpc-id ${VPC_ID} --query GroupId --output text)
+aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} --protocol tcp --port 988 --self
+# EKS 노드 그룹 보안 그룹에서 988 허용 (필요 시 추가)
+
+# FSx for Lustre 생성 (SCRATCH_2, 1200 GiB)
+FSX_ID=$(aws fsx create-file-system \
+    --file-system-type LUSTRE \
+    --storage-capacity 1200 \
+    --subnet-ids ${SUBNET_ID} \
+    --security-group-ids ${FSX_SG_ID} \
+    --lustre-configuration "DeploymentType=SCRATCH_2,ImportPath=s3://${BUCKET_NAME},ExportPath=s3://${BUCKET_NAME}/export,AutoImportPolicy=NEW_CHANGED" \
+    --query "FileSystem.FileSystemId" --output text)
+
+echo "FSx File System Creating: $FSX_ID"
+
+# IAM 역할(IRSA) 생성 (eksctl 활용)
+# 이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 주석 처리를 한 번에 수행합니다.
+eksctl create iamserviceaccount \
+    --name fsx-csi-driver-controller-sa \
+    --namespace fsx-csi-driver \
+    --cluster ${CLUSTER_NAME} \
+    --role-name "FSx_Lustre_CSI_Driver_Role" \
+    --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonFSxLustreCSIDriverPolicy \
+    --approve \
+    --override-existing-serviceaccounts
+
+# 6. 커스텀 S3 접근 정책 생성 및 연결
+cat <<EOF > s3-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [{
+        "Effect": "Allow",
+        "Action": ["s3:GetBucketLocation","s3:ListBucket","s3:GetBucketAcl","s3:GetObject","s3:GetObjectTagging","s3:PutObject","s3:DeleteObject"],
+        "Resource": ["arn:aws:s3:::${BUCKET_NAME}","arn:aws:s3:::${BUCKET_NAME}/*"]
+    }]
+}
+EOF
+
+S3_POLICY_ARN=$(aws iam create-policy --policy-name FSxLustreS3IntegrationPolicy --policy-document file://s3-policy.json --query Policy.Arn --output text)
+aws iam attach-role-policy --role-name "FSx_Lustre_CSI_Driver_Role" --policy-arn $S3_POLICY_ARN
+
+echo "Setup Complete!"
+echo "FSx ID: ${FSX_ID}"
 ```
 
 #### 1-2. Amazon FSx CSI 드라이버 설치 #### 
