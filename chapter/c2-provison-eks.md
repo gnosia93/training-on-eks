@@ -40,6 +40,7 @@ helm version
 ### 1. 환경 설정 ###
 ```
 export REGION=$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].RegionName' --output text)
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export CLUSTER_NAME="training-on-eks"
 export K8S_VERSION="1.34"
 export KARPENTER_VERSION="1.8.1"
