@@ -94,17 +94,17 @@ vpc:
     private:                                 # 프라이빗 서브넷에 데이터플레인 설치
 $(cat SUBNET_IDS)
 
-#addons:
-#  - name: vpc-cni
-#    podIdentityAssociations:
-#      - serviceAccountName: aws-node
-#        namespace: kube-system
-#        permissionPolicyARNs: 
-#          - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
-#  - name: eks-pod-identity-agent
-#  - name: metrics-server
-#  - name: kube-proxy
-#  - name: coredns
+addons:
+  - name: vpc-cni
+    podIdentityAssociations:
+      - serviceAccountName: aws-node
+        namespace: kube-system
+        permissionPolicyARNs: 
+          - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+  - name: eks-pod-identity-agent
+  - name: metrics-server
+  - name: kube-proxy
+  - name: coredns
 
 managedNodeGroups:                           # 관리형 노드 그룹
   - name: ng-arm
