@@ -39,7 +39,7 @@ helm version
 
 ### 1. 환경 설정 ###
 ```
-export AWS_DEFAULT_REGION="ap-northeast-2"
+export REGION=$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].RegionName' --output text)
 export CLUSTER_NAME="training-on-eks"
 export K8S_VERSION="1.34"
 export KARPENTER_VERSION="1.8.1"
@@ -55,7 +55,7 @@ aws ec2 describe-subnets \
     --output table
 
 SUBNET_IDS=$(aws ec2 describe-subnets \
-    --region "${AWS_DEFAULT_REGION}" \
+    --region "${REGION}" \
     --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
     --query "Subnets[*].AvailabilityZone" \
     --output text)
@@ -85,7 +85,7 @@ kind: ClusterConfig
 metadata:
   name: "${CLUSTER_NAME}"
   version: "${K8S_VERSION}"
-  region: "${AWS_DEFAULT_REGION}"
+  region: "${REGION}"
 
 vpc:
   id: "${VPC_ID}"                    
