@@ -25,8 +25,6 @@ FSX_SG_ID=$(aws ec2 create-security-group --group-name fsx-lustre-sg \
 aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} \
     --protocol tcp --port 988  --source-group ${FSX_SG_ID}
 
-# EKS 노드 그룹 보안 그룹에서 988 허용 (필요 시 추가)
-
 # FSx for Lustre 생성 (SCRATCH_2, 1200 GiB)
 FSX_ID=$(aws fsx create-file-system \
     --file-system-type LUSTRE \
