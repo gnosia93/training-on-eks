@@ -263,6 +263,12 @@ spec:
 kubectl apply -f nginx.yaml
 ```
 
+## 참고 ##
+* 클러스터 삭제
+```
+eksctl delete cluster -f cluster.yaml
+```
+
 ## 레퍼런스 ##
 
 * [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
