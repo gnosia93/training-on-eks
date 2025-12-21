@@ -7,10 +7,10 @@ aws iam list-instance-profiles-for-role \
     --output text
 
 aws iam remove-role-from-instance-profile \
-    --instance-profile-name <확인한_프로파일_이름> \
+    --instance-profile-name EFAInstanceProfile \
     --role-name eksctl-KarpenterNodeRole-training-on-eks
 
-aws iam delete-instance-profile --instance-profile-name <확인한_프로파일_이름>
+aws iam delete-instance-profile --instance-profile-name EFAInstanceProfile
 
 aws iam delete-role --role-name eksctl-KarpenterNodeRole-training-on-eks
 
