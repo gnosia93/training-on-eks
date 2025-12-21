@@ -35,6 +35,18 @@ spec:
 * rdzv_endpoint 생략: PyTorchJob 컨트롤러가 각 포드에 PET_RDZV_ENDPOINT 환경 변수를 자동으로 넣어줍니다. 보통 첫 번째 워커 포드(worker-0)의 주소를 사용하도록 자동 설정됩니다.
 * rdzv_id 생략: 컨트롤러가 해당 Job의 고유 UID를 ID로 자동 주입하여 다른 Job과 섞이지 않게 해줍니다.
 
+#### 주입되는 환경 변수 (자동 설정됨) ####
+YAML을 실행하면 쿠버네티스는 각 워커 포드에 다음과 같은 환경 변수를 자동으로 설정하여 torchrun이 이를 읽게 합니다.
+* PET_NNODES: "5:5"
+* PET_NPROC_PER_NODE: "8"
+* PET_RDZV_BACKEND: "c10d"
+* PET_RDZV_ENDPOINT: "multi-node-train-worker-0:2379"
+
+#### 주의사항 ####
+* 공유 저장소 마운트: 5개 노드가 모두 동일한 체크포인트 파일에 접근해야 하므로, spec.template.spec.volumes 설정에 NFS나 AWS FSx 같은 공유 파일 시스템을 마운트하는 설정을 반드시 추가해야 합니다.
+* 리소스 할당: replicas: 5와 nvidia.com: 8을 설정하면 클러스터에 최소 40개의 GPU 여유 자원이 있어야 학습이 시작됩니다.
+
+이 방식이 현재 쿠버네티스 환경에서 torchrun을 사용하는 표준(Best Practice)입니다.
 
 
 
