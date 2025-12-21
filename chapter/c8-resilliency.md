@@ -28,3 +28,9 @@ HyperPod 위에서 torchrun을 쓰면 일반 EKS보다 더 강력해집니다.
 #### 요약 ####
 torchrun은 "통신 그룹을 다시 묶어주는 소프트웨어적 접착제"이고, EKS(HyperPod)는 "죽은 포드를 다시 살려내고 하드웨어를 제공하는 인프라 엔진"입니다. 이 두 개가 결합되어야만 진정한 의미의 Fault-tolerant 분산 학습이 완성됩니다.
 관련하여 더 자세한 구현 예시는 PyTorch Elastic 공식 문서에서 확인하실 수 있습니다.
+
+
+## 레퍼런스 ##
+
+* [Building Resilience for Large-Scale AI Training: GPU Management](https://www.youtube.com/watch?v=iam7A5peA5U)
+* 
