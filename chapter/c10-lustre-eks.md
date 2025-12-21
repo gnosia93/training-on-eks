@@ -75,7 +75,7 @@ Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배�
 AWS FSx CSI 드라이버의 이미지는 각 리전별 AWS 전용 ECR 레포지토리에서 가져와야 한다.(image.repository)
 ```
 kubectl create namespace fsx-csi-driver
-helm repo add aws-fsx-csi-driver kubernetes-sigs.github.io/aws-fsx-csi-driver
+helm repo add aws-fsx-csi-driver https://kubernetes-sigs.github.io/aws-fsx-csi-driver
 helm repo update
 
 helm install fsx-csi-driver --namespace fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
