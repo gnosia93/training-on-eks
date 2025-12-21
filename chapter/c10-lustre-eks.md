@@ -6,7 +6,7 @@ AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완�
 #### 1-1. Amazon FSx for Lustre 설치 #### 
 ```
 export CLUSTER_NAME="training-on-eks"
-export REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
+export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
 
