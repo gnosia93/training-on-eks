@@ -30,6 +30,7 @@
    - [복원](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-resilliency.md)
       - 컨테이너 / 노드 크래쉬
       - 모델 체크 포인팅
+   - [EKS 오토 리커버리](https://docs.aws.amazon.com/eks/latest/userguide/node-health.html) 
 * [C9. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
 
 * [c10. 커스텀 컨테이너 이미지]
