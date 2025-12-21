@@ -1,5 +1,8 @@
 ## 클러스터 생성시 카펜터 설치 실패 ##
+#### 원인 ####
+eksctl-KarpenterNodeRole-training-on-eks 지워지지 않고 남아 있어서 발생함
 
+#### 해결방법 ####
 ```
 aws iam list-instance-profiles-for-role \
     --role-name eksctl-KarpenterNodeRole-training-on-eks \
