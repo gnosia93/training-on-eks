@@ -98,6 +98,7 @@ addons:
   - name: vpc-cni
     podIdentityAssociations:
       - serviceAccountName: aws-node
+        namespace: kube-system
         permissionPolicyARNs: 
           - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
   - name: eks-pod-identity-agent
