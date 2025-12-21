@@ -78,10 +78,12 @@ kubectl create namespace fsx-csi-driver
 helm repo add aws-fsx-csi-driver https://kubernetes-sigs.github.io/aws-fsx-csi-driver
 helm repo update
 
-helm install fsx-csi-driver --namespace fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
---set image.repository=602401143452.dkr.ecr.${AWS_REGION}.amazonaws.com/eks/aws-fsx-csi-driver, \
-controller.serviceAccount.name=fsx-csi-driver-controller-sa, \
-controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"==arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}
+helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
+    --namespace fsx-csi-driver \
+    --set image.repository=602401143452.dkr.ecr.${AWS_REGION}.amazonaws.com/eks/aws-fsx-csi-driver \
+    --set controller.serviceAccount.create=false \
+    --set controller.serviceAccount.name=fsx-csi-driver-controller-sa \
+    --set controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}
 ```
 
 #### 1-3. StorageClass 및 Persistent Volume Claim (PVC) 배포 ####
