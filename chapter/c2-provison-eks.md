@@ -228,6 +228,7 @@ kubectl describe configmap aws-auth -n kube-system
 ## nginx 실행해 보기 ##
 [nginx.yaml]
 ```
+cat <<EOF > nginx.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -271,6 +272,7 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
+EOF
 ```
 ```
 kubectl apply -f nginx.yaml
