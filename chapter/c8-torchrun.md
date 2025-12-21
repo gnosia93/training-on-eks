@@ -77,3 +77,27 @@ def main():
 * 공유 저장소(NFS 등)를 쓰는 것이 가장 안전하고 편리합니다. 
 * 노드가 재시작될 때 자동으로 ckpt_path를 확인하여 load_state_dict를 수행하는 로직이 코드에 포함되어야 합니다.
 * 만약 공유 저장소가 없다면, 노드 장애 시 해당 노드에 있던 데이터는 못 쓰게 되므로 외부 클라우드 저장소(S3 등)에 백업하는 절차가 필요합니다.
+
+## 장애 복구 시나리오 (Kubernetes + PyTorchJob) ##
+* 장애 발생: 한 개의 워커 포드가 노드 문제로 종료됩니다.
+* 랑데뷰 중단: 나머지 노드들의 torchrun 프로세스가 장애를 감지하고 중단됩니다.
+* 포드 재생성: PyTorchJob 컨트롤러가 죽은 포드를 확인하고 새로운 포드를 띄웁니다.
+* 재결합(Rendezvous): 모든 포드(신규 포드 포함)가 다시 랑데뷰 포인트에 모여 WORLD_SIZE를 확인합니다.
+* 학습 재개: 코드가 마지막 체크포인트를 로드하여 학습을 이어갑니다. (공유 스토리지 필수)
+
+```
+apiVersion: "kubeflow.org/v1"
+kind: "PyTorchJob"
+metadata:
+  name: "elastic-train"
+spec:
+  pytorchReplicaSpecs:
+    Worker:
+      replicas: 4  # 전체 노드 수
+  elasticPolicy:
+    minReplicas: 4 # min/max를 동일하게 설정하여 고정 규모 유지
+    maxReplicas: 4
+    rdzvBackend: c10d # Kubernetes 내부 서비스 이름을 rdzvEndpoint로 사용
+    maxRestarts: 3
+```
+
