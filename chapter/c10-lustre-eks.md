@@ -67,7 +67,7 @@ echo "FSX ID: ${FSX_ID}"
 ```
 AVAILABLE 상태가 될 때까지 기다린다.
 ```
-aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].Status"
+aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].Lifecycle"
 ```
 
 #### 1-2. Amazon FSx CSI 드라이버 설치 #### 
