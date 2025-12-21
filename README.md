@@ -24,7 +24,7 @@
       - export NCCL_TOPO_FILE=/path/to/system.xml  
       - NVLINK&Switch / EFA / ENA / PCIe  /w docker
 
-* [C8. 분산 훈련 스케줄링 및 복원력]
+* [C8. 분산 훈련 스케줄링 및 복원력] <--- 복원력은 훈련잡 실패시 사용자의 개입을 최소화 할 수 있는냐가 관건.. 이게 하이퍼파드 없이 가능할지 ?
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
    - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)      
    - [복원](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-resilliency.md)
