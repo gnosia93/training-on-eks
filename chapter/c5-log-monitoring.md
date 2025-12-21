@@ -174,5 +174,8 @@ http://loki-gateway.loki.svc.cluster.local/
 ```
 
 
+## 레퍼런스 ##
+* https://grafana.com/docs/loki/latest/setup/install/helm/install-monolithic/
+
 
 
