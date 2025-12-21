@@ -20,10 +20,16 @@ echo "Using VPC: ${VPC_ID}, Subnet: ${SUBNET_ID}, Bucket: ${BUCKET_NAME}"
 aws s3 mb s3://${BUCKET_NAME} --region ${AWS_REGION}
 
 # 시큐리티 그룹 생성 및 포트 오픈
+NODE_SG_ID=$(aws eks describe-cluster --name ${CLUSTER_NAME} \
+    --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
+
 FSX_SG_ID=$(aws ec2 create-security-group --group-name fsx-lustre-sg \
     --description "Allow Lustre traffic" --vpc-id ${VPC_ID} --query GroupId --output text)
 aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} \
-    --protocol tcp --port 988  --source-group ${FSX_SG_ID}
+    --protocol tcp --port 988  --source-group ${NODE_SG_ID}
+aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} \
+    --protocol tcp --port 1018-1023 --source-group ${NODE_SG_ID}
+
 
 # FSx for Lustre 생성 (SCRATCH_2, 1200 GiB)
 FSX_ID=$(aws fsx create-file-system \
