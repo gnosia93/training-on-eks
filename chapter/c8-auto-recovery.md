@@ -1,3 +1,19 @@
+
+```
+aws eks create-addon \
+    --cluster-name <클러스터_이름> \
+    --addon-name eks-node-monitoring-agent \
+    --addon-version v1.0.0-eksbuild.1  # 2025년 최신 버전 확인 필요
+
+# 에이전트 포드 확인
+kubectl get pods -n kube-system | grep node-monitoring-agent
+
+```
+
+
+
+
+---
 2025년 기준 Amazon EKS의 노드 자동 복구(Node Auto-repair)는 한층 정교해진 모니터링 에이전트와 자동화된 교체 로직을 통해 클러스터의 가용성을 유지합니다. 상세 작동 원리와 주요 특징은 다음과 같습니다.
 
 ### 1. 작동 원리 및 프로세스 ###
