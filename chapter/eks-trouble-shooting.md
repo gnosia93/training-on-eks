@@ -1,3 +1,18 @@
+## 로드밸런서 비정상적인 동작 - Timeout / 작동은 하나 Headlth 상태 Not Applicable ##
+#### 현상 ####
+로드 밸런서 타입의 서비스가 생성된 후, 상당히 오랜 시간이 흘러야 CLB 의 타겟노드들이 In-Service 상태로 바뀜, 하지만 Health status description 칼럼의 값은 Not applicable 상태, 즉 헬스 체킹이 실패하고 있는 상태로 유지됨.. 하지만 서비스는 가능한 상태..
+* In-tree 방식(현재 작동 중): 이 방식은 로드밸런서를 만들 때 "워커 노드의 IAM 역할(Node Role)"을 가로채서 사용합니다. Pod Identity 설정 여부와 상관없이 노드 자체에 권한이 있으면 작동합하는중. 
+
+
+#### 해결책 (2025년 권장 아키텍처) ####
+Pod Identity 모드에서 정상적으로 로드밸런서를 쓰시려면 아래 단계를 밟으세요.
+* 애드온 설치: eks-pod-identity-agent 설치.
+* 컨트롤러 배포: helm으로 aws-load-balancer-controller 설치.
+* 권한 연결: eksctl create podidentityassociation으로 컨트롤러와 IAM Role 연결.
+* 서비스 수정: 어노테이션에 aws-load-balancer-type: external 추가 (NLB 생성 유도).
+요약하자면: Pod Identity를 쓰면 "노드 권한"을 사용하는 구식 방식이 막히는 것이 정상입니다. 따라서 그 권한을 정당하게 이어받을 전용 컨트롤러를 설치해야만 로드밸런서가 다시 동작하게 됩니다. AWS EKS Pod Identity 가이드를 참고하여 컨트롤러를 추가해 보시기 바랍니다.
+
+
 ## 클러스터 생성시 카펜터 설치 실패 ##
 #### 원인 ####
 eksctl-KarpenterNodeRole-training-on-eks 지워지지 않고 남아 있어서 발생함
