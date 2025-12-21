@@ -17,7 +17,7 @@ export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
 echo "Using VPC: ${VPC_ID}, Subnet: ${SUBNET_ID}, Bucket: ${BUCKET_NAME}"
 
 # S3 버킷 생성
-aws s3 mb s3://${BUCKET_NAME} --region ${REGION}
+aws s3 mb s3://${BUCKET_NAME} --region ${AWS_REGION}
 
 # 시큐리티 그룹 생성 및 포트 오픈
 FSX_SG_ID=$(aws ec2 create-security-group --group-name fsx-lustre-sg --description "Allow Lustre traffic" --vpc-id ${VPC_ID} --query GroupId --output text)
