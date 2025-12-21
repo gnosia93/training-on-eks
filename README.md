@@ -32,7 +32,9 @@
       - 모델 체크 포인팅
 * [C9. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
 
-* [C10. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
+* [c10. 커스텀 컨테이너 이미지]
+
+* [C11. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
 
    
 ## 레퍼런스 ## 
