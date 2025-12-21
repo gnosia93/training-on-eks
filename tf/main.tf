@@ -192,18 +192,15 @@ resource "aws_instance" "graviton_box" {
 
   user_data = <<_DATA
 #!/bin/bash
-# 1. code-server 설치 (최신 버전 자동 내려받기)
-# curl -fsSL https://code-server.dev/install.sh | sh
-
 # 2. ec2-user 권한으로 설정 파일 초기화 및 수정
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
-curl -fsSL https://code-server.dev/install.sh | sh
+curl -fsSL https://code-server.dev/install.sh | sh && sudo systemctl enable --now code-server@ec2-user
 
 # 설정 파일 경로 변수화
 CONFIG_PATH="/home/ec2-user/.config/code-server/config.yaml"
 
 # 서비스가 실행되지 않았더라도 폴더를 강제로 생성하여 설정 준비
-mkdir -p /home/ec2-user/.config/code-server
+# mkdir -p /home/ec2-user/.config/code-server
 
 # 설정 변경: 외부 접속 허용(0.0.0.0), 비밀번호 비활성화(auth: none)
 # 만약 파일이 없으면 새로 생성, 있으면 내용을 교체합니다.
@@ -215,10 +212,10 @@ EOF
 EC2_USER_SCRIPT
 
 # 3. 서비스 활성화 및 즉시 시작
-sudo systemctl enable --now code-server@ec2-user
+#sudo systemctl enable --now code-server@ec2-user
 
 # 4. 설정이 반영되도록 서비스 재시작
-sudo systemctl restart code-server@ec2-user
+#sudo systemctl restart code-server@ec2-user
 
 _DATA
 
