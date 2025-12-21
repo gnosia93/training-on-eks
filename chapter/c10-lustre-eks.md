@@ -43,7 +43,7 @@ eksctl create iamserviceaccount \
     --namespace fsx-csi-driver \
     --cluster ${CLUSTER_NAME} \
     --role-name "FSx_Lustre_CSI_Driver_Role" \
-    --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonFSxLustreCSIDriverPolicy \
+    --attach-policy-arn arn:aws:iam::aws:policy/AmazonFSxFullAccess \
     --approve \
     --override-existing-serviceaccounts
 
