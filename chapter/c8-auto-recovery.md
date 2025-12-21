@@ -32,3 +32,7 @@
 * Pod Disruption Budgets(PDB): 자동 복구 시에도 사용자가 설정한 PDB를 준수합니다. 서비스 가용성을 보장하기 위해 앱마다 최소 실행 단위(PDB)를 설정해두는 것이 권장됩니다.
 * 로그 및 감사: 모든 자동 복구 조치는 AWS CloudTrail이나 EKS 이벤트 로그에 기록되어 사후 분석이 가능합니다. 
 이 기능은 특히 관리자가 직접 인프라를 일일이 확인하기 어려운 대규모 클러스터나 GPU 기반의 AI 모델 학습 환경에서 운영 부담을 획기적으로 줄여줍니다. 
+
+## 레퍼런스 ##
+
+* https://docs.aws.amazon.com/eks/latest/userguide/node-health.html
