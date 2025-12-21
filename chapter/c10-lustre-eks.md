@@ -62,7 +62,11 @@ S3_POLICY_ARN=$(aws iam create-policy --policy-name FSxLustreS3IntegrationPolicy
 aws iam attach-role-policy --role-name "FSx_Lustre_CSI_Driver_Role" --policy-arn $S3_POLICY_ARN
 
 echo "Setup Complete!"
-echo "FSx ID: ${FSX_ID}"
+echo "FSX ID: ${FSX_ID}"
+```
+AVAILABLE 상태가 될 때까지 기다린다.
+```
+aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].Status"
 ```
 
 #### 1-2. Amazon FSx CSI 드라이버 설치 #### 
