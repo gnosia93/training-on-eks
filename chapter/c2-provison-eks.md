@@ -180,7 +180,7 @@ aws ec2 create-tags \
 			"Sid": "VisualEditor0",
 			"Effect": "Allow",
 			"Action": "eks:DescribeCluster",
-			"Resource": "arn:aws:eks:${AWS_DEFAULT_REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
+			"Resource": "arn:aws:eks:${REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
 		},
  		{
             "Effect": "Allow",
