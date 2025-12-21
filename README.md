@@ -31,6 +31,7 @@
       - 컨테이너 / 노드 크래쉬
       - 모델 체크 포인팅
    - [EKS 오토 리커버리](https://docs.aws.amazon.com/eks/latest/userguide/node-health.html)
+   - torchrun /w etcd or k8s backend 
    - 노드간의 체크 포인팅 데이터 전달 - P2P / bit torrent ??? 
 * [C9. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
 
