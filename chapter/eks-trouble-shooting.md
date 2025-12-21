@@ -1,7 +1,10 @@
 ## 클러스터 생성시 카펜터 설치 실패 ##
 
 ```
-aws iam list-instance-profiles-for-role --role-name eksctl-KarpenterNodeRole-training-on-eks
+aws iam list-instance-profiles-for-role \
+    --role-name eksctl-KarpenterNodeRole-training-on-eks \
+    --query 'InstanceProfiles[*].InstanceProfileName' \
+    --output text
 
 aws iam remove-role-from-instance-profile \
     --instance-profile-name <확인한_프로파일_이름> \
