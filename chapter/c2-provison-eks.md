@@ -134,12 +134,6 @@ EOF
 eksctl create cluster -f cluster.yaml
 ```
 
-#### 참고 - 클러스터 삭제 ####
-```
-eksctl delete cluster -f cluster.yaml
-```
-
-
 [결과]
 ```
 2025-12-15 04:51:25 [ℹ]  eksctl version 0.220.0
@@ -159,6 +153,10 @@ eksctl delete cluster -f cluster.yaml
 2025-12-15 05:09:32 [ℹ]  adding Karpenter to cluster training-on-eks
 2025-12-15 05:09:52 [ℹ]  kubectl command should work with "/home/ec2-user/.kube/config", try 'kubectl get nodes'
 2025-12-15 05:09:52 [✔]  EKS cluster "training-on-eks" in "ap-northeast-2" region is ready
+```
+#### 참고 - 클러스터 삭제 ####
+```
+eksctl delete cluster -f cluster.yaml
 ```
 
 클러스터 생성이 완료되면 아래 추가적인 억세스 설정 이 필요하다. 
