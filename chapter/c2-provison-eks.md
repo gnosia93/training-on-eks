@@ -172,7 +172,8 @@ aws ec2 create-tags \
 
 #### 2. 억세스 설정 ####
 카펜터 버전 1.8.1 (EKS 1.3.4) 에는 아래의 두가지 설정이 누락되어 있어서 패치가 필요하다. 패치를 하지 않는 경우 카펜터가 프러비저닝한 노드가 클러스터에 조인되지 않는다.  
-* eksctl-training-on-eks-iamservice-role 정책 추가 (OIDC 정책 누락)
+
+#### eksctl-training-on-eks-iamservice-role 에 정책 추가 (OIDC 정책 누락) ####
 ``` 
 {
 	"Version": "2012-10-17",
