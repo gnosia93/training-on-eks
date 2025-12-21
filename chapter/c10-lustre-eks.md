@@ -108,8 +108,9 @@ DNSNAME=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "Fil
 MOUNTNAME=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{MountName:LustreConfiguration.MountName}" --output text)
 ```
 
-동적 프로비저닝을 위해 StorageClass를 정의한다.  
+동적 프로비저닝을 위해 SC, PV, PVC를 생성한다.  
 ```
+cat << EOF > fsx-pvc.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -117,10 +118,7 @@ metadata:
 provisioner: fsx.csi.aws.com
 reclaimPolicy: Retain # PVC 삭제 시 FSx는 유지 (안전)
 volumeBindingMode: Immediate
-```
-
-PersistentVolume (PV) 생성한다.
-```
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -135,14 +133,11 @@ spec:
   storageClassName: fsx-sc
   csi:
     driver: fsx.csi.aws.com
-    volumeHandle: fs-xxxxxxxxxxxxxxxxx # 테라폼 결과물인 FSx ID
+    volumeHandle: ${FSxID}
     volumeAttributes:
-      dnsname: fs-xxxxxxxxxxxxxxxxx.fsx.ap-northeast-2.amazonaws.com # DNS 주소
-      mountname: "xxxxxxxx" # 테라폼 output에서 확인 가능한 Mount Name
-```
-
-PersistentVolumeClaim을 생성한다. Pod는 이 PVC를 통해 볼륨을 요청합니다.
-```
+      dnsname: ${DNSNAME}
+      mountname: ${MOUNTNAME}
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -155,6 +150,7 @@ spec:
     requests:
       storage: 1200Gi
   volumeName: fsx-pv # 위에서 정의한 PV와 수동 연결
+EOF
 ```
 
 ### 2. 테스트 하기 ###
