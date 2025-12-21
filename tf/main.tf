@@ -255,7 +255,7 @@ server {
 EOF
 
 systemctl enable nginx
-systemctl restart nginx
+systemctl start nginx
 _DATA
 
   tags = {
