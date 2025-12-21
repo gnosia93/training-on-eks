@@ -1,3 +1,28 @@
+## EKS 보안 그룹 ##
+
+### 1. eksctl에서 아무 설정도 안 하면 생기는 일 ###
+* 클러스터 보안 그룹(Shared SG) 자동 생성: eksctl이 443, 10250 및 노드 간 통신 규칙이 완벽히 세팅된 보안 그룹을 만듭니다 [1, 2].
+* 태그 자동 부여: 이 보안 그룹에는 kubernetes.io/cluster/<name>: owned 태그가 자동으로 붙습니다 [2].
+* 노드 그룹에 자동 적용: 작성하신 managedNodeGroups에도 withShared: true가 기본으로 적용되어, 노드들이 이 보안 그룹을 입고 태어납니다 [3].
+
+### 2. 카펜터(Karpenter) 설정과의 연결 ###
+이제 카펜터 설정(EC2NodeClass)에서 eksctl이만든 그 태그만 바라보게 하면 모든 것이 끝납니다.
+```
+# EC2NodeClass (카펜터 설정)
+spec:
+  securityGroupSelectorTerms:
+    - tags:
+        kubernetes.io/cluster/${CLUSTER_NAME}: "owned"
+```
+
+### 3. 결론: "최소한의 설정이 최고의 설정" ###
+cluster.yaml에서 보안 그룹 관련 코드를 추가하지 않는 것은 "AWS와 eksctl이 권장하는 표준 보안 아키텍처를 그대로 따르겠다"는 의미입니다.
+* 장점: 설정 오류로 인해 노드가 NotReady에 빠질 위험이 거의 없습니다.
+* 추가 작업: 나중에 특정 DB나 외부 서비스에 접속해야 할 때만 별도의 보안 그룹을 만들어 attachIDs로 추가해 주시면 됩니다.
+결론적으로, 보안 그룹 부분은 아무것도 건드리지 않고 owned 태그로 카펜터를 연결하는 것이 2025년 현재 가장 깔끔한 베스트 프랙티스입니다.
+
+
+
 ## 로드밸런서 비정상적인 동작 - Timeout / 작동은 하나 Headlth 상태 Not Applicable ##
 #### 현상 ####
 * OIDC 만 설정된 클러스터에서 로드 밸런서 타입의 서비스가 생성된 후, 상당히 오랜 시간이 흘러야 CLB 의 타겟노드들이 In-Service 상태로 바뀜, 하지만 Health status description 칼럼의 값은 Not applicable 상태, 즉 헬스 체킹이 실패하고 있는 상태로 유지됨.. 하지만 서비스는 가능한 상태..
