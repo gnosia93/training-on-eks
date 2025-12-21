@@ -134,6 +134,12 @@ EOF
 eksctl create cluster -f cluster.yaml
 ```
 
+#### 참고 - 클러스터 삭제 ####
+```
+eksctl delete cluster -f cluster.yaml
+```
+
+
 [결과]
 ```
 2025-12-15 04:51:25 [ℹ]  eksctl version 0.220.0
@@ -253,21 +259,11 @@ EOF
 kubectl apply -f nginx.yaml
 ```
 
-## 참고 ##
-* 클러스터 삭제
-```
-eksctl delete cluster -f cluster.yaml
-```
-
 ## 레퍼런스 ##
 
 * [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
 * [eksctl EKS 설치 예제](https://www.kubeai.org/installation/eks/)
 * [Enable an IAM User or IAM Role to access an EKS cluster](https://www.javierinthecloud.com/enable-an-iam-user-or-iam-role-to-access-an-eks-cluster/)
 
-
- ## todo ##
- * eksctl 로 클러스터를 생성하기 전에 시큐리티 그룹을 만들고, 그것으로 eks 에 붙인다.
- * discovery.sh.. 설정도 넣어야 한다.. 그렇게 하면 태깅이 불필요하게 된다. 
 
 
