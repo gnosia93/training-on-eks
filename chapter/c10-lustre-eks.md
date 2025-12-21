@@ -22,7 +22,9 @@ aws s3 mb s3://${BUCKET_NAME} --region ${AWS_REGION}
 # 시큐리티 그룹 생성 및 포트 오픈
 FSX_SG_ID=$(aws ec2 create-security-group --group-name fsx-lustre-sg \
     --description "Allow Lustre traffic" --vpc-id ${VPC_ID} --query GroupId --output text)
-aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} --protocol tcp --port 988 --self
+aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} \
+    --protocol tcp --port 988  --source-group ${FSX_SG_ID}
+
 # EKS 노드 그룹 보안 그룹에서 988 허용 (필요 시 추가)
 
 # FSx for Lustre 생성 (SCRATCH_2, 1200 GiB)
