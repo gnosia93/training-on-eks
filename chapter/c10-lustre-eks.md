@@ -68,6 +68,21 @@ echo "FSX ID: ${FSX_ID}"
 AVAILABLE 상태가 될 때까지 기다린다.
 ```
 aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].Lifecycle"
+
+aws fsx describe-file-systems \
+    --file-system-ids ${FSX_ID} \
+    --query "FileSystems[0].{FileSystemId:FileSystemId, DNSName:DNSName, MountName:LustreConfiguration.MountName}" \
+    --output table
+```
+[결과]
+```
+------------------------------------------------------------------------------------------------
+|                                      DescribeFileSystems                                     |
++--------------------------------------------------------+------------------------+------------+
+|                         DNSName                        |     FileSystemId       | MountName  |
++--------------------------------------------------------+------------------------+------------+
+|  fs-04cb64a224a31f75d.fsx.ap-northeast-2.amazonaws.com |  fs-04cb64a224a31f75d  |  ddyezbev  |
++--------------------------------------------------------+------------------------+------------+
 ```
 
 #### 1-2. Amazon FSx CSI 드라이버 설치 #### 
@@ -87,6 +102,12 @@ helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
 ```
 
 #### 1-3. StorageClass 및 Persistent Volume Claim (PVC) 배포 ####
+```
+FSxID=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{FileSystemId:FileSystemId}" --output text)
+DNSNAME=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{DNSName:DNSName}" --output text)
+MOUNTNAME=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{MountName:LustreConfiguration.MountName}" --output text)
+```
+
 동적 프로비저닝을 위해 StorageClass를 정의한다.  
 ```
 apiVersion: storage.k8s.io/v1
