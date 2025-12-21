@@ -184,7 +184,7 @@ kubectl apply -f pod-fsx.yaml
 #### 2-2. S3 연동 테스트 ####
 ```
 echo "Hello FSx Lustre" > test-file.txt
-aws s3 cp test-file.txt s3://사용자-버킷-이름/
+aws s3 cp test-file.txt s3://${BUCKET_NAME}/
 
 # Pod 내부 접속
 kubectl exec -it pod-fsx -- /bin/bash
