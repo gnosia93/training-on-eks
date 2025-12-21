@@ -225,13 +225,11 @@ resource "aws_instance" "x86_box" {
 
   user_data = <<_DATA
 #!/bin/bash
+dnf update -y
 dnf install -y nginx
 
-sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
-curl -fsSL https://code-server.dev/install.sh | sh && sudo systemctl enable --now code-server@ec2-user
-EC2_USER_SCRIPT
-
-sudo systemctl start code-server@ec2-user
+curl -fsSL code-server.dev | sh
+systemctl enable --now code-server@ec2-user
 
 cat <<EOF > /etc/nginx/conf.d/code-server.conf
 server {
@@ -242,16 +240,14 @@ server {
         proxy_pass http://127.0.0.1:8080;
         proxy_set_header Host \$host;
         proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection upgrade;
+        proxy_set_header Connection "upgrade";
         proxy_set_header Accept-Encoding gzip;
     }
 }
 EOF
 
-systemctl start nginx
 systemctl enable nginx
 systemctl restart nginx
-
 _DATA
 
   tags = {
