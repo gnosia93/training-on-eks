@@ -1,3 +1,19 @@
+## 클러스터 생성시 카펜터 설치 실패 ##
+
+```
+aws iam list-instance-profiles-for-role --role-name eksctl-KarpenterNodeRole-training-on-eks
+
+aws iam remove-role-from-instance-profile \
+    --instance-profile-name <확인한_프로파일_이름> \
+    --role-name eksctl-KarpenterNodeRole-training-on-eks
+
+aws iam delete-instance-profile --instance-profile-name <확인한_프로파일_이름>
+
+aws iam delete-role --role-name eksctl-KarpenterNodeRole-training-on-eks
+
+```
+
+
 ## 문제 Node Not Initialized ##
 Karpenter가 EC2 인스턴스를 성공적으로 생성하여 kubectl get nodes에는 나타나지만, Not Initialized 상태(또는 NoSchedule 테인트 유지)로 수 분 이상 머무는 이유는 크게 네트워크, 권한, 설정 세 가지 측면에서 발생합니다.
 2025년 기준, 특히 EKS 1.34 버전 환경에서 발생할 수 있는 주요 원인들은 다음과 같습니다.
