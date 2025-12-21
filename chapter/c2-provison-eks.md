@@ -157,30 +157,7 @@ eksctl create cluster -f cluster.yaml
 
 클러스터 생성이 완료되면 1/시큐리티 그룹 태깅과 2/억세스 설정 이 필요하다. 
 
-#### 1. 시큐리티 그룹 태깅 ####
-클러스터 생성시 만들어진 시큐리티 그룹에 karpenter.sh/discovery={cluster name} 로 태깅한다.
-카펜터가 신규 노드를 프로비저닝 하면, 이 값으로 태킹된 시큐리티 그룹을 찾아 신규 노드에 할당하게 된다.  
-노드가 위치하게 되는 서브넷 역시 동일 매커니즘으로 동작하는데, 테라폼에서 이미 karpenter.sh/discovery={cluster name} 태깅을 완료하였다. 
-```
-NODEGROUP=$(aws eks list-nodegroups --cluster-name "${CLUSTER_NAME}" \
-    --query 'nodegroups[0]' --output text)
 
-LAUNCH_TEMPLATE=$(aws eks describe-nodegroup --cluster-name "${CLUSTER_NAME}" \
-    --nodegroup-name "${NODEGROUP}" --query 'nodegroup.launchTemplate.{id:id,version:version}' \
-    --output text | tr -s "\t" ",")
-
-SECURITY_GROUPS=$(aws eks describe-cluster \
-    --name "${CLUSTER_NAME}" --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
-
-SECURITY_GROUPS="$(aws ec2 describe-launch-template-versions \
-    --launch-template-id "${LAUNCH_TEMPLATE%,*}" --versions "${LAUNCH_TEMPLATE#*,}" \
-    --query 'LaunchTemplateVersions[0].LaunchTemplateData.[NetworkInterfaces[0].Groups||SecurityGroupIds]' \
-    --output text)"
-
-aws ec2 create-tags \
-    --tags "Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}" \
-    --resources "${SECURITY_GROUPS}"
-```
 
 #### 2. 억세스 설정 ####
 카펜터 버전 1.8.1 (EKS 1.3.4) 에는 아래의 두가지 설정이 누락되어 있어서 패치가 필요하다. 패치를 하지 않는 경우 카펜터가 프러비저닝한 노드가 클러스터에 조인되지 않는다.  
