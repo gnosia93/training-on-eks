@@ -27,7 +27,7 @@
 * [C8. 분산 훈련 스케줄링 및 복원력]
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
    - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)      
-   - 복원
+   - [복원](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-resilliency.md)
       - 컨테이너 / 노드 크래쉬
       - 모델 체크 포인팅
 * [C9. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
