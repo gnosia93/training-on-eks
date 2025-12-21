@@ -131,6 +131,8 @@ spec:
     minReplicas: 5
     maxReplicas: 5
     rdzvBackend: c10d     # Pod 간 통신을 위해 Kubernetes Service 활용
+    maxRestarts: 3
 ```
-
+* c10d (권장): 추가 인프라가 필요 없어 가장 가볍습니다. 포드가 재시작되어도 쿠버네티스 서비스 이름은 유지되므로 torchrun이 다시 랑데뷰하는 데 문제가 없습니다.
+* etcd: 수백 개 이상의 노드를 사용하는 대규모 클러스터에서 랑데뷰의 안정성을 극한으로 높여야 할 때 사용합니다. 일반적인 5~10개 노드 규모에서는 c10d로도 충분합니다.
 
