@@ -152,6 +152,9 @@ spec:
   volumeName: fsx-pv # 위에서 정의한 PV와 수동 연결
 EOF
 ```
+```
+kubectl apply -f fsx-pvc.yaml
+```
 
 ### 2. 테스트 하기 ###
 #### 2-1. 애플리케이션 파드에서 사용 ####
