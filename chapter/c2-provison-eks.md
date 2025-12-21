@@ -200,7 +200,7 @@ aws ec2 create-tags \
 }
 ```
 
-* IAM Identity Mapping (이 부분은 필요한 설정인지 확인이 필요하다) 
+#### IAM Identity Mapping #### 
 ```
 eksctl create iamidentitymapping \
   --username system:node:{{EC2PrivateDNSName}} \
