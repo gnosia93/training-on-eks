@@ -165,6 +165,14 @@ resource "aws_security_group" "instance_sg" {
     cidr_blocks = var.allowed_ip_cidrs
   }
 
+  # VS Code Server (Code Server) 접속 허용
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_ip_cidrs
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
