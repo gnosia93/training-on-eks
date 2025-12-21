@@ -1,4 +1,15 @@
 ```
+# 모든 노드(1번~5번)에서 동일하게 실행 (endpoint는 1번 노드 IP로 통일)
+torchrun --nnodes=5 \
+         --nproc_per_node=8 \
+         --rdzv_id=job_1 \
+         --rdzv_backend=c10d \
+         --rdzv_endpoint=10.0.0.1:2379 \
+         train.py
+```
+를 쿠버네티스 환경에서 실행하는 경우 
+
+```
 apiVersion: "kubeflow.org/v1"
 kind: "PyTorchJob"
 metadata:
