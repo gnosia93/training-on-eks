@@ -29,6 +29,24 @@ HyperPod 위에서 torchrun을 쓰면 일반 EKS보다 더 강력해집니다.
 torchrun은 "통신 그룹을 다시 묶어주는 소프트웨어적 접착제"이고, EKS(HyperPod)는 "죽은 포드를 다시 살려내고 하드웨어를 제공하는 인프라 엔진"입니다. 이 두 개가 결합되어야만 진정한 의미의 Fault-tolerant 분산 학습이 완성됩니다.
 관련하여 더 자세한 구현 예시는 PyTorch Elastic 공식 문서에서 확인하실 수 있습니다.
 
+---
+
+* https://www.google.com/search?q=k8s+llm+training+resiliency&rlz=1C5GCCM_en&oq=k8s+llm+training+resiliency&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCjE3NTMzajBqMTWoAgCwAgA&sourceid=chrome&ie=UTF-8
+
+Kubernetes (K8s) provides the underlying infrastructure for resilient LLM training through features like container orchestration and self-healing mechanisms. However, specific techniques and software are required to manage the unique challenges of large-scale, long-running, and computationally intensive AI workloads, which are prone to frequent interruptions. 
+Core Kubernetes Mechanisms
+Containerization: Packaging training processes into containers ensures consistency and portability across different environments.
+Self-healing: Kubernetes can automatically detect and restart failed pods, nodes, or containers, which is fundamental for maintaining continuous operation.
+Scalability: K8s dynamically scales resources (GPUs/CPUs) to optimize utilization, though managing this for highly coordinated jobs requires specific tooling. 
+Specialized Techniques for LLM Training Resilience
+Achieving true resilience for LLM training on Kubernetes often requires application-level strategies and specialized tools that address the significant challenges of distributed AI workloads. 
+Technique 	Description	Benefit for Resilience
+Robust Checkpointing	Regularly saving the model's state and weights to persistent storage allows training to resume from the last successful checkpoint after a failure.	Minimizes lost training time and financial losses from project delays.
+Automated Failure Recovery	Using orchestration tools like Argo or Kubeflow's Trainer operator can automate the recovery process, often just by restarting the job, which addresses the root cause of many common failures.	Reduces manual intervention and downtime.
+Elasticity & Parallelism	Implementing parallelism strategies (data, tensor, pipeline) allows the training workload to adapt to available resources and potential changes in batch size or node availability.	Enables the use of cost-effective, volatile cloud resources (e.g., spot instances) without compromising job integrity.
+Custom Health Checks	Implementing specific health checks within Kubernetes can help detect if a training process is stuck (e.g., due to a CUDA error or NaN value) rather than just crashed, allowing for automated remediation.	Improves detection of non-terminal but progress-halting issues.
+Infrastructure Management Systems	Specialized systems like ByteDance's ByteRobust provide an infrastructure layer tailored for highly efficient fault tolerance and prompt fault diagnosis in large-scale GPU clusters.	Ensures continuous and efficient training at scale by managing diverse failure types.
+By combining the inherent capabilities of Kubernetes with these specialized techniques and tools, organizations can build robust and stable infrastructures capable of handling the resource-intensive and long-running nature of LLM training. 
 
 ## 레퍼런스 ##
 
