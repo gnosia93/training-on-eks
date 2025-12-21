@@ -172,6 +172,16 @@ ls -l
 ```
 
 
+## 생성된 객체 삭제 ##
+```
+eksctl delete iamserviceaccount \
+    --name fsx-csi-driver-controller-sa \
+    --namespace fsx-csi-driver \
+    --cluster ${CLUSTER_NAME} \
+    --wait
+```
+
+
 ## 레퍼런스 ##
 * https://aws.amazon.com/ko/blogs/tech/lustre/
 
