@@ -1,3 +1,53 @@
+```
+apiVersion: "kubeflow.org/v1"
+kind: "PyTorchJob"
+metadata:
+  name: "multi-node-train"
+spec:
+  # [중요] Master 섹션 없이 Worker만 설정
+  pytorchReplicaSpecs:
+    Worker:
+      replicas: 5  # --nnodes=5 에 해당
+      template:
+        spec:
+          containers:
+            - name: pytorch
+              image: your-training-image:latest
+              # [중요] command에서 rdzv 관련 인자를 직접 쓰지 않아도 컨트롤러가 주입함
+              command:
+                - torchrun
+                - "--nproc_per_node=8" # 노드당 GPU 8개
+                - "train.py"
+                - "--your-arg=value"
+              resources:
+                limits:
+                  nvidia.com: 8 # 실제 GPU 할당
+  
+  # [중요] 탄력적 학습(torchrun)을 위한 정책 설정
+  elasticPolicy:
+    minReplicas: 5
+    maxReplicas: 5
+    rdzvBackend: c10d # 외부 etcd 없이 내부 통신 사용
+    maxRestarts: 3    # 노드 장애 시 재시도 횟수
+```
+
+* Master 섹션이 없는 이유: torchrun은 모든 노드를 대등한 워커로 취급하며, 랑데뷰 시스템을 통해 실행 시점에 Rank 0을 자동으로 선출합니다. Master 스펙을 별도로 정의하면 오히려 랑데뷰 주소가 꼬일 수 있습니다. 
+* rdzv_endpoint 생략: PyTorchJob 컨트롤러가 각 포드에 PET_RDZV_ENDPOINT 환경 변수를 자동으로 넣어줍니다. 보통 첫 번째 워커 포드(worker-0)의 주소를 사용하도록 자동 설정됩니다.
+* rdzv_id 생략: 컨트롤러가 해당 Job의 고유 UID를 ID로 자동 주입하여 다른 Job과 섞이지 않게 해줍니다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------
 ## 토치런 랑데뷰 ##
 torchrun (PyTorch Elastic) 환경에서 하나의 노드에 장애가 발생하면, 나머지 노드들은 무한정 기다리는 것이 아니라 현재 작업을 중단하고 새로운 랑데뷰(Rendezvous)를 통해 재구성을 시도합니다.
 구체적인 동작 과정은 다음과 같습니다.
