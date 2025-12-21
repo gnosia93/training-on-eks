@@ -155,14 +155,12 @@ eksctl create cluster -f cluster.yaml
 2025-12-15 05:09:52 [✔]  EKS cluster "training-on-eks" in "ap-northeast-2" region is ready
 ```
 
-클러스터 생성이 완료되면 1/시큐리티 그룹 태깅과 2/억세스 설정 이 필요하다. 
+클러스터 생성이 완료되면 아래 추가적인 억세스 설정 이 필요하다. 
 
-
-
-#### 2. 억세스 설정 ####
+### 추가적인 억세스 설정 ###
 카펜터 버전 1.8.1 (EKS 1.3.4) 에는 아래의 두가지 설정이 누락되어 있어서 패치가 필요하다. 패치를 하지 않는 경우 카펜터가 프러비저닝한 노드가 클러스터에 조인되지 않는다.  
 
-#### eksctl-training-on-eks-iamservice-role 에 정책 추가 (OIDC 정책 누락) ####
+#### 1. eksctl-training-on-eks-iamservice-role 에 정책 추가 (OIDC 정책 누락) ####
 ``` 
 {
 	"Version": "2012-10-17",
@@ -190,7 +188,7 @@ eksctl create cluster -f cluster.yaml
 }
 ```
 
-#### IAM Identity Mapping #### 
+#### 2. IAM Identity Mapping #### 
 ```
 eksctl create iamidentitymapping \
   --username system:node:{{EC2PrivateDNSName}} \
