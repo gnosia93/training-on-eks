@@ -193,10 +193,12 @@ resource "aws_instance" "graviton_box" {
   user_data = <<_DATA
 #!/bin/bash
 # 1. code-server 설치 (최신 버전 자동 내려받기)
-curl -fsSL https://code-server.dev/install.sh | sh
+# curl -fsSL https://code-server.dev/install.sh | sh
 
 # 2. ec2-user 권한으로 설정 파일 초기화 및 수정
 sudo -u ec2-user -i <<'EC2_USER_SCRIPT'
+curl -fsSL https://code-server.dev/install.sh | sh
+
 # 설정 파일 경로 변수화
 CONFIG_PATH="/home/ec2-user/.config/code-server/config.yaml"
 
