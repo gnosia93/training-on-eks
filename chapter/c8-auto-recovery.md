@@ -8,6 +8,10 @@ aws eks create-addon \
 # 에이전트 포드 확인
 kubectl get pods -n kube-system | grep node-monitoring-agent
 
+. 핵심 주의사항
+Karpenter 연동: 에이전트만 설치한다고 복구가 완료되지 않습니다. Karpenter v1.1.0 이상이 설치되어 있어야 에이전트가 보낸 "아파요" 신호를 보고 Karpenter가 노드를 교체합니다.
+권한(IAM): 에이전트가 장애 정보를 AWS로 보고할 수 있도록 노드 IAM 역할(Node Role)에 관련 권한(AmazonEKSWorkerNodePolicy 등)이 포함되어 있어야 합니다.
+요약하자면: 2025년에는 EKS Managed Add-on 목록에서 클릭 한 번으로 설치하는 것이 표준이며, 가장 안전한 방법입니다.
 ```
 
 
