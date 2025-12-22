@@ -111,6 +111,53 @@ kubectl describe node <노드명> | grep -A 5 Conditions
 NMA는 감지된 문제에 대해 CloudWatch 메트릭을 발행할 수 있습니다. CloudWatch 콘솔의 ContainerInsights 네임스페이스에서 관련 성능 지표나 로그가 수집되고 있는지 점검
 
 ---
+
+#### 방법 1: kubectl run으로 임시 특권 파드 실행 (가장 빠름) ####
+이 명령은 호스트의 /dev/kmsg를 파드 내부로 매핑하여 직접 메시지를 기록합니다.
+```
+kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu -- \
+sh -c "echo 'NVRM: Xid (PCI:0000:00:00): 31, GPU termination' > /dev/kmsg"
+```
+
+#### 방법 2: YAML 파일을 이용한 실행 (Node 선택 필요 시) ####
+특정 GPU 노드를 타겟팅하고 싶다면 nodeSelector를 포함한 YAML을 사용하세요.
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-fault-injector
+spec:
+  containers:
+  - name: injector
+    image: ubuntu
+    command: ["/bin/sh", "-c"]
+    args: ["echo 'NVRM: Xid (PCI:0000:00:00): 45, GPU internal error' > /dev/kmsg && sleep 3600"]
+    securityContext:
+      privileged: true  # 호스트 커널에 쓰기 위해 필수
+    volumeMounts:
+    - name: kmsg
+      mountPath: /dev/kmsg
+  nodeSelector:
+    accelerator: nvidia-tesla-t4 # 테스트할 GPU 노드의 레이블 지정
+  volumes:
+  - name: kmsg
+    hostPath:
+      path: /dev/kmsg
+```
+
+#### 테스트 확인 절차 ####
+* 메시지 주입: 위 명령어를 실행합니다.
+* 커널 로그 확인: 노드 레벨에서 메시지가 찍혔는지 확인합니다
+```
+# 다른 파드나 노드에서 확인
+dmesg | tail -n 5
+```
+* Agent 반응 확인: EKS Node Monitoring Agent가 해당 로그를 읽고 노드 상태를 Unhealthy로 변경하거나 Taint를 추가하는지 확인합니다
+```
+kubectl describe node <해당-노드-이름> | grep Conditions -A 10
+```
+
+---
 ## 프로메테우스 연동 ##
 EKS Node Monitoring Agent(NMA)는 내부적으로 GPU 메트릭을 수집하지만, 기본적으로는 Prometheus가 아닌 Amazon CloudWatch Container Insights로 데이터를 보내도록 설계되어 있습니다. 그라파나(Grafana) 연동을 위해 프로메테우스(Prometheus)가 NMA의 데이터를 읽어오게 하려면, NMA가 노출하는 메트릭 엔드포인트를 프로메테우스 스크랩(Scrape) 대상에 추가해야 합니다.
 
