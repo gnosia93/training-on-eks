@@ -6,12 +6,16 @@ NMA 에이전트가 노드의 커널, 네트워크, 스토리지, GPU 상태를 
 #### 1. Node Monitoring Agent 설치 ####
 클러스터 설정에서 eks-node-monitoring-agent 애드온을 추가하여 설치해야 합니다. 이 에이전트가 노드의 로그를 분석하여 장애를 감지하는 역할을 합니다.
 ```
-aws eks describe-addon-versions --kubernetes-version <K8s_VERSION> --addon-name eks-node-monitoring-agent
+export CLUSTER_NAME="training-on-eks"
+export K8S_VERSION="1.34"
+
+NMA_VERSION=$(aws eks describe-addon-versions --kubernetes-version ${K8S_VERSION} --addon-name eks-node-monitoring-agent)
+echo "Node Monitoring Agent Version: "${NMA_VERSION}
 
 aws eks create-addon \
-    --cluster-name <클러스터_이름> \
+    --cluster-name ${CLUSTER_NAME} \
     --addon-name eks-node-monitoring-agent \
-    --addon-version v1.0.0-eksbuild.1  # 2025년 최신 버전 확인 필요
+    --addon-version ${NMA_VERSION}  # 2025년 최신 버전 확인 필요
 
 # 에이전트 포드 확인
 kubectl get pods -n kube-system | grep node-monitoring-agent
