@@ -159,14 +159,26 @@ eksctl create cluster -f cluster.yaml
 eksctl delete cluster -f cluster.yaml
 ```
 
-클러스터 시큐리티 그룹의 태킹 정보를 확인하여 karpenter.sh/ == 태크가 존재하는 확인한다. 이 태크는 카펜터가 신규 노드를 생성할때 상요하는 시큐리티 그룹으로 이 설정값이 잘못된 경우 EC2 인스턴스를 생성되나 EKS 클러스터에 조인하지 못하는 문제가 발생한다. 
+클러스터 시큐리티 그룹에 "karpenter.sh/discovery=${CLUSTER_NAME}" 태크가 존재하는 확인한다. 카펜터가 신규 노드를 생성할때 이 태크가 설정된 시큐리티 그룹을 인스턴스의 시큐리티 그룹으로 사용한다. 시큐리티 그룹 설정이 잘못된 경우 EC2 인스턴스를 생성되지만 EKS 클러스터에 조인하지 못하게 된다.  
 ```
-# <CLUSTER_NAME> 부분을 실제 클러스터 이름으로 바꾸세요.
 aws ec2 describe-security-groups \
   --group-ids $(aws eks describe-cluster --name ${CLUSTER_NAME} --query \
 					"cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text) \
   --query "SecurityGroups[0].Tags" \
   --output table
+```
+[결과]
+```
+----------------------------------------------------------------------------------------
+|                                DescribeSecurityGroups                                |
++----------------------------------------+---------------------------------------------+
+|                   Key                  |                    Value                    |
++----------------------------------------+---------------------------------------------+
+|  kubernetes.io/cluster/training-on-eks |  owned                                      |
+|  Name                                  |  eks-cluster-sg-training-on-eks-1860330510  |
+|  aws:eks:cluster-name                  |  training-on-eks                            |
+|  karpenter.sh/discovery                |  training-on-eks                            |
++----------------------------------------+---------------------------------------------+
 ```
 
 ### 추가적인 억세스 설정 ###
