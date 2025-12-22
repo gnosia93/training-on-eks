@@ -64,6 +64,22 @@ spec:
       - nodes: "10%" # 한 번에 교체될 수 있는 최대 노드 비율
 ```
 
+## 장애 시뮬레이션 ##
+
+* 3. Chaos Mesh 등 카오스 엔지니어링 도구 사용
+파드 수준에서 더 정교한 장애(네트워크 지연, 특정 컨테이너 강제 종료 등)를 시뮬레이션하고 싶다면 전용 도구를 사용하는 것이 좋습니다. 
+Chaos Mesh: PodChaos를 생성하여 특정 파드를 주기적으로 죽이거나(PodKill), 컨테이너를 강제 종료(ContainerKill)하여 EKS의 자가 치유 성능을 측정할 수 있습니다.
+
+* 4. GPU 스트레스 테스트 (과부하 유도)
+장애가 아닌 '성능 저하' 및 '과열로 인한 노드 이탈' 시나리오를 테스트하고 싶다면 파드 내에서 연산 부하를 최대치로 올릴 수 있습니다.
+```
+# 파드 내에서 무한 루프로 GPU 연산 수행 (유틸리티 상승)
+bash -c "for i in {1..100}; do nvidia-smi; sleep 0.1; done"
+```
+파드 내부에서 "GPU 고장" 명령을 날리는 대신, NVIDIA_VISIBLE_DEVICES=none을 설정하여 앱의 오류 처리를 테스트하거나, Chaos Mesh 같은 도구로 파드 자체를 강제 종료하는 방식이 실제 EKS 복구 테스트에 더 적합합니다.
+
+
+---
 ## 프로메테우스 연동 ##
 EKS Node Monitoring Agent(NMA)는 내부적으로 GPU 메트릭을 수집하지만, 기본적으로는 Prometheus가 아닌 Amazon CloudWatch Container Insights로 데이터를 보내도록 설계되어 있습니다. 그라파나(Grafana) 연동을 위해 프로메테우스(Prometheus)가 NMA의 데이터를 읽어오게 하려면, NMA가 노출하는 메트릭 엔드포인트를 프로메테우스 스크랩(Scrape) 대상에 추가해야 합니다.
 
