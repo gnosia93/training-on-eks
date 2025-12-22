@@ -23,7 +23,7 @@ aws eks update-nodegroup-config --cluster-name <클러스터명> \
   --node-repair-config enabled=true
 ```
 
-## 카펜터 ##
+## 카펜터 노드 자동복구 ##
 
 매니지드 노드 그룹에서는 AWS 백엔드가 복구를 수행하지만, 카펜터 환경에서는 NMA가 문제를 감지하고 카펜터가 노드를 교체하는 협업 구조로 작동합니다. 
 NMA가 노드 장애를 발견하면 해당 노드의 NodeCondition을 업데이트합니다 (예: StorageReady=False).
