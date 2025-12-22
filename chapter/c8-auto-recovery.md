@@ -49,7 +49,7 @@ Disruption 컨트롤러 클러스터의 상태를 계속 감지하면서 "지금
 * Consolidation (최적화): 노드가 비어 있거나 더 저렴한 인스턴스로 합칠 수 있을 때.
 * Repair (복구 - Node Monitoring Agent 연동): Node Monitoring Agent가 노드 장애를 보고하여 NodeCondition이 나빠졌을 때.
 
-#### NodeRepair 기능 활성화 ####
+#### Node Repair 기능 활성화 ####
 카펜터 버전 v1.1.0 이상부터는 기본적으로 Node Auto Repair 기능이 포함되어져 있어 별도의 설정이 필요하지 않다. 
 다만, 카펜터가 노드를 너무 공격적으로 노드를 교체하지 않도록 NodePool 리소스에 Disruption Budgets를 설정하는 것을 고려해 볼 수도 있다.
 ```
