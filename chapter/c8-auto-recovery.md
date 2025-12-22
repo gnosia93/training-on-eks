@@ -26,7 +26,7 @@ Karpenter 연동: 에이전트만 설치한다고 복구가 완료되지 않습�
 
 ## 레퍼런스 ##
 * https://github.com/aws/eks-node-monitoring-agent/tree/main/charts/eks-node-monitoring-agent
-
+* https://aws.amazon.com/ko/blogs/containers/amazon-eks-introduces-node-monitoring-and-auto-repair-capabilities/
 
 ---
 2025년 기준 Amazon EKS의 노드 자동 복구(Node Auto-repair)는 한층 정교해진 모니터링 에이전트와 자동화된 교체 로직을 통해 클러스터의 가용성을 유지합니다. 상세 작동 원리와 주요 특징은 다음과 같습니다.
