@@ -107,7 +107,8 @@ kubectl describe node <노드명> | grep -A 5 Conditions
 정상 감지 시: AcceleratedHardwareReady 또는 관련 조건이 False로 변경되거나 특정 오류 테인트(Taint)가 붙는지 확인합니다. 
 
 * 관전 포인트: 오류 주입 후 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고, 새로운 노드가 프로비저닝되는지 확인합니다. 
-
+*  CloudWatch 지표 확인
+NMA는 감지된 문제에 대해 CloudWatch 메트릭을 발행할 수 있습니다. CloudWatch 콘솔의 ContainerInsights 네임스페이스에서 관련 성능 지표나 로그가 수집되고 있는지 점검
 
 ---
 ## 프로메테우스 연동 ##
