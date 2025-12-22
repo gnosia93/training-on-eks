@@ -174,7 +174,8 @@ Wed Dec 10 06:44:46 2025
 * 용도: 생성된 노드가 EKS 클러스터에 접속하고, ECR에서 이미지를 풀(Pull)하거나, VPC CNI와 통신하는 등 "K8s 워커 노드로서 동작"하기 위해 필요한 권한.
 * 핵심 권한: AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy, AmazonEC2ContainerRegistryReadOnly 등.
 * 특징: EC2NodeClass의 spec.role 부분에 명시되는 이름.
-* 카펜터 노드 롤 확인
+
+#### 카펜터 노드 롤 확인 ####
 ```
 aws iam list-roles --query 'Roles[?contains(RoleName, `KarpenterNodeRole`)].RoleName'
 ```  
