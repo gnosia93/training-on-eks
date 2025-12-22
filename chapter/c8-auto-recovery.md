@@ -9,7 +9,11 @@ NMA 에이전트가 노드의 커널, 네트워크, 스토리지, GPU 상태를 
 export CLUSTER_NAME="training-on-eks"
 export K8S_VERSION="1.34"
 
-NMA_VERSION=$(aws eks describe-addon-versions --kubernetes-version ${K8S_VERSION} --addon-name eks-node-monitoring-agent)
+NMA_VERSION=$(aws eks describe-addon-versions \
+    --kubernetes-version ${K8S_VERSION} \
+    --addon-name eks-node-monitoring-agent \
+    --query 'addons[0].addonVersions[?compatibilities[0].defaultVersion==`true`].addonVersion' \
+    --output text)
 echo "Node Monitoring Agent Version: "${NMA_VERSION}
 
 aws eks create-addon \
