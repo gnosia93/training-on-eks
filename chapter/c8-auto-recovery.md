@@ -20,6 +20,7 @@ aws eks create-addon \
 # 에이전트 포드 확인
 kubectl get pods -n kube-system | grep node-monitoring-agent
 ```
+Node Monitoring Agent는 GPU 노드의 상태를 정밀하게 진단하기 위해 내부적으로 NVIDIA의 핵심 라이브러리인 NVML(NVIDIA Management Library)과 DCGM을 활용한다.
 
 #### 2. 노드 그룹의 'Node Repair' 활성화 ####
 에이전트만 설치한다고 복구가 자동으로 수행되지 않습니다. 매니지드 노드 그룹 설정에서 node-repair 기능을 Enabled로 변경해야 합니다.
