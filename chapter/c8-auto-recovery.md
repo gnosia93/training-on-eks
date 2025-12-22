@@ -1,11 +1,19 @@
-### 1. 필수 설정 2단계 ###
+### 1. 구성하기 ###
 관리형 노드 그룹에서는 오토 모드와 달리 사용자가 직접 기능을 활성화해야 합니다. 
 
-#### Node Monitoring Agent(NMA) 설치: ####
-EKS Add-on으로 제공됩니다.
+#### Node Monitoring Agent 설치 ####
 클러스터 설정에서 eks-node-monitoring-agent 애드온을 추가하여 설치해야 합니다. 이 에이전트가 노드의 로그를 분석하여 장애를 감지하는 역할을 합니다.
+```
+aws eks create-addon \
+    --cluster-name <클러스터_이름> \
+    --addon-name eks-node-monitoring-agent \
+    --addon-version v1.0.0-eksbuild.1  # 2025년 최신 버전 확인 필요
 
-#### 노드 그룹의 'Node Repair' 활성화: ####
+# 에이전트 포드 확인
+kubectl get pods -n kube-system | grep node-monitoring-agent
+```
+
+#### 노드 그룹의 'Node Repair' 활성화 ####
 에이전트만 설치한다고 복구가 자동으로 수행되지 않습니다. 매니지드 노드 그룹 설정에서 node-repair 기능을 Enabled로 변경해야 합니다.
 ```
 aws eks update-nodegroup-config --cluster-name <클러스터명> \
