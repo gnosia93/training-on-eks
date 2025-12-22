@@ -115,7 +115,12 @@ NMA는 감지된 문제에 대해 CloudWatch 메트릭을 발행할 수 있습�
 #### 방법 1: kubectl run으로 임시 특권 파드 실행 (가장 빠름) ####
 이 명령은 호스트의 /dev/kmsg를 파드 내부로 매핑하여 직접 메시지를 기록합니다.
 ```
-kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu -- \
+kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
+--overrides='{"spec": {"nodeName": "<테스트_노드_이름>"}}' -- \
+sh -c "echo 'NVRM: Xid (PCI:0000:00:00): 31, GPU termination' > /dev/kmsg"
+
+kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
+--overrides='{"spec": {"nodeSelector": {"k8s.amazonaws.com": "nvidia-tesla-t4"}}}' -- \
 sh -c "echo 'NVRM: Xid (PCI:0000:00:00): 31, GPU termination' > /dev/kmsg"
 ```
 
