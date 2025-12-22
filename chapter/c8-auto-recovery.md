@@ -64,6 +64,17 @@ spec:
       - nodes: "10%" # 한 번에 교체될 수 있는 최대 노드 비율
 ```
 
+## 프로메테우스 연동 ##
+EKS Node Monitoring Agent(NMA)는 내부적으로 GPU 메트릭을 수집하지만, 기본적으로는 Prometheus가 아닌 Amazon CloudWatch Container Insights로 데이터를 보내도록 설계되어 있습니다. 그라파나(Grafana) 연동을 위해 프로메테우스(Prometheus)가 NMA의 데이터를 읽어오게 하려면, NMA가 노출하는 메트릭 엔드포인트를 프로메테우스 스크랩(Scrape) 대상에 추가해야 합니다.
+
+#### 1. NMA 메트릭 엔드포인트 확인 ####
+NMA는 각 노드에서 DaemonSet 형태로 실행되며, 일반적으로 다음 포트를 통해 메트릭을 노출합니다: 
+* 포트: 8080 (또는 설정에 따라 다를 수 있음)
+* 경로: /metrics 
+
+#### 2. Prometheus 설정 (Scrape Config) #### 
+프로메테우스 설정(prometheus.yml) 또는 ServiceMonitor(Prometheus Operator 사용 시)에 NMA를 타겟으로 추가합니다. 
+
 
 ## 레퍼런스 ##
 * https://github.com/aws/eks-node-monitoring-agent/tree/main/charts/eks-node-monitoring-agent
