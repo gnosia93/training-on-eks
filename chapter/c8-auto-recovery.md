@@ -169,4 +169,4 @@ spec:
 ## 레퍼런스 ##
 * https://github.com/aws/eks-node-monitoring-agent/tree/main/charts/eks-node-monitoring-agent
 * https://aws.amazon.com/ko/blogs/containers/amazon-eks-introduces-node-monitoring-and-auto-repair-capabilities/
-
+* https://dev.to/aws-builders/node-health-monitoring-and-auto-repair-for-amazon-eks-3eja
