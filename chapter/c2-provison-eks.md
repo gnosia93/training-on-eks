@@ -159,6 +159,17 @@ eksctl create cluster -f cluster.yaml
 eksctl delete cluster -f cluster.yaml
 ```
 
+클러스터 시큐리티 그룹의 태킹 정보를 확인하여 karpenter.sh/ == 태크가 존재하는 확인한다. 이 태크는 카펜터가 신규 노드를 생성할때 상요하는 시큐리티 그룹으로 이 설정값이 잘못된 경우 EC2 인스턴스를 생성되나 EKS 클러스터에 조인하지 못하는 문제가 발생한다. 
+```
+# <CLUSTER_NAME> 부분을 실제 클러스터 이름으로 바꾸세요.
+aws ec2 describe-security-groups \
+  --group-ids $(aws eks describe-cluster --name ${CLUSTER_NAME} --query \
+					"cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text) \
+  --query "SecurityGroups[0].Tags" \
+  --output table
+```
+
+
 클러스터 생성이 완료되면 아래 추가적인 억세스 설정 이 필요하다. 
 
 ### 추가적인 억세스 설정 ###
