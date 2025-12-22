@@ -1,3 +1,13 @@
+```
+# using the github chart repository
+helm repo add eks-node-monitoring-agent https://aws.github.io/eks-node-monitoring-agent
+helm install eks-node-monitoring-agent eks-node-monitoring-agent/eks-node-monitoring-agent --namespace kube-system
+```
+
+```
+helm uninstall eks-node-monitoring-agent --namespace kube-system
+```
+
 
 ```
 aws eks create-addon \
