@@ -28,6 +28,11 @@ aws eks update-nodegroup-config --cluster-name <클러스터명> \
 매니지드 노드 그룹에서는 AWS 백엔드가 복구를 수행하지만, 카펜터 환경에서는 NMA가 문제를 감지하고 카펜터가 노드를 교체하는 협업 구조로 작동합니다. 
 NMA가 노드 장애를 발견하면 해당 노드의 NodeCondition을 업데이트합니다 (예: StorageReady=False).
 카펜터의 Disruption(중단) 컨트롤러가 상태가 나빠진 노드를 감지하고, 이를 자동으로 교체(Terminate & Provision)합니다. 
+#### Disruption 컨트롤러의 역할 ###
+이 컨트롤러는 클러스터의 상태를 계속 감지하면서 "지금 이 노드를 삭제하거나 교체해야 하는가?"를 결정합니다. 크게 3가지 이유(Reason)로 작동합니다.
+* Drift (드리프트): 사용자가 NodePool 설정을 변경하여 실제 노드 사양과 설정이 달라졌을 때.
+* Consolidation (최적화): 노드가 비어 있거나 더 저렴한 인스턴스로 합칠 수 있을 때.
+* Repair (복구 - NMA 연동): Node Monitoring Agent(NMA)가 노드 장애를 보고하여 NodeCondition이 나빠졌을 때.
 
 ### 카펜터 NodeRepair 기능 활성화 ###
 카펜터 버전 v1.1.0 이상부터는 NMA가 마킹한 비정상 노드를 자동으로 감지하여 교체하는 Node Auto Repair 기능이 포함되어 있습니다. 이를 위해 카펜터 설정에서 해당 기능 플래그를 확인해야 할 수 있습니다 (보통 기본값이거나 Disruption 설정에 포함됨). 
