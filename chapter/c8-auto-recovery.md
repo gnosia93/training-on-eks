@@ -8,7 +8,10 @@ helm install eks-node-monitoring-agent eks-node-monitoring-agent/eks-node-monito
 helm uninstall eks-node-monitoring-agent --namespace kube-system
 ```
 
-
+* 
+```
+aws eks create-addon --cluster-name <name of the EKS cluster> --addon-name eks-node-monitoring-agent
+```
 ```
 aws eks create-addon \
     --cluster-name <클러스터_이름> \
