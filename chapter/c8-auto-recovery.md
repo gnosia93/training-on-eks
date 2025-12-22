@@ -79,6 +79,36 @@ bash -c "for i in {1..100}; do nvidia-smi; sleep 0.1; done"
 파드 내부에서 "GPU 고장" 명령을 날리는 대신, NVIDIA_VISIBLE_DEVICES=none을 설정하여 앱의 오류 처리를 테스트하거나, Chaos Mesh 같은 도구로 파드 자체를 강제 종료하는 방식이 실제 EKS 복구 테스트에 더 적합합니다.
 
 
+#### 에이전트 로그 실시간 모니터링 ####
+에이전트가 노드의 커널 메시지나 시스템 로그를 제대로 파싱하고 있는지 확인합니다.
+```
+# stern 설치 시
+kubectl stern -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring-agent
+
+# 기본 kubectl 사용 시
+kubectl logs -f -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring-agent
+```
+
+#### GPU 장애 감지 시뮬레이션 (검증 테스트) ####
+NMA는 노드 로그를 모니터링하여 특정 오류 메시지가 발생하면 NodeCondition을 변경합니다. GPU 노드의 경우 NVIDIA 드라이버 오류(XID 메시지 등)를 감지하도록 설계되어 있습니다. 
+
+A. 가상 오류 메시지 주입 (노드 레벨)
+노드에 직접 접속하여 에이전트가 감시하는 커널 로그(kmsg)에 강제로 오류 메시지를 써서 감지 여부를 테스트할 수 있습니다. 
+```
+# 노드 SSH 접속 후 실행 (NVIDIA GPU 오류 메시지 예시)
+echo "NVRM: Xid (PCI:0000:00:00): 31, GPU termination" | sudo tee /dev/kmsg
+```
+
+B. NodeCondition 변화 확인
+메시지 주입 후 에이전트가 이를 감지하면 해당 노드의 상태값이 변경됩니다
+```
+kubectl describe node <노드명> | grep -A 5 Conditions
+```
+정상 감지 시: AcceleratedHardwareReady 또는 관련 조건이 False로 변경되거나 특정 오류 테인트(Taint)가 붙는지 확인합니다. 
+
+* 관전 포인트: 오류 주입 후 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고, 새로운 노드가 프로비저닝되는지 확인합니다. 
+
+
 ---
 ## 프로메테우스 연동 ##
 EKS Node Monitoring Agent(NMA)는 내부적으로 GPU 메트릭을 수집하지만, 기본적으로는 Prometheus가 아닌 Amazon CloudWatch Container Insights로 데이터를 보내도록 설계되어 있습니다. 그라파나(Grafana) 연동을 위해 프로메테우스(Prometheus)가 NMA의 데이터를 읽어오게 하려면, NMA가 노출하는 메트릭 엔드포인트를 프로메테우스 스크랩(Scrape) 대상에 추가해야 합니다.
