@@ -15,8 +15,7 @@ Karpenter 연동: 에이전트만 설치한다고 복구가 완료되지 않습�
 ```
 
 ## 레퍼런스 ##
-* https://github.com/aws/eks-node-monitoring-agent
-
+* https://github.com/aws/eks-node-monitoring-agent/tree/main/charts/eks-node-monitoring-agent
 
 
 ---
