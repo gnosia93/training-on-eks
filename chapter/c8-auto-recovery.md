@@ -155,6 +155,8 @@ export NODE_NAME=ip-10-0-4-138.ap-northeast-2.compute.internal
 export PCI_BUS_ID=$(kubectl exec -it nvidia-smi -- nvidia-smi --query-gpu=pci.bus_id --format=csv,noheader)
 echo ${NODE_NAME}" "${PCI_BUS_ID}
 
+export INSTANCE_ID=$(kubectl get node ${NODE_NAME} -o jsonpath='{.spec.providerID}' | cut -d'/' -f5)
+echo "Target Instance ID: ${INSTANCE_ID}"
 
 aws ssm send-command \
     --instance-ids "<INSTANCE_ID>" \
