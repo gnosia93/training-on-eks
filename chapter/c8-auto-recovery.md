@@ -158,9 +158,9 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   NetworkingReady            <none
 
 
 ```
-export NMA_NAME=$(kubectl get pod eks-node-monitoring-agent-rs7lg -n kube-system -o jsonpath='{.spec.containers[*].name}')
+export NMA_NAME=$(kubectl get pod eks-node-monitoring-agent-zwsc9 -n kube-system -o jsonpath='{.spec.containers[*].name}')
 echo ${NMA_NAME}
-kubectl debug -it eks-node-monitoring-agent-rs7lg -n kube-system \
+kubectl debug -it eks-node-monitoring-agent-zwsc9 -n kube-system \
     --image=nvidia/dcgm-exporter:4.4.2-4.7.1-ubuntu22.04 --target=${NMA_NAME} \
     -- bash
 
