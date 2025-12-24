@@ -87,7 +87,7 @@ kubectl logs -f -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring
 
 #### GPU 노드 할당 받기 ####
 ```
-cat <<EOF
+cat <<EOF > nvidia-smi.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -105,7 +105,8 @@ spec:
     - key: "nvidia.com/gpu"
       operator: "Exists"                      # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크
       effect: "NoSchedule"
-EOF | kubectl apply -f -
+EOF
+kubectl apply -f nvidia-smi.yaml
 ```
 
 
