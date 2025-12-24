@@ -1,5 +1,59 @@
 << fault injection 이 동작하지 않는다. 왜 일까? >> 
 
+
+```
+cat <<EOF > nma-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "eks:DescribeAddon",
+                "eks:DescribeCluster",
+                "ec2:DescribeInstances",
+                "ec2:DescribeInstanceStatus"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
+aws iam create-policy --policy-name EKSNodeMonitoringAgentPolicy --policy-document file://nma-policy.json || true
+
+eksctl create iamserviceaccount \
+    --name eks-node-monitoring-agent \
+    --namespace kube-system \
+    --cluster ${CLUSTER_NAME} \
+    --region ${REGION} \
+    --attach-policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy \
+    --attach-policy-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):policy/EKSNodeMonitoringAgentPolicy \
+    --override-existing-serviceaccounts \
+    --approve
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 1. Node Monitoring Agent 설치 ##
 클러스터 설정에서 eks-node-monitoring-agent 애드온을 추가하여 설치해야 합니다. 이 에이전트가 노드의 로그를 분석하여 장애를 감지하는 역할을 합니다.
 ```
@@ -13,6 +67,11 @@ NMA_VERSION=$(aws eks describe-addon-versions \
     --query 'addons[0].addonVersions[?compatibilities[0].defaultVersion==`true`].addonVersion' \
     --output text)
 echo "Node Monitoring Agent Version: "${NMA_VERSION}
+
+ROLE_ARN=$(aws iam get-role --role-name eksctl-${CLUSTER_NAME}-addon-iamserviceaccount-kube-system-eks-node-monitoring-agent-Role1 --query 'Role.Arn' --output text || aws iam list-roles --query "Roles[?contains(RoleName, 'eks-node-monitoring-agent')].Arn" --output text | head -n 1)
+
+
+
 
 # 해당 애드온을 설치한다. 
 aws eks create-addon \
