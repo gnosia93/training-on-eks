@@ -85,7 +85,7 @@ kubectl logs -f -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring
 
 ## 장애 시뮬레이션 ##
 
-#### GPU 노드 할당 받기 ####
+#### 1. GPU 노드 할당 받기 ####
 ```
 cat <<EOF > nvidia-smi.yaml
 apiVersion: v1
@@ -133,7 +133,7 @@ kubectl apply -f nvidia-smi.yaml && kubectl logs nvidia-smi
 ```
 Bus-Id 값이 00000000:00:1F.0 임을 확인할 수 있다.
 
-#### 노드 확인 ####
+#### 2. 노드 확인 ####
 ```
 kubectl get nodes -o custom-columns="NAME:.metadata.name,STATUS:.status.conditions[-1].type,\
 GPU_TOTAL:.status.capacity.nvidia\.com/gpu,\
@@ -149,7 +149,7 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   NetworkingReady            <none
 ```
 
 
-#### GPU 오류 로그 주입 ####
+#### 3. GPU 오류 주입 ####
 ```
 export NODE_NAME=ip-10-0-4-138.ap-northeast-2.compute.internal
 export BUS_ID=00000000:00:1F.0
@@ -161,36 +161,9 @@ sh -c "echo 'NVRM: Xid (PCI:${BUS_ID}): 31, GPU termination' > /dev/kmsg"
 Xid 31 은 "GPU memory corruption" 또는 "GPU has fallen off the bus" (GPU가 버스에서 이탈함) 을 나타내는 NVIDA 에서 정의한 코드값이다.
 
 
-[gpu-fault-injector.yaml]
+#### 4. NodeCondition 변화 확인 ####
 ```
-apiVersion: v1
-kind: Pod
-metadata:
-  name: gpu-fault-injector
-spec:
-  containers:
-  - name: injector
-    image: ubuntu
-    command: ["/bin/sh", "-c"]
-    args: ["echo 'NVRM: Xid (PCI:0000:00:00): 45, GPU internal error' > /dev/kmsg && sleep 3600"]
-    securityContext:
-      privileged: true  # 호스트 커널에 쓰기 위해 필수
-    volumeMounts:
-    - name: kmsg
-      mountPath: /dev/kmsg
-  nodeSelector:
-    accelerator: nvidia-tesla-t4 # 테스트할 GPU 노드의 레이블 지정
-  volumes:
-  - name: kmsg
-    hostPath:
-      path: /dev/kmsg
-```
-
-
-#### NodeCondition 변화 확인 ####
-메시지 주입 후 에이전트가 이를 감지하면 해당 노드의 상태값이 변경됩니다
-```
-kubectl describe node <노드명> | grep -A 5 Conditions
+kubectl describe node ${NODE_NAME} | grep -A 5 Conditions
 ```
 * 정상 감지 시: AcceleratedHardwareReady 또는 관련 조건이 False로 변경되거나 특정 오류 테인트(Taint)가 붙는지 확인합니다. 
 * 관전 포인트: 오류 주입 후 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고, 새로운 노드가 프로비저닝되는지 확인합니다. 
@@ -199,8 +172,6 @@ kubectl describe node <노드명> | grep -A 5 Conditions
 kubectl get nodes
 dmesg | tail -n 5
 ```
-
-
 
 
 ---
