@@ -85,6 +85,9 @@ kubectl logs -f -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring
 
 ## 장애 시뮬레이션 ##
 
+#### GPU 노드 할당 받기 ####
+
+
 #### GPU 목록 확인 ####
 * lspci: 모든 PCI 장치 목록을 보여줍니다.
 * nvidia-smi: NVIDIA GPU를 사용 중이라면, 각 GPU가 어떤 PCI 주소(Bus-Id)에 할당되어 있는지 바로 확인할 수 있습니다.
@@ -99,6 +102,7 @@ kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
 --overrides='{"spec": {"nodeSelector": {"k8s.amazonaws.com": "nvidia-tesla-t4"}}}' -- \
 sh -c "echo 'NVRM: Xid (PCI:0000:00:00): 31, GPU termination' > /dev/kmsg"
 ```
+
 [gpu-fault-injector.yaml]
 ```
 apiVersion: v1
@@ -133,33 +137,13 @@ kubectl describe node <노드명> | grep -A 5 Conditions
 * 정상 감지 시: AcceleratedHardwareReady 또는 관련 조건이 False로 변경되거나 특정 오류 테인트(Taint)가 붙는지 확인합니다. 
 * 관전 포인트: 오류 주입 후 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고, 새로운 노드가 프로비저닝되는지 확인합니다. 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 테스트 확인 절차 ##
-* 메시지 주입: 위 명령어를 실행합니다.
-* 커널 로그 확인: 노드 레벨에서 메시지가 찍혔는지 확인합니다
 ```
-# 다른 파드나 노드에서 확인
+kubectl get nodes
 dmesg | tail -n 5
 ```
-* Agent 반응 확인: EKS Node Monitoring Agent가 해당 로그를 읽고 노드 상태를 Unhealthy로 변경하거나 Taint를 추가하는지 확인합니다
-```
-kubectl describe node <해당-노드-이름> | grep Conditions -A 10
-```
+
+
+
 
 ---
 ## 프로메테우스 연동 ##
