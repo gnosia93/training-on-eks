@@ -70,22 +70,7 @@ spec:
       - nodes: "10%" # 한 번에 교체될 수 있는 최대 노드 비율
 ```
 
-## 장애 시뮬레이션 ##
-
-* 3. Chaos Mesh 등 카오스 엔지니어링 도구 사용
-파드 수준에서 더 정교한 장애(네트워크 지연, 특정 컨테이너 강제 종료 등)를 시뮬레이션하고 싶다면 전용 도구를 사용하는 것이 좋습니다. 
-Chaos Mesh: PodChaos를 생성하여 특정 파드를 주기적으로 죽이거나(PodKill), 컨테이너를 강제 종료(ContainerKill)하여 EKS의 자가 치유 성능을 측정할 수 있습니다.
-
-* 4. GPU 스트레스 테스트 (과부하 유도)
-장애가 아닌 '성능 저하' 및 '과열로 인한 노드 이탈' 시나리오를 테스트하고 싶다면 파드 내에서 연산 부하를 최대치로 올릴 수 있습니다.
-```
-# 파드 내에서 무한 루프로 GPU 연산 수행 (유틸리티 상승)
-bash -c "for i in {1..100}; do nvidia-smi; sleep 0.1; done"
-```
-파드 내부에서 "GPU 고장" 명령을 날리는 대신, NVIDIA_VISIBLE_DEVICES=none을 설정하여 앱의 오류 처리를 테스트하거나, Chaos Mesh 같은 도구로 파드 자체를 강제 종료하는 방식이 실제 EKS 복구 테스트에 더 적합합니다.
-
-
-#### 에이전트 로그 실시간 모니터링 ####
+## 에이전트 로그 실시간 모니터링 ##
 에이전트가 노드의 커널 메시지나 시스템 로그를 제대로 파싱하고 있는지 확인합니다.
 ```
 # stern 설치 시
@@ -95,31 +80,15 @@ kubectl stern -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring-a
 kubectl logs -f -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring-agent
 ```
 
-#### GPU 장애 감지 시뮬레이션 (검증 테스트) ####
-NMA는 노드 로그를 모니터링하여 특정 오류 메시지가 발생하면 NodeCondition을 변경합니다. GPU 노드의 경우 NVIDIA 드라이버 오류(XID 메시지 등)를 감지하도록 설계되어 있습니다. 
 
-A. 가상 오류 메시지 주입 (노드 레벨)
-노드에 직접 접속하여 에이전트가 감시하는 커널 로그(kmsg)에 강제로 오류 메시지를 써서 감지 여부를 테스트할 수 있습니다. 
-```
-# 노드 SSH 접속 후 실행 (NVIDIA GPU 오류 메시지 예시)
-echo "NVRM: Xid (PCI:0000:00:00): 31, GPU termination" | sudo tee /dev/kmsg
-```
 
-B. NodeCondition 변화 확인
-메시지 주입 후 에이전트가 이를 감지하면 해당 노드의 상태값이 변경됩니다
-```
-kubectl describe node <노드명> | grep -A 5 Conditions
-```
-정상 감지 시: AcceleratedHardwareReady 또는 관련 조건이 False로 변경되거나 특정 오류 테인트(Taint)가 붙는지 확인합니다. 
+## 장애 시뮬레이션 ##
 
-* 관전 포인트: 오류 주입 후 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고, 새로운 노드가 프로비저닝되는지 확인합니다. 
-*  CloudWatch 지표 확인
-NMA는 감지된 문제에 대해 CloudWatch 메트릭을 발행할 수 있습니다. CloudWatch 콘솔의 ContainerInsights 네임스페이스에서 관련 성능 지표나 로그가 수집되고 있는지 점검
+#### GPU 목록 확인 ####
+* lspci: 모든 PCI 장치 목록을 보여줍니다.
+* nvidia-smi: NVIDIA GPU를 사용 중이라면, 각 GPU가 어떤 PCI 주소(Bus-Id)에 할당되어 있는지 바로 확인할 수 있습니다.
 
----
-
-#### 방법 1: kubectl run으로 임시 특권 파드 실행 (가장 빠름) ####
-이 명령은 호스트의 /dev/kmsg를 파드 내부로 매핑하여 직접 메시지를 기록합니다.
+#### GPU 오류 로그 주입 ####
 ```
 kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
 --overrides='{"spec": {"nodeName": "<테스트_노드_이름>"}}' -- \
@@ -129,9 +98,7 @@ kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
 --overrides='{"spec": {"nodeSelector": {"k8s.amazonaws.com": "nvidia-tesla-t4"}}}' -- \
 sh -c "echo 'NVRM: Xid (PCI:0000:00:00): 31, GPU termination' > /dev/kmsg"
 ```
-
-#### 방법 2: YAML 파일을 이용한 실행 (Node 선택 필요 시) ####
-특정 GPU 노드를 타겟팅하고 싶다면 nodeSelector를 포함한 YAML을 사용하세요.
+[gpu-fault-injector.yaml]
 ```
 apiVersion: v1
 kind: Pod
@@ -156,7 +123,32 @@ spec:
       path: /dev/kmsg
 ```
 
-#### 테스트 확인 절차 ####
+
+#### NodeCondition 변화 확인 ####
+메시지 주입 후 에이전트가 이를 감지하면 해당 노드의 상태값이 변경됩니다
+```
+kubectl describe node <노드명> | grep -A 5 Conditions
+```
+* 정상 감지 시: AcceleratedHardwareReady 또는 관련 조건이 False로 변경되거나 특정 오류 테인트(Taint)가 붙는지 확인합니다. 
+* 관전 포인트: 오류 주입 후 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고, 새로운 노드가 프로비저닝되는지 확인합니다. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 테스트 확인 절차 ##
 * 메시지 주입: 위 명령어를 실행합니다.
 * 커널 로그 확인: 노드 레벨에서 메시지가 찍혔는지 확인합니다
 ```
@@ -225,6 +217,8 @@ spec:
 
 
 ## 레퍼런스 ##
+
 * https://github.com/aws/eks-node-monitoring-agent/tree/main/charts/eks-node-monitoring-agent
 * https://aws.amazon.com/ko/blogs/containers/amazon-eks-introduces-node-monitoring-and-auto-repair-capabilities/
 * https://dev.to/aws-builders/node-health-monitoring-and-auto-repair-for-amazon-eks-3eja
+* [Chaos Mesh](https://kmaster.tistory.com/12#google_vignette)
