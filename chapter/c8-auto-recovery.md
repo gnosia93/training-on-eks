@@ -86,6 +86,27 @@ kubectl logs -f -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring
 ## 장애 시뮬레이션 ##
 
 #### GPU 노드 할당 받기 ####
+```
+cat <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-pod
+spec:
+  containers:
+    - name: cuda-container
+      image: nvidia/cuda:13.0.2-runtime-ubuntu22.04    # runtime 이미지 사용
+      command: ["/bin/sh", "-c"]
+      args: ["nvidia-smi && sleep infinity"]
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+  tolerations:                                             
+    - key: "nvidia.com/gpu"
+      operator: "Exists"                      # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크
+      effect: "NoSchedule"
+EOF | kubectl apply -f -  
+```
 
 
 #### GPU 목록 확인 ####
