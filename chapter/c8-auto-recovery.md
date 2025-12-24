@@ -6,6 +6,7 @@ export CLUSTER_NAME="training-on-eks"
 export AWS_REGION="ap-northeast-2"
 export ROLE_NAME="eks-nma-role"
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export K8S_VERSION="1.34"
 
 echo "--- 1. 클러스터 OIDC 정보 확인 및 신뢰 정책 생성 ---"
 # 클러스터의 OIDC ID 추출
@@ -46,7 +47,7 @@ ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}"
 
 # 최신 NMA 버전 가져오기
 NMA_VERSION=$(aws eks describe-addon-versions \
-    --kubernetes-version 1.31 \
+    --kubernetes-version ${K8S_VERSION} \
     --addon-name eks-node-monitoring-agent \
     --query 'addons[0].addonVersions[?compatibilities[0].defaultVersion==`true`].addonVersion' \
     --output text)
