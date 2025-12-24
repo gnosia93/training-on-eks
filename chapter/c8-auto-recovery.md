@@ -4,6 +4,7 @@
 export CLUSTER_NAME="training-on-eks"
 export K8S_VERSION="1.34"
 
+# AWS가 권장하는 최적의 애드온 버전을 찾는다.
 NMA_VERSION=$(aws eks describe-addon-versions \
     --kubernetes-version ${K8S_VERSION} \
     --addon-name eks-node-monitoring-agent \
@@ -11,10 +12,10 @@ NMA_VERSION=$(aws eks describe-addon-versions \
     --output text)
 echo "Node Monitoring Agent Version: "${NMA_VERSION}
 
+# 해당 애드온을 설치한다. 
 aws eks create-addon \
-    --cluster-name ${CLUSTER_NAME} \
-    --addon-name eks-node-monitoring-agent \
-    --addon-version ${NMA_VERSION}  # 2025년 최신 버전 확인 필요
+    --cluster-name ${CLUSTER_NAME} --addon-name eks-node-monitoring-agent \
+    --addon-version ${NMA_VERSION}  
 
 # 에이전트 포드 확인
 kubectl get pods -n kube-system | grep node-monitoring-agent
