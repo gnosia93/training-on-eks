@@ -91,7 +91,7 @@ cat <<EOF > nvidia-smi.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: gpu-pod
+  name: nvidia-smi
 spec:
   containers:
     - name: cuda-container
@@ -103,7 +103,7 @@ spec:
           nvidia.com/gpu: 1
   tolerations:                                             
     - key: "nvidia.com/gpu"
-      operator: "Exists"                      # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크
+      operator: "Exists"               # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크
       effect: "NoSchedule"
 EOF
 kubectl apply -f nvidia-smi.yaml
