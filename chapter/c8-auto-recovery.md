@@ -69,8 +69,72 @@ echo "설치가 완료되었습니다."
 kubectl get sa -n kube-system eks-node-monitoring-agent -o yaml
 ```
 
+### pod identity 방식 ###
+```
+# 1. 환경 변수 설정 (본인의 환경에 맞게 수정)
+export CLUSTER_NAME="training-on-eks"
+export REGION="ap-northeast-2"
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export ROLE_NAME="eks-nma-pod-identity-role"
 
+echo "--- 1. Pod Identity용 IAM Role 생성 ---"
+# Pod Identity 서비스가 이 역할을 맡을 수 있도록 신뢰 정책 생성
+cat <<EOF > nma-pod-identity-trust-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "pods.eks.amazonaws.com"
+            },
+            "Action": [
+                "sts:AssumeRole",
+                "sts:TagSession"
+            ]
+        }
+    ]
+}
+EOF
 
+# Role 생성 및 필수 정책(WorkerNodePolicy) 연결
+aws iam create-role --role-name ${ROLE_NAME} --assume-role-policy-document file://nma-pod-identity-trust-policy.json || true
+aws iam attach-role-policy --role-name ${ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+
+echo "--- 2. Pod Identity 연결(Association) 생성 ---"
+# 클러스터, 네임스페이스, SA 이름, IAM Role을 하나로 묶음
+# (SA는 애드온이 생성할 것이므로 미리 정의만 함)
+aws eks create-pod-identity-association \
+    --cluster-name ${CLUSTER_NAME} \
+    --namespace kube-system \
+    --service-account eks-node-monitoring-agent \
+    --role-arn arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME} \
+    --region ${REGION} || true
+
+echo "--- 3. EKS NMA 애드온 설치 ---"
+# 최신 버전 확인 (2025년 기준)
+NMA_VERSION=$(aws eks describe-addon-versions \
+    --kubernetes-version 1.31 \
+    --addon-name eks-node-monitoring-agent \
+    --query 'addons.addonVersions[?compatibilities.defaultVersion==`true`].addonVersion' \
+    --output text)
+
+aws eks create-addon \
+    --cluster-name ${CLUSTER_NAME} \
+    --addon-name eks-node-monitoring-agent \
+    --addon-version ${NMA_VERSION} \
+    --resolve-conflicts OVERWRITE
+
+echo "애드온 배포 대기 중 (약 30초)..."
+sleep 30
+
+echo "--- 4. 쿠버네티스 RBAC 권한 패치 (중요!) ---"
+# NMA가 노드 상태(nodes/status)를 수정할 수 있도록 내부 권한 부여
+kubectl patch clusterrole eks-node-monitoring-agent --type='json' -p='[{"op": "add", "path": "/rules/-", "value": {"apiGroups": [""], "resources": ["nodes", "nodes/status"], "verbs": ["get", "patch", "update", "list", "watch"]}}]'
+
+echo "--- 설치 완료! ---"
+echo "이제 dcgmi 결함 주입 테스트를 진행하셔도 좋습니다."
+```
 
 
 
