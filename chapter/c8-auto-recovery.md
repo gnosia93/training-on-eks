@@ -182,33 +182,6 @@ dcgmi discovery -l
 dcgmi test --inject --gpuid 0 -f 319 -v 4
 ```
 
-When the repair feature is enabled, you can test this feature by inducing errors. For example, to induce GPU errors, exec into the DCGM Server Pods and run the following commands:
-kubectl exec -n kube-system -it dcgm-server-gkchs -- /bin/sh  
-dcgmi test --inject --gpuid 0 -f 319 -v 4
-Successfully injected field info.
-If you check the corresponding Amazon EKS node condition where the dcgm-server-gkchs Pod is running, then you should see that the AcceleratedHardwareReady type status condition for the underlying node has turned False. This means that the NMA agent is enabled and can detect the GPU failures.
-
-kubectl get nodes -o json | jq '.items[1].status.conditions
-{
-"lastHeartbeatTime": "2024-10-30T19:25:51Z",
-    "lastTransitionTime": "2024-10-29T18:36:29Z",
-    "message": "detected 2 Nvidia Double Bit error(s) on location Device",
-    "reason": "NvidiaDoubleBitError",
-    "status": "False",
-    "type": "AcceleratedHardwareReady"
-}
-Only certain GPU hardware failures, such as NVLink errors or GPU falling off the bus, cause the underlying Node to be rebooted instead of a Node replacement.
-
-
-
-
-
-
-
-
-```
-여러가지 방식으로 시도해 보았으나, GPU 에 직접적인 오류는 주입할 수 있는 방법은 현재로서는 찾아내지 못했다..
-
 #### 4. NodeCondition 변화 확인 ####
 ```
 kubectl describe node ${NODE_NAME} | grep -A 15 Conditions
