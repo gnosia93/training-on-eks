@@ -156,7 +156,7 @@ export PCI_BUS_ID=$(kubectl exec -it nvidia-smi -- nvidia-smi --query-gpu=pci.bu
 echo ${NODE_NAME}" "${PCI_BUS_ID}
 
 kubectl run gpu-detach --rm -it --privileged --image=ubuntu \
---overrides='{"spec": {"nodeName": "${NODE_NAME}"}}' -- \
+--overrides='{"spec": {"nodeName": "'"${NODE_NAME}"'"}}' -- \
 sh -c "echo 1 > /sys/bus/pci/devices/${PCI_BUS_ID}/remove"
 ```
 
