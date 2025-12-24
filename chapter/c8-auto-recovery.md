@@ -106,13 +106,48 @@ spec:
       operator: "Exists"               # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크
       effect: "NoSchedule"
 EOF
-kubectl apply -f nvidia-smi.yaml
+kubectl apply -f nvidia-smi.yaml && kubectl logs nvidia-smi
 ```
 
+[결과]
+```
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA T4G                     On  |   00000000:00:1F.0 Off |                    0 |
+| N/A   58C    P8             10W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
 
-#### GPU 목록 확인 ####
-* lspci: 모든 PCI 장치 목록을 보여줍니다.
-* nvidia-smi: NVIDIA GPU를 사용 중이라면, 각 GPU가 어떤 PCI 주소(Bus-Id)에 할당되어 있는지 바로 확인할 수 있습니다.
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
+Bus-Id 값이 00000000:00:1F.0 임을 확인할 수 있다.
+
+#### 노드 확인 ####
+```
+kubectl get nodes -o custom-columns="NAME:.metadata.name,STATUS:.status.conditions[-1].type,\
+GPU_TOTAL:.status.capacity.nvidia\.com/gpu,\
+GPU_AVAIL:.status.allocatable.nvidia\.com/gpu,\
+INSTANCE:.metadata.labels.node\.kubernetes\.io/instance-type"
+```
+[결과]
+```
+NAME                                            STATUS                     GPU_TOTAL   GPU_AVAIL   INSTANCE
+ip-10-0-4-115.ap-northeast-2.compute.internal   KernelReady                <none>      <none>      c7g.2xlarge
+ip-10-0-4-138.ap-northeast-2.compute.internal   AcceleratedHardwareReady   1           1           g5g.xlarge
+ip-10-0-6-164.ap-northeast-2.compute.internal   NetworkingReady            <none>      <none>      c6i.2xlarge
+```
+
 
 #### GPU 오류 로그 주입 ####
 ```
