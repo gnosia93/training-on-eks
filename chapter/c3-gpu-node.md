@@ -70,10 +70,10 @@ spec:
     - alias: al2023@latest
   subnetSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "training-on-eks" # replace with your cluster name
+        karpenter.sh/discovery: "training-on-eks" 
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "training-on-eks" # replace with your cluster name
+        karpenter.sh/discovery: "training-on-eks" 
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
