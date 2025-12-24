@@ -105,7 +105,7 @@ spec:
     - key: "nvidia.com/gpu"
       operator: "Exists"                      # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크
       effect: "NoSchedule"
-EOF | kubectl apply -f -  
+EOF | kubectl apply -f -
 ```
 
 
