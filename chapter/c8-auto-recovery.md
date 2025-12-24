@@ -114,7 +114,7 @@ aws eks create-pod-identity-association \
 echo "--- 3. EKS NMA 애드온 설치 ---"
 # 최신 버전 확인 (2025년 기준)
 NMA_VERSION=$(aws eks describe-addon-versions \
-    --kubernetes-version 1.31 \
+    --kubernetes-version ${K8S_VERSION} \
     --addon-name eks-node-monitoring-agent \
     --query 'addons.addonVersions[?compatibilities.defaultVersion==`true`].addonVersion' \
     --output text)
