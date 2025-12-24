@@ -194,14 +194,7 @@ Addresses:
   InternalDNS:  ip-10-0-4-138.ap-northeast-2.compute.internal
   Hostname:     ip-10-0-4-138.ap-northeast-2.compute.internal
 ```
-
-* 관전 포인트: 오류 주입 후 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고, 새로운 노드가 프로비저닝되는지 확인합니다. 
-
-```
-kubectl get nodes
-dmesg | tail -n 5
-```
-
+오류 주입후 AcceleratedHardwareReady 값이 False 변경되는지 확인하고, 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고 새로운 노드가 프로비저닝되는지 확인한다. 
 
 ---
 ## 프로메테우스 연동 ##
