@@ -157,8 +157,9 @@ export BUS_ID=00000000:00:1F.0
 kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
 --overrides='{"spec": {"nodeName": "${NODE_NAME}"}}' -- \
 sh -c "echo 'NVRM: Xid (PCI:${BUS_ID}): 31, GPU termination' > /dev/kmsg"
-
 ```
+Xid 31 은 "GPU memory corruption" 또는 "GPU has fallen off the bus" (GPU가 버스에서 이탈함) 을 나타내는 NVIDA 에서 정의한 코드값이다.
+
 
 [gpu-fault-injector.yaml]
 ```
