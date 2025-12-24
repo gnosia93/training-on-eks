@@ -179,7 +179,26 @@ dcgmi discovery -l
 +--------+----------------------------------------------------------------------+
 ```
 ```
-dcgmi test --inject --gpuid 0 -f 319 -v 4
+# 1. DCGM 그룹 생성 (이미 있으면 에러가 나지만 무시됨)
+dcgmi group -c nma_test_group --addgpu 0
+
+# 2. 헬스 체크 시스템 활성화 (메모리, PCIe, NVLink 감시 시작)
+# 이 명령어가 실행되어야 주입된 값이 '장애'로 판정됩니다.
+dcgmi health -g $(dcgmi group -l | grep nma_test_group | awk '{print $2}') -s mpi
+
+# 3. 에러 주입 (가장 강력한 트리거들 조합)
+echo "Injecting errors to GPU 0..."
+
+# (A) XID 48: Double-bit ECC 에러 (NMA가 즉각 반응하는 Critical 에러)
+dcgmi test --inject --gpuid 0 -f 150 -v 48
+
+# (B) ECC Uncorrectable Volatile Total: 999개 (수치상 장애 유도)
+dcgmi test --inject --gpuid 0 -f 111 -v 999
+
+# 4. DCGM 자체 상태 확인
+echo "Checking DCGM Health Status..."
+sleep 5
+dcgmi health -g $(dcgmi group -l | grep nma_test_group | awk '{print $2}') -c
 ```
 
 #### 4. NodeCondition 변화 확인 ####
