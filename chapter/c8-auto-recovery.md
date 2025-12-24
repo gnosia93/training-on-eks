@@ -155,22 +155,13 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   NetworkingReady            <none
 
 
 #### 3. GPU 오류 주입 ####
-```
-export NODE_NAME=ip-10-0-4-59.ap-northeast-2.compute.internal 
-export PCI_BUS_ID=$(kubectl exec -it nvidia-smi -- nvidia-smi --query-gpu=pci.bus_id --format=csv,noheader)
-echo ${NODE_NAME}" "${PCI_BUS_ID}
-
-export INSTANCE_ID=$(kubectl get node ${NODE_NAME} -o jsonpath='{.spec.providerID}' | cut -d'/' -f5)
-echo "Target Instance ID: ${INSTANCE_ID}"
-```
-
 
 
 ```
 export NMA_NAME=$(kubectl get pod eks-node-monitoring-agent-rs7lg -n kube-system -o jsonpath='{.spec.containers[*].name}')
 echo ${NMA_NAME}
 kubectl debug -it eks-node-monitoring-agent-rs7lg -n kube-system \
-    --image=nvcr.io/nvidia/k8s/dcgm-exporter:3.3.5-ubuntu22.04 --target=${NMA_NAME}
+    --image=nvidia/dcgm-exporter:4.4.2-4.7.1-ubuntu22.04 --target=${NMA_NAME}
 ```
 
 When the repair feature is enabled, you can test this feature by inducing errors. For example, to induce GPU errors, exec into the DCGM Server Pods and run the following commands:
