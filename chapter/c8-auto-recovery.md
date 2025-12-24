@@ -162,7 +162,14 @@ echo ${NODE_NAME}" "${PCI_BUS_ID}
 
 export INSTANCE_ID=$(kubectl get node ${NODE_NAME} -o jsonpath='{.spec.providerID}' | cut -d'/' -f5)
 echo "Target Instance ID: ${INSTANCE_ID}"
+```
 
+
+
+```
+export NMA_NAME=$(kubectl get pod eks-node-monitoring-agent-rs7lg -n kube-system -o jsonpath='{.spec.containers[*].name}')
+echo ${NMA_NAME)
+```
 
 When the repair feature is enabled, you can test this feature by inducing errors. For example, to induce GPU errors, exec into the DCGM Server Pods and run the following commands:
 kubectl exec -n kube-system -it dcgm-server-gkchs -- /bin/sh  
