@@ -2,36 +2,70 @@
 
 
 ```
-cat <<EOF > nma-policy.json
+export CLUSTER_NAME="training-on-eks"
+export AWS_REGION="ap-northeast-2"
+export ROLE_NAME="eks-nma-role"
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+echo "--- 1. 클러스터 OIDC 정보 확인 및 신뢰 정책 생성 ---"
+# 클러스터의 OIDC ID 추출
+OIDC_URL=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.identity.oidc.issuer" --output text)
+OIDC_ID=$(echo $OIDC_URL | cut -d '/' -f 5)
+
+# 신뢰 정책(Trust Policy) 생성: EKS 파드가 이 역할을 사용할 수 있게 허용
+cat <<EOF > nma-trust-policy.json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "eks:DescribeAddon",
-                "eks:DescribeCluster",
-                "ec2:DescribeInstances",
-                "ec2:DescribeInstanceStatus"
-            ],
-            "Resource": "*"
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/oidc.eks.${AWS_REGION}{OIDC_ID}"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "oidc.eks.${REGION}{OIDC_ID}:sub": "system:serviceaccount:kube-system:eks-node-monitoring-agent",
+          "oidc.eks.${REGION}{OIDC_ID}:aud": "sts.amazonaws.com"
         }
-    ]
+      }
+    }
+  ]
 }
 EOF
 
-aws iam create-policy --policy-name EKSNodeMonitoringAgentPolicy --policy-document file://nma-policy.json || true
+echo "--- 2. IAM Role 생성 및 정책 연결 ---"
+# 1) IAM Role 생성
+aws iam create-role --role-name ${ROLE_NAME} --assume-role-policy-document file://nma-trust-policy.json || true
 
-eksctl create iamserviceaccount \
-    --name eks-node-monitoring-agent \
-    --namespace kube-system \
-    --cluster ${CLUSTER_NAME} \
-    --region ${REGION} \
-    --attach-policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy \
-    --attach-policy-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):policy/EKSNodeMonitoringAgentPolicy \
-    --override-existing-serviceaccounts \
-    --approve
+# 2) 필수 권한 정책 연결 (노드 모니터링에 필요한 표준 정책)
+aws iam attach-role-policy --role-name ${ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
 
+echo "--- 3. EKS 애드온 설치 (Role 지정) ---"
+ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}"
+
+# 최신 NMA 버전 가져오기
+NMA_VERSION=$(aws eks describe-addon-versions \
+    --kubernetes-version 1.31 \
+    --addon-name eks-node-monitoring-agent \
+    --query 'addons[0].addonVersions[?compatibilities[0].defaultVersion==`true`].addonVersion' \
+    --output text)
+
+aws eks create-addon \
+    --cluster-name ${CLUSTER_NAME} \
+    --addon-name eks-node-monitoring-agent \
+    --addon-version ${NMA_VERSION} \
+    --service-account-role-arn ${ROLE_ARN} \
+    --resolve-conflicts OVERWRITE
+
+echo "--- 4. RBAC 권한 패치 (노드 상태 수정 권한) ---"
+# 애드온이 생성될 때까지 대기 후 실행 (혹은 명령어가 성공할 때까지 반복)
+sleep 30
+kubectl patch clusterrole eks-node-monitoring-agent --type='json' -p='[{"op": "add", "path": "/rules/-", "value": {"apiGroups": [""], "resources": ["nodes", "nodes/status"], "verbs": ["get", "patch", "update", "list", "watch"]}}]'
+
+echo "설치가 완료되었습니다."
+
+kubectl get sa -n kube-system eks-node-monitoring-agent -o yaml
 ```
 
 
