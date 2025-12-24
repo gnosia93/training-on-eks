@@ -165,6 +165,20 @@ kubectl debug -it eks-node-monitoring-agent-zwsc9 -n kube-system \
     -- bash
 
 nv-hostengine &
+dcgmi discovery -l
+```
+[결과]
+```
+1 GPU found.
++--------+----------------------------------------------------------------------+
+| GPU ID | Device Information                                                   |
++--------+----------------------------------------------------------------------+
+| 0      | Name: NVIDIA T4G                                                     |
+|        | PCI Bus ID: 00000000:00:1F.0                                         |
+|        | Device UUID: GPU-9ca02968-f496-c0c4-01d9-509cb6c32f5f                |
++--------+----------------------------------------------------------------------+
+```
+```
 dcgmi test --inject --gpuid 0 -f 319 -v 4
 ```
 
