@@ -17,8 +17,13 @@ aws eks create-addon \
     --cluster-name ${CLUSTER_NAME} --addon-name eks-node-monitoring-agent \
     --addon-version ${NMA_VERSION}  
 
-# 에이전트 포드 확인
+# 설치된 파드 확인
 kubectl get pods -n kube-system | grep node-monitoring-agent
+```
+[결과]
+```
+eks-node-monitoring-agent-pm4kc   1/1     Running     0          44h
+eks-node-monitoring-agent-rbgxp   1/1     Running     0          44h
 ```
 Node Monitoring Agent는 GPU 노드의 상태를 정밀하게 진단하기 위해 내부적으로 NVIDIA의 핵심 라이브러리인 NVML(NVIDIA Management Library)과 DCGM을 활용한다.
 
