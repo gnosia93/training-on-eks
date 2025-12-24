@@ -159,10 +159,15 @@ export INSTANCE_ID=$(kubectl get node ${NODE_NAME} -o jsonpath='{.spec.providerI
 echo "Target Instance ID: ${INSTANCE_ID}"
 
 aws ssm send-command \
-    --instance-ids "<INSTANCE_ID>" \
+    --instance-ids "${INSTANCE_ID}" \
     --document-name "AWS-RunShellScript" \
-    --parameters 'commands=["echo 1 > /sys/bus/pci/devices/${PCI_BUS_ID}/remove"]'
-
+    --comment "GPU Fault Simulation: Force Remove PCI Device" \
+    --parameters '{
+        "commands": [
+            "echo 1 > /sys/bus/pci/devices/${PCI_BUS_ID}/remove",
+            "logger \"[FAULT_INJECTION] GPU ${PCI_BUS_ID} has been removed by SSM command\""
+        ]
+    }' 
 ```
 
 
