@@ -180,11 +180,11 @@ dcgmi discovery -l
 ```
 ```
 # 1. DCGM 그룹 생성 (이미 있으면 에러가 나지만 무시됨)
-dcgmi group -c nma_test_group --addgpu 0
+dcgmi group -c nma_test_group -a 0
 
 # 2. 헬스 체크 시스템 활성화 (메모리, PCIe, NVLink 감시 시작)
 # 이 명령어가 실행되어야 주입된 값이 '장애'로 판정됩니다.
-dcgmi health -g $(dcgmi group -l | grep nma_test_group | awk '{print $2}') -s mpi
+dcgmi health -g $(dcgmi group -l | grep nma_test_group | awk '{print $6}') -s mpi
 
 # 3. 에러 주입 (가장 강력한 트리거들 조합)
 echo "Injecting errors to GPU 0..."
