@@ -73,14 +73,8 @@ spec:
 ## 에이전트 로그 실시간 모니터링 ##
 에이전트가 노드의 커널 메시지나 시스템 로그를 제대로 파싱하고 있는지 확인합니다.
 ```
-# stern 설치 시
-kubectl stern -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring-agent
-
-# 기본 kubectl 사용 시
 kubectl logs -f -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring-agent
 ```
-
-
 
 ## 장애 시뮬레이션 ##
 
