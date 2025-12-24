@@ -163,9 +163,28 @@ Xid 31 은 "GPU memory corruption" 또는 "GPU has fallen off the bus" (GPU가 �
 
 #### 4. NodeCondition 변화 확인 ####
 ```
-kubectl describe node ${NODE_NAME} | grep -A 5 Conditions
+kubectl describe node ${NODE_NAME} | grep -A 15 Conditions
 ```
-* 정상 감지 시: AcceleratedHardwareReady 또는 관련 조건이 False로 변경되거나 특정 오류 테인트(Taint)가 붙는지 확인합니다. 
+[결과]
+```
+Conditions:
+  Type                       Status  LastHeartbeatTime                 LastTransitionTime                Reason                             Message
+  ----                       ------  -----------------                 ------------------                ------                             -------
+  MemoryPressure             False   Wed, 24 Dec 2025 03:04:59 +0000   Wed, 24 Dec 2025 02:27:47 +0000   KubeletHasSufficientMemory         kubelet has sufficient memory available
+  DiskPressure               False   Wed, 24 Dec 2025 03:04:59 +0000   Wed, 24 Dec 2025 02:27:47 +0000   KubeletHasNoDiskPressure           kubelet has no disk pressure
+  PIDPressure                False   Wed, 24 Dec 2025 03:04:59 +0000   Wed, 24 Dec 2025 02:27:47 +0000   KubeletHasSufficientPID            kubelet has sufficient PID available
+  Ready                      True    Wed, 24 Dec 2025 03:04:59 +0000   Wed, 24 Dec 2025 02:32:20 +0000   KubeletReady                       kubelet is posting ready status
+  ContainerRuntimeReady      True    Wed, 24 Dec 2025 02:32:26 +0000   Wed, 24 Dec 2025 02:32:26 +0000   ContainerRuntimeIsReady            Monitoring for the ContainerRuntime system is active
+  StorageReady               True    Wed, 24 Dec 2025 02:32:26 +0000   Wed, 24 Dec 2025 02:32:26 +0000   DiskIsReady                        Monitoring for the Disk system is active
+  NetworkingReady            True    Wed, 24 Dec 2025 02:32:26 +0000   Wed, 24 Dec 2025 02:32:26 +0000   NetworkingIsReady                  Monitoring for the Networking system is active
+  KernelReady                True    Wed, 24 Dec 2025 02:32:26 +0000   Wed, 24 Dec 2025 02:32:26 +0000   KernelIsReady                      Monitoring for the Kernel system is active
+  AcceleratedHardwareReady   True    Wed, 24 Dec 2025 02:32:26 +0000   Wed, 24 Dec 2025 02:32:26 +0000   NvidiaAcceleratedHardwareIsReady   Monitoring for the Nvidia AcceleratedHardware system is active
+Addresses:
+  InternalIP:   10.0.4.138
+  InternalDNS:  ip-10-0-4-138.ap-northeast-2.compute.internal
+  Hostname:     ip-10-0-4-138.ap-northeast-2.compute.internal
+```
+
 * 관전 포인트: 오류 주입 후 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고, 새로운 노드가 프로비저닝되는지 확인합니다. 
 
 ```
