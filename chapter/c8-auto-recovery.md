@@ -228,61 +228,6 @@ Addresses:
 ```
 오류 주입후 AcceleratedHardwareReady 값이 False 변경되는지 확인하고, 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고 새로운 노드가 프로비저닝되는지 확인한다. 
 
----
-## 프로메테우스 연동 ##
-EKS Node Monitoring Agent(NMA)는 내부적으로 GPU 메트릭을 수집하지만, 기본적으로는 Prometheus가 아닌 Amazon CloudWatch Container Insights로 데이터를 보내도록 설계되어 있습니다. 그라파나(Grafana) 연동을 위해 프로메테우스(Prometheus)가 NMA의 데이터를 읽어오게 하려면, NMA가 노출하는 메트릭 엔드포인트를 프로메테우스 스크랩(Scrape) 대상에 추가해야 합니다.
-
-#### 1. NMA 메트릭 엔드포인트 확인 ####
-NMA는 각 노드에서 DaemonSet 형태로 실행되며, 일반적으로 다음 포트를 통해 메트릭을 노출합니다: 
-* 포트: 8080 (또는 설정에 따라 다를 수 있음)
-* 경로: /metrics 
-
-#### 2. Prometheus 설정 (Scrape Config) #### 
-프로메테우스 설정(prometheus.yml) 또는 ServiceMonitor(Prometheus Operator 사용 시)에 NMA를 타겟으로 추가합니다. 
-
-방법 A: prometheus.yml에 직접 추가
-프로메테우스 설정 파일의 scrape_configs 섹션에 아래 내용을 추가합니다. 
-```
-scrape_configs:
-  - job_name: 'eks-node-monitoring-agent'
-    kubernetes_sd_configs:
-      - role: pod
-    relabel_configs:
-      # NMA 포드가 있는 kube-system 네임스페이스와 앱 라벨 필터링
-      - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_app_kubernetes_io_name]
-        action: keep
-        regex: kube-system;eks-node-monitoring-agent
-      # 포트 8080 사용 설정
-      - source_labels: [__address__]
-        action: replace
-        regex: ([^:]+)(?::\d+)?
-        replacement: $1:8080
-        target_label: __address__
-
-```
-
-방법 B: ServiceMonitor 사용 (Prometheus Operator 환경) 
-가장 권장되는 현대적인 방식입니다. 아래 YAML을 적용하여 프로메테우스가 자동으로 NMA를 발견하게 합니다.
-```
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: eks-node-monitoring-agent
-  namespace: kube-system # NMA가 설치된 네임스페이스
-  labels:
-    release: prometheus # 사용하는 프로메테우스 릴리즈 라벨에 맞게 수정
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: eks-node-monitoring-agent
-  endpoints:
-  - port: metrics # NMA 서비스/포드에 정의된 포트 이름
-    interval: 30s
-    path: /metrics
-
-```
-
-
 
 ## 레퍼런스 ##
 
