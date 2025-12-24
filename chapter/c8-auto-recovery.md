@@ -151,13 +151,13 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   NetworkingReady            <none
 
 #### GPU 오류 로그 주입 ####
 ```
-kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
---overrides='{"spec": {"nodeName": "<테스트_노드_이름>"}}' -- \
-sh -c "echo 'NVRM: Xid (PCI:0000:00:00): 31, GPU termination' > /dev/kmsg"
+export NODE_NAME=ip-10-0-4-138.ap-northeast-2.compute.internal
+export BUS_ID=00000000:00:1F.0
 
 kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
---overrides='{"spec": {"nodeSelector": {"k8s.amazonaws.com": "nvidia-tesla-t4"}}}' -- \
-sh -c "echo 'NVRM: Xid (PCI:0000:00:00): 31, GPU termination' > /dev/kmsg"
+--overrides='{"spec": {"nodeName": "${NODE_NAME}"}}' -- \
+sh -c "echo 'NVRM: Xid (PCI:${BUS_ID}): 31, GPU termination' > /dev/kmsg"
+
 ```
 
 [gpu-fault-injector.yaml]
