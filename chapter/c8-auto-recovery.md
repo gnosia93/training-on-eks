@@ -152,7 +152,7 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   NetworkingReady            <none
 #### 3. GPU 오류 주입 ####
 ```
 export NODE_NAME=ip-10-0-4-138.ap-northeast-2.compute.internal
-export BUS_ID=00000000:00:1F.0
+export BUS_ID=$(kubectl exec -it nvidia-smi -- nvidia-smi --query-gpu=pci.bus_id --format=csv,noheader)
 
 kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
 --overrides='{"spec": {"nodeName": "'"${NODE_NAME}"'"}}' -- \
