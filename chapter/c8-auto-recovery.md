@@ -163,18 +163,9 @@ echo ${NODE_NAME}" "${PCI_BUS_ID}
 export INSTANCE_ID=$(kubectl get node ${NODE_NAME} -o jsonpath='{.spec.providerID}' | cut -d'/' -f5)
 echo "Target Instance ID: ${INSTANCE_ID}"
 
-aws ssm send-command \
-    --instance-ids "${INSTANCE_ID}" \
-    --document-name "AWS-RunShellScript" \
-    --comment "GPU Fault Simulation: Force Remove PCI Device" \
-    --parameters '{
-        "commands": [
-            "echo 1 > /sys/bus/pci/devices/${PCI_BUS_ID}/remove",
-            "logger \"[FAULT_INJECTION] GPU ${PCI_BUS_ID} has been removed by SSM command\""
-        ]
-    }' 
+aws ec2 reboot-instances --instance-ids "$INSTANCE_ID"
 ```
-
+여러가지 방식으로 시도해 보았으나, GPU 에 직접적인 오류는 주입할 수 있는 방법은 현재로서는 찾아내지 못했다..
 
 #### 4. NodeCondition 변화 확인 ####
 ```
