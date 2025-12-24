@@ -155,9 +155,11 @@ export NODE_NAME=ip-10-0-4-138.ap-northeast-2.compute.internal
 export PCI_BUS_ID=$(kubectl exec -it nvidia-smi -- nvidia-smi --query-gpu=pci.bus_id --format=csv,noheader)
 echo ${NODE_NAME}" "${PCI_BUS_ID}
 
-kubectl run gpu-detach --rm -it --privileged --image=ubuntu \
+# 2025년 기준 가장 확실한 하드웨어 Unbind 명령어
+kubectl run gpu-killer --rm -it --privileged --image=ubuntu \
 --overrides='{"spec": {"nodeName": "'"${NODE_NAME}"'"}}' -- \
-sh -c "echo 1 > /sys/bus/pci/devices/${PCI_BUS_ID}/remove"
+sh -c "echo ${PCI_BUS_ID} > /sys/bus/pci/drivers/nvidia/unbind && echo 'GPU Unbound Successfully'"
+
 ```
 
 
