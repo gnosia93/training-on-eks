@@ -162,7 +162,7 @@ export NMA_NAME=$(kubectl get pod eks-node-monitoring-agent-zwsc9 -n kube-system
 echo ${NMA_NAME}
 kubectl debug -it eks-node-monitoring-agent-zwsc9 -n kube-system \
     --image=nvidia/dcgm-exporter:4.4.2-4.7.1-ubuntu22.04 --target=${NMA_NAME} \
-    -- bash
+    --profile=sysadmin -- bash
 
 nv-hostengine &
 dcgmi discovery -l
