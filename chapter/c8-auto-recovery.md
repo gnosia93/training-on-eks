@@ -69,6 +69,11 @@ spec:
     budgets:
       - nodes: "10%" # 한 번에 교체될 수 있는 최대 노드 비율
 ```
+아래 명령어를 이용하여 카펜터가 노드를 스케일링 하는 로그를 관찰할 수 있다. 
+```
+kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
+```
+
 
 ## 에이전트 로그 실시간 모니터링 ##
 
