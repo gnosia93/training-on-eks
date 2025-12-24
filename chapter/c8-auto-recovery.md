@@ -169,6 +169,7 @@ echo "Target Instance ID: ${INSTANCE_ID}"
 ```
 export NMA_NAME=$(kubectl get pod eks-node-monitoring-agent-rs7lg -n kube-system -o jsonpath='{.spec.containers[*].name}')
 echo ${NMA_NAME}
+kubectl debug -it eks-node-monitoring-agent-rs7lg -n kube-system --image=busybox --target=${NMA_NAME}
 ```
 
 When the repair feature is enabled, you can test this feature by inducing errors. For example, to induce GPU errors, exec into the DCGM Server Pods and run the following commands:
