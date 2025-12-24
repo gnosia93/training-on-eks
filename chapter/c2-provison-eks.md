@@ -211,6 +211,39 @@ aws ec2 describe-security-groups \
 }
 ```
 
+아래 명령어를 이용하여 인라인 정책으로 eksctl-training-on-eks-iamservice-role 에 추가한다.
+```
+aws iam put-role-policy \
+    --role-name eksctl-training-on-eks-iamservice-role \
+    --policy-name EKS_OIDC_Support_Policy \
+    --policy-document "{
+        \"Version\": \"2012-10-17\",
+        \"Statement\": [
+            {
+                \"Sid\": \"VisualEditor0\",
+                \"Effect\": \"Allow\",
+                \"Action\": \"eks:DescribeCluster\",
+                \"Resource\": \"arn:aws:eks:${AWS_REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}\"
+            },
+            {
+                \"Effect\": \"Allow\",
+                \"Action\": [
+                    \"iam:CreateInstanceProfile\",
+                    \"iam:DeleteInstanceProfile\",
+                    \"iam:GetInstanceProfile\",
+                    \"iam:TagInstanceProfile\",
+                    \"iam:AddRoleToInstanceProfile\",
+                    \"iam:RemoveRoleFromInstanceProfile\",
+                    \"iam:ListInstanceProfiles\"
+                ],
+                \"Resource\": \"*\"
+            }
+        ]
+    }"
+```
+
+
+
 #### 2. IAM Identity Mapping #### 
 ```
 eksctl create iamidentitymapping \
