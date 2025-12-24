@@ -167,11 +167,6 @@ NMA_VERSION=$(aws eks describe-addon-versions \
     --output text)
 echo "Node Monitoring Agent Version: "${NMA_VERSION}
 
-ROLE_ARN=$(aws iam get-role --role-name eksctl-${CLUSTER_NAME}-addon-iamserviceaccount-kube-system-eks-node-monitoring-agent-Role1 --query 'Role.Arn' --output text || aws iam list-roles --query "Roles[?contains(RoleName, 'eks-node-monitoring-agent')].Arn" --output text | head -n 1)
-
-
-
-
 # 해당 애드온을 설치한다. 
 aws eks create-addon \
     --cluster-name ${CLUSTER_NAME} --addon-name eks-node-monitoring-agent \
