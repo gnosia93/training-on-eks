@@ -1,3 +1,5 @@
+<< fault injection 이 동작하지 않는다. 왜 일까? >> 
+
 ## 1. Node Monitoring Agent 설치 ##
 클러스터 설정에서 eks-node-monitoring-agent 애드온을 추가하여 설치해야 합니다. 이 에이전트가 노드의 로그를 분석하여 장애를 감지하는 역할을 합니다.
 ```
