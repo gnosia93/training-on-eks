@@ -152,14 +152,13 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   NetworkingReady            <none
 #### 3. GPU 오류 주입 ####
 ```
 export NODE_NAME=ip-10-0-4-138.ap-northeast-2.compute.internal
-export BUS_ID=$(kubectl exec -it nvidia-smi -- nvidia-smi --query-gpu=pci.bus_id --format=csv,noheader)
-echo ${NODE_NAME}" "${BUS_ID}
+export PCI_BUS_ID=$(kubectl exec -it nvidia-smi -- nvidia-smi --query-gpu=pci.bus_id --format=csv,noheader)
+echo ${NODE_NAME}" "${PCI_BUS_ID}
 
-kubectl run gpu-fault-sim --rm -it --privileged --image=ubuntu \
---overrides='{"spec": {"nodeName": "ip-10-0-4-138.ap-northeast-2.compute.internal"}}' -- \
-sh -c "echo 'NVRM: Xid (PCI:${BUS_ID}): 31, GPU termination' > /dev/kmsg"
+kubectl run gpu-detach --rm -it --privileged --image=ubuntu \
+--overrides='{"spec": {"nodeName": "${NODE_NAME}"}}' -- \
+sh -c "echo 1 > /sys/bus/pci/devices/${PCI_BUS_ID}/remove"
 ```
-Xid 31 은 "GPU memory corruption" 또는 "GPU has fallen off the bus" (GPU가 버스에서 이탈함) 을 나타내는 NVIDA 에서 정의한 코드값이다.
 
 
 #### 4. NodeCondition 변화 확인 ####
