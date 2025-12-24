@@ -71,9 +71,16 @@ spec:
 ```
 
 ## 에이전트 로그 실시간 모니터링 ##
-에이전트가 노드의 커널 메시지나 시스템 로그를 제대로 파싱하고 있는지 확인합니다.
+
+에이전트가 노드의 커널 메시지나 시스템 로그를 제대로 파싱하고 있는지 확인한다.
 ```
 kubectl logs -f -n kube-system -l app.kubernetes.io/instance=eks-node-monitoring-agent
+```
+[결과]
+```
+{"level":"info","ts":"2025-12-24T01:53:06Z","msg":"reported node conditions","hostname":"ip-10-0-6-164.ap-northeast-2.compute.internal"}
+{"level":"info","ts":"2025-12-24T01:58:06Z","msg":"reporting managed conditions","hostname":"ip-10-0-6-164.ap-northeast-2.compute.internal"}
+{"level":"info","ts":"2025-12-24T01:58:06Z","msg":"Skipping MAC address policy check - not needed for this OS","hostname":"ip-10-0-6-164.ap-northeast-2.compute.internal","monitor":"networking"}
 ```
 
 ## 장애 시뮬레이션 ##
