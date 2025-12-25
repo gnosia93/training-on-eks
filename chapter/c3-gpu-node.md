@@ -70,6 +70,8 @@ spec:
     # Required; when coupled with a pod that requests NVIDIA GPUs or AWS Neuron
     # devices, Karpenter will select the correct AL2023 accelerated AMI variant
     # see https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/
+    # EKS GPU Optimized AMI: NVIDIA 드라이버와 CUDA 런타임만 포함된 가벼운 이미지 (Karpenter가 자동으로 선택 가능) 가 설치됨.
+    # 특정 DLAMI 가 필요한 경우 - name : 필드에 정의해야 함. 
     - alias: al2023@latest
   subnetSelectorTerms:
     - tags:
