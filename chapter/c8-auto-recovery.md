@@ -18,6 +18,11 @@ kubectl logs -f -l app.kubernetes.io/name=eks-node-monitoring-agent -n kube-syst
 echo "<3>NVRM: Xid (PCI:00000000:00:1F.0): 31, Ch 00000001, failed to allocate GPU memory" | sudo tee /dev/kmsg
 
 ```
+
+* instance shell login
+```
+[root@ip-10-0-4-234 bin]# dmesg -Tw
+```
   
 
 
