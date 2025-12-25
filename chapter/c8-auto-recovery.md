@@ -470,6 +470,7 @@ dcgmi test --inject --gpuid 0 -f 111 -v 999
 echo "Checking DCGM Health Status..."
 sleep 5
 dcgmi health -g $(dcgmi group -l | grep nma_test_group | awk '{print $2}') -c
+dcgmi health -g 5 -c
 ```
 
 #### 4. NodeCondition 변화 확인 ####
