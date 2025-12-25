@@ -29,7 +29,7 @@
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
    - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)      
    - [노드 자동 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-auto-recovery.md)
-   - [torchrun /w k8s backend](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-torchrun.md) 
+   - [트레이닝 작업 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-torchrun.md) 
 
 * [C9. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
 
