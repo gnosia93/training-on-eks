@@ -153,7 +153,11 @@ kubectl exec -n dcgm ${DCGM_POD} -- dcgmi test --inject --gpuid 0 -f 319 -v 4
 
 ```
 
+## 노드 확인 ##
+```
+kubectl get nodes -o json | jq '.items[].status.conditions[] | select(.type=="AcceleratedHardwareReady")'
 
+```
 
 
 
