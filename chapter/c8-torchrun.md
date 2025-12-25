@@ -43,7 +43,11 @@ spec:
   trainer:                          
     minNodes: 2                               # 최소 노드 수
     maxNodes: 2                               # 최대 노드 수 (가용한 자원에 따라 확장)
-    
+
+    schedulingPolicy:                         # Coscheduling을 통해 노드들이 물리적으로 가까운 랙(Rack)이나 영역에 배치되도록 유도 
+      queue: default
+      priorityClassName: high-priority
+
     image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
     nodeSelector:
       node.kubernetes.io/instance-type: g4dn.12xlarge
