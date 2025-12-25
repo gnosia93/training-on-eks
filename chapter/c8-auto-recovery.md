@@ -40,8 +40,8 @@ cat <<EOF > nma-trust-policy.json
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "oidc.eks.${REGION}{OIDC_ID}:sub": "system:serviceaccount:kube-system:eks-node-monitoring-agent",
-          "oidc.eks.${REGION}{OIDC_ID}:aud": "sts.amazonaws.com"
+          "oidc.eks.${AWS_REGION}${OIDC_ID}:sub": "system:serviceaccount:kube-system:eks-node-monitoring-agent",
+          "oidc.eks.${AWS_REGION}${OIDC_ID}:aud": "sts.amazonaws.com"
         }
       }
     }
