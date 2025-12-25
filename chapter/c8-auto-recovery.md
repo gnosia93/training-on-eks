@@ -69,6 +69,9 @@ echo "설치가 완료되었습니다."
 kubectl get sa -n kube-system eks-node-monitoring-agent -o yaml
 ```
 
+
+
+
 ### pod identity 방식 ###
 ```
 # 1. 환경 변수 설정 (본인의 환경에 맞게 수정)
@@ -142,6 +145,13 @@ echo "이제 dcgmi 결함 주입 테스트를 진행하셔도 좋습니다."
 ```
 
 
+## 폴트 주입 ##
+```
+export DCGM_POD=$(kubectl get pods -n dcgm -l app.kubernetes.io/name=dcgm-exporter -o jsonpath='{.items[0].metadata.name}')
+echo ${DCGM_POD}
+kubectl exec -n dcgm ${DCGM_POD} -- dcgmi test --inject --gpuid 0 -f 319 -v 4
+
+```
 
 
 
