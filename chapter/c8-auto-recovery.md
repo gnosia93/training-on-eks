@@ -24,10 +24,9 @@ export K8S_VERSION="1.34"
 
 echo "--- 1. 클러스터 OIDC 정보 확인 및 신뢰 정책 생성 ---"
 # 클러스터의 OIDC ID 추출
-OIDC_URL=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.identity.oidc.issuer" --output text)
-OIDC_ID=$(echo $OIDC_URL | cut -d '/' -f 5)
+OIDC_ENDPOINT=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.identity.oidc.issuer" --output text | sed 's/https:\/\///')
 
-# 신뢰 정책(Trust Policy) 생성: EKS 파드가 이 역할을 사용할 수 있게 허용
+
 cat <<EOF > nma-trust-policy.json
 {
   "Version": "2012-10-17",
@@ -35,19 +34,21 @@ cat <<EOF > nma-trust-policy.json
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/oidc.eks.${AWS_REGION}${OIDC_ID}"
+        "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/${OIDC_ENDPOINT}"
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "oidc.eks.${AWS_REGION}${OIDC_ID}:sub": "system:serviceaccount:kube-system:eks-node-monitoring-agent",
-          "oidc.eks.${AWS_REGION}${OIDC_ID}:aud": "sts.amazonaws.com"
+          "${OIDC_ENDPOINT}:sub": "system:serviceaccount:kube-system:eks-node-monitoring-agent",
+          "${OIDC_ENDPOINT}:aud": "sts.amazonaws.com"
         }
       }
     }
   ]
 }
 EOF
+
+
 
 echo "--- 2. IAM Role 생성 및 정책 연결 ---"
 # 1) IAM Role 생성
