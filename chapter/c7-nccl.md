@@ -47,3 +47,6 @@ spec:
 보통은 기본값(Automatic)을 쓰되, 특정 규모에서 성능 저하가 보인다면 두 값을 직접 테스트해보는 것이 좋습니다.
 이러한 설정들은 앞서 논의한 NET_ADMIN과 privileged: true 권한이 있어야만 커널 및 하드웨어 레벨에서 정상적으로 동작합니다. NVIDIA NCCL 공식 가이드에서 더 자세한 변수 목록을 확인하실 수 있습니다.
 
+## 레퍼런스 ##
+
+* https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/index.html
