@@ -28,29 +28,30 @@ torchtune-qwen2.5-1.5b   114s
 ```
 
 ## 트레이닝 작업 실행 ##
+TrainJob 오퍼레이터는 backoffLimit 라는 필드를 이용하여 작업 복구 매커니즘을 제공한다. 작업 실패 했을때 다시 시작하는 기능으로, 이 예제에서는 3번까지 트레이닝 작업을 재 시작 하도록 설정 하였다.  
 ```
-cat <<EOF > t5-large.yaml
+cat <<EOF > t5-large-trn.yaml
 apiVersion: trainer.kubeflow.org/v1alpha1
 kind: TrainJob
 metadata:
-  name: pytorch-elastic-job
+  name: t5-large-trn
   namespace: kubeflow
 spec:
-  backoffLimit: 3                   # 노드 장애 시 전체 재시도 횟수
+  backoffLimit: 3                             # 작업 실패시 재시도 횟수
   runtimeRef:
-    name: torch-distributed         # 탄력적 학습을 지원하는 런타임 참조
+    name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묵음)
   trainer:                          
-    minNodes: 4                     # 최소 노드 수
-    maxNodes: 4                     # 최대 노드 수 (가용한 자원에 따라 확장)
+    minNodes: 2                               # 최소 노드 수
+    maxNodes: 2                               # 최대 노드 수 (가용한 자원에 따라 확장)
     
     image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
     nodeSelector:
       node.kubernetes.io/instance-type: g4dn.xlarge
     command:
       - "torchrun"
-      - "--nproc_per_node=1"
-      - "--rdzv_id=elastic-job"                                  # 탄력적 학습을 위한 고유 ID
-      - "--rdzv_backend=c10d"                                    # 탄력적 학습에 필수적인 c10d 백엔드
+      - "--nproc_per_node=4"
+      - "--rdzv_id=elastic-job"                                  # 고유 ID (작업 재시작시 유지되어어 한다)
+      - "--rdzv_backend=c10d"                                    # c10d 백엔드 설정 (cf. etcd 설정 가능)
       - "--rdzv_endpoint=$(MASTER_ADDR):$(MASTER_PORT)"          # 환경 변수값은 Trainer 가 자동으로 채워준다.
       - "/opt/pytorch-mnist/mnist.py"
       - "--epochs=10"
@@ -58,14 +59,14 @@ spec:
     restartPolicy: OnFailure
     resources:
       requests:
-        nvidia.com: "1"
+        nvidia.com: "8"
       limits:
-        nvidia.com: "1"
+        nvidia.com: "8"
 EOF
 ```
 트레이닝 작업을 시작한다.
 ```
-kubectl apply -f t5-large.yaml
+kubectl apply -f t5-large-trn.yaml
 ```
 
 
