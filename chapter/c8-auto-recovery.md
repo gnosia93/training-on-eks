@@ -155,8 +155,15 @@ kubectl exec -n dcgm ${DCGM_POD} -- dcgmi test --inject --gpuid 0 -f 319 -v 4
 
 ## 노드 확인 ##
 ```
-kubectl get nodes -o json | jq '.items[].status.conditions[] | select(.type=="AcceleratedHardwareReady")'
+TARGET_NODE=$(kubectl get pod -n dcgm -l app.kubernetes.io/name=dcgm-exporter -o jsonpath='{.items[0].spec.nodeName}')
+echo "Target Node: $TARGET_NODE"
 
+# 해당 노드만 콕 집어서 상태 확인
+kubectl get node $TARGET_NODE -o json | jq '.status.conditions[] | select(.type=="AcceleratedHardwareReady")'
+
+NMA_POD=$(kubectl get pod -n kube-system -l app.kubernetes.io/name=eks-node-monitoring-agent --field-selector spec.nodeName=$TARGET_NODE -o jsonpath='{.items[0].metadata.name}')
+
+kubectl logs -n kube-system $NMA_POD -f
 ```
 
 
