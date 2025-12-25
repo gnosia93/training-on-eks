@@ -1,5 +1,5 @@
-* https://aws.amazon.com/ko/blogs/containers/amazon-eks-introduces-node-monitoring-and-auto-repair-capabilities/
-<<fault injection 이 동작하지 않는다. 왜 일까? >> 
+## 버그 ##
+* https://github.com/aws/containers-roadmap/issues/2555
 
 ### eks node monitoring agent 애드온 설치 ### 
 ```
