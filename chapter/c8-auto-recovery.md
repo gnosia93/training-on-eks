@@ -455,7 +455,7 @@ dcgmi group -c nma_test_group -a 0
 # 이 명령어가 실행되어야 주입된 값이 '장애'로 판정됩니다.
 dcgmi health -g $(dcgmi group -l | grep nma_test_group | awk '{print $6}') -s mpi
 
-dcgmi health -f 
+dcgmi health -f -g 5
 
 # 3. 에러 주입 (가장 강력한 트리거들 조합)
 echo "Injecting errors to GPU 0..."
