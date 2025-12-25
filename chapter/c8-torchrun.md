@@ -56,7 +56,7 @@ spec:
       cd /workspace/code/samples/fsdp
       echo "working directory: "$(pwd)
       pip install -r requirements.txt
-      torchrun --nproc_per_node 8 --rdzv_id=elastic-job --rdzv_backend=c10d --rdzv_endpoint=$(MASTER_ADDR):$(MASTER_PORT) t5-fsdp.py
+      torchrun --nproc_per_node 8 --rdzv_id=elastic-job --rdzv_backend=c10d t5-fsdp.py
    
     restartPolicy: OnFailure
     resources:
