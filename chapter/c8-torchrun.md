@@ -32,27 +32,30 @@ torchtune-qwen2.5-1.5b   114s
 apiVersion: trainer.kubeflow.org/v1alpha1
 kind: TrainJob
 metadata:
-  name: pytorch-aws-distributed
+  name: pytorch-elastic-job
   namespace: kubeflow
 spec:
-  backoffLimit: 3
+  backoffLimit: 3                   # 노드 장애 시 전체 재시도 횟수
   runtimeRef:
-    name: torch-distributed
-  trainer:
-    numNodes: 2
-    image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
+    name: torch-distributed         # 탄력적 학습을 지원하는 런타임 참조
+  trainer:                          
+    minNodes: 4                     # 최소 노드 수
+    maxNodes: 4                     # 최대 노드 수 (가용한 자원에 따라 확장)
     
-    # AWS 특정 인스턴스 타입 설정
+    image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
     nodeSelector:
       node.kubernetes.io/instance-type: g4dn.xlarge
 
-    # 랑데부 인자 없이 torchrun 실행
-    # Kubeflow가 주입한 MASTER_ADDR, MASTER_PORT 등을 자동으로 사용함
+    # 탄력적 학습(c10d 백엔드)을 명시적으로 활성화하는 torchrun 설정
     command:
       - "torchrun"
-      - "--nproc_per_node=1"      # 각 노드당 사용할 GPU(프로세스) 개수
+      - "--nproc_per_node=1"
+      - "--nnodes=4"                                             # min:max 노드 비율 설정
+      - "--rdzv_id=elastic-job"                                  # 탄력적 학습을 위한 고유 ID
+      - "--rdzv_backend=c10d"                                    # 탄력적 학습에 필수적인 c10d 백엔드
+      - "--rdzv_endpoint=$(MASTER_ADDR):$(MASTER_PORT)"          # 환경변수값은 Trainer 가 채워준다.
       - "/opt/pytorch-mnist/mnist.py"
-      - "--epochs=5"
+      - "--epochs=10"
 
     restartPolicy: OnFailure
     resources:
@@ -64,11 +67,8 @@ spec:
         cpu: "4"
         memory: "8Gi"
         nvidia.com: "1"
-
 ```
-* Master 섹션이 없는 이유: torchrun은 모든 노드를 대등한 워커로 취급하며, 랑데뷰 시스템을 통해 실행 시점에 Rank 0을 자동으로 선출합니다. Master 스펙을 별도로 정의하면 오히려 랑데뷰 주소가 꼬일 수 있습니다. 
-* rdzv_endpoint 생략: PyTorchJob 컨트롤러가 각 포드에 PET_RDZV_ENDPOINT 환경 변수를 자동으로 넣어줍니다. 보통 첫 번째 워커 포드(worker-0)의 주소를 사용하도록 자동 설정됩니다.
-* rdzv_id 생략: 컨트롤러가 해당 Job의 고유 UID를 ID로 자동 주입하여 다른 Job과 섞이지 않게 해줍니다.
+
 
 #### 주입되는 환경 변수 (자동 설정됨) ####
 YAML을 실행하면 쿠버네티스는 각 워커 포드에 다음과 같은 환경 변수를 자동으로 설정하여 torchrun이 이를 읽게 합니다.
