@@ -1,4 +1,5 @@
-<< fault injection 이 동작하지 않는다. 왜 일까? >> 
+* https://aws.amazon.com/ko/blogs/containers/amazon-eks-introduces-node-monitoring-and-auto-repair-capabilities/
+<<fault injection 이 동작하지 않는다. 왜 일까? >> 
 
 * 설치방법 
 ```
