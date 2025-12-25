@@ -27,51 +27,45 @@ torchtune-llama3.2-3b    114s
 torchtune-qwen2.5-1.5b   114s
 ```
 
-
-
----
+## 트레이닝 작업 실행 ##
 ```
-# 모든 노드(1번~5번)에서 동일하게 실행 (endpoint는 1번 노드 IP로 통일)
-torchrun --nnodes=2 \
-         --nproc_per_node=8 \
-         --rdzv_id=job_1 \
-         --rdzv_backend=c10d \
-         --rdzv_endpoint=10.0.0.1:2379 \
-         train.py
-```
-를 쿠버네티스 환경에서 실행하는 경우 
-
-```
-apiVersion: "kubeflow.org/v1"
-kind: "PyTorchJob"
+apiVersion: trainer.kubeflow.org/v1alpha1
+kind: TrainJob
 metadata:
-  name: "multi-node-train"
+  name: pytorch-aws-distributed
+  namespace: kubeflow
 spec:
-  # [중요] Master 섹션 없이 Worker만 설정
-  pytorchReplicaSpecs:
-    Worker:
-      replicas: 2  # --nnodes=2 에 해당
-      template:
-        spec:
-          containers:
-            - name: pytorch
-              image: your-training-image:latest
-              command:
-                - torchrun                           # rdzv 관련 인자를 직접 쓰지 않아도 컨트롤러가 주입함
-                - "--nproc_per_node=8"               # 노드당 GPU 8개
-                - "train.py"
-                - "--your-arg=value"
-              resources:
-                limits:
-                  nvidia.com: 8                      # 실제 GPU 할당
-  
-  elasticPolicy:                                     # torchrun을 위한 정책 설정
-    minReplicas: 2
-    maxReplicas: 2
-    rdzvBackend: c10d                                # 외부 etcd 없이 내부 통신 사용 (c10d 소켓 통신)
-    maxRestarts: 3                                   # 노드 장애 시 재시도 횟수
-```
+  backoffLimit: 3
+  runtimeRef:
+    name: torch-distributed
+  trainer:
+    numNodes: 2
+    image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
+    
+    # AWS 특정 인스턴스 타입 설정
+    nodeSelector:
+      node.kubernetes.io/instance-type: g4dn.xlarge
 
+    # 랑데부 인자 없이 torchrun 실행
+    # Kubeflow가 주입한 MASTER_ADDR, MASTER_PORT 등을 자동으로 사용함
+    command:
+      - "torchrun"
+      - "--nproc_per_node=1"      # 각 노드당 사용할 GPU(프로세스) 개수
+      - "/opt/pytorch-mnist/mnist.py"
+      - "--epochs=5"
+
+    restartPolicy: OnFailure
+    resources:
+      requests:
+        cpu: "2"
+        memory: "4Gi"
+        nvidia.com: "1"
+      limits:
+        cpu: "4"
+        memory: "8Gi"
+        nvidia.com: "1"
+
+```
 * Master 섹션이 없는 이유: torchrun은 모든 노드를 대등한 워커로 취급하며, 랑데뷰 시스템을 통해 실행 시점에 Rank 0을 자동으로 선출합니다. Master 스펙을 별도로 정의하면 오히려 랑데뷰 주소가 꼬일 수 있습니다. 
 * rdzv_endpoint 생략: PyTorchJob 컨트롤러가 각 포드에 PET_RDZV_ENDPOINT 환경 변수를 자동으로 넣어줍니다. 보통 첫 번째 워커 포드(worker-0)의 주소를 사용하도록 자동 설정됩니다.
 * rdzv_id 생략: 컨트롤러가 해당 Job의 고유 UID를 ID로 자동 주입하여 다른 Job과 섞이지 않게 해줍니다.
