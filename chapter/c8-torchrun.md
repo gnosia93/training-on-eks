@@ -1,7 +1,21 @@
 ## [트레이닝 오퍼레이터 설치](https://www.kubeflow.org/docs/components/trainer/operator-guides/installation/) ##
 
+큐브 플로우 트레이닝 오퍼레이터와 런터임 설치한다. 
+```
+export VERSION=v2.1.0
+kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=${VERSION}"
+kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
+
+kubectl get pods -n kubeflow-system
+```
+[결과]
+```
+
+```
 
 
+
+---
 ```
 # 모든 노드(1번~5번)에서 동일하게 실행 (endpoint는 1번 노드 IP로 통일)
 torchrun --nnodes=2 \
