@@ -81,6 +81,14 @@ kubectl patch clusterrole eks-node-monitoring-agent --type='json' -p='[{"op": "a
 
 echo "설치가 완료되었습니다."
 
+
+aws eks update-addon \
+    --cluster-name training-on-eks \
+    --addon-name eks-node-monitoring-agent \
+    --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/eks-nma-role \
+    --resolve-conflicts OVERWRITE
+
+
 kubectl get sa -n kube-system eks-node-monitoring-agent -o yaml
 ```
 ---
