@@ -117,8 +117,9 @@ echo "--- 3. EKS NMA 애드온 설치 ---"
 NMA_VERSION=$(aws eks describe-addon-versions \
     --kubernetes-version ${K8S_VERSION} \
     --addon-name eks-node-monitoring-agent \
-    --query 'addons.addonVersions[?compatibilities.defaultVersion==`true`].addonVersion' \
+    --query 'addons[0].addonVersions[?compatibilities[0].defaultVersion==`true`].addonVersion' \
     --output text)
+echo "Node Monitoring Agent Version: "${NMA_VERSION}
 
 aws eks create-addon \
     --cluster-name ${CLUSTER_NAME} \
