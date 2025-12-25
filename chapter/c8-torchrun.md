@@ -28,7 +28,7 @@ torchtune-qwen2.5-1.5b   114s
 ```
 
 ## 트레이닝 작업 실행 ##
-TrainJob 오퍼레이터는 backoffLimit 라는 필드를 이용하여 작업 복구 매커니즘을 제공한다. 작업 실패 했을때 다시 시작하는 기능으로, 이 예제에서는 3번까지 트레이닝 작업을 재 시작 하도록 설정 하였다.  
+TrainJob 오퍼레이터는 backoffLimit 라는 필드를 이용하여 작업 복구 매커니즘을 제공한다. 작업이 실패 했을때 다시 시작하는 기능으로, 이 예제에서는 3번까지 트레이닝 작업을 재 시작 하도록 설정 하였다.  
 ```
 cat <<EOF > t5-large-trn.yaml
 apiVersion: trainer.kubeflow.org/v1alpha1
@@ -39,7 +39,7 @@ metadata:
 spec:
   backoffLimit: 3                             # 작업 실패시 재시도 횟수
   runtimeRef:
-    name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묵음)
+    name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묶음)
   trainer:                          
     minNodes: 2                               # 최소 노드 수
     maxNodes: 2                               # 최대 노드 수 (가용한 자원에 따라 확장)
