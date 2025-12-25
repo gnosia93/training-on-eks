@@ -35,7 +35,7 @@ cat <<EOF > nma-trust-policy.json
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/oidc.eks.${AWS_REGION}{OIDC_ID}"
+        "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/oidc.eks.${AWS_REGION}${OIDC_ID}"
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
