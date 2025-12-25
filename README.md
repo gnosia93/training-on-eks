@@ -31,7 +31,7 @@
    - [노드 자동 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-auto-recovery.md)
    - [트레이닝 작업 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-torchrun.md) 
 
-* [C9. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
+* [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
 
 * [c10. 커스텀 컨테이너 이미지]
 
