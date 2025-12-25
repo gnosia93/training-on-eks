@@ -17,6 +17,21 @@ jobset-controller-manager-58555b47c7-ltrck             1/1     Running   0      
 kubeflow-trainer-controller-manager-5b7b978fbf-r24kr   1/1     Running   0          2m55s
 ```
 
+#### 런타임 확인 ####
+```
+kubectl get clustertrainingruntimes
+```
+[결과]
+```
+NAME                     AGE
+deepspeed-distributed    114s
+mlx-distributed          114s
+torch-distributed        114s
+torchtune-llama3.2-1b    114s
+torchtune-llama3.2-3b    114s
+torchtune-qwen2.5-1.5b   114s
+```
+
 
 
 ---
