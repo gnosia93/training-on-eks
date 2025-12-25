@@ -99,36 +99,6 @@ spec:
 * 레이블 일치: Flavor에서 nvidia-a100을 지정했는데 카펜터 설정에는 g4dn.xlarge(T4 GPU)만 허용되어 있다면, 카펜터가 노드를 띄우지 못해 포드가 Pending 상태로 남게 됩니다.
 
 
-## PytorchJob 수정 및 실행 ##
-
-```
-apiVersion: "kubeflow.org/v1"
-kind: "PyTorchJob"
-metadata:
-  name: pytorch-dist-mnist
-  namespace: team-a  # LocalQueue가 생성된 네임스페이스
-  labels:
-    # 1. 이 레이블이 있어야 Kueue가 작업을 관리합니다.
-    kueue.x-k8s.io/queue-name: team-a-queue
-spec:
-  # 2. 제출 시점에 true로 설정해야 Kueue가 쿼터를 확인한 뒤 실행합니다.
-  runPolicy:
-    suspend: true
-    cleanPodPolicy: Running
-  pytorchReplicaSpecs:
-    Master:
-      replicas: 1
-      template:
-        ...chJob 제출
-kubectl apply -f pytorch-job.yaml
-
-# 2. Kueue 워크로드 상태 확인 (Admitted: true가 되면 실행 시작)
-kubectl get workloads -n team-a
-
-# 3. PyTorchJob 상태 확인 (ALL-OR-NOTHING 확인)
-kubectl get pytorchjob pytorch-dist-mnist -n team-a
-```
-
 
 
 ## 레퍼런스 ##
