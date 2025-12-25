@@ -90,11 +90,10 @@ tolerations:
     value: "present"
     effect: "NoSchedule"
 
-arguments:
-  - "-f"
-  - "/etc/dcgm-exporter/default-counters.csv"
-  - "-a"
-  - "unix:/var/run/dcgm/dcgm.sock"
+# 2. 환경 변수: 문자열 파싱 에러를 피하기 위해 변수로 주소를 전달합니다.
+env:
+  - name: DCGM_EXPORTER_LISTEN
+    value: "unix:/var/run/dcgm/dcgm.sock"
 
 securityContext:
   privileged: true
