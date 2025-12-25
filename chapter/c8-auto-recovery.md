@@ -15,7 +15,7 @@ kubectl logs -f -l app.kubernetes.io/name=eks-node-monitoring-agent -n kube-syst
 ```
 * 폴트 주입
 ```
-echo "<3>NVRM: Xid (PCI:0000:00:00): 31, Ch 00000001, failed to allocate GPU memory" | sudo tee /dev/kmsg
+echo "<3>NVRM: Xid (PCI:00000000:00:1F.0): 31, Ch 00000001, failed to allocate GPU memory" | sudo tee /dev/kmsg
 
 ```
   
