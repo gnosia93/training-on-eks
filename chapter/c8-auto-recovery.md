@@ -9,6 +9,11 @@ eksctl create addon --cluster ${CLUSTER_NAME} --name eks-node-monitoring-agent -
 ```
 ROLE 설정은 불필요하다.. 
 
+* 설치후 로그 확인 
+```
+kubectl logs -f -l app.kubernetes.io/name=eks-node-monitoring-agent -n kube-system
+```
+
 
 ## 오류 메시지 ##
 ```
