@@ -90,13 +90,13 @@ tolerations:
     value: "present"
     effect: "NoSchedule"
 
-resources:
-  limits:
-    cpu: 500m
-    memory: 1Gi
-  requests:
-    cpu: 100m
-    memory: 256Mi
+arguments:
+  - "--collect-interval"
+  - "30000"
+  - "--address"
+  - "0.0.0.0:9400"
+  - "--socket-path"
+  - "/run/nvidia-dcgm/dcgm.sock"
 
 # 호스트 소켓 공유를 위한 추가 설정
 extraVolumeMounts:
@@ -107,6 +107,14 @@ extraVolumeMounts:
 extraHostVolumes:
   - name: dcgm-socket
     hostPath: /run/nvidia-dcgm
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 256Mi
 EOF
 
 helm install dcgm-exporter nvidia/dcgm-exporter -n dcgm \
