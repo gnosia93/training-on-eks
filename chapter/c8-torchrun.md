@@ -145,3 +145,4 @@ def main():
 
 * https://github.com/kubeflow/trainer
 * https://www.kubeflow.org/docs/components/trainer/operator-guides/migration/
+* https://blog.kubeflow.org/trainer/intro/
