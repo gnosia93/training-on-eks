@@ -94,7 +94,7 @@ arguments:
   - "-f"
   - "/etc/dcgm-exporter/default-counters.csv"
   - "-a"
-  - "0.0.0.0:9400,unix:/var/run/dcgm/dcgm.sock" # 포트와 소켓을 동시에 엽니다.
+  - "unix:/var/run/dcgm/dcgm.sock"
 
 securityContext:
   privileged: true
