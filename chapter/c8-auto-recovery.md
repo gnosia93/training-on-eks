@@ -1,4 +1,10 @@
 << fault injection 이 동작하지 않는다. 왜 일까? >> 
+
+```
+eksctl create addon --cluster ${CLUSTER_NAME} --name eks-node-monitoring-agent --version latest \
+    --service-account-role-arn arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME} --force
+```
+
 ## 오류 메시지 ##
 ```
 [Errno 2] No such file or directory: '/var/run/secrets/eks.amazonaws.com/serviceaccount/token'
