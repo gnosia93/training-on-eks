@@ -90,6 +90,18 @@ tolerations:
     value: "present"
     effect: "NoSchedule"
 
+securityContext:
+  privileged: true
+
+extraHostPathVolumes:
+  - name: run-dcgm
+    hostPath: /var/run/dcgm
+
+extraVolumeMounts:
+  - name: run-dcgm
+    mountPath: /var/run/dcgm
+    mountPropagation: Bidirectional
+
 # 호스트 소켓 공유를 위한 추가 설정
 #extraVolumeMounts:
 #  - name: dcgm-socket
