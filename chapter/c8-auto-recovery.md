@@ -76,6 +76,7 @@ export CLUSTER_NAME="training-on-eks"
 export REGION="ap-northeast-2"
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export ROLE_NAME="eks-nma-pod-identity-role"
+export K8S_VERSION="1.34"
 
 echo "--- 1. Pod Identity용 IAM Role 생성 ---"
 # Pod Identity 서비스가 이 역할을 맡을 수 있도록 신뢰 정책 생성
