@@ -12,7 +12,9 @@ kubectl get pods -n kubeflow-system
 ```
 [결과]
 ```
-
+NAME                                                   READY   STATUS    RESTARTS   AGE
+jobset-controller-manager-58555b47c7-ltrck             1/1     Running   0          2m55s
+kubeflow-trainer-controller-manager-5b7b978fbf-r24kr   1/1     Running   0          2m55s
 ```
 
 
