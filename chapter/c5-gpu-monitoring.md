@@ -90,6 +90,14 @@ tolerations:
     value: "present"
     effect: "NoSchedule"
 
+arguments:
+  - "-e"
+  # 소켓 파일 경로를 명시적으로 지정 (NMA가 찾는 위치)
+  - "--address=unix:/var/run/dcgm/dcgm.sock"
+  - "-f"
+  - "/etc/dcgm-exporter/default-counters.csv"
+
+
 securityContext:
   privileged: true
   allowPrivilegeEscalation: true  # false에서 true로 명시적 수정
