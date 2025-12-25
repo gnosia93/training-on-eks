@@ -90,26 +90,21 @@ tolerations:
     value: "present"
     effect: "NoSchedule"
 
-# 2. 환경 변수: 문자열 파싱 에러를 피하기 위해 변수로 주소를 전달합니다.
-env:
-  - name: DCGM_EXPORTER_LISTEN
-    value: "unix:/var/run/dcgm/dcgm.sock"
+#securityContext:
+#  privileged: true
+#  allowPrivilegeEscalation: true  # false에서 true로 명시적 수정
+#  runAsUser: 0
+#  capabilities:
+#    add: ["SYS_ADMIN"]
 
-securityContext:
-  privileged: true
-  allowPrivilegeEscalation: true  # false에서 true로 명시적 수정
-  runAsUser: 0
-  capabilities:
-    add: ["SYS_ADMIN"]
+#extraHostVolumes:
+#  - name: run-dcgm
+#    hostPath: /var/run/dcgm
 
-extraHostVolumes:
-  - name: run-dcgm
-    hostPath: /var/run/dcgm
-
-extraVolumeMounts:
-  - name: run-dcgm
-    mountPath: /var/run/dcgm
-    mountPropagation: Bidirectional
+#extraVolumeMounts:
+#  - name: run-dcgm
+#    mountPath: /var/run/dcgm
+#    mountPropagation: Bidirectional
 
 # 호스트 소켓 공유를 위한 추가 설정
 #extraVolumeMounts:
