@@ -7,6 +7,7 @@
 ## 1. Node Monitoring Agent 설치 ##
 eks-node-monitoring-agent 애드온을 설치한다. 이 에이전트가 노드의 로그(/dev/kmsg)를 분석하여 장애를 감지하는 역할 한다.
 Node Monitoring Agent는 GPU 의 상태를 확인하기 위해 DCGM exporter(nv-hostengine)와 unix domain 소켓으로 연결하여 관련 정보를 수집한다.
+다른 애드온 들과는 달리 Pod identity 나 OIDC 와 연관된 Role 를 설정하지 않는다. 
 ```
 export CLUSTER_NAME="training-on-eks"
 eksctl create addon --cluster ${CLUSTER_NAME} --name eks-node-monitoring-agent --version latest
