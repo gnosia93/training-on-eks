@@ -29,6 +29,7 @@ torchtune-qwen2.5-1.5b   114s
 
 ## 트레이닝 작업 실행 ##
 ```
+cat <<EOF > t5-large.yaml
 apiVersion: trainer.kubeflow.org/v1alpha1
 kind: TrainJob
 metadata:
@@ -45,54 +46,37 @@ spec:
     image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
     nodeSelector:
       node.kubernetes.io/instance-type: g4dn.xlarge
-
-    # 탄력적 학습(c10d 백엔드)을 명시적으로 활성화하는 torchrun 설정
     command:
       - "torchrun"
       - "--nproc_per_node=1"
-      - "--nnodes=4"                                             # min:max 노드 비율 설정
       - "--rdzv_id=elastic-job"                                  # 탄력적 학습을 위한 고유 ID
       - "--rdzv_backend=c10d"                                    # 탄력적 학습에 필수적인 c10d 백엔드
-      - "--rdzv_endpoint=$(MASTER_ADDR):$(MASTER_PORT)"          # 환경변수값은 Trainer 가 채워준다.
+      - "--rdzv_endpoint=$(MASTER_ADDR):$(MASTER_PORT)"          # 환경 변수값은 Trainer 가 자동으로 채워준다.
       - "/opt/pytorch-mnist/mnist.py"
       - "--epochs=10"
 
     restartPolicy: OnFailure
     resources:
       requests:
-        cpu: "2"
-        memory: "4Gi"
         nvidia.com: "1"
       limits:
-        cpu: "4"
-        memory: "8Gi"
         nvidia.com: "1"
+EOF
+```
+트레이닝 작업을 시작한다.
+```
+kubectl apply -f t5-large.yaml
 ```
 
 
-#### 주입되는 환경 변수 (자동 설정됨) ####
-YAML을 실행하면 쿠버네티스는 각 워커 포드에 다음과 같은 환경 변수를 자동으로 설정하여 torchrun이 이를 읽게 합니다.
-* PET_NNODES: "5:5"
-* PET_NPROC_PER_NODE: "8"
-* PET_RDZV_BACKEND: "c10d"
-* PET_RDZV_ENDPOINT: "multi-node-train-worker-0:2379"
-
-#### 주의사항 ####
-* 공유 저장소 마운트: 5개 노드가 모두 동일한 체크포인트 파일에 접근해야 하므로, spec.template.spec.volumes 설정에 NFS나 AWS FSx 같은 공유 파일 시스템을 마운트하는 설정을 반드시 추가해야 합니다.
-* 리소스 할당: replicas: 5와 nvidia.com: 8을 설정하면 클러스터에 최소 40개의 GPU 여유 자원이 있어야 학습이 시작됩니다.
-
-이 방식이 현재 쿠버네티스 환경에서 torchrun을 사용하는 표준(Best Practice)입니다.
-
-
----
-#### 장애 발생 시 복구 프로세스 (Step-by-Step) ####
+## 장애 발생 시 복구 프로세스 ##
 노드 1개가 죽었을 때, 일반적인 NCCL 훈련과 달리 torchrun은 다음과 같이 행동합니다.
 
-장애 감지: 특정 Pod가 죽으면 NCCL 통신이 깨집니다. 이때 살아있는 나머지 Pod의 torchrun 프로세스가 이를 감지하고 자신의 로컬 프로세스들을 모두 종료(Terminate)시킵니다. (전체 작업은 잠시 멈춥니다.)
-쿠버네티스 재스케줄링: 쿠버네티스의 Job 컨트롤러나 ReplicaSet이 죽은 Pod를 감지하고, 새로운 Pod를 자동으로 다시 생성합니다.
-새로운 랑데부: 새로 뜬 Pod와 기존에 살아있던 Pod들이 다시 랑데부 서버에 모입니다.
-World 재구성: 랑데부 서버는 "자, 다시 8명이 모였으니 새로 시작하자"라고 신호를 보냅니다. 이때 바뀐 IP 정보 등을 NCCL에 다시 전파하여 통신 그룹을 재형성(Re-init)합니다.
-학습 재개: 개발자가 짠 코드 내의 load_checkpoint 로직에 의해 공유 스토리지에서 마지막 상태를 불러와 학습을 이어갑니다.
+* 장애 감지: 특정 Pod가 죽으면 NCCL 통신이 깨집니다. 이때 살아있는 나머지 Pod의 torchrun 프로세스가 이를 감지하고 자신의 로컬 프로세스들을 모두 종료(Terminate)시킵니다. (전체 작업은 잠시 멈춥니다.)
+* 쿠버네티스 재스케줄링: 쿠버네티스의 Job 컨트롤러나 ReplicaSet이 죽은 Pod를 감지하고, 새로운 Pod를 자동으로 다시 생성합니다.
+* 새로운 랑데부: 새로 뜬 Pod와 기존에 살아있던 Pod들이 다시 랑데부 서버에 모입니다.
+* World 재구성: 랑데부 서버는 "자, 다시 8명이 모였으니 새로 시작하자"라고 신호를 보냅니다. 이때 바뀐 IP 정보 등을 NCCL에 다시 전파하여 통신 그룹을 재형성(Re-init)합니다.
+* 학습 재개: 개발자가 짠 코드 내의 load_checkpoint 로직에 의해 공유 스토리지에서 마지막 상태를 불러와 학습을 이어갑니다.
 
 
 
