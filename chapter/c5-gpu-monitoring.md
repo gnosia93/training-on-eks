@@ -92,6 +92,10 @@ tolerations:
 
 securityContext:
   privileged: true
+  allowPrivilegeEscalation: true  # false에서 true로 명시적 수정
+  runAsUser: 0
+  capabilities:
+    add: ["SYS_ADMIN"]
 
 extraHostPathVolumes:
   - name: run-dcgm
