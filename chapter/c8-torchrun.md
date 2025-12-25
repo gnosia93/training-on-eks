@@ -47,6 +47,7 @@ spec:
     image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
     nodeSelector:
       node.kubernetes.io/instance-type: g4dn.xlarge
+      topology.kubernetes.io/zone: ap-northeast-2                # 특정 가용 영역(AZ) 내 배치를 강제하여 노드 간 통신 지연을 최소화
     command:
       - "torchrun"
       - "--nproc_per_node=4"
