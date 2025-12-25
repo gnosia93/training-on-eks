@@ -9,20 +9,15 @@ kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifest
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
 
 kubectl get pods -n kubeflow-system
+kubectl get clustertrainingruntimes
+
 ```
 [결과]
 ```
 NAME                                                   READY   STATUS    RESTARTS   AGE
 jobset-controller-manager-58555b47c7-ltrck             1/1     Running   0          2m55s
 kubeflow-trainer-controller-manager-5b7b978fbf-r24kr   1/1     Running   0          2m55s
-```
 
-#### 런타임 확인 ####
-```
-kubectl get clustertrainingruntimes
-```
-[결과]
-```
 NAME                     AGE
 deepspeed-distributed    114s
 mlx-distributed          114s
