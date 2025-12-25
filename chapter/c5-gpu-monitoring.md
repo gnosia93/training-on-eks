@@ -97,7 +97,7 @@ securityContext:
   capabilities:
     add: ["SYS_ADMIN"]
 
-extraHostPathVolumes:
+extraHostVolumes:
   - name: run-dcgm
     hostPath: /var/run/dcgm
 
