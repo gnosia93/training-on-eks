@@ -245,6 +245,7 @@ aws iam put-role-policy \
 
 
 #### 2. IAM Identity Mapping #### 
+* 이 설정은 하지 않아도 된다.. 삭제예정 
 ```
 eksctl create iamidentitymapping \
   --username system:node:{{EC2PrivateDNSName}} \
