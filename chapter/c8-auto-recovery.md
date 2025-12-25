@@ -129,6 +129,9 @@ aws eks create-addon \
 
 echo "애드온 배포 대기 중 (약 30초)..."
 sleep 30
+aws eks describe-addon --cluster-name ${CLUSTER_NAME} \
+    --addon-name eks-node-monitoring-agent --query "addon.status" --output text
+
 
 echo "--- 4. 쿠버네티스 RBAC 권한 패치 (중요!) ---"
 # NMA가 노드 상태(nodes/status)를 수정할 수 있도록 내부 권한 부여
