@@ -30,12 +30,11 @@ torchtune-qwen2.5-1.5b   114s
 ## 트레이닝 작업 실행 ##
 TrainJob 오퍼레이터는 backoffLimit 라는 필드를 이용하여 작업 복구 매커니즘을 제공한다. 작업이 실패 했을때 다시 시작하는 기능으로, 이 예제에서는 3번까지 트레이닝 작업을 재 시작 하도록 설정 하였다.  
 ```
-cat <<EOF > t5-large-trn.yaml
+cat <<EOF > t5-large.yaml
 apiVersion: trainer.kubeflow.org/v1alpha1
 kind: TrainJob
 metadata:
-  name: t5-large-trn
-  namespace: kubeflow
+  name: t5-large
 spec:
   backoffLimit: 3                             # 작업 실패시 재시도 횟수
   runtimeRef:
@@ -67,9 +66,11 @@ spec:
         nvidia.com: "8"
 EOF
 ```
-트레이닝 작업을 시작한다.
+트레이닝 작업을 시작하고 로그를 확인한다. 
 ```
-kubectl apply -f t5-large-trn.yaml
+kubectl apply -f t5-large.yaml
+
+kubectl logs -f -l trainjob-name=t5-large
 ```
 
 * Placement Group (가용 영역 지정):
