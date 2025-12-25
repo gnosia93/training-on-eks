@@ -90,13 +90,14 @@ tolerations:
     value: "present"
     effect: "NoSchedule"
 
-arguments:
-  - "--collect-interval"
-  - "30000"
-  - "--address"
-  - "0.0.0.0:9400"
-  - "--socket-path"
-  - "/run/nvidia-dcgm/dcgm.sock"
+dcgmExporter:
+  env:
+    - name: DCGM_REMOTE_HOSTENGINE_INFO
+      value: "unix:///run/nvidia/dcgm.sock"
+  extraHostVolumeMounts:
+    - name: host-run-nvidia
+      hostPath: /run/nvidia
+      mountPath: /run/nvidia
 
 # 호스트 소켓 공유를 위한 추가 설정
 extraVolumeMounts:
