@@ -97,6 +97,16 @@ resources:
   requests:
     cpu: 100m
     memory: 256Mi
+
+# 호스트 소켓 공유를 위한 추가 설정
+extraVolumeMounts:
+  - name: dcgm-socket
+    mountPath: /run/nvidia-dcgm
+extraVolumes:
+  - name: dcgm-socket
+    hostPath:
+      path: /run/nvidia-dcgm
+      type: DirectoryOrCreate
 EOF
 
 helm install dcgm-exporter nvidia/dcgm-exporter -n dcgm \
