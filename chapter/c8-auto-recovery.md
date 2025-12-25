@@ -68,6 +68,23 @@ echo "설치가 완료되었습니다."
 
 kubectl get sa -n kube-system eks-node-monitoring-agent -o yaml
 ```
+---
+## IRSA 방식 ##
+```
+export CLUSTER_NAME="training-on-eks"
+export REGION="ap-northeast-2"
+export ROLE_NAME="eks-nma-irsa-role"
+
+# eksctl을 사용하면 OIDC 신뢰 관계를 자동으로 설정하여 매우 간편합니다.
+eksctl create iamserviceaccount \
+    --name eks-node-monitoring-agent \
+    --namespace kube-system \
+    --cluster ${CLUSTER_NAME} \
+    --role-name ${ROLE_NAME} \
+    --attach-policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy \
+    --approve \
+    --override-existing-serviceaccounts
+```
 
 
 
