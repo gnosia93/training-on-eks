@@ -1,6 +1,18 @@
 << fault injection 이 동작하지 않는다. 왜 일까? >> 
+## 오류 메시지 ##
+```
+[Errno 2] No such file or directory: '/var/run/secrets/eks.amazonaws.com/serviceaccount/token'
+panic: exit status 255
+
+goroutine 1 [running]:
+main.main()
+        /local/p4clients/pkgbuild-const/workspace/src/EKSNodeMonitoringAgent/cmd/chroot/main.go:17 +0xec
+{"level":"error","ts":"2025-12-25T03:01:17Z","msg":"failed to report managed conditions","hostname":"ip-10-0-4-234.ap-northeast-2.compute.internal","error":"failed to get server groups: Get \"https://F1DD89A1F08A8008F71A4721C30B0435.sk1.ap-northeast-2.eks.amazonaws.com/api\": getting credentials: exec: executable /opt/amazon/bin/chroot failed with exit code 2","stacktrace":"golang.a2z.com/EKSNodeMonitoringAgent/internal/manager.(*nodeExporter).run\n\t/local/p4clients/pkgbuild-const/workspace/src/EKSNodeMonitoringAgent/internal/manager/node_exporter.go:150\ngolang.a2z.com/EKSNodeMonitoringAgent/internal/manager.(*nodeExporter).Run\n\t/local/p4clients/pkgbuild-const/workspace/src/EKSNodeMonitoringAgent/internal/manager/node_exporter.go:137"}
+^C[ec2-user@ip-10-0-0-122 ~]$ 
+```
 
 
+## raw 설치 ##
 ```
 export CLUSTER_NAME="training-on-eks"
 export AWS_REGION="ap-northeast-2"
