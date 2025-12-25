@@ -2,6 +2,8 @@
 
 큐브 플로우 트레이닝 오퍼레이터와 런터임 설치한다. 
 ```
+sudo dnf install git -y
+
 export VERSION=v2.1.0
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=${VERSION}"
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
