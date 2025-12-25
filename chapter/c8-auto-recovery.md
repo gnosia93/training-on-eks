@@ -28,7 +28,8 @@ echo "<3>NVRM: Xid (PCI:00000000:00:1F.0): 31, Ch 00000001, failed to allocate G
 * node monitoring agent
 * 디버깅해면 dcgm 은 별도로 설치해야 하는게 맞다. host 의 / 루트 파일 경로를 통채로 마운트 하고 있다.  
 ```
-kubectl logs eks-node-monitoring-agent-8n8kx -n kube-system | grep -iE "gpu|nvidia|nvml|xid"
+kubectl logs eks-node-monitoring-agent-hspqh -n kube-system | grep -iE "gpu|nvidia|nvml|xid"
+
 Defaulted container "eks-node-monitoring-agent" out of: eks-node-monitoring-agent, debugger-fqjd8 (ephem)
 {"level":"info","ts":"2025-12-25T08:04:21Z","msg":"NVIDIA-based monitoring is disabled for the arm64 architecture in this version of the agent","hostname":"ip-10-0-6-132.ap-northeast-2.compute.internal","monitor":"nvidia"}
 {"level":"info","ts":"2025-12-25T08:04:21Z","msg":"registered monitor","hostname":"ip-10-0-6-132.ap-northeast-2.compute.internal","name":"nvidia"}
