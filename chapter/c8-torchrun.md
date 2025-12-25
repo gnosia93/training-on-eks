@@ -48,19 +48,17 @@ spec:
       queue: default
       priorityClassName: high-priority
 
-    image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
+    image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
     nodeSelector:
-      node.kubernetes.io/instance-type: g4dn.12xlarge
+      node.kubernetes.io/instance-type: g6e.48xlarge
       topology.kubernetes.io/zone: ap-northeast-2                # 특정 가용 영역(AZ) 내 배치를 강제하여 노드 간 통신 지연을 최소화
-    command:
-      - "torchrun"
-      - "--nproc_per_node=4"
-      - "--rdzv_id=elastic-job"                                  # 고유 ID (작업 재시작시 유지되어어 한다)
-      - "--rdzv_backend=c10d"                                    # c10d 백엔드 설정 (cf. etcd 설정 가능)
-      - "--rdzv_endpoint=$(MASTER_ADDR):$(MASTER_PORT)"          # 환경 변수값은 Trainer 가 자동으로 채워준다.
-      - "/opt/pytorch-mnist/mnist.py"
-      - "--epochs=10"
-
+    command: |
+      git clone https://github.com/gnosia93/training-on-eks /workspace/code
+      cd /workspace/code/samples/fsdp
+      echo "working directory: "$(pwd)
+      pip install -r requirements.txt
+      torchrun --nproc_per_node 8 --rdzv_id=elastic-job --rdzv_backend=c10d --rdzv_endpoint=$(MASTER_ADDR):$(MASTER_PORT) t5-fsdp.py
+   
     restartPolicy: OnFailure
     resources:
       requests:
