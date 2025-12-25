@@ -89,6 +89,31 @@ aws eks update-addon \
     --resolve-conflicts OVERWRITE
 
 
+# 1. ServiceAccount에 IAM Role 주석 강제 삽입
+ kubectl get sa eks-node-monitoring-agent -n kube-system -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::499514681453:role/eks-nma-role
+  creationTimestamp: "2025-12-25T03:31:24Z"
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: eks-node-monitoring-agent
+    app.kubernetes.io/managed-by: EKS
+    app.kubernetes.io/name: eks-node-monitoring-agent
+    app.kubernetes.io/version: 1.4.3
+  name: eks-node-monitoring-agent
+  namespace: kube-system
+  resourceVersion: "1107140"
+  uid: cae74315-f9a8-4cc6-84f3-d9def0193462
+
+
+# 2. 파드 강제 삭제 (새로운 토큰 주입 유도)
+kubectl delete pods -n kube-system -l app.kubernetes.io/name=eks-node-monitoring-agent
+
+
+
 kubectl get sa -n kube-system eks-node-monitoring-agent -o yaml
 ```
 ---
