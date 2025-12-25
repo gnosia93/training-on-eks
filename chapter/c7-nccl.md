@@ -21,3 +21,22 @@ AWS의 고성능 인스턴스(P4, P5, G5 등)를 사용한다면 EFA(Elastic Fab
 튜닝 전후의 차이를 확인하기 위해 로그를 활성화합니다.
 * NCCL_DEBUG=INFO: 학습 시작 시 NCCL이 어떤 인터페이스를 찾았고, 어떤 알고리즘(Tree, Ring 등)을 선택했는지 출력합니다.
 * NCCL_DEBUG_SUBSYS=GRAPH,INIT,ENV: 더 상세한 그래프 연결 상태를 확인하여 병목 지점을 찾습니다.
+
+[yaml 예시]
+```
+spec:
+  trainer:
+    env:
+      - name: NCCL_DEBUG
+        value: "INFO"
+      - name: NCCL_IB_DISABLE
+        value: "0"  # RDMA/EFA 활성화
+      - name: NCCL_SOCKET_IFNAME
+        value: "eth,en" # 실제 노드의 인터페이스명 확인 필요
+      - name: NCCL_BUFFSIZE
+        value: "2097152"
+      - name: FI_EFA_USE_DEVICE_RDMA
+        value: "1"
+    # ... 이전의 securityContext 및 command 설정 유지
+
+```
