@@ -46,7 +46,7 @@ spec:
     
     image: docker.io/kubeflowkatib/pytorch-mnist:v1beta1-45c5727
     nodeSelector:
-      node.kubernetes.io/instance-type: g4dn.xlarge
+      node.kubernetes.io/instance-type: g4dn.12xlarge
       topology.kubernetes.io/zone: ap-northeast-2                # 특정 가용 영역(AZ) 내 배치를 강제하여 노드 간 통신 지연을 최소화
     command:
       - "torchrun"
@@ -69,6 +69,14 @@ EOF
 ```
 kubectl apply -f t5-large-trn.yaml
 ```
+
+* Placement Group (가용 영역 지정):
+nodeSelector에 topology.kubernetes.io/zone을 명시하면, 분산 학습에 참여하는 노드들이 동일한 데이터 센터 내에 배치되어 NCCL 통신 레이턴시가 크게 줄어듭니다.
+* Scheduling Policy (Gang Scheduling):
+schedulingPolicy를 사용하면 2개의 노드가 동시에 할당될 때만 학습을 시작합니다. 이는 하나는 확보되고 하나는 대기 상태일 때 발생하는 자원 낭비와 통신 비효율을 방지합니다.
+* NCCL 환경 변수 (env):
+NCCL_P2P_DISABLE=0: GPU 간의 Direct 통신을 허용하여 데이터 전송 경로를 최적화합니다.
+만약 대규모 노드 환경이라면 NCCL_IB_HCA 설정을 통해 특정 네트워크 인터페이스를 강제할 수도 있습니다.
 
 
 ## 장애 발생 시 복구 프로세스 ##
