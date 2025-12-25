@@ -90,16 +90,6 @@ tolerations:
     value: "present"
     effect: "NoSchedule"
 
-arguments:
-  - "-f"
-  - "/etc/dcgm-exporter/default-counters.csv"
-  - "-e"
-
-# NMA(Node Monitoring Agent)가 인식할 수 있도록 포트 및 라벨 설정 확인
-service:
-  port: 9400
-
-
 # 호스트 소켓 공유를 위한 추가 설정
 #extraVolumeMounts:
 #  - name: dcgm-socket
