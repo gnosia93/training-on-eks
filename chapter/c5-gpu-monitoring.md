@@ -90,32 +90,6 @@ tolerations:
     value: "present"
     effect: "NoSchedule"
 
-#securityContext:
-#  privileged: true
-#  allowPrivilegeEscalation: true  # false에서 true로 명시적 수정
-#  runAsUser: 0
-#  capabilities:
-#    add: ["SYS_ADMIN"]
-
-#extraHostVolumes:
-#  - name: run-dcgm
-#    hostPath: /var/run/dcgm
-
-#extraVolumeMounts:
-#  - name: run-dcgm
-#    mountPath: /var/run/dcgm
-#    mountPropagation: Bidirectional
-
-# 호스트 소켓 공유를 위한 추가 설정
-#extraVolumeMounts:
-#  - name: dcgm-socket
-#    mountPath: /run/nvidia-dcgm
-
-# 호스트 볼륨 설정 (이름 주의: extraHostVolumes)
-#extraHostVolumes:
-#  - name: dcgm-socket
-#    hostPath: /run/nvidia-dcgm
-
 resources:
   limits:
     cpu: 500m
@@ -126,8 +100,7 @@ resources:
 EOF
 
 helm install dcgm-exporter nvidia/dcgm-exporter -n dcgm \
-  --create-namespace \
-  -f custom-values.yaml
+  --create-namespace -f custom-values.yaml
 
 kubectl get all -n dcgm
 ```
