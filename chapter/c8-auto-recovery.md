@@ -13,6 +13,13 @@ ROLE 설정은 불필요하다..
 ```
 kubectl logs -f -l app.kubernetes.io/name=eks-node-monitoring-agent -n kube-system
 ```
+* 폴트 주입
+```
+echo "<3>NVRM: Xid (PCI:0000:00:00): 31, Ch 00000001, failed to allocate GPU memory" | sudo tee /dev/kmsg
+
+```
+  
+
 
 
 ## 오류 메시지 ##
