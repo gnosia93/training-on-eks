@@ -514,6 +514,50 @@ Addresses:
 오류 주입후 AcceleratedHardwareReady 값이 False 변경되는지 확인하고, 수 분 내에 노드가 Cordon(스케줄링 중단) 상태가 되고 새로운 노드가 프로비저닝되는지 확인한다. 
 
 
+---
+
+구체적으로 이넘이 gpu 폴트를 어떻게 캐치하는지 알아 낼수 있는 방법은 없어?
+eks-node-monitoring-agent가 GPU 장애(Fault)를 구동하는 구체적인 메커니즘을 파헤칠 수 있는 3가지 실무적인 방법을 알려드립니다.
+1. 에이전트 설정 파일(Config Map) 확인
+이 에이전트는 내부적으로 어떤 항목을 감시할지 정의된 설정 파일을 가지고 있을 확률이 매우 높습니다. describe 명령어로 설정 파일의 경로를 찾고 내용을 확인해 보세요.
+설정 경로 확인:
+bash
+kubectl describe pod <pod-name> -n kube-system
+코드를 사용할 때는 주의가 필요합니다.
+
+Volumes나 Mounts 섹션에서 config라는 이름으로 매핑된 파일(예: /etc/amazon/node-monitoring-agent/config.yaml)을 찾으세요.
+내용 읽기: (디버그 컨테이너 안에서 실행)
+bash
+cat /etc/amazon/node-monitoring-agent/config.yaml
+코드를 사용할 때는 주의가 필요합니다.
+
+여기에 gpu_health_check나 xid_errors 같은 키워드가 있다면, 특정 에러 코드를 감시하고 있다는 증거입니다.
+2. 에이전트 로그 레벨 상향 및 로그 분석
+에이전트가 GPU 상태를 체크하는 순간의 로그를 보는 것이 가장 확실합니다.
+로그 확인:
+bash
+kubectl logs -f <pod-name> -n kube-system
+코드를 사용할 때는 주의가 필요합니다.
+
+키워드 검색: 로그 중에서 NVIDIA, NVML, XID, GPU Health 등의 단어를 검색해 보세요.
+예: Successfully initialized NVML이라는 로그가 있다면 NVML 라이브러리를 직접 사용한다는 뜻입니다.
+장애 상황을 시뮬레이션하기 어렵다면, 에이전트가 기동될 때의 초기화 로그만 봐도 어떤 라이브러리를 로드하는지 알 수 있습니다.
+3. 바이너리 종속성 확인 (Shared Libraries)
+에이전트가 어떤 라이브러리에 의존하는지 확인하면 감지 방식을 유추할 수 있습니다. (디버그 컨테이너에서 실행 가능 시)
+bash
+# 에이전트 실행 파일 경로 확인 (describe 명령어로 확인 가능)
+ldd /path/to/eks-node-monitoring-agent
+코드를 사용할 때는 주의가 필요합니다.
+
+만약 출력 결과에 libnvidia-ml.so (NVML)나 libdcgm.so (DCGM)가 포함되어 있다면, 이 에이전트는 외부 엑스포터 없이 NVIDIA 드라이버와 직접 통신하여 장애 정보를 가져오는 구조입니다.
+4. /dev 및 /proc 마운트 확인
+describe 결과에서 다음 경로들이 마운트되어 있는지 보세요.
+/dev/nvidiactl, /dev/nvidia0: GPU 하드웨어에 직접 쿼리를 날린다는 뜻입니다 (NVML 방식).
+/var/log 또는 /dev/kmsg: 커널 로그를 파싱해서 XID 에러(GPU 하드웨어 고유 에러)를 감치한다는 뜻입니다 (Log Tailing 방식).
+요약
+가장 빠른 방법은 kubectl logs를 통해 초기화 과정에서 "NVML"이나 "DCGM" 라이브러리를 언급하는지 보는 것입니다. 만약 언급이 있다면, 이 에이전트는 NVIDIA Management Library(NVML)를 통해 GPU의 하드웨어 레지스터 상태를 직접 읽어서 장애를 판단하는 것입니다.
+이것은 2025년 현재 AWS EKS에서 GPU 노드의 안정성을 관리하는 관리형 자동 복구(Auto-repair)의 핵심 로직입니다. Amazon EKS Node Monitoring Agent 가이드에 따르면 이 에이전트는 하드웨어 오류 발생 시 노드를 NotReady로 만들고 교체를 유도하도록 설계되어 있습니다.
+
 ## 레퍼런스 ##
 
 * https://github.com/aws/eks-node-monitoring-agent/tree/main/charts/eks-node-monitoring-agent
