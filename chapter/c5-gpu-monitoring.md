@@ -99,10 +99,10 @@ resources:
     memory: 256Mi
 
 # 호스트 소켓 공유를 위한 추가 설정
-extraVolumeMounts:
+volumeMounts:
   - name: dcgm-socket
     mountPath: /run/nvidia-dcgm
-extraVolumes:
+volumes:
   - name: dcgm-socket
     hostPath:
       path: /run/nvidia-dcgm
