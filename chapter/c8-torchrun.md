@@ -1,4 +1,4 @@
-## [트레이닝 오퍼레이터 설치](https://www.kubeflow.org/docs/components/trainer/operator-guides/installation/) ##
+## [트레이닝 오퍼레이터(V2) 설치](https://www.kubeflow.org/docs/components/trainer/operator-guides/installation/) ##
 
 V2 버전의 큐브 플로우 트레이닝 오퍼레이터와 런터임 설치한다. 
 ```
