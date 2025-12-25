@@ -30,7 +30,7 @@
    - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)      
    - [노드 자동 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-auto-recovery.md)
    - [torchrun /w k8s backend](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-torchrun.md) 
-   - 노드간의 체크 포인팅 데이터 전달 - P2P / bit torrent ??? 
+
 * [C9. 병렬 분산 파일 시스템(Lustre)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
 
 * [c10. 커스텀 컨테이너 이미지]
