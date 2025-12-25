@@ -1,6 +1,6 @@
 ```
 # 모든 노드(1번~5번)에서 동일하게 실행 (endpoint는 1번 노드 IP로 통일)
-torchrun --nnodes=5 \
+torchrun --nnodes=2 \
          --nproc_per_node=8 \
          --rdzv_id=job_1 \
          --rdzv_backend=c10d \
@@ -18,28 +18,26 @@ spec:
   # [중요] Master 섹션 없이 Worker만 설정
   pytorchReplicaSpecs:
     Worker:
-      replicas: 5  # --nnodes=5 에 해당
+      replicas: 2  # --nnodes=2 에 해당
       template:
         spec:
           containers:
             - name: pytorch
               image: your-training-image:latest
-              # [중요] command에서 rdzv 관련 인자를 직접 쓰지 않아도 컨트롤러가 주입함
               command:
-                - torchrun
-                - "--nproc_per_node=8" # 노드당 GPU 8개
+                - torchrun                           # rdzv 관련 인자를 직접 쓰지 않아도 컨트롤러가 주입함
+                - "--nproc_per_node=8"               # 노드당 GPU 8개
                 - "train.py"
                 - "--your-arg=value"
               resources:
                 limits:
-                  nvidia.com: 8 # 실제 GPU 할당
+                  nvidia.com: 8                      # 실제 GPU 할당
   
-  # [중요] 탄력적 학습(torchrun)을 위한 정책 설정
-  elasticPolicy:
-    minReplicas: 5
-    maxReplicas: 5
-    rdzvBackend: c10d # 외부 etcd 없이 내부 통신 사용
-    maxRestarts: 3    # 노드 장애 시 재시도 횟수
+  elasticPolicy:                                     # torchrun을 위한 정책 설정
+    minReplicas: 2
+    maxReplicas: 2
+    rdzvBackend: c10d                                # 외부 etcd 없이 내부 통신 사용 (c10d 소켓 통신)
+    maxRestarts: 3                                   # 노드 장애 시 재시도 횟수
 ```
 
 * Master 섹션이 없는 이유: torchrun은 모든 노드를 대등한 워커로 취급하며, 랑데뷰 시스템을 통해 실행 시점에 Rank 0을 자동으로 선출합니다. Master 스펙을 별도로 정의하면 오히려 랑데뷰 주소가 꼬일 수 있습니다. 
