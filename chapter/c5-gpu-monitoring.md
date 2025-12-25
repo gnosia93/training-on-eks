@@ -91,12 +91,10 @@ tolerations:
     effect: "NoSchedule"
 
 arguments:
-  - "-e"
-  # 소켓 파일 경로를 명시적으로 지정 (NMA가 찾는 위치)
-  - "--address=unix:/var/run/dcgm/dcgm.sock"
   - "-f"
   - "/etc/dcgm-exporter/default-counters.csv"
-
+  - "-a"
+  - "0.0.0.0:9400,unix:/var/run/dcgm/dcgm.sock" # 포트와 소켓을 동시에 엽니다.
 
 securityContext:
   privileged: true
