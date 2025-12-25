@@ -1,3 +1,6 @@
+
+
+
 ```
 # 모든 노드(1번~5번)에서 동일하게 실행 (endpoint는 1번 노드 IP로 통일)
 torchrun --nnodes=2 \
@@ -218,4 +221,4 @@ spec:
 ## 레퍼런스 ##
 
 * https://github.com/kubeflow/trainer
-
+* https://www.kubeflow.org/docs/components/trainer/operator-guides/migration/
