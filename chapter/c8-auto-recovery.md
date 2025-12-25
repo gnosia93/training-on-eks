@@ -1,14 +1,20 @@
 * https://aws.amazon.com/ko/blogs/containers/amazon-eks-introduces-node-monitoring-and-auto-repair-capabilities/
 <<fault injection 이 동작하지 않는다. 왜 일까? >> 
 
-* 설치방법 
+### eks node monitoring agent 애드온 설치 ### 
 ```
 eksctl create addon --cluster ${CLUSTER_NAME} --name eks-node-monitoring-agent --version latest
-
-   #\
+   # ROLE 설정은 불필요하다.. 
    # --service-account-role-arn arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME} --force
 ```
-ROLE 설정은 불필요하다.. 
+[결과]
+```
+2025-12-25 21:07:49 [ℹ]  Kubernetes version "1.34" in use by cluster "training-on-eks"
+2025-12-25 21:07:49 [ℹ]  creating addon: eks-node-monitoring-agent
+2025-12-25 21:08:11 [ℹ]  addon "eks-node-monitoring-agent" active
+```
+
+
 
 * 설치후 로그 확인 
 ```
