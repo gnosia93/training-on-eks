@@ -35,7 +35,7 @@ helm uninstall kueue --namespace kueue-system
 PyTorchJob을 실행하기 전에 Kueue가 해당 작업을 인식하고 리소스를 할당할 수 있도록 ResourceFlavor, ClusterQueue, 그리고 LocalQueue 세 가지 핵심 리소스가 설정되어 있어야 합니다
 
 #### 1. 리소스 플레이버 정의 ####
-클러스터에 존재하는 실제 리소스(여기서는 GPU)의 종류와 레이블을 정의합니다. 
+Kueue에서 리소스 플레이버는 클러스터 내 노드들의 다양한 물리적/논리적 특성(사양)을 정의하는 API 객체로, 단순히 CPU나 메모리 양을 의미하는 것이 아니라 특정 노드 그룹이 가진 고유한 성격(예: GPU 모델, 인스턴스 유형, 가용성 정책 등)을 구분하는 역할을 한다. 클러스터에 존재하는 실제 리소스(여기서는 GPU)의 종류와 레이블을 정의하면 된다. 
 ```
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: ResourceFlavor
@@ -43,7 +43,7 @@ metadata:
   name: flavor-gpu-nvidia
 spec:
   nodeSelector:
-    nodeType: "nvidia"
+    nodeType: "nvidia"                         # 카펜터가 생성한 gpu 노드풀의 레이블 
   tolerations:
   - key: "nvidia.com/gpu"
     operator: "Exists"
@@ -55,7 +55,7 @@ metadata:
   name: flavor-gpu-nvidia-efa
 spec:
   nodeSelector:
-    nodeType: "nvidia-efa"
+    nodeType: "nvidia-efa"                    # 카펜터가 생성한 gpu-efa 노드풀의 레이블
   tolerations:
   - key: "nvidia.com/gpu"
     operator: "Exists"
