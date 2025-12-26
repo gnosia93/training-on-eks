@@ -27,6 +27,13 @@ torchtune-llama3.2-3b    114s
 torchtune-qwen2.5-1.5b   114s
 ```
 
+## CRD 조회 ##
+```
+kubectl explain trainjob.spec
+kubectl explain trainjob.spec.podTemplateOverrides.spec
+```
+
+
 ## 트레이닝 작업 실행 ##
 TrainJob 오퍼레이터는 backoffLimit 라는 필드를 이용하여 작업 복구 매커니즘을 제공한다. 작업이 실패 했을때 다시 시작하는 기능으로, 이 예제에서는 3번까지 트레이닝 작업을 재 시작 하도록 설정 하였다.  
 ```
