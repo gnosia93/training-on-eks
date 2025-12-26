@@ -105,9 +105,7 @@ spec:
 * 레이블 일치: Flavor에서 nvidia-a100을 지정했는데 카펜터 설정에는 g4dn.xlarge(T4 GPU)만 허용되어 있다면, 카펜터가 노드를 띄우지 못해 포드가 Pending 상태로 남게 됩니다.
 
 
-
-
 ## 레퍼런스 ##
+* https://www.kubeflow.org/docs/components/trainer/operator-guides/job-scheduling/
 * https://kueue.sigs.k8s.io/docs/overview/
-* https://www.redhat.com/ko/blog/openshift-joining-kueue
 * https://thenewstack.io/kueue-can-now-schedule-kubernetes-batch-jobs-across-clusters/
