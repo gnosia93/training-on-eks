@@ -63,7 +63,7 @@ spec:
 ```
 
 #### 2. 클러스터큐 정의 (cluster-queue.yaml) #### 
-클러스터 전체의 리소스 할당량과 정책을 정의합니다. queue-a라는 이름으로 총 GPU 10개까지 할당할 수 있도록 설정합니다.
+클러스터 전체의 리소스 할당량과 정책을 정의한다. cluster-queue-gpu 라는 이름으로 GPU를 최대 100 장까지 할당 받을 수 있도록 설정한다. 
 ```
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: ClusterQueue
@@ -75,7 +75,7 @@ spec:
     - flavor-gpu-nvidia
     - flavor-gpu-nvidia-efa
     resources:
-    - name: "nvidia.com/gpu"
+    - name: "nvidia.com/gpu"              # 실제 리소스 명칭 / 카펜터에서 관리되고 있는 리소스 명칭과 동일해야 한다. 
       nominalQuota: 100                   # 전체 GPU 쿼타 설정
 ```
 
