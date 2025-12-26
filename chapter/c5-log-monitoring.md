@@ -2,6 +2,23 @@
 << 제대로 설치가 되지 않는다.. 디버깅 필요. >>
 <<>>
 
+#### S3 버킷생성 ####
+Before deploying Loki, you need to create two S3 buckets; one to store logs (chunks), the second to store alert rules. You can create the bucket using the AWS Management Console or the AWS CLI. The bucket name must be globally unique.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
 ## grafana loki ## 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-loki.webp)
 
