@@ -34,6 +34,9 @@ metadata:
   name: gpu
 spec:
   template:
+    metadata:
+      labels:
+        nodeType: "nvidia" 
     spec:
       requirements:
         - key: kubernetes.io/arch
