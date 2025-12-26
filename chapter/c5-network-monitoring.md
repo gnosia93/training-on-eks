@@ -11,3 +11,7 @@ prometheus-node-exporter:
     # 특정 디바이스만 필터링하고 싶을 경우 아래 옵션 추가 (선택사항)
     # - --collector.ethtool.device-include=^rdma.* 
 ```
+
+```
+helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f values.yaml
+```
