@@ -50,10 +50,9 @@ spec:
           node.kubernetes.io/instance-type: g6e.48xlarge              # https://instances.vantage.sh/aws/ec2/g6e.48xlarge?currency=USD
           topology.kubernetes.io/zone: ap-northeast-2a                # AZ 설정, 노드 간 통신 지연을 최소화 
 
-         # --- [추가] 컨테이너에 볼륨 마운트 설정 ---
         containers:
           - name: node                                                # -name: node 은 상당히 중요한 설정값 / ClusterTrainingRuntime 에 있는 컨테이너 이름이 node 이다.
-            volumeMounts:
+            volumeMounts:                                             # 이 값을 잘못 설정하는 경우 TrainJob 이 시작되지 않는다. 
               - mountPath: /dev/shm
                 name: dshm
         volumes:
