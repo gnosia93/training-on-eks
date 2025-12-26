@@ -15,3 +15,4 @@ prometheus-node-exporter:
 ```
 helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f values.yaml
 ```
+EFA는 리눅스 커널에서 네트워크 인터페이스로 인식됩니다. node_exporter의 ethtool 콜렉터는 노드의 /sys/class/net/ 경로에 있는 통계 정보를 읽어 node_net_ethtool 형태의 메트릭으로 변환합니다.
