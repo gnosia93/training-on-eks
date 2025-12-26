@@ -136,9 +136,6 @@ spec:
     numProcPerNode: auto                      # 노드별 프로세스 갯수                                                                               
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
 
-    env:
-      - name: MASTER_PORT
-        value: "29500"  # 명시적으로 포트 주입
     # 랑데뷰 포인트를 명시적으로 기술해 준다(rdzv_id, rdzv_backend, rdzv_endpoint)
     # --rdzv_endpoint=\${MASTER_ADDR}:\${MASTER_PORT} 에서 \$ 함으로써 쉘이 해당 변수를 해석하지 않도록 함.
     # ${MASTER_ADDR} 와 ${MASTER_PORT} 환경변수는 TrainJob 오퍼레이터가 잡 실행시 채워주는 값이다.  
@@ -149,11 +146,11 @@ spec:
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
         cd /workspace/code/samples/fsdp
         pip install -r requirements.txt
-        echo "=== Environment Variables Check ==="
-        echo "MASTER_ADDR: \${MASTER_ADDR}"
-        echo "MASTER_PORT: \${MASTER_PORT}"
-        echo "NODE_RANK: \${PET_NODE_RANK}"
-        env | grep -E 'MASTER|PET|RANK'
+        echo "=== Launching Distributed Training ==="
+        export MASTER_ADDR=\${PET_MASTER_ADDR}
+        export MASTER_PORT=\${PET_MASTER_PORT:-29500}
+        echo "Master Address: \${MASTER_ADDR}"
+        echo "Master Port: \${MASTER_PORT}"
         echo "=================================="
         torchrun \
           --nproc_per_node=8 \
