@@ -90,6 +90,17 @@ helm repo update
 kubectl create namespace loki
 ```
 
+#### 5. Loki Basic Authentication ####
+Loki by default does not come with any authentication. Since we will be deploying Loki to AWS and exposing the gateway to the internet, we recommend adding at least basic authentication. In this guide we will give Loki a username and password
+```
+htpasswd -c .htpasswd <username>
+kubectl create secret generic loki-basic-auth --from-file=.htpasswd -n loki
+
+kubectl create secret generic canary-basic-auth \
+  --from-literal=username=<USERNAME> \
+  --from-literal=password=<PASSWORD> \
+  -n loki
+```
 
 
 
