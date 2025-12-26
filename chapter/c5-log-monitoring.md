@@ -267,7 +267,6 @@ It is important to create a namespace called loki as our trust policy is set to 
 ## 레퍼런스 ##
 
 * [Loki Architecture: A Log Aggregation Journey with Grafana](https://sujayks007.medium.com/loki-architecture-a-log-aggregation-journey-with-grafana-bde6d9df6a04)
-* https://grafana.com/docs/loki/latest/setup/install/helm/deployment-guides/aws/
 
 
 
