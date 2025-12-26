@@ -167,6 +167,9 @@ EOF
 ```
 * Placement Group (가용 영역 지정):
 nodeSelector에 topology.kubernetes.io/zone을 명시하면, 분산 학습시 노드들이 동일한 AZ 내에 배치되어 NCCL 통신 레이턴시가 크게 줄어든다.
+* CPU/메모리 (선택):
+분산 학습(특히 FSDP)은 데이터 전처리나 체크포인트 저장시 일시적으로 많은 CPU와 메모리를 사용한다. 쿠버네티스 리소스 리미트를 주지 않으면 이러한 작업이 병목 없이 빠르게 처리된다.
+* 현재 설정해서는 분산 트레이닝 잡이 실행 도중 실패하는 경우 재시작 하지 않는다.
 
 #### 2. 잡 실행하기 ####
 트레이닝 작업을 시작하고 로그를 확인한다. 
@@ -202,6 +205,11 @@ ip-10-0-4-210.ap-northeast-2.compute.internal   g6e.48xlarge   amd64      Amazon
 ip-10-0-4-89.ap-northeast-2.compute.internal    g6e.48xlarge   amd64      Amazon Linux 2023.9.20251208   8
 ip-10-0-6-164.ap-northeast-2.compute.internal   c6i.2xlarge    amd64      Amazon Linux 2023.9.20251208   <none>
 ```
+
+## 복원력 설정 ##
+..
+
+
 
 ## 장애 발생 시 복구 프로세스 ##
 노드 1개가 죽었을 때, 일반적인 NCCL 훈련과 달리 torchrun은 다음과 같이 행동합니다.
