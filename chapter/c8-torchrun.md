@@ -169,8 +169,8 @@ EOF
 nodeSelector에 topology.kubernetes.io/zone을 명시하면, 분산 학습시 노드들이 동일한 AZ 내에 배치되어 NCCL 통신 레이턴시가 크게 줄어든다.
 * CPU/메모리 (선택):
 분산 학습(특히 FSDP)은 데이터 전처리나 체크포인트 저장시 일시적으로 많은 CPU와 메모리를 사용한다. 쿠버네티스 리소스 리미트를 주지 않으면 이러한 작업이 병목 없이 빠르게 처리된다.
-* PET_MASTER_ADDR 및 PET_MASTER_PORT는 파이토치 일라스틱 트레이닝(PyTorch Elastic Training)모듈이 그 값을 채워준다. 각 랭크들이 마스터 랭크를 식별하기 위해서 PET 는 쿠버네티스 헤드리스 서비스를 만든다.  
-* 현재 설정해서는 분산 트레이닝 잡이 실행 도중 실패하는 경우 재시작 하지 않는다.
+* Kubeflow Training Operator가 분산 학습을 위해 쿠버네티스 헤드리스 서비스를 생성하면, 각 파드 내의 PyTorch Elastic Training(PET) 모듈이 이 서비스 주소를 참조하여 PET_MASTER_ADDR 및 PET_MASTER_PORT 환경 변수를 채워준다. 이를 통해 모든 랭크(Rank)들이 마스터 노드를 식별하고 랑데뷰(Rendezvous)를 수행한다 
+* 현재 설정해서는 분산 트레이닝 잡이 실행 도중 실패하는 경우 재시작 하지 않는다. ClusterTrainingRuntime 에 대한 추가 설정이 필요하다. 
 
 #### 2. 잡 실행하기 ####
 트레이닝 작업을 시작하고 로그를 확인한다. 
@@ -208,12 +208,7 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   c6i.2xlarge    amd64      Amazon
 ```
 
 ## 복원력 설정 ##
-..
 
-
-
-## 장애 발생 시 복구 프로세스 ##
-노드 1개가 죽었을 때, 일반적인 NCCL 훈련과 달리 torchrun은 다음과 같이 행동합니다.
 
 * 장애 감지: 특정 Pod가 죽으면 NCCL 통신이 깨집니다. 이때 살아있는 나머지 Pod의 torchrun 프로세스가 이를 감지하고 자신의 로컬 프로세스들을 모두 종료(Terminate)시킵니다. (전체 작업은 잠시 멈춥니다.)
 * 쿠버네티스 재스케줄링: 쿠버네티스의 Job 컨트롤러나 ReplicaSet이 죽은 Pod를 감지하고, 새로운 Pod를 자동으로 다시 생성합니다.
@@ -230,8 +225,6 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   c6i.2xlarge    amd64      Amazon
 ## 랑데뷰 포인트 ##
 * c10d (권장): 추가 인프라가 필요 없어 가장 가볍습니다. 포드가 재시작되어도 쿠버네티스 서비스 이름은 유지되므로 torchrun이 다시 랑데뷰하는 데 문제가 없습니다.
 * etcd: 수백 개 이상의 노드를 사용하는 대규모 클러스터에서 랑데뷰의 안정성을 극한으로 높여야 할 때 사용합니다. 일반적인 5~10개 노드 규모에서는 c10d로도 충분합니다.
-
-
 
 
 
