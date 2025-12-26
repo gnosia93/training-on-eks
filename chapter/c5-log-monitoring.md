@@ -316,16 +316,10 @@ controller:
       - name: varlog
         hostPath:
           path: /var/log
-      - name: varlibdockercontainers
-        hostPath:
-          path: /var/lib/docker/containers
 
 extraVolumeMounts:
   - name: varlog
     mountPath: /var/log
-    readOnly: true
-  - name: varlibdockercontainers
-    mountPath: /var/lib/docker/containers
     readOnly: true
 ```
 
