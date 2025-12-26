@@ -48,7 +48,7 @@ spec:
 
   podTemplateOverrides:
     - targetJobs:
-        name: trainer
+        - name: trainer
       spec:
         nodeSelector:
           node.kubernetes.io/instance-type: g6e.48xlarge
