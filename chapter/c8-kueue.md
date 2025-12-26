@@ -93,7 +93,7 @@ spec:
   clusterQueue: cluster-queue-gpu
 ```
 
-#### 사용 방법 (Job 제출 시) ####
+## 사용 방법 ##
 ```
 metadata:
   labels:
