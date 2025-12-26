@@ -62,8 +62,8 @@ spec:
   - flavors:
     - flavor-gpu-nvidia
     resources:
-    - name: "nvidia.com"
-      nominalQuota: 100                 # 전체 GPU 쿼타 설정
+    - name: "nvidia.com/gpu"
+      nominalQuota: 100                   # 전체 GPU 쿼타 설정
 ```
 
 
