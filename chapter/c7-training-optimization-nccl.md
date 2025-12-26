@@ -79,7 +79,7 @@ export NCCL_DEBUG=INFO
 * 인스턴스 타입: P4d, P4de, P5 인스턴스를 사용 중이라면 각 노드에 4개 또는 그 이상의 EFA 인터페이스가 존재한다. nccl-tests 실행 시 모든 인터페이스가 토폴로지에 포함되었는지 확인이 필요하다.
 
 
-## 로그 확인 ##
+## 레퍼런스 ##
 
-* Topology Aware Scheduler: EKS에서 대규모 훈련 시 성능 극대화를 위해 노드 내 GPU 위치를 고려하는 스케줄러 설정이 필요하다.
+* https://github.com/eksctl-io/eksctl/tree/main
   
