@@ -56,24 +56,14 @@ spec:
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: ClusterQueue
 metadata:
-  name: cluster-queue-a
+  name: cluster-queue-gpu
 spec:
   resourceGroups:
-    - flavors:
-        - name: nvidia-gpu-flavor
-          resources:
-            - name: nvidia.com/gpu
-              nominalQuota: 10  # 총 GPU 10개 할당 가능
-            - name: cpu
-              nominalQuota: 40
-            - name: memory
-              nominalQuota: 100Gi
-      # 갱 스케줄링(Gang Scheduling)을 위한 설정
-      # 모든 파드가 준비될 때까지 기다릴지 여부 (선택 사항, v0.3.0 이후)
-      # waitForPodsReady:
-      #   enable: true
-  # 이 ClusterQueue를 사용할 수 있는 LocalQueue의 네임스페이스 제약 (선택 사항)
-  namespaceSelector: {} 
+  - flavors:
+    - flavor-gpu-nvidia
+    resources:
+    - name: "nvidia.com"
+      nominalQuota: 100                 # 전체 GPU 쿼타 설정
 ```
 
 #### 3. LocalQueue 정의 (local-queue.yaml) ####
