@@ -47,6 +47,8 @@ spec:
   restartPolicy: OnFailure
 
   podTemplateOverrides:
+    targetJobs:
+      name: t5-large
     spec:
       nodeSelector:
         node.kubernetes.io/instance-type: g6e.48xlarge
