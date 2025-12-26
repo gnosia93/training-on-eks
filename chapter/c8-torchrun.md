@@ -196,7 +196,8 @@ kubectl get nodes -o custom-columns="NAME:.metadata.name, \
    INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
    ARCH:.status.nodeInfo.architecture, \
    OS:.status.nodeInfo.osImage, \
-   GPU:.status.capacity['nvidia\.com/gpu']"
+   GPU:.status.capacity['nvidia\.com/gpu'], \
+   CAPACITY:.metadata.labels['karpenter\.sh/capacity-type']"
 ```
 [결과]
 ```
