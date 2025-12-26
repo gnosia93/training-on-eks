@@ -90,7 +90,7 @@ aws iam attach-role-policy --role-name "FSxLustreRole" --policy-arn $S3_POLICY_A
 ### 3. lustre 파일시스템 조회 ###
 ```
 aws fsx describe-file-systems \
-    --file-system-ids ${FSX_ID} \
+    --file-system-ids ${FSx_ID} \
     --query "FileSystems[0].{FileSystemId:FileSystemId, DNSName:DNSName, MountName:LustreConfiguration.MountName}" \
     --output table
 ```
@@ -101,7 +101,7 @@ aws fsx describe-file-systems \
 +--------------------------------------------------------+------------------------+------------+
 |                         DNSName                        |     FileSystemId       | MountName  |
 +--------------------------------------------------------+------------------------+------------+
-|  fs-04cb64a224a31f75d.fsx.ap-northeast-2.amazonaws.com |  fs-04cb64a224a31f75d  |  ddyezbev  |
+|  fs-04e6429ada0540632.fsx.ap-northeast-2.amazonaws.com |  fs-04e6429ada0540632  |  klje3bev  |
 +--------------------------------------------------------+------------------------+------------+
 ```
 
