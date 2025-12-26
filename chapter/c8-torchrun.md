@@ -157,7 +157,7 @@ spec:
           --rdzv_id=elastic-job \
           --rdzv_backend=c10d \
           --rdzv_endpoint=\${MASTER_ADDR}:\${MASTER_PORT} \
-          t5-fsdp.py
+          t5-fsdp.py --model_id="google-t5/t5-large" --epochs=10
     resourcesPerNode:
       limits:
         nvidia.com/gpu: "8"
@@ -165,6 +165,7 @@ spec:
         nvidia.com/gpu: "8"
 EOF
 ```
+* google-t5/t5-large는 약 770M 파라미터 모델, epochs는 10회 수행 
 * Placement Group (가용 영역 지정):
 nodeSelector에 topology.kubernetes.io/zone을 명시하면, 분산 학습시 노드들이 동일한 AZ 내에 배치되어 NCCL 통신 레이턴시가 크게 줄어든다.
 * CPU/메모리 (선택):
@@ -208,7 +209,6 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   c6i.2xlarge    amd64      Amazon
 
 ## 복원력 설정 ##
 
-
 * 장애 감지: 특정 Pod가 죽으면 NCCL 통신이 깨집니다. 이때 살아있는 나머지 Pod의 torchrun 프로세스가 이를 감지하고 자신의 로컬 프로세스들을 모두 종료(Terminate)시킵니다. (전체 작업은 잠시 멈춥니다.)
 * 쿠버네티스 재스케줄링: 쿠버네티스의 Job 컨트롤러나 ReplicaSet이 죽은 Pod를 감지하고, 새로운 Pod를 자동으로 다시 생성합니다.
 * 새로운 랑데부: 새로 뜬 Pod와 기존에 살아있던 Pod들이 다시 랑데부 서버에 모입니다.
@@ -224,7 +224,6 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   c6i.2xlarge    amd64      Amazon
 ## 랑데뷰 포인트 ##
 * c10d (권장): 추가 인프라가 필요 없어 가장 가볍습니다. 포드가 재시작되어도 쿠버네티스 서비스 이름은 유지되므로 torchrun이 다시 랑데뷰하는 데 문제가 없습니다.
 * etcd: 수백 개 이상의 노드를 사용하는 대규모 클러스터에서 랑데뷰의 안정성을 극한으로 높여야 할 때 사용합니다. 일반적인 5~10개 노드 규모에서는 c10d로도 충분합니다.
-
 
 
 ## 레퍼런스 ##
