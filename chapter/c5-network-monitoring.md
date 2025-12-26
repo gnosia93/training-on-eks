@@ -16,3 +16,9 @@ prometheus-node-exporter:
 helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f values.yaml
 ```
 EFA는 리눅스 커널에서 네트워크 인터페이스로 인식됩니다. node_exporter의 ethtool 콜렉터는 노드의 /sys/class/net/ 경로에 있는 통계 정보를 읽어 node_net_ethtool 형태의 메트릭으로 변환합니다.
+
+### 2. 수집되는 주요 EFA 메트릭 ###
+정상적으로 설정되면 Prometheus에서 다음과 같은 쿼리로 EFA 지표를 확인할 수 있습니다.
+* 전송된 바이트 수: node_net_ethtool{device="rdma0", stat="rdma_read_bytes"}
+* 수신된 바이트 수: node_net_ethtool{device="rdma0", stat="rdma_write_bytes"}
+* EFA 에러 카운트: node_net_ethtool{device="rdma0", stat="lif_error_errors"}
