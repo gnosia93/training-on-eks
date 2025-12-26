@@ -112,12 +112,18 @@ spec:
     numNodes: 2                               # 노드수 설정
     numProcPerNode: auto                      # 노드별 프로세스 갯수                                                                               
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
-    command: 
-      - git clone https://github.com/gnosia93/training-on-eks /workspace/code
-      - cd /workspace/code/samples/fsdp
-      - echo "working directory: "$(pwd)
-      - pip install -r requirements.txt
-      - torchrun --nproc_per_node 8 --rdzv_id=elastic-job --rdzv_backend=c10d t5-fsdp.py
+    command:
+      - /bin/bash
+      - -c
+      - |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        cd /workspace/code/samples/fsdp
+        pip install -r requirements.txt
+        torchrun \
+          --nproc_per_node=8 \
+          --rdzv_id=elastic-job \
+          --rdzv_backend=c10d \
+          t5-fsdp.py
     resourcesPerNode:
       limits:
         nvidia.com/gpu: "8"
