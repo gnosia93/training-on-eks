@@ -90,6 +90,9 @@ DESCRIPTION:
 
 ## 트레이닝 작업 실행 ##
 TrainJob 오퍼레이터는 backoffLimit 라는 필드를 이용하여 작업 복구 매커니즘을 제공한다. 작업이 실패 했을때 다시 시작하는 기능으로, 이 예제에서는 3번까지 트레이닝 작업을 재 시작 하도록 설정 하였다.  
+* failurePolicy.maxRestarts를 써야 하는 이유
+  * 전체 재시작 (Clean Slate): maxRestarts는 문제가 발생하면 관련된 모든 파드(전체 워커들)를 한꺼번에 삭제하고 새로 띄웁니다.
+  * 랑데뷰 초기화: 모든 노드가 동시에 새로 뜨기 때문에 랑데뷰 포인트에서 다시 깔끔하게 모여 학습을 재개할 수 있습니다. 이것이 분산 학습에서 훨씬 안정적인 복구 방식입니다.
 ```
 cat <<EOF > t5-large.yaml
 apiVersion: trainer.kubeflow.org/v1alpha1
@@ -99,7 +102,10 @@ metadata:
 spec:
   podTemplateOverrides:
     - targetJobs:
-        - name: trainer
+        - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
+      # 작업 전체를 최대 5번 재시작하여 NCCL/네트워크 일시 오류 복구
+      failurePolicy:
+        maxRestarts: 5
       spec:
         nodeSelector:
           node.kubernetes.io/instance-type: g6e.48xlarge              # https://instances.vantage.sh/aws/ec2/g6e.48xlarge?currency=USD
