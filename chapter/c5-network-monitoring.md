@@ -22,3 +22,16 @@ EFA는 리눅스 커널에서 네트워크 인터페이스로 인식됩니다. n
 * 전송된 바이트 수: node_net_ethtool{device="rdma0", stat="rdma_read_bytes"}
 * 수신된 바이트 수: node_net_ethtool{device="rdma0", stat="rdma_write_bytes"}
 * EFA 에러 카운트: node_net_ethtool{device="rdma0", stat="lif_error_errors"}
+
+
+### 3. Grafana 대시보드 연결 ###
+AWS에서 공식적으로 제공하거나 커뮤니티에서 널리 쓰이는 대시보드 템플릿을 활용하면 시각화가 쉽습니다.
+
+#### 권장 대시보드 템플릿 ####
+* AWS 공식 EFA Grafana Dashboard: AWS 샘플 저장소에서 제공하는 JSON 파일을 다운로드하여 임포트할 수 있습니다.
+* Grafana ID 이용: Grafana "Import" 메뉴에서 ID 14531 또는 12457 등을 시도해 볼 수 있으나, EFA 전용인 AWS 공식 가이드의 JSON을 복사하여 사용하는 것이 가장 정확합니다.
+
+#### 임포트 방법 ####
+* Grafana 접속 -> 왼쪽 메뉴의 Dashboards -> New -> Import 클릭.
+* 위에서 다운로드한 JSON 파일을 업로드하거나 JSON 텍스트를 붙여넣기 합니다.
+* 데이터 소스로 현재 연동된 Prometheus를 선택합니다
