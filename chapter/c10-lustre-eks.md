@@ -36,13 +36,16 @@ aws ec2 authorize-security-group-egress --group-id ${FSX_SG_ID} --protocol -1 --
 # FSx for Lustre 생성 (SCRATCH_2, 1200 GiB, EFA)
 FSx_ID=$(aws fsx create-file-system \
     --file-system-type LUSTRE \
-    --storage-capacity 1200 \
+    --storage-capacity 38400 \
     --subnet-ids ${PRIV_SUBNET_ID} \
     --security-group-ids ${FSX_SG_ID} \
-    --lustre-configuration "DeploymentType=SCRATCH_2,ImportPath=s3://${BUCKET_NAME},\
+    --lustre-configuration "DeploymentType=PERSISTENT_2,\
+        ImportPath=s3://${BUCKET_NAME},\
         ExportPath=s3://${BUCKET_NAME}/export,\
         AutoImportPolicy=NEW_CHANGED,\
-        EfaEnabled=true" \
+        EfaEnabled=true, \
+        PerUnitStorageThroughput=125, \
+        MetadataConfiguration={Mode=AUTOMATIC}" \
     --query "FileSystem.FileSystemId" --output text)
 
 echo "FSx File System Creating: ${FSx_ID}"
