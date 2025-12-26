@@ -6,6 +6,8 @@ NPD(Node Problem Detector) 같은 모니터링 에이전트가 없으면, 카펜
 카펜터의 시야: 노드가 Ready 상태인지, CPU/Memory 자원이 여유가 있는지, 인스턴스가 활성화(Running) 상태인지만 확인합니다.
 GPU 장애의 특성: GPU가 물리적으로 고장 나거나 드라이버가 깨져도(Xid 에러 등), 리눅스 커널이나 CPU, 네트워크는 멀쩡한 경우가 많습니다. 따라서 쿠버네티스 입장에서는 노드가 여전히 Ready 상태로 보입니다.
 
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/npd.png)
+
 #### 3. 카펜터가 알 수 있는 유일한 '간접적' 상황 ####
 NPD가 없어도 카펜터가 노드를 교체하는 경우가 딱 하나 있습니다.
 장애가 너무 심각해서 노드 자체가 완전히 멈추거나(Kernel Panic), AWS 상태 검사(Status Check)가 실패하여 노드가 NotReady 상태가 될 때입니다.
