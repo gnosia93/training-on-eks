@@ -37,7 +37,10 @@ helm version
 
 #### 4. k9s 설치 ####
 ```
-https://github.com/derailed/k9s/archive/refs/tags/v0.50.16.tar.gz
+
+k9s_linux_arm64.rpm
+
+
 ```
 
 
