@@ -169,8 +169,7 @@ EOF
 kubectl apply -f fsx-pvc.yaml
 ```
 
-### 2. 테스트 하기 ###
-#### 2-1. 애플리케이션 파드에서 사용 ####
+### 6. Pod 테스트 ####
 ```
 cat <<EOF > pod-fsx.yaml
 apiVersion: v1
@@ -183,10 +182,10 @@ spec:
     image: centos:latest
     command: ["sleep", "infinity"]
     volumeMounts:
-    - name: fsx-volume
+    - name: fsx
       mountPath: /data/fsx
   volumes:
-    - name: fsx-volume
+    - name: fsx
       persistentVolumeClaim:
         claimName: fsx-pvc # 위에서 생성한 PVC 이름
 EOF
@@ -194,7 +193,7 @@ EOF
 kubectl apply -f pod-fsx.yaml
 ```
 
-#### 2-2. S3 연동 테스트 ####
+S3 에 파일을 업로드 하고 Pod 에서 조회되는지 확인한다.  
 ```
 echo "Hello FSx Lustre" > test-file.txt
 aws s3 cp test-file.txt s3://${BUCKET_NAME}/
@@ -206,32 +205,12 @@ cd /
 ls -l
 ```
 
-```
-nc -zv fs-04cb64a224a31f75d.fsx.ap-northeast-2.amazonaws.com 988
-```
-
-
-
-
-#### 오류메시지 ####
-```
-Warning  FailedMount  25s (x2 over 2m6s)  kubelet            MountVolume.SetUp failed for volume "fsx-pv" : rpc error: code = Internal desc = Could not mount "fs-04cb64a224a31f75d.fsx.ap-northeast-2.amazonaws.com@tcp:/ddyezbev" at "/var/lib/kubelet/pods/54547989-658e-4990-90f5-e98ef9634e87/volumes/kubernetes.io~csi/fsx-pv/mount": mount failed: exit status 22
-Mounting command: mount
-Mounting arguments: -t lustre fs-04cb64a224a31f75d.fsx.ap-northeast-2.amazonaws.com@tcp:/ddyezbev /var/lib/kubelet/pods/54547989-658e-4990-90f5-e98ef9634e87/volumes/kubernetes.io~csi/fsx-pv/mount
-Output: mount.lustre: mount fs-04cb64a224a31f75d.fsx.ap-northeast-2.amazonaws.com@tcp:/ddyezbev at /var/lib/kubelet/pods/54547989-658e-4990-90f5-e98ef9634e87/volumes/kubernetes.io~csi/fsx-pv/mount failed: Invalid argument
-This may have multiple causes.
-Is 'ddyezbev' the correct filesystem name?
-Are the mount options correct?
-Check the syslog for more info.
-```
-
-
 ## 리소스 삭제 ##
 ```
 export CLUSTER_NAME="training-on-eks"
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
-export ROLE_NAME="FSx_Lustre_CSI_Driver_Role"
+export ROLE_NAME="FSxLustreRole"
 
 echo "=== EKS FSx for Lustre 리소스 삭제 시작 ==="
 
@@ -245,7 +224,7 @@ eksctl delete iamserviceaccount \
 
 # 2. 커스텀 S3 정책 삭제
 echo "2. IAM 정책(FSxLustreS3IntegrationPolicy) 삭제 중..."
-POLICY_ARN=$(aws iam list-policies --scope Local --query "Policies[?PolicyName=='FSxLustreS3IntegrationPolicy'].Arn" --output text)
+POLICY_ARN=$(aws iam list-policies --scope Local --query "Policies[?PolicyName=='FSxLustreS3Policy'].Arn" --output text)
 if [ "$POLICY_ARN" != "None" ] && [ -n "$POLICY_ARN" ]; then
     # 역할이 아직 남아있을 경우를 대비해 연결 해제 시도
     aws iam detach-role-policy --role-name "${ROLE_NAME}" --policy-arn "${POLICY_ARN}" 2>/dev/null
@@ -254,7 +233,7 @@ if [ "$POLICY_ARN" != "None" ] && [ -n "$POLICY_ARN" ]; then
 fi
 
 # 3. FSx_Lustre_CSI_Driver_Role이 남아있을 경우 직접 삭제
-echo "3. IAM 역할(${ROLE_NAME}) 확인 및 삭제 중..."
+echo "3. IAM 역할(${ROLE_NAME}) 삭제 중..."
 if aws iam get-role --role-name "${ROLE_NAME}" 2>/dev/null; then
     # 연결된 모든 정책 해제
     for p_arn in $(aws iam list-attached-role-policies --role-name "${ROLE_NAME}" --query 'AttachedPolicies[].PolicyArn' --output text); do
