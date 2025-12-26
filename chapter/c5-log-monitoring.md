@@ -256,9 +256,8 @@ kubectl get pods -n loki
 It is important to create a namespace called loki as our trust policy is set to allow the IAM role to be used by the loki service account in the loki namespace. This is configurable but make sure to update your service account
 
 
-### Log Sender (Grafana Alloy) 설치 ###
-* https://grafana.com/docs/alloy/latest/
-* https://grafana.com/docs/loki/latest/send-data/
+### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/) ###
+
 
 
 
