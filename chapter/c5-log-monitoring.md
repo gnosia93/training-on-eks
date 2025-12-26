@@ -232,6 +232,12 @@ singleBinary:
  replicas: 0
 ```
 
+* 로키 까나리 disable
+```
+lokiCanary:
+  enabled: false
+```
+
 
 ---
 ## grafana loki ## 
