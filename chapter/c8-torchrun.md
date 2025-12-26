@@ -181,13 +181,12 @@ kubectl get trainjob
 
 kubectl get pods
 
-kubectl logs -f -l trainjob-name=t5-large
+kubectl logs -f <pod name> 
 ```
 * Job 삭제
 ```
 kubectl delete trainjob t5-large
 ``` 
-
 
 #### 3. 노드 리스트 출력하기 ####
 본 워크삽에서는 카펜터를 이용하여 GPU 노드를 프로비저닝 하므로, 트레이닝 잡을 실행 후 GPU 노드가 프로비저닝 될때 까지 1분 이상의 시간이 소요된다. 아래 명령어는 쿠버네티스 클러스터에 조인된 노드 정보를 출력하는 명령어이다.
