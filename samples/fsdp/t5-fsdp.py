@@ -130,9 +130,6 @@ def train(args, rank, device):
     if args.use_checkpointing:
         apply_activation_checkpointing(model, checkpoint_wrapper_fn=checkpoint_wrapper, check_fn=lambda m: isinstance(m, T5Block))
 
-
-
-
          
     # 데이터 로딩
     #dataset = load_dataset("billsum", split=f"train[:{args.train_size}]", trust_remote_code=True)
@@ -177,10 +174,6 @@ def train(args, rank, device):
     )
     # --- [수정 부분 끝] ---     
 
-
-
-
-
          
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
@@ -217,8 +210,11 @@ def train(args, rank, device):
             if i % 10 == 0 and rank == 0:
                 print(f"Epoch {epoch} | Step {i} | Loss: {loss.item() * args.grad_acc_steps:.4f} | Strategy: {args.sharding_strategy}")
 
-        # 에폭 종료 후 체크포인트 저장
-        save_checkpoint(model, optimizer, epoch, checkpoint_path, rank)
+        # 에폭 종료후 체크포인트 저장
+        # 현재는 저장하는 부분만 수정 / Load 하는 부분이 수정이 필요한 지는 나중에 확인 필요.     
+        if args.save_path: 
+            save_checkpoint(model, optimizer, epoch, checkpoint_path, rank)
+
 
 # [메인 함수]
 def main():
@@ -238,7 +234,8 @@ def main():
     parser.add_argument("--use_prefetch", action="store_true")
     parser.add_argument("--pin_memory", type=bool, default=True)
     parser.add_argument("--num_workers", type=int, default=4)
-    
+    parser.add_argument("--save_path", type=str, default=None, help="체크포인트를 저장할 경로(설정하지 않으면 저장하지 않음)")
+         
     args = parser.parse_args()
 
     # 분산 학습 환경 초기화
