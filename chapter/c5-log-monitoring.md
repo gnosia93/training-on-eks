@@ -313,7 +313,7 @@ alloy:
           action = "replace"
           target_label = "job"
           separator = "/"
-          replacement = "$1"
+          replacement = "$1/$2"
         }
 
         // Label creation - "__path__" field from "__meta_kubernetes_pod_uid" and "__meta_kubernetes_pod_container_name"
@@ -371,6 +371,7 @@ extraVolumeMounts:
     mountPath: /var/log
     readOnly: true
 ```
+Alloy 문법: discovery → source → process → write로 이어지는 파이프라인 흐름(receiver 및 output 참조)이 정확합니다
 
 ```
 helm install alloy grafana/alloy --namespace alloy --create-namespace \
