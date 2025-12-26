@@ -128,6 +128,18 @@ spec:
           node.kubernetes.io/instance-type: g6e.48xlarge              # https://instances.vantage.sh/aws/ec2/g6e.48xlarge?currency=USD
           topology.kubernetes.io/zone: ap-northeast-2a                # AZ 설정, 노드 간 통신 지연을 최소화 
 
+         # --- [추가] 컨테이너에 볼륨 마운트 설정 ---
+        containers:
+          - name: pytorch
+            volumeMounts:
+              - mountPath: /dev/shm
+                name: dshm
+        volumes:
+          - name: dshm
+            emptyDir:
+              medium: Memory
+              sizeLimit: "64Gi"               # shared memory 공간을 기본값(64Mi) 에서 64Gi 로 설정 / num_workers 와 연관됨.
+
   runtimeRef:
     name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묶음)
 
