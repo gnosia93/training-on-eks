@@ -1,5 +1,32 @@
-분산 훈련 환경(특히 EKS와 EFA가 활성화된 환경)에서 GPU 간 및 노드 간 통신 경로를 확인하기 위해 NCCL Topology를 확인하는 방법은 크게 두가지 이다. 
+## 클러스터 배치 그룹(Cluster Placement Group) ##
+네트워크 지연 시간을 줄이려면, EKS 노드 그룹 생성 시 AWS 수준에서 Cluster Placement Group을 적용해야 한다. 
+```
+aws ec2 create-placement-group --group-name "ml-training-pg" --strategy cluster
 
+eksctl create nodegroup \
+  --cluster ${CLUSTER_NAME} \
+  --name efa-gpu-nodes \
+  --node-type p4d.24xlarge \
+  --placement-group "ml-training-pg" \
+  --nodes 8 \
+  --node-zones "ap-northeast-2a"       # 반드시 동일 AZ 지정
+```
+cluster 배치 그룹 내에서 노드 생성이 실패(InsufficientCapacity)한다면, 해당 AZ에 가용 자원이 부족한 것이다. 
+이 경우 다른 AZ를 시도하거나 AWS EC2 Capacity Blocks를 통해 사전에 자원을 예약하는 방식이 있다.
+```
+eksctl create nodegroup \
+  --cluster ${CLUSTER_NAME} \
+  --name ml-capacity-block-nodes \
+  --node-type p5.48xlarge \
+  --nodes 16 \
+  --placement-group "ml-training-pg" \
+  --capacity-reservation-id cr-0123456789abcdefg \
+  --node-zones "ap-northeast-2a"
+```
+
+
+## NCCL ##
+분산 훈련 환경(특히 EKS와 EFA가 활성화된 환경)에서 GPU 간 및 노드 간 통신 경로를 확인하기 위해 NCCL Topology를 확인하는 방법은 크게 두가지 이다. 
 
 ### 1. NCCL 디버그 로그 활성화 ###
 #### 환경변수 ####
@@ -41,10 +68,10 @@ export NCCL_DEBUG=INFO
 * algbw (Algorithm Bandwidth): 실제 데이터 통신 속도로 EFA가 활성화된 경우 노드 간 통신에서 이 수치가 네트워크 대역폭(예: P4d의 경우 400Gbps)에 근접해야 한다.
 * busbw (Bus Bandwidth): 하드웨어 토폴로지(NVLink 등)의 효율성을 나타낸다.
 * NCCL INFO 로그: 실행 초기 출력되는 로그에서 NET/OFI 문구가 보인다면, NCCL이 일반 이더넷이 아닌 EFA(Libfabric) 토폴로지를 정상적으로 인식하고 사용 중임을 의미한다.
-
+* 인스턴스 타입: P4d, P4de, P5 인스턴스를 사용 중이라면 각 노드에 4개 또는 그 이상의 EFA 인터페이스가 존재한다. nccl-tests 실행 시 모든 인터페이스가 토폴로지에 포함되었는지 확인이 필요하다.
 
 
 ## 로그 확인 ##
-* NCCL 로그에서 NCCL INFO NET/OFI라는 문구가 보여야 EFA(Libfabric)를 통한 최적의 노드 간 토폴로지가 구성된 것이다.
+
 * Topology Aware Scheduler: EKS에서 대규모 훈련 시 성능 극대화를 위해 노드 내 GPU 위치를 고려하는 스케줄러 설정이 필요하다.
   
