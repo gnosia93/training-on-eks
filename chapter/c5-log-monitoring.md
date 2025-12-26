@@ -344,7 +344,7 @@ alloy:
       loki.process "pod_logs" {
         stage.static_labels {
             values = {
-              cluster = "my-k8s-cluster",
+              cluster = "training-on-eks",
             }
         }
         forward_to = [loki.write.grafana_loki.receiver]
