@@ -239,6 +239,15 @@ lokiCanary:
 ```
 
 
+#### 7.Deploy Loki ####
+Now that you have created the values.yaml file, you can deploy Loki using the Helm chart.
+```
+helm install --values values.yaml loki grafana/loki -n loki --create-namespace
+kubectl get pods -n loki
+```
+It is important to create a namespace called loki as our trust policy is set to allow the IAM role to be used by the loki service account in the loki namespace. This is configurable but make sure to update your service account
+
+
 ---
 ## grafana loki ## 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-loki.webp)
