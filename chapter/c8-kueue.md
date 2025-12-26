@@ -15,7 +15,7 @@
 Kueue 자체는 '언제(When)' 작업을 실행할 지를 결정하는 쿼터 관리 시스템이다. '어디서(Where)' 실행할 지를 결정하는 노드/GPU 레벨의 세부 스케줄링은 쿠버네티스 기본 스케줄러(kube-scheduler) 또는 카펜터가 처리하게 된다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/Kueue-Arch.svg)
 
-### 1. 설치 ###
+### 1. Kueue 설치 ###
 ```
 helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
   --version=0.15.2 \
@@ -28,7 +28,7 @@ helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
 helm uninstall kueue --namespace kueue-system 
 ```
 
-### 2. Kueue가 설정 ###
+### 2. Kueue 설정 ###
 PyTorchJob을 실행하기 전에 Kueue가 해당 작업을 인식하고 리소스를 할당할 수 있도록 ResourceFlavor, ClusterQueue, 그리고 LocalQueue 세 가지 핵심 리소스가 설정되어 있어야 합니다
 
 #### 1. 리소스 플레이버 정의 ####
