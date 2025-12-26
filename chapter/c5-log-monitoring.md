@@ -1,6 +1,23 @@
 <<>>
 << 제대로 설치가 되지 않는다.. 디버깅 필요. >>
 <<>>
+#### cluster.yaml 변경 ####
+```
+addons:
+  - name: aws-ebs-csi-driver
+
+managedNodeGroups:
+  - name: loki-workers
+    instanceType: m7i.2xlarge
+    desiredCapacity: 3
+    minSize: 2
+    maxSize: 3
+    amiFamily: AmazonLinux2023
+    iam:                                  <---- iam 생성.
+      withAddonPolicies:
+        ebs: true
+```
+
 
 #### S3 버킷생성 ####
 Before deploying Loki, you need to create two S3 buckets; one to store logs (chunks), the second to store alert rules. You can create the bucket using the AWS Management Console or the AWS CLI. The bucket name must be globally unique.
