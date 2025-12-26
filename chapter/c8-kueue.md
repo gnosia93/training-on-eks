@@ -20,22 +20,11 @@ Kueue 자체는 '언제(When)' 작업을 실행할지를 결정하는 쿼터 관
 
 ### 1. 설치 ###
 ```
-cat <<EOF > kueue-values.yaml
-controllerManager:
-  manager:
-    configuration:
-      integrations:
-        frameworks:
-        - "batch/job"
-        - "kubeflow.org/pytorchjob"
-#        - "kubeflow.org/tfjob"   
-#        - "ray.io/rayjob"      
-EOF
-
 helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
-  --namespace kueue-system \
+  --version=0.15.2 \
+  --namespace  kueue-system \
   --create-namespace \
-  -f kueue-values.yaml
+  --wait --timeout 300s
 ```
 
 ### 2. Kueue가 설정 ###
