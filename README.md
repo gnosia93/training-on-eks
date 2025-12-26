@@ -37,8 +37,6 @@
 
 * [c10. 커스텀 컨테이너 이미지]
 
-* [C11. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
-
    
 ## 레퍼런스 ## 
 
