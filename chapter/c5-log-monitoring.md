@@ -82,6 +82,13 @@ aws iam create-role --role-name LokiServiceAccountRole --assume-role-policy-docu
 aws iam attach-role-policy --role-name LokiServiceAccountRole --policy-arn arn:aws:iam::<Account ID>:policy/LokiS3AccessPolicy
 ```
 
+#### 4. Deploying the Helm chart ####
+
+```
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+kubectl create namespace loki
+```
 
 
 
