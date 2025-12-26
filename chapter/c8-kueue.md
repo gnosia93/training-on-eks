@@ -26,6 +26,10 @@ helm install kueue oci://registry.k8s.io/kueue/charts/kueue \
   --create-namespace \
   --wait --timeout 300s
 ```
+* 삭제
+```
+helm uninstall kueue --namespace kueue-system 
+```
 
 ### 2. Kueue가 설정 ###
 PyTorchJob을 실행하기 전에 Kueue가 해당 작업을 인식하고 리소스를 할당할 수 있도록 ResourceFlavor, ClusterQueue, 그리고 LocalQueue 세 가지 핵심 리소스가 설정되어 있어야 합니다
