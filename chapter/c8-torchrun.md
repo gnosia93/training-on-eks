@@ -39,18 +39,21 @@ spec:
   backoffLimit: 3                             # 작업 실패시 재시도 횟수
   restartPolicy: OnFailure
 
+  podTemplateOverrides:
+    spec:
+      nodeSelector:
+        node.kubernetes.io/instance-type: g6e.48xlarge
+        topology.kubernetes.io/zone: ap-northeast-2                # 특정 가용 영역(AZ) 내 배치를 강제하여 노드 간 통신 지연을 최소화 
+
   schedulingPolicy:                         # Coscheduling을 통해 노드들이 물리적으로 가까운 랙(Rack)이나 영역에 배치되도록 유도 
       queue: default
       priorityClassName: high-priority
- 
-  nodeSelector:
-      node.kubernetes.io/instance-type: g6e.48xlarge
-      topology.kubernetes.io/zone: ap-northeast-2                # 특정 가용 영역(AZ) 내 배치를 강제하여 노드 간 통신 지연을 최소화
 
   runtimeRef:
     name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묶음)
   trainer:
-    numNodes: 2                   # 노드수 설정                                                                                        
+    numNodes: 2                            # 노드수 설정
+    numProcPerNode: auto                   # 노드별 프로세스 갯수                                                                               
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
     command: |
       git clone https://github.com/gnosia93/training-on-eks /workspace/code
