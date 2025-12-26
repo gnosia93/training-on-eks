@@ -257,6 +257,8 @@ It is important to create a namespace called loki as our trust policy is set to 
 
 
 ### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/set-up/install/kubernetes/) ###
+You have successfully deployed Alloy on Kubernetes, using default Helm settings.
+
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
