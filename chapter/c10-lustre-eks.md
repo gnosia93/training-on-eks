@@ -3,7 +3,6 @@
 러스터(Lustre) 파일 시스템은 높은 처리량, 낮은 지연 시간, 뛰어난 확장성을 제공하는 병렬 분산 파일 시스템으로, 대규모 데이터셋을 처리해야 하는 AI 시스템에 필수적이다.
 AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완전 관리형 서비스인 Amazon FSx for Lustre 와 FSx for Lustre CSI(Container Storage Interface) 드라이버를 활용하여 쿠버네티스 클러스터에 통합하는 것이다.
 
-### 1. 구성하기 ###
 ```
 export CLUSTER_NAME="training-on-eks"
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
@@ -11,7 +10,7 @@ export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
 ```
 
-#### 1. lustre 파일시스템 생성 ####
+### 1. lustre 파일시스템 생성 ###
 ```
 # 첫 번째 프라이빗 서브넷 ID 가져오기
 export PRIV_SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" \
@@ -49,7 +48,7 @@ FSx_ID=$(aws fsx create-file-system \
 echo "FSx File System Creating: ${FSx_ID}"
 ```
 
-#### 2. IAM 역할(IRSA) 생성 ####
+### 2. IAM 역할(IRSA) 생성 ###
 이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 생성 및 annontation 처리를 한 번에 수행한다
 ```
 eksctl create iamserviceaccount \
@@ -85,7 +84,7 @@ S3_POLICY_ARN=$(aws iam create-policy --policy-name FSxLustreS3Policy --policy-d
 aws iam attach-role-policy --role-name "FSxLustreRole" --policy-arn $S3_POLICY_ARN
 ```
 
-#### 3. lustre 파일시스템 조회 ####
+### 3. lustre 파일시스템 조회 ###
 ```
 aws fsx describe-file-systems \
     --file-system-ids ${FSX_ID} \
@@ -103,7 +102,7 @@ aws fsx describe-file-systems \
 +--------------------------------------------------------+------------------------+------------+
 ```
 
-#### 4. Amazon FSx CSI 드라이버 설치 #### 
+### 4. Amazon FSx CSI 드라이버 설치 ### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
 ```
 kubectl create namespace fsx-csi-driver
@@ -118,7 +117,7 @@ helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
     --set controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/FSxLustreRole
 ```
 
-#### 5. PV/PVC 배포 ####
+### 5. PV/PVC 배포 ###
 ```
 FSxID=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{FileSystemId:FileSystemId}" --output text)
 FSx_DNS=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{DNSName:DNSName}" --output text)
