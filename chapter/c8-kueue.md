@@ -34,7 +34,7 @@ helm uninstall kueue --namespace kueue-system
 ### 2. Kueue가 설정 ###
 PyTorchJob을 실행하기 전에 Kueue가 해당 작업을 인식하고 리소스를 할당할 수 있도록 ResourceFlavor, ClusterQueue, 그리고 LocalQueue 세 가지 핵심 리소스가 설정되어 있어야 합니다
 
-#### 1. ResourceFlavor 정의 ####
+#### 1. 리소스 플레이버 정의 ####
 클러스터에 존재하는 실제 리소스(여기서는 GPU)의 종류와 레이블을 정의합니다. 
 ```
 apiVersion: kueue.x-k8s.io/v1beta1
@@ -48,9 +48,22 @@ spec:
   - key: "nvidia.com/gpu"
     operator: "Exists"
     effect: "NoSchedule"
+---
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: ResourceFlavor
+metadata:
+  name: flavor-gpu-nvidia-efa
+spec:
+  nodeSelector:
+    nodeType: "nvidia-efa"
+  tolerations:
+  - key: "nvidia.com/gpu"
+    operator: "Exists"
+    effect: "NoSchedule"
+
 ```
 
-#### 2. ClusterQueue 정의 (cluster-queue.yaml) #### 
+#### 2. 클러스터큐 정의 (cluster-queue.yaml) #### 
 클러스터 전체의 리소스 할당량과 정책을 정의합니다. queue-a라는 이름으로 총 GPU 10개까지 할당할 수 있도록 설정합니다.
 ```
 apiVersion: kueue.x-k8s.io/v1beta1
@@ -61,13 +74,15 @@ spec:
   resourceGroups:
   - flavors:
     - flavor-gpu-nvidia
+    - flavor-gpu-nvidia-efa
     resources:
     - name: "nvidia.com/gpu"
       nominalQuota: 100                   # 전체 GPU 쿼타 설정
 ```
 
-#### 3. LocalQueue 정의 (local-queue.yaml) ####
-특정 네임스페이스(team-a) 내 사용자들이 작업을 제출하는 통로를 정의합니다. 이 LocalQueue가 위의 ClusterQueue를 참조합니다.
+#### 3. 로컬큐 정의 (local-queue.yaml) ####
+특정 네임스페이스(team-a) 내 사용자들이 작업을 제출하는 통로를 정의하는 것으로 LocalQueue는 ClusterQueue를 참조한다. 이 예제에서는 default 네임스페이스에 default-queue 라는 로컬큐를 만들었다.
+team-a 라는 네임스페이스를 만들게되면 해당 네임스페이스안에 로컬큐를 만들어야 한다. 
 ```
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: LocalQueue
@@ -79,16 +94,12 @@ spec:
   clusterQueue: cluster-queue-gpu
 ```
 
-
 #### 사용 방법 (Job 제출 시) ####
-사용자가 특정 노드풀을 선택하고 싶다면, Job의 labels에 어떤 Flavor를 쓸지 명시하면 됩니다.
-일반 GPU 노드풀을 쓰고 싶을 때:
 ```
 metadata:
   labels:
     kueue.x-k8s.io/queue-name: default-queue # 생성한 로컬 큐 이름
     kueue.x-k8s.io/flavor: "flavor-gpu-nvidia"
-
 ```
 
 
