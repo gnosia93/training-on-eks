@@ -1,7 +1,7 @@
 ## 클러스터 배치 그룹(Cluster Placement Group) ##
 네트워크 지연 시간을 줄이려면, EKS 노드 그룹 생성 시 AWS 수준에서 Cluster Placement Group을 적용해야 한다. 
 
-### EKS 노드그룹 -- 확인필ㅇ요 ###
+### EKS 노드그룹 -- 확인필요 ###
 노드그룹은 placement group 및 Capacity Block 설정을 지원한다. 
 ```
 aws ec2 create-placement-group --group-name "ml-training-pg" --strategy cluster
