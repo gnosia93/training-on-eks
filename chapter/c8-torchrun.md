@@ -136,6 +136,9 @@ spec:
     numProcPerNode: auto                      # 노드별 프로세스 갯수                                                                               
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
 
+    env:
+      - name: MASTER_PORT
+        value: "29500"  # 명시적으로 포트 주입
     # 랑데뷰 포인트를 명시적으로 기술해 준다(rdzv_id, rdzv_backend, rdzv_endpoint)
     # --rdzv_endpoint=\${MASTER_ADDR}:\${MASTER_PORT} 에서 \$ 함으로써 쉘이 해당 변수를 해석하지 않도록 함.
     # ${MASTER_ADDR} 와 ${MASTER_PORT} 환경변수는 TrainJob 오퍼레이터가 잡 실행시 채워주는 값이다.  
