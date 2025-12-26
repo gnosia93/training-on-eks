@@ -24,7 +24,7 @@
    - topoloy aware - https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-nccl.md
       - export NCCL_TOPO_FILE=/path/to/system.xml  
       - NVLINK&Switch / EFA / ENA / PCIe  /w docker
-   - [Placement Group & NCCL]()
+   - [Placement Group & NCCL](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-placement-nccl.md)
    
      
 * [C8. 분산 훈련 스케줄링 및 복원력] 
