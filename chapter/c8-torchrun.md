@@ -181,7 +181,7 @@ kubectl logs -f -l trainjob-name=t5-large
 ```
 * Job 삭제
 ```
-kubectl delete trainjob <job-name>
+kubectl delete trainjob t5-large
 ``` 
 
 
