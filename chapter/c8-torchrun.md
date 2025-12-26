@@ -103,10 +103,10 @@ spec:
   podTemplateOverrides:
     - targetJobs:
         - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
-      # 작업 전체를 최대 5번 재시작하여 NCCL/네트워크 일시 오류 복구
-      failurePolicy:
-        maxRestarts: 5
       spec:
+        # 작업 전체를 최대 5번 재시작하여 NCCL/네트워크 일시 오류 복구
+        failurePolicy:
+          maxRestarts: 5
         nodeSelector:
           node.kubernetes.io/instance-type: g6e.48xlarge              # https://instances.vantage.sh/aws/ec2/g6e.48xlarge?currency=USD
           topology.kubernetes.io/zone: ap-northeast-2a                # AZ 설정, 노드 간 통신 지연을 최소화 
