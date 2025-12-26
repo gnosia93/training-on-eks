@@ -113,7 +113,7 @@ helm repo add aws-fsx-csi-driver https://kubernetes-sigs.github.io/aws-fsx-csi-d
 helm repo update
 
 helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
-    --namespace fsx-csi-driver \
+    --namespace fsx-csi \
     --set image.repository=602401143452.dkr.ecr.${AWS_REGION}.amazonaws.com/eks/aws-fsx-csi-driver \
     --set controller.serviceAccount.create=false \
     --set controller.serviceAccount.name=fsx-csi-sa \
