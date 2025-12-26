@@ -205,7 +205,7 @@ aws s3 cp test-file.txt s3://${BUCKET_NAME}/
 # Pod 내부 접속
 kubectl exec -it pod-fsx -- /bin/bash
 
-cd /
+cd /data/fsx
 ls -l
 ```
 
