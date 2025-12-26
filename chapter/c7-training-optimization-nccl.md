@@ -24,9 +24,12 @@ eksctl create nodegroup \
   --node-zones "ap-northeast-2a"
 ```
 
-### [카펜터 Capacity Block](https://karpenter.sh/docs/tasks/odcrs/) ###
+### 카펜터 Capacity Block ###
+카펜터는 ODCR 과 Capacity Block 설정을 지원하지만 (아래 메뉴얼 참고), Placement Group 은 명시적으로 지원하지 않는다. 
+* https://karpenter.sh/docs/tasks/odcrs/
 * https://karpenter.sh/docs/concepts/nodeclasses/
-
+* https://karpenter.sh/docs/concepts/nodepools/
+  
 ## NCCL ##
 분산 훈련 환경(특히 EKS와 EFA가 활성화된 환경)에서 GPU 간 및 노드 간 통신 경로를 확인하기 위해 NCCL Topology를 확인하는 방법은 크게 두가지 이다. 
 
