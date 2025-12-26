@@ -4,78 +4,89 @@
 AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완전 관리형 서비스인 Amazon FSx for Lustre 와 FSx for Lustre CSI(Container Storage Interface) 드라이버를 활용하여 쿠버네티스 클러스터에 통합하는 것이다.
 
 ### 1. 구성하기 ###
-#### 1-1. Amazon FSx for Lustre 설치 #### 
 ```
 export CLUSTER_NAME="training-on-eks"
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
+```
 
+#### 1. lustre 파일시스템 생성 ####
+```
 # 첫 번째 프라이빗 서브넷 ID 가져오기
-export SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" "Name=tag:Name,Values=*priv-subnet-1*" --query "Subnets[0].SubnetId" --output text)
+export PRIV_SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" \
+        "Name=tag:Name,Values=*priv-subnet-1*" \
+        --query "Subnets[0].SubnetId" --output text)
 export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
 
-echo "Using VPC: ${VPC_ID}, Subnet: ${SUBNET_ID}, Bucket: ${BUCKET_NAME}"
-
 # S3 버킷 생성
-aws s3 mb s3://${BUCKET_NAME} --region ${AWS_REGION}
+aws s3 mb s3://${BUCKET_NAME} --region ${AWS_REGION}           
 
-# 시큐리티 그룹 생성 및 포트 오픈
+# FSX 시큐리티 그룹 생성
 NODE_SG_ID=$(aws eks describe-cluster --name ${CLUSTER_NAME} \
     --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
-
 FSX_SG_ID=$(aws ec2 create-security-group --group-name fsx-lustre-sg \
     --description "Allow Lustre traffic" --vpc-id ${VPC_ID} --query GroupId --output text)
 aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} \
     --protocol tcp --port 988  --source-group ${NODE_SG_ID}
 aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} \
     --protocol tcp --port 1018-1023 --source-group ${NODE_SG_ID}
+aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} --protocol -1 --port -1 --source-group ${FSX_SG_ID}
+aws ec2 authorize-security-group-egress --group-id ${FSX_SG_ID} --protocol -1 --port -1 --source-group ${FSX_SG_ID}
 
-
-# FSx for Lustre 생성 (SCRATCH_2, 1200 GiB)
-FSX_ID=$(aws fsx create-file-system \
+# FSx for Lustre 생성 (SCRATCH_2, 1200 GiB, EFA)
+FSx_ID=$(aws fsx create-file-system \
     --file-system-type LUSTRE \
     --storage-capacity 1200 \
-    --subnet-ids ${SUBNET_ID} \
+    --subnet-ids ${PRIV_SUBNET_ID} \
     --security-group-ids ${FSX_SG_ID} \
-    --lustre-configuration "DeploymentType=SCRATCH_2,ImportPath=s3://${BUCKET_NAME},ExportPath=s3://${BUCKET_NAME}/export,AutoImportPolicy=NEW_CHANGED" \
+    --lustre-configuration "DeploymentType=SCRATCH_2,ImportPath=s3://${BUCKET_NAME},\
+        ExportPath=s3://${BUCKET_NAME}/export,\
+        AutoImportPolicy=NEW_CHANGED,\
+        LogicallyAppliedInterfaceType=EFA" \
     --query "FileSystem.FileSystemId" --output text)
 
-echo "FSx File System Creating: $FSX_ID"
+echo "FSx File System Creating: ${FSx_ID}"
+```
 
-# IAM 역할(IRSA) 생성 (eksctl 활용)
-# 이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 주석 처리를 한 번에 수행합니다.
+#### 2. IAM 역할(IRSA) 생성 ####
+이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 생성 및 annontation 처리를 한 번에 수행한다
+```
 eksctl create iamserviceaccount \
-    --name fsx-csi-driver-controller-sa \
-    --namespace fsx-csi-driver \
+    --name fsx-csi-sa \
+    --namespace fsx-csi \
     --cluster ${CLUSTER_NAME} \
-    --role-name "FSx_Lustre_CSI_Driver_Role" \
+    --role-name "FSxLustreRole" \
     --attach-policy-arn arn:aws:iam::aws:policy/AmazonFSxFullAccess \
     --approve \
     --override-existing-serviceaccounts
 
-# 6. 커스텀 S3 접근 정책 생성 및 연결
+# FSxLustreRole 에 S3 접근권한 부여
 cat <<EOF > s3-policy.json
 {
     "Version": "2012-10-17",
     "Statement": [{
         "Effect": "Allow",
-        "Action": ["s3:GetBucketLocation","s3:ListBucket","s3:GetBucketAcl","s3:GetObject","s3:GetObjectTagging","s3:PutObject","s3:DeleteObject"],
+        "Action": [
+            "s3:GetBucketLocation",
+            "s3:ListBucket",
+            "s3:GetBucketAcl",
+            "s3:GetObject",
+            "s3:GetObjectTagging",
+            "s3:PutObject",
+            "s3:DeleteObject"
+        ],
         "Resource": ["arn:aws:s3:::${BUCKET_NAME}","arn:aws:s3:::${BUCKET_NAME}/*"]
     }]
 }
 EOF
 
-S3_POLICY_ARN=$(aws iam create-policy --policy-name FSxLustreS3IntegrationPolicy --policy-document file://s3-policy.json --query Policy.Arn --output text)
-aws iam attach-role-policy --role-name "FSx_Lustre_CSI_Driver_Role" --policy-arn $S3_POLICY_ARN
-
-echo "Setup Complete!"
-echo "FSX ID: ${FSX_ID}"
+S3_POLICY_ARN=$(aws iam create-policy --policy-name FSxLustreS3Policy --policy-document file://s3-policy.json --query Policy.Arn --output text)
+aws iam attach-role-policy --role-name "FSxLustreRole" --policy-arn $S3_POLICY_ARN
 ```
-AVAILABLE 상태가 될 때까지 기다린다.
-```
-aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].Lifecycle"
 
+#### 3. lustre 파일시스템 조회 ####
+```
 aws fsx describe-file-systems \
     --file-system-ids ${FSX_ID} \
     --query "FileSystems[0].{FileSystemId:FileSystemId, DNSName:DNSName, MountName:LustreConfiguration.MountName}" \
@@ -92,9 +103,8 @@ aws fsx describe-file-systems \
 +--------------------------------------------------------+------------------------+------------+
 ```
 
-#### 1-2. Amazon FSx CSI 드라이버 설치 #### 
+#### 4. Amazon FSx CSI 드라이버 설치 #### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
-AWS FSx CSI 드라이버의 이미지는 각 리전별 AWS 전용 ECR 레포지토리에서 가져와야 한다.(image.repository)
 ```
 kubectl create namespace fsx-csi-driver
 helm repo add aws-fsx-csi-driver https://kubernetes-sigs.github.io/aws-fsx-csi-driver
@@ -104,26 +114,23 @@ helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
     --namespace fsx-csi-driver \
     --set image.repository=602401143452.dkr.ecr.${AWS_REGION}.amazonaws.com/eks/aws-fsx-csi-driver \
     --set controller.serviceAccount.create=false \
-    --set controller.serviceAccount.name=fsx-csi-driver-controller-sa \
-    --set controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}
+    --set controller.serviceAccount.name=fsx-csi-sa \
+    --set controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/FSxLustreRole
 ```
 
-#### 1-3. StorageClass 및 Persistent Volume Claim (PVC) 배포 ####
+#### 5. PV/PVC 배포 ####
 ```
 FSxID=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{FileSystemId:FileSystemId}" --output text)
-DNSNAME=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{DNSName:DNSName}" --output text)
-MOUNTNAME=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{MountName:LustreConfiguration.MountName}" --output text)
-```
+FSx_DNS=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{DNSName:DNSName}" --output text)
+FSx_MOUNT=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{MountName:LustreConfiguration.MountName}" --output text)
 
-동적 프로비저닝을 위해 SC, PV, PVC를 생성한다.  
-```
 cat << EOF > fsx-pvc.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: fsx-sc
 provisioner: fsx.csi.aws.com
-reclaimPolicy: Retain # PVC 삭제 시 FSx는 유지 (안전)
+reclaimPolicy: Retain                     # PVC 삭제 시 FSx는 유지 (안전)
 volumeBindingMode: Immediate
 ---
 apiVersion: v1
@@ -142,8 +149,8 @@ spec:
     driver: fsx.csi.aws.com
     volumeHandle: ${FSxID}
     volumeAttributes:
-      dnsname: ${DNSNAME}
-      mountname: ${MOUNTNAME}
+      dnsname: ${FSx_DNS}
+      mountname: ${FSx_MOUNT}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -156,7 +163,7 @@ spec:
   resources:
     requests:
       storage: 1200Gi
-  volumeName: fsx-pv # 위에서 정의한 PV와 수동 연결
+  volumeName: fsx-pv 
 EOF
 ```
 ```
