@@ -66,6 +66,19 @@ spec:
       nominalQuota: 100                   # 전체 GPU 쿼타 설정
 ```
 
+#### 3. LocalQueue 정의 (local-queue.yaml) ####
+특정 네임스페이스(team-a) 내 사용자들이 작업을 제출하는 통로를 정의합니다. 이 LocalQueue가 위의 ClusterQueue를 참조합니다.
+```
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: LocalQueue
+metadata:
+  name: default-queue
+  namespace: default
+spec:
+  # 위에서 정의한 ClusterQueue 이름
+  clusterQueue: cluster-queue-gpu
+```
+
 
 #### 사용 방법 (Job 제출 시) ####
 사용자가 특정 노드풀을 선택하고 싶다면, Job의 labels에 어떤 Flavor를 쓸지 명시하면 됩니다.
@@ -73,29 +86,12 @@ spec:
 ```
 metadata:
   labels:
-    kueue.x-k8s.io/priority-class: "high"
-    kueue.x-k8s.io/flavor: "flavor-gpu-standard" # 이 레이블 추가
+    kueue.x-k8s.io/queue-name: default-queue # 생성한 로컬 큐 이름
+    kueue.x-k8s.io/flavor: "flavor-gpu-nvidia"
+
 ```
 
 
-
-#### 3. LocalQueue 정의 (local-queue.yaml) ####
-특정 네임스페이스(team-a) 내 사용자들이 작업을 제출하는 통로를 정의합니다. 이 LocalQueue가 위의 ClusterQueue를 참조합니다.
-```
-apiVersion: kueue.x-k8s.io/v1beta1
-kind: LocalQueue
-metadata:
-  name: team-a-queue
-  namespace: team-a
-spec:
-  # 위에서 정의한 ClusterQueue 이름
-  clusterQueue: cluster-queue-a
-```
-
-#### 4. 주의해야 할 점 (매칭 확인) ####
-설정이 꼬이지 않으려면 다음 사항만 일치시키면 됩니다.
-* 카펜터의 NodePool 설정: 카펜터의 NodePool (또는 Provisioner)이 Kueue Flavor에서 지정한 레이블(예: GPU 타입, 인스턴스 타입)을 생성할 수 있는 권한과 범위 내에 있어야 합니다.
-* 레이블 일치: Flavor에서 nvidia-a100을 지정했는데 카펜터 설정에는 g4dn.xlarge(T4 GPU)만 허용되어 있다면, 카펜터가 노드를 띄우지 못해 포드가 Pending 상태로 남게 됩니다.
 
 
 ## 레퍼런스 ##
