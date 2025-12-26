@@ -42,7 +42,7 @@ FSx_ID=$(aws fsx create-file-system \
     --lustre-configuration "DeploymentType=SCRATCH_2,ImportPath=s3://${BUCKET_NAME},\
         ExportPath=s3://${BUCKET_NAME}/export,\
         AutoImportPolicy=NEW_CHANGED,\
-        LogicallyAppliedInterfaceType=EFA" \
+        EfaEnabled=true" \
     --query "FileSystem.FileSystemId" --output text)
 
 echo "FSx File System Creating: ${FSx_ID}"
