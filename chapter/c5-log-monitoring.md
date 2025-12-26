@@ -259,6 +259,9 @@ It is important to create a namespace called loki as our trust policy is set to 
 ### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/) ###
 
 
+### [Grafana Dashboard 설정]() ###
+
+
 
 
 ## 레퍼런스 ##
