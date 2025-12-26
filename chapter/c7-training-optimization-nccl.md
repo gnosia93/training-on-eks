@@ -1,3 +1,5 @@
+<< 테스트 필요 >>
+
 ## 클러스터 배치 그룹(Cluster Placement Group) ##
 네트워크 지연 시간을 줄이려면, EKS 노드 그룹 생성 시 AWS 수준에서 Cluster Placement Group을 적용해야 한다. 
 
