@@ -60,7 +60,6 @@ spec:
   - key: "nvidia.com/gpu"
     operator: "Exists"
     effect: "NoSchedule"
-
 ```
 
 #### 2. 클러스터큐 정의 (cluster-queue.yaml) #### 
