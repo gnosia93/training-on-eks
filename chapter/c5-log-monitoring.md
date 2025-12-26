@@ -1,7 +1,5 @@
-<<>>
-<< 제대로 설치가 되지 않는다.. 디버깅 필요. >>
-<<>>
-#### cluster.yaml 변경 ####
+## 설치 가이드 ##
+#### 1. cluster.yaml 변경 ####
 ```
 addons:
   - name: aws-ebs-csi-driver             <----- csi 애드온 설치
@@ -18,8 +16,7 @@ managedNodeGroups:
         ebs: true
 ```
 
-
-#### S3 버킷생성 ####
+#### 2. S3 버킷생성 ####
 Before deploying Loki, you need to create two S3 buckets; one to store logs (chunks), the second to store alert rules. You can create the bucket using the AWS Management Console or the AWS CLI. The bucket name must be globally unique.
 ```
 aws s3api create-bucket --bucket  <YOUR CHUNK BUCKET NAME e.g. `loki-aws-dev-chunks`> --region <S3 region your account is on, e.g. `eu-west-2`> --create-bucket-configuration LocationConstraint=<S3 region your account is on, e.g. `eu-west-2`> \
@@ -27,12 +24,63 @@ aws s3api create-bucket --bucket  <YOUR CHUNK BUCKET NAME e.g. `loki-aws-dev-chu
 aws s3api create-bucket --bucket  <YOUR RULER BUCKET NAME e.g. `loki-aws-dev-ruler`> --region <S3 REGION your account is on, e.g. `eu-west-2`> --create-bucket-configuration LocationConstraint=<S3 REGION your account is on, e.g. `eu-west-2`>
 ```
 
+#### 3. Defining IAM roles and policies ####
+The recommended method for connecting Loki to AWS S3 is to use an IAM role. 
+[loki-s3-policy.json]
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "LokiStorage",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::< CHUNK BUCKET NAME >",
+                "arn:aws:s3:::< CHUNK BUCKET NAME >/*",
+                "arn:aws:s3:::< RULER BUCKET NAME >",
+                "arn:aws:s3:::< RULER BUCKET NAME >/*"
+            ]
+        }
+    ]
+}
+```
 
+```
+aws iam create-policy --policy-name LokiS3AccessPolicy --policy-document file://loki-s3-policy.json
+```
 
+[trust-policy.json]
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::< ACCOUNT ID >:oidc-provider/oidc.eks.<INSERT REGION>.amazonaws.com/id/< OIDC ID >"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.<INSERT REGION>.amazonaws.com/id/< OIDC ID >:sub": "system:serviceaccount:loki:loki",
+                    "oidc.eks.<INSERT REGION>.amazonaws.com/id/< OIDC ID >:aud": "sts.amazonaws.com"
+                }
+            }
+        }
+    ]
+}
+```
 
-
-
-
+```
+aws iam create-role --role-name LokiServiceAccountRole --assume-role-policy-document file://trust-policy.json
+aws iam attach-role-policy --role-name LokiServiceAccountRole --policy-arn arn:aws:iam::<Account ID>:policy/LokiS3AccessPolicy
+```
 
 
 
