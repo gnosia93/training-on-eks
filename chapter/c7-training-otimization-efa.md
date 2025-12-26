@@ -128,6 +128,9 @@ metadata:
   name: gpu-efa
 spec:
   template:
+    metadata:
+      labels:
+        nodeType: "nvidia-efa" 
     spec:
       nodeClassRef:
         group: karpenter.k8s.aws
