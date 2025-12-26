@@ -256,18 +256,83 @@ kubectl get pods -n loki
 It is important to create a namespace called loki as our trust policy is set to allow the IAM role to be used by the loki service account in the loki namespace. This is configurable but make sure to update your service account
 
 
-### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/set-up/install/kubernetes/) ###
-Alloy는 기본적으로 "어디서 읽고 어디로 보낼지"에 대한 Pipeline 설정이 필요합니다. 노드 파일 시스템의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며, 아래 내용을 alloy-values.yaml로 저장하세요. 
-Grafana Alloy를 쿠버네티스에서 컨테이너 로그 수집을 위해 설정하는 방법은 다음과 같습니다. 먼저, Loki와 같은 목적지를 설정하고 쿠버네티스 Pod를 탐색하도록 구성합니다. 이후, 수집된 로그를 설정된 목적지로 전송하는 파이프라인을 정의합니다. 노드 파일 시스템의 로그에 접근하기 위해 DaemonSet 모드로 배포하고 /var/log/pods 경로를 마운트합니다
+### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/collect/logs-in-kubernetes/) ###
+Alloy는 기본적으로 "어디서 읽고 어디로 보낼지"에 대한 Pipeline 설정이 필요하다. 노드 파일 시스템의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며,  
+Loki를 목적지를 설정하고 쿠버네티스 Pod를 탐색하도록 구성해야 한다. 
+
+[alloy-values.yaml]
+```
+alloy:
+  configMap:
+    create: true
+    # 여기에 제시하신 .alloy 설정 내용을 넣습니다.
+    content: |
+      discovery.kubernetes "pod" {
+        role = "pod"
+        selectors {
+          role = "pod"
+          field = "spec.nodeName=" + coalesce(sys.env("HOSTNAME"), constants.hostname)
+        }
+      }
+
+      discovery.relabel "pod_logs" {
+        targets = discovery.kubernetes.pod.targets
+        // ... (제시하신 나머지 레이블 규칙들) ...
+        rule {
+          source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+          action = "replace"
+          target_label = "__path__"
+          separator = "/"
+          replacement = "/var/log/pods/*$1/*.log"
+        }
+      }
+
+      loki.source.file "pod_logs" {
+        targets    = discovery.relabel.pod_logs.output
+        forward_to = [loki.process.pod_logs.receiver]
+      }
+
+      loki.process "pod_logs" {
+        stage.static_labels {
+            values = {
+              cluster = "my-k8s-cluster",
+            }
+        }
+        forward_to = [loki.write.grafana_loki.receiver]
+      }
+
+      // 필수: 로그를 실제로 보낼 Loki 주소 설정
+      loki.write "grafana_loki" {
+        endpoint {
+          url = "loki-gateway.loki.svc.cluster.local"
+        }
+      }
+
+# 필수: 노드의 로그 파일(/var/log/pods)에 접근하기 위한 설정
+controller:
+  type: daemonset
+  volumes:
+    extra:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+
+extraVolumeMounts:
+  - name: varlog
+    mountPath: /var/log
+    readOnly: true
+  - name: varlibdockercontainers
+    mountPath: /var/lib/docker/containers
+    readOnly: true
+```
 
 ```
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
-helm install --namespace alloy alloy grafana/alloy --create-namespace
-kubectl get pods --namespace alloy
+helm install alloy grafana/alloy --namespace alloy --create-namespace \
+  -f alloy-values.yaml
 ```
-
-* https://grafana.com/docs/alloy/latest/collect/logs-in-kubernetes/
 
 ### [Grafana Dashboard 설정]() ###
 
