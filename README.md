@@ -28,7 +28,7 @@
 * [C8. 분산 훈련 스케줄링 및 복원력] 
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
    - [노드/GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)      
-   - [노드 자동 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-auto-recovery.md)
+   - [장애노드 식별 및/복구]자동 복구장애노드 식별 자동 복구장애노드 식별자동 복구장애노드 식벼자동 복구장애노드 식ㅂ자동 복구장애노드 식자동 복구장애노드 식자동 복구장애노드 시자동 복구장애
    - [트레이닝 작업 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-trainjob.md) 
 
 * [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
