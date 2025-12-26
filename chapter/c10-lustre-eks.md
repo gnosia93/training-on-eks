@@ -142,7 +142,7 @@ metadata:
   name: fsx-pv
 spec:
   capacity:
-    storage: 1200Gi # FSx 생성 용량과 일치시킴
+    storage: 38400Gi # FSx 생성 용량과 일치시킴
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -150,7 +150,7 @@ spec:
   storageClassName: fsx-sc
   csi:
     driver: fsx.csi.aws.com
-    volumeHandle: ${FSxID}
+    volumeHandle: ${FSx_ID}
     volumeAttributes:
       dnsname: ${FSx_DNS}
       mountname: ${FSx_MOUNT}
@@ -165,7 +165,7 @@ spec:
   storageClassName: fsx-sc
   resources:
     requests:
-      storage: 1200Gi
+      storage: 38400Gi
   volumeName: fsx-pv 
 EOF
 ```
