@@ -54,10 +54,6 @@ spec:
         node.kubernetes.io/instance-type: g6e.48xlarge
         topology.kubernetes.io/zone: ap-northeast-2                # 특정 가용 영역(AZ) 내 배치를 강제하여 노드 간 통신 지연을 최소화 
 
-  schedulingPolicy:                         # Coscheduling을 통해 노드들이 물리적으로 가까운 랙(Rack)이나 영역에 배치되도록 유도 
-      queue: default
-      priorityClassName: high-priority
-
   runtimeRef:
     name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묶음)
   trainer:
@@ -70,10 +66,10 @@ spec:
       echo "working directory: "$(pwd)
       pip install -r requirements.txt
       torchrun --nproc_per_node 8 --rdzv_id=elastic-job --rdzv_backend=c10d t5-fsdp.py
-    resources:
-      requests:
-        nvidia.com: "8"
+    resourcesPerNode:
       limits:
+        nvidia.com: "8"
+      requests:
         nvidia.com: "8"
 EOF
 ```
