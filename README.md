@@ -21,7 +21,7 @@
 
 * C7. 분산 훈련 최적화
    - [EFA RDMA](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md)
-   - [Placement 그룹 & NCCL 토플로지](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-nccl.md) 
+   - [Placement Group & NCCL](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-nccl.md) 
  
      
 * [C8. 훈련 스케줄링 및 복원력] 
