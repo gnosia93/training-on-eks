@@ -183,7 +183,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: centos:latest
+    image: public.ecr.aws/amazonlinux/amazonlinux:2023
     command: ["sleep", "infinity"]
     volumeMounts:
     - name: fsx
