@@ -71,6 +71,21 @@ spec:
                 - image: pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime
                   name: node
 ```
+```
+kubectl explain ClusterTrainingRuntime.spec.template.spec.failurePolicy.maxRestarts
+```
+```
+GROUP:      trainer.kubeflow.org
+KIND:       ClusterTrainingRuntime
+VERSION:    v1alpha1
+
+FIELD: maxRestarts <integer>
+
+
+DESCRIPTION:
+    MaxRestarts defines the limit on the number of JobSet restarts.
+    A restart is achieved by recreating all active child jobs.
+```
 
 
 ## 트레이닝 작업 실행 ##
