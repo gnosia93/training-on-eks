@@ -146,6 +146,5 @@ spec:
 ```
 
 ## 레퍼런스 ##
-* https://www.kubeflow.org/docs/components/trainer/operator-guides/job-scheduling/
 * https://kueue.sigs.k8s.io/docs/overview/
 * https://thenewstack.io/kueue-can-now-schedule-kubernetes-batch-jobs-across-clusters/
