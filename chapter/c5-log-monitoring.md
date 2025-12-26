@@ -257,7 +257,8 @@ It is important to create a namespace called loki as our trust policy is set to 
 
 
 ### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/set-up/install/kubernetes/) ###
-You have successfully deployed Alloy on Kubernetes, using default Helm settings.
+Alloy는 기본적으로 "어디서 읽고 어디로 보낼지"에 대한 Pipeline 설정이 필요합니다. 노드 파일 시스템의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며, 아래 내용을 alloy-values.yaml로 저장하세요. 
+Grafana Alloy를 쿠버네티스에서 컨테이너 로그 수집을 위해 설정하는 방법은 다음과 같습니다. 먼저, Loki와 같은 목적지를 설정하고 쿠버네티스 Pod를 탐색하도록 구성합니다. 이후, 수집된 로그를 설정된 목적지로 전송하는 파이프라인을 정의합니다. 노드 파일 시스템의 로그에 접근하기 위해 DaemonSet 모드로 배포하고 /var/log/pods 경로를 마운트합니다
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
