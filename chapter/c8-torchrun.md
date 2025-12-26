@@ -33,6 +33,45 @@ kubectl explain trainjob.spec
 kubectl explain trainjob.spec.podTemplateOverrides.spec
 ```
 
+## runtme 조회 ##
+```
+kubectl get clustertrainingruntime torch-distributed -o yaml
+```
+[결과]
+```
+apiVersion: trainer.kubeflow.org/v1alpha1
+kind: ClusterTrainingRuntime
+metadata:
+  creationTimestamp: "2025-12-25T17:37:32Z"
+  generation: 1
+  labels:
+    trainer.kubeflow.org/framework: torch
+  name: torch-distributed
+  resourceVersion: "1310309"
+  uid: 2067ff23-511e-4b9c-b37e-b4d873f43c85
+spec:
+  mlPolicy:
+    numNodes: 1
+    torch:
+      numProcPerNode: auto
+  template:
+    spec:
+      replicatedJobs:
+      - groupName: default
+        name: node
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              trainer.kubeflow.org/trainjob-ancestor-step: trainer
+          spec:
+            template:
+              spec:
+                containers:
+                - image: pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime
+                  name: node
+```
+
 
 ## 트레이닝 작업 실행 ##
 TrainJob 오퍼레이터는 backoffLimit 라는 필드를 이용하여 작업 복구 매커니즘을 제공한다. 작업이 실패 했을때 다시 시작하는 기능으로, 이 예제에서는 3번까지 트레이닝 작업을 재 시작 하도록 설정 하였다.  
