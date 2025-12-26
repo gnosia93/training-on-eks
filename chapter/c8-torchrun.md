@@ -56,6 +56,7 @@ spec:
 
   runtimeRef:
     name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묶음)
+
   trainer:
     numNodes: 2                            # 노드수 설정
     numProcPerNode: auto                   # 노드별 프로세스 갯수                                                                               
