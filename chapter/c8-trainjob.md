@@ -142,7 +142,7 @@ ip-10-0-4-89.ap-northeast-2.compute.internal    g6e.48xlarge   amd64      Amazon
 ip-10-0-6-164.ap-northeast-2.compute.internal   c6i.2xlarge    amd64      Amazon Linux 2023.9.20251208   <none>
 ```
 
-## 복원력 설정 ##
+## 복원력 설정 (재시도 횟수 설정) ##
 
 큐브플루우의 TrainingJob 오퍼레이터는 기본적으로 6회 까지의 잡 재시작 기능을 제공하고 있다. 이 값을 더 크게 늘리기 위해서는 ClusterTrainingRuntime 의 maxRestarts 필드값을 수정해 줘야한다.
 ```
