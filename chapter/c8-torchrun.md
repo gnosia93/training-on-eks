@@ -52,7 +52,7 @@ spec:
 
          # --- [추가] 컨테이너에 볼륨 마운트 설정 ---
         containers:
-          - name: pytorch
+          - name: node                                                # -name: node 은 상당히 중요한 설정값 / ClusterTrainingRuntime 에 있는 컨테이너 이름이 node 이다.
             volumeMounts:
               - mountPath: /dev/shm
                 name: dshm
