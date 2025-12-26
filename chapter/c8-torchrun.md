@@ -149,6 +149,12 @@ spec:
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
         cd /workspace/code/samples/fsdp
         pip install -r requirements.txt
+        echo "=== Environment Variables Check ==="
+        echo "MASTER_ADDR: \${MASTER_ADDR}"
+        echo "MASTER_PORT: \${MASTER_PORT}"
+        echo "NODE_RANK: \${PET_NODE_RANK}"
+        env | grep -E 'MASTER|PET|RANK'
+        echo "=================================="
         torchrun \
           --nproc_per_node=8 \
           --rdzv_id=elastic-job \
