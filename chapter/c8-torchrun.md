@@ -47,12 +47,12 @@ spec:
   restartPolicy: OnFailure
 
   podTemplateOverrides:
-    targetJobs:
-      name: t5-large
-    spec:
-      nodeSelector:
-        node.kubernetes.io/instance-type: g6e.48xlarge
-        topology.kubernetes.io/zone: ap-northeast-2                # 특정 가용 영역(AZ) 내 배치를 강제하여 노드 간 통신 지연을 최소화 
+    - targetJobs:
+        name: trainer
+      spec:
+        nodeSelector:
+          node.kubernetes.io/instance-type: g6e.48xlarge
+          topology.kubernetes.io/zone: ap-northeast-2                # 특정 가용 영역(AZ) 내 배치를 강제하여 노드 간 통신 지연을 최소화 
 
   runtimeRef:
     name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묶음)
