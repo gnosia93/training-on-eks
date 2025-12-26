@@ -4,7 +4,7 @@
 #### cluster.yaml 변경 ####
 ```
 addons:
-  - name: aws-ebs-csi-driver
+  - name: aws-ebs-csi-driver             <----- csi 애드온 설치
 
 managedNodeGroups:
   - name: loki-workers
