@@ -80,8 +80,8 @@ spec:
 ```
 
 #### 3. 로컬큐 정의 (local-queue.yaml) ####
-특정 네임스페이스(team-a) 내 사용자들이 작업을 제출하는 통로를 정의하는 것으로 LocalQueue는 ClusterQueue를 참조한다. 이 예제에서는 default 네임스페이스에 default-queue 라는 로컬큐를 만들었다.
-team-a 라는 네임스페이스를 만들게되면 해당 네임스페이스안에 로컬큐를 만들어야 한다. 
+특정 네임스페이스(team-a)내 사용자들이 작업을 제출하는 통로를 정의하는 것으로 로컬큐는 클러스터큐를 참조한다. 이 예제에서는 default 네임스페이스에 default-queue 라는 로컬큐를 만들었다.
+team-a 라는 네임스페이스를 만들게되면 해당 네임스페이스안에 로컬큐를 별도로 만들어야 한다. 
 ```
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: LocalQueue
@@ -100,8 +100,6 @@ metadata:
     kueue.x-k8s.io/queue-name: default-queue # 생성한 로컬 큐 이름
     kueue.x-k8s.io/flavor: "flavor-gpu-nvidia"
 ```
-
-
 
 
 ## 레퍼런스 ##
