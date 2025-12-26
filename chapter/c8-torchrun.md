@@ -169,6 +169,24 @@ nodeSelector에 topology.kubernetes.io/zone을 명시하면, 분산 학습에 �
 * Scheduling Policy (Gang Scheduling):
 schedulingPolicy를 사용하면 2개의 노드가 동시에 할당될 때만 학습을 시작합니다. 이는 하나는 확보되고 하나는 대기 상태일 때 발생하는 자원 낭비와 통신 비효율을 방지합니다.
 
+
+### 노드 리스트 출력 ###
+```
+kubectl get nodes -o custom-columns="NAME:.metadata.name, \
+   INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
+   ARCH:.status.nodeInfo.architecture, \
+   OS:.status.nodeInfo.osImage, \
+   GPU:.status.capacity['nvidia\.com/gpu']"
+```
+[결과]
+```
+NAME                                                INSTANCE       ARCH       OS                             GPU
+ip-10-0-4-115.ap-northeast-2.compute.internal   c7g.2xlarge    arm64      Amazon Linux 2023.9.20251208   <none>
+ip-10-0-4-210.ap-northeast-2.compute.internal   g6e.48xlarge   amd64      Amazon Linux 2023.9.20251208   8
+ip-10-0-4-89.ap-northeast-2.compute.internal    g6e.48xlarge   amd64      Amazon Linux 2023.9.20251208   8
+ip-10-0-6-164.ap-northeast-2.compute.internal   c6i.2xlarge    amd64      Amazon Linux 2023.9.20251208   <none>
+```
+
 ## 장애 발생 시 복구 프로세스 ##
 노드 1개가 죽었을 때, 일반적인 NCCL 훈련과 달리 torchrun은 다음과 같이 행동합니다.
 
