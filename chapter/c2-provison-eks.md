@@ -35,6 +35,13 @@ sh get_helm.sh
 helm version
 ``` 
 
+#### 4. k9s 설치 ####
+```
+https://github.com/derailed/k9s/archive/refs/tags/v0.50.16.tar.gz
+```
+
+
+
 ## EKS 클러스터 생성하기 ##
 
 ### 1. 환경 설정 ###
