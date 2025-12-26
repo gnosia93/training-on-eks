@@ -166,7 +166,7 @@ spec:
 EOF
 ```
 * google-t5/t5-large는 약 770M 파라미터 모델, epochs는 10회 수행 
-* Placement Group (가용 영역 지정):
+* Placement Group (가용 영역 지정): 이와 관련된 필드 설정은 존재하지 않는다. 노드 라벨을 이용하여 비슷한 효과를 내게해야 한다. 
 nodeSelector에 topology.kubernetes.io/zone을 명시하면, 분산 학습시 노드들이 동일한 AZ 내에 배치되어 NCCL 통신 레이턴시가 크게 줄어든다.
 * CPU/메모리 (선택):
 분산 학습(특히 FSDP)은 데이터 전처리나 체크포인트 저장시 일시적으로 많은 CPU와 메모리를 사용한다. 쿠버네티스 리소스 리미트를 주지 않으면 이러한 작업이 병목 없이 빠르게 처리된다.
