@@ -120,9 +120,9 @@ spec:
       - torchrun --nproc_per_node 8 --rdzv_id=elastic-job --rdzv_backend=c10d t5-fsdp.py
     resourcesPerNode:
       limits:
-        nvidia.com: "8"
+        nvidia.com/gpu: "8"
       requests:
-        nvidia.com: "8"
+        nvidia.com/gpu: "8"
 EOF
 ```
 트레이닝 작업을 시작하고 로그를 확인한다. 
