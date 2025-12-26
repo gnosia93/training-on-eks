@@ -24,6 +24,8 @@ eksctl create nodegroup \
   --node-zones "ap-northeast-2a"
 ```
 
+### [카펜터 Capacity Block](https://karpenter.sh/docs/tasks/odcrs/) ###
+
 
 ## NCCL ##
 분산 훈련 환경(특히 EKS와 EFA가 활성화된 환경)에서 GPU 간 및 노드 간 통신 경로를 확인하기 위해 NCCL Topology를 확인하는 방법은 크게 두가지 이다. 
