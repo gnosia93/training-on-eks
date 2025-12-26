@@ -1,6 +1,5 @@
-## 설치 가이드 ##
 
-### [Loki 설치](https://grafana.com/docs/loki/latest/setup/install/helm/deployment-guides/aws/) ###
+## [Loki 설치](https://grafana.com/docs/loki/latest/setup/install/helm/deployment-guides/aws/) ##
 #### 1. cluster.yaml 변경 ####
 ```
 addons:
@@ -249,6 +248,11 @@ kubectl get pods -n loki
 ```
 It is important to create a namespace called loki as our trust policy is set to allow the IAM role to be used by the loki service account in the loki namespace. This is configurable but make sure to update your service account
 
+
+
+## Log Sender 설치 ##
+
+* https://grafana.com/docs/loki/latest/send-data/
 
 ---
 ## grafana loki ## 
