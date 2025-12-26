@@ -267,6 +267,8 @@ helm install --namespace alloy alloy grafana/alloy --create-namespace
 kubectl get pods --namespace alloy
 ```
 
+* https://grafana.com/docs/alloy/latest/collect/logs-in-kubernetes/
+
 ### [Grafana Dashboard 설정]() ###
 
 
