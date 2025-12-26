@@ -1,4 +1,6 @@
 ## 설치 가이드 ##
+
+### [Loki 설치](https://grafana.com/docs/loki/latest/setup/install/helm/deployment-guides/aws/#defining-iam-roles-and-policies) ###
 #### 1. cluster.yaml 변경 ####
 ```
 addons:
