@@ -115,67 +115,10 @@ helm install promtail grafana/promtail \
 kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
 
-#### Grafana 연동 ####
-* Connections -> Data Sources -> Add Loki
-URL에 http://loki.monitoring.svc.cluster.local:3100 입력 후 Save & Test
-
-* 분산 학습 로그 실시간 검색 방법
-설치가 완료되면 Grafana 왼쪽 메뉴의 Explore에서 다음처럼 검색합니다.
-   * 파드별 로그 보기:
-   {pod="training-rank-0"} 선택 후 Run Query를 누르면 해당 파드가 내뱉는 모든 Raw Text가 보입니다.
-   * 텍스트 안에서 검색:
-   {pod=~"training-rank-.*"} |= "Loss"   
-   rank-0, 1, 2... 모든 파드의 로그 중 "Loss"라는 단어가 들어간 줄만 실시간으로 필터링합니다.
-   * 실시간 스트리밍:
-   상단의 Live 버튼을 누르면 파드가 로그를 내뱉는 족족 화면에 흐르듯 나타납니다.
-
 
 ## 레퍼런스 ##
+
 * [Loki Architecture: A Log Aggregation Journey with Grafana](https://sujayks007.medium.com/loki-architecture-a-log-aggregation-journey-with-grafana-bde6d9df6a04)
-
-
-
-* 설치로그..
-```
-***********************************************************************
-Sending logs to Loki
-***********************************************************************
-
-Loki has been configured with a gateway (nginx) to support reads and writes from a single component.
-
-You can send logs from inside the cluster using the cluster DNS:
-
-http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push
-
-You can test to send data from outside the cluster by port-forwarding the gateway to your local machine:
-
-  kubectl port-forward --namespace loki svc/loki-gateway 3100:80 &
-
-And then using http://127.0.0.1:3100/loki/api/v1/push URL as shown below:
-
-```
-curl -H "Content-Type: application/json" -XPOST -s "http://127.0.0.1:3100/loki/api/v1/push"  \
---data-raw "{\"streams\": [{\"stream\": {\"job\": \"test\"}, \"values\": [[\"$(date +%s)000000000\", \"fizzbuzz\"]]}]}"
-```
-
-Then verify that Loki did receive the data using the following command:
-
-```
-curl "http://127.0.0.1:3100/loki/api/v1/query_range" --data-urlencode 'query={job="test"}' | jq .data.result
-```
-
-***********************************************************************
-Connecting Grafana to Loki
-***********************************************************************
-
-If Grafana operates within the cluster, you'll set up a new Loki datasource by utilizing the following URL:
-
-http://loki-gateway.loki.svc.cluster.local/
-```
-
-
-## 레퍼런스 ##
-
 * https://grafana.com/docs/loki/latest/setup/install/helm/deployment-guides/aws/
 
 
