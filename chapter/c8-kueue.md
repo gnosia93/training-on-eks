@@ -95,10 +95,16 @@ spec:
 
 ## 사용 방법 ##
 ```
+apiVersion: "kubeflow.org/v1"
+kind:  # 또는 TFJob, XGBoostJob 등
 metadata:
+  name: pytorch-gang-job
+  namespace: default
   labels:
-    kueue.x-k8s.io/queue-name: default-queue # 생성한 로컬 큐 이름
-    kueue.x-k8s.io/flavor: "flavor-gpu-nvidia"
+    kueue.x-k8s.io/queue-name: default-queue # 이전에 정의한 LocalQueue
+spec:
+  # ... (생략)
+
 ```
 
 
