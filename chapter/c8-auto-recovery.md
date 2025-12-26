@@ -1,6 +1,7 @@
 NPD(Node Problem Detector) 같은 모니터링 에이전트가 없으면, 카펜터(Karpenter)는 "GPU가 물리적으로 고장 났다"는 사실을 스스로 알아낼 방법이 없습니다.
 그 이유와 결과를 2025년 기준 시스템 동작 원리로 설명해 드립니다.
-
+* https://github.com/kubernetes/node-problem-detector
+  
 #### 1. 카펜터가 "모르는" 이유 ####
 카펜터는 주로 쿠버네티스 API 서버의 정보를 보고 판단합니다.
 카펜터의 시야: 노드가 Ready 상태인지, CPU/Memory 자원이 여유가 있는지, 인스턴스가 활성화(Running) 상태인지만 확인합니다.
