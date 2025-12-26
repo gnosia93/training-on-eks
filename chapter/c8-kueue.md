@@ -10,7 +10,7 @@
 
 
 ## Kueue ##
-Kueue 자체는 '언제(When)' 작업을 실행할지를 결정하는 쿼터 관리 시스템이며, '어디서(Where)' 실행할지를 결정하는 노드/GPU 레벨의 세부 스케줄링은 쿠버네티스 기본 스케줄러(kube-scheduler) 및 노드 설정과 연동하여 처리합니다
+Kueue 자체는 '언제(When)' 작업을 실행할 지를 결정하는 쿼터 관리 시스템이다. '어디서(Where)' 실행할 지를 결정하는 노드/GPU 레벨의 세부 스케줄링은 쿠버네티스 기본 스케줄러(kube-scheduler) 또는 카펜터가 처리하게 된다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/Kueue-Arch.svg)
 
 ### 1. 설치 ###
