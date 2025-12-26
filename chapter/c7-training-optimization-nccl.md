@@ -27,11 +27,22 @@ kubectl exec -it <pod-name> -- nvidia-smi topo -m
 
 ## NCCL Tests ##
 네트워크를 포함한 전체 토폴로지의 성능을 측정하려면 NVIDIA에서 제공하는 nccl-tests를 사용해야 한다.
-다음 명령어를 EKS 노드 내 혹은 전용 컨테이너에서 실행한다. 
+* 일반적으로 nccl-tests는 MPI와 연동되어 실행되므로, 단순 실행보다는 EKS 노드 내의 전용 컨테이너 또는 KubeFlow/MPI Operator 환경에서 실행하는 것이 정확하다.
+* EFA를 사용하는 경우, 실행 시 LD_LIBRARY_PATH에 Libfabric 경로를 포함해야 하며, FI_EFA_USE_DEVICE_RDMA=1과 같은 EFA 전용 환경 변수를 함께 사용하여 토폴로지 최적화 여부를 확인해야 한다.
+
+[EKS Pod 내에서 실행 (8개 GPU 기준)]
 ```
-./all_reduce_perf -b 8 -e 128M -f 2 -g 8
+export FI_PROVIDER=efa
+export FI_EFA_USE_DEVICE_RDMA=1
+export NCCL_DEBUG=INFO
+
+./all_reduce_perf -b 8 -e 1G -f 2 -g 8
 ```
-EFA가 활성화된 경우 노드 간 통신에서 높은 대역폭과 낮은 지연 시간이 나타난다.
+* algbw (Algorithm Bandwidth): 실제 데이터 통신 속도로 EFA가 활성화된 경우 노드 간 통신에서 이 수치가 네트워크 대역폭(예: P4d의 경우 400Gbps)에 근접해야 한다.
+* busbw (Bus Bandwidth): 하드웨어 토폴로지(NVLink 등)의 효율성을 나타낸다.
+* NCCL INFO 로그: 실행 초기 출력되는 로그에서 NET/OFI 문구가 보인다면, NCCL이 일반 이더넷이 아닌 EFA(Libfabric) 토폴로지를 정상적으로 인식하고 사용 중임을 의미한다.
+
+
 
 ## 로그 확인 ##
 * NCCL 로그에서 NCCL INFO NET/OFI라는 문구가 보여야 EFA(Libfabric)를 통한 최적의 노드 간 토폴로지가 구성된 것이다.
