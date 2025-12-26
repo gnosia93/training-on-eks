@@ -251,7 +251,7 @@ It is important to create a namespace called loki as our trust policy is set to 
 
 
 ## Log Sender 설치 ##
-
+* https://grafana.com/docs/alloy/latest/
 * https://grafana.com/docs/loki/latest/send-data/
 
 ---
