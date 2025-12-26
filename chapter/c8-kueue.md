@@ -37,18 +37,58 @@ PyTorchJob을 실행하기 전에 Kueue가 해당 작업을 인식하고 리소�
 #### 1. ResourceFlavor 정의 ####
 클러스터에 존재하는 실제 리소스(여기서는 GPU)의 종류와 레이블을 정의합니다. 
 ```
+# gpu 노드풀 예시
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: gpu
+spec:
+  template:
+    metadata:
+      labels:
+        nvidia-type: "standard" # 이 레이블로 구분
+# ... 생략
+---
+# gpu-efa 노드풀 예시
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: gpu-efa
+spec:
+  template:
+    metadata:
+      labels:
+        nvidia-type: "efa" # 이 레이블로 구분
+# ... 생략
+```
+
+```
+# 1. 일반 GPU Flavor
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: ResourceFlavor
 metadata:
-  name: nvidia-gpu-flavor
+  name: flavor-gpu-standard
 spec:
   nodeSelector:
-    # 이 레이블은 GPU 노드에 실제로 있어야 합니다.
-    # 예: "cloud.provider.com": "nvidia-a100"
-    # 또는 간단한 예시로 "karpenter.sh/capacity-type": "on-demand"
-    kueue.x-k8s.io/default-flavor: "true" 
+    nvidia-type: "standard"
   tolerations:
-  - key: "kueue.x-k8s.io/gpu"
+  - key: "nvidia.com"
+    operator: "Exists"
+    effect: "NoSchedule"
+---
+# 2. EFA GPU Flavor
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: ResourceFlavor
+metadata:
+  name: flavor-gpu-efa
+spec:
+  nodeSelector:
+    nvidia-type: "efa"
+  tolerations:
+  - key: "nvidia.com"
+    operator: "Exists"
+    effect: "NoSchedule"
+  - key: "vpc.amazonaws.com" # EFA 전용 테인트가 있다면 추가
     operator: "Exists"
     effect: "NoSchedule"
 ```
