@@ -66,6 +66,19 @@ spec:
       nominalQuota: 100                 # 전체 GPU 쿼타 설정
 ```
 
+
+#### 사용 방법 (Job 제출 시) ####
+사용자가 특정 노드풀을 선택하고 싶다면, Job의 labels에 어떤 Flavor를 쓸지 명시하면 됩니다.
+일반 GPU 노드풀을 쓰고 싶을 때:
+```
+metadata:
+  labels:
+    kueue.x-k8s.io/priority-class: "high"
+    kueue.x-k8s.io/flavor: "flavor-gpu-standard" # 이 레이블 추가
+```
+
+
+
 #### 3. LocalQueue 정의 (local-queue.yaml) ####
 특정 네임스페이스(team-a) 내 사용자들이 작업을 제출하는 통로를 정의합니다. 이 LocalQueue가 위의 ClusterQueue를 참조합니다.
 ```
