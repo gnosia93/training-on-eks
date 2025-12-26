@@ -100,12 +100,48 @@ metadata:
 spec:
     # ... (생략)
 ```
+
 #### Kueue에서의 작동 방식 ####
 
 Kueue는 TrainJob 이 요구하는 리소스 합계를 계산하고(여기서는 gpu 갯수), cluster-queue-gpu 리소스 풀에 리소스가 남아있는지 확인한다.
 * 리소스가 모두 있으면: 모든 파드를 동시에 실행(Admit) 상태로 변경하고
 * 리소스가 하나라도 부족하면: 어떤 파드도 생성되지 않도록 큐에서 대기시킨다.
 이 방식을 통해 일부 파드만 먼저 실행되어 자원을 점유한 채 나머지를 기다리는 데드락(Deadlock) 현상을 방지할 수 있다.
+
+
+## 카펜터 통합 전략 ##
+Kueue가 할당량(Quota) 관점에서는 갱 스케줄링을 보장하지만, 실제 노드 프로비저닝(Karpenter)과 파드 배치(Kube-scheduler) 단계에서 일부 파드만 먼저 생성되어 '노드 대기' 상태에 빠지는 현상이 종종 발생한다.
+이 문제를 해결하고 Karpenter 환경에서 완전한 갱 스케줄링(All-or-Nothing)을 구현하기 위한 핵심 전략은 다음과 같다.
+
+#### 1. Kueue의 'Admit' 메커니즘 활용 ####
+Kueue는 리소스 풀에 자리가 생기기 전까지는 TrainJob 아래의 실제 Pod들을 생성조차 하지 못하게(Suspended) 막아둡니다.
+Kueue가 승인(Admit)을 내리는 순간, Karpenter는 필요한 전체 노드 개수를 한꺼번에 인지하게 됩니다.
+하지만 Karpenter가 노드를 하나씩 띄우는 속도 차이 때문에, 먼저 뜬 노드에 일부 파드가 먼저 배치되는 현상은 여전히 발생합니다.
+
+#### 2. PodGroup 기반 Coscheduling 적용 (필수) ####
+Karpenter가 노드를 준비하는 동안 발생할 수 있는 "일부만 실행되는 현상"을 막으려면, 쿠버네티스 스케줄러 레벨에서 Scheduler Plugins의 Coscheduling을 함께 사용해야 합니다.
+* PodGroup 정의: TrainJob의 모든 파드가 하나의 PodGroup에 속하게 합니다.
+* MinMember 설정: 예를 들어 GPU 파드 4개가 모두 준비되어야만 스케줄링을 시작하도록 minMember: 4를 설정합니다.
+* 동작 방식:
+  * Karpenter가 노드 2개를 먼저 띄워도, 스케줄러는 minMember가 충족되지 않았으므로 이 노드들에 파드를 배치하지 않고 대기시킵니다.
+  * 나머지 노드 2개가 마저 떠서 전체 4개의 자리가 확보되는 순간, 모든 파드를 동시에 노드에 바인딩합니다.
+
+#### 3. Karpenter의 통합 최적화 ####
+Karpenter가 갱 스케줄링에 최적화되도록 하려면 NodePool(또는 구 버전의 Provisioner)에서 다음 설정을 고려해야 합니다.
+* Batching Window: Karpenter는 짧은 시간 동안 발생하는 파드 요청을 모아서 처리합니다. TrainJob의 모든 파드 요청이 Karpenter에게 한꺼번에 전달되도록 Kueue가 제어하므로, Karpenter는 한 번의 작업으로 필요한 노드들을 동시에 프로비저닝하기 시작합니다.
+* Capacity-type: 갱 스케줄링 시 스팟(Spot) 인스턴스를 쓰면 일부 노드만 확보되고 나머지는 재고 부족으로 실패할 위험이 큽니다. 안정적인 갱 스케줄링을 원한다면 해당 작업에 한해 온디맨드(on-demand)를 권장합니다.
+
+#### 4. 설정 요약 예시 ####
+TrainJob의 각 리플리카 템플릿에 아래 내용을 포함해야 합니다.
+```
+spec:
+  template:
+    spec:
+      schedulerName: coscheduling               # 스케줄러 플러그인 지정
+      priorityClassName: high-priority          # Kueue와 연동된 우선순위
+      containers:
+      - ...
+```
 
 ## 레퍼런스 ##
 * https://www.kubeflow.org/docs/components/trainer/operator-guides/job-scheduling/
