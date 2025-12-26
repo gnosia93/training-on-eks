@@ -39,6 +39,7 @@
 
 * [C11. 인터커넥트 성능 비교](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-intercon-perf.md)
 
+* [c12. Slurm]()
    
 ## 레퍼런스 ## 
 
