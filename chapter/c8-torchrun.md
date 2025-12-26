@@ -111,7 +111,8 @@ spec:
 
 
 ## 트레이닝 작업 실행 ##
-TrainJob 오퍼레이터는 backoffLimit 라는 필드를 이용하여 작업 복구 매커니즘을 제공한다. 작업이 실패 했을때 다시 시작하는 기능으로, 이 예제에서는 3번까지 트레이닝 작업을 재 시작 하도록 설정 하였다.  
+
+#### 1. TrainJob 만들기 #### 
 ```
 cat <<EOF > t5-large.yaml
 apiVersion: trainer.kubeflow.org/v1alpha1
@@ -157,20 +158,21 @@ spec:
         nvidia.com/gpu: "8"
 EOF
 ```
+* Placement Group (가용 영역 지정):
+nodeSelector에 topology.kubernetes.io/zone을 명시하면, 분산 학습시 노드들이 동일한 AZ 내에 배치되어 NCCL 통신 레이턴시가 크게 줄어든다.
+
+#### 2. 잡 실행하기 ####
 트레이닝 작업을 시작하고 로그를 확인한다. 
 ```
 kubectl apply -f t5-large.yaml
 
+kubectl get pods
+
 kubectl logs -f -l trainjob-name=t5-large
 ```
 
-* Placement Group (가용 영역 지정):
-nodeSelector에 topology.kubernetes.io/zone을 명시하면, 분산 학습에 참여하는 노드들이 동일한 데이터 센터 내에 배치되어 NCCL 통신 레이턴시가 크게 줄어듭니다.
-* Scheduling Policy (Gang Scheduling):
-schedulingPolicy를 사용하면 2개의 노드가 동시에 할당될 때만 학습을 시작합니다. 이는 하나는 확보되고 하나는 대기 상태일 때 발생하는 자원 낭비와 통신 비효율을 방지합니다.
-
-
-### 노드 리스트 출력 ###
+#### 3. 노드 리스트 출력하기 ####
+본 워크삽에서는 카펜터를 이용하여 GPU 노드를 프로비저닝 하므로, 트레이닝 잡을 실행 후 GPU 노드가 프로비저닝 될때 까지 1분 이상의 시간이 소요된다. 아래 명령어는 쿠버네티스 클러스터에 조인된 노드 정보를 출력하는 명령어이다.
 ```
 kubectl get nodes -o custom-columns="NAME:.metadata.name, \
    INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
