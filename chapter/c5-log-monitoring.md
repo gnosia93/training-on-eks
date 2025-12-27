@@ -12,6 +12,7 @@ export CLUSTER_NAME="training-on-eks"
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
+export OIDC=$(aws eks describe-cluster --name training-on-eks --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
 ```
 
 #### 1. loki-ng 노드그룹 추가 ####
@@ -93,13 +94,13 @@ cat <<EOF > trust-policy.json
         {
             "Effect": "Allow",
             "Principal": {
-                "Federated": "arn:aws:iam::${AWS_ACCOUNT}:oidc-provider/oidc.eks.${AWS_REGION}.amazonaws.com/id/< OIDC ID >"
+                "Federated": "arn:aws:iam::${AWS_ACCOUNT}:oidc-provider/oidc.eks.${AWS_REGION}.amazonaws.com/id/${OIDC}"
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
                 "StringEquals": {
-                    "oidc.eks.${AWS_REGION}.amazonaws.com/id/< OIDC ID >:sub": "system:serviceaccount:loki:loki",
-                    "oidc.eks.${AWS_REGION}.amazonaws.com/id/< OIDC ID >:aud": "sts.amazonaws.com"
+                    "oidc.eks.${AWS_REGION}.amazonaws.com/id/${OIDC}:sub": "system:serviceaccount:loki:loki",
+                    "oidc.eks.${AWS_REGION}.amazonaws.com/id/${OIDC}:aud": "sts.amazonaws.com"
                 }
             }
         }
