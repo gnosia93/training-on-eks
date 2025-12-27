@@ -120,19 +120,25 @@ addons:
 managedNodeGroups:                           # 관리형 노드 그룹
   - name: ng-arm
     instanceType: c7g.2xlarge
-    minSize: 1
-    maxSize: 1
-    desiredCapacity: 1
+    minSize: 2
+    maxSize: 2
+    desiredCapacity: 2
     amiFamily: AmazonLinux2023
     privateNetworking: true                  # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
-   
+    iam:
+      withAddonPolicies:
+        ebs: true                     		 # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
+ 
   - name: ng-x86
     instanceType: c6i.2xlarge
-    minSize: 1
-    maxSize: 1
-    desiredCapacity: 1
+    minSize: 2
+    maxSize: 2
+    desiredCapacity: 2
     amiFamily: AmazonLinux2023
-    privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
+    privateNetworking: true           		 # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
+    iam:
+      withAddonPolicies:
+        ebs: true                     		 # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
 
 iam:
   withOIDC: true 
