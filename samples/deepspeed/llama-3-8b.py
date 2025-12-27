@@ -47,6 +47,6 @@ trainer.train()
 
 # 6. 학습 종료 후 최종 모델 및 토크나이저 저장
 # 이 과정은 추후 배포를 위해 분산된 가중치를 하나로 병합하는 시도를 포함합니다.
-trainer.save_model("./llama3-deepspeed-final")
-tokenizer.save_pretrained("./llama3-deepspeed-final")
+trainer.save_model("/data/fsx/llama3-deepspeed-final")
+tokenizer.save_pretrained("/data/fsx/llama3-deepspeed-final")
 
