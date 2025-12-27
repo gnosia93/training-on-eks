@@ -85,26 +85,27 @@ EOF
 aws iam create-policy --policy-name LokiS3AccessPolicy --policy-document file://loki-s3-policy.json
 ```
 
-[trust-policy.json]
 ```
+cat <<EOF > trust-policy.json
 {
     "Version": "2012-10-17",
     "Statement": [
         {
             "Effect": "Allow",
             "Principal": {
-                "Federated": "arn:aws:iam::< ACCOUNT ID >:oidc-provider/oidc.eks.<INSERT REGION>.amazonaws.com/id/< OIDC ID >"
+                "Federated": "arn:aws:iam::${AWS_ACCOUNT}:oidc-provider/oidc.eks.${AWS_REGION}.amazonaws.com/id/< OIDC ID >"
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
                 "StringEquals": {
-                    "oidc.eks.<INSERT REGION>.amazonaws.com/id/< OIDC ID >:sub": "system:serviceaccount:loki:loki",
-                    "oidc.eks.<INSERT REGION>.amazonaws.com/id/< OIDC ID >:aud": "sts.amazonaws.com"
+                    "oidc.eks.${AWS_REGION}.amazonaws.com/id/< OIDC ID >:sub": "system:serviceaccount:loki:loki",
+                    "oidc.eks.${AWS_REGION}.amazonaws.com/id/< OIDC ID >:aud": "sts.amazonaws.com"
                 }
             }
         }
     ]
 }
+EOF
 ```
 
 ```
