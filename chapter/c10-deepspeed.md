@@ -60,7 +60,10 @@ fi_info -p efa
 * 러스터에 저장하도록 코드를 수정해야 한다..
 
 ### 훈련 모니터링 ###
-
+* GPU 모니터링
+* 노드 모니터링
+* EFA 모니터링
+* 러스터 모니터링.
  
 ## 레퍼런스 ##
 * [Simple DeepSpeed](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed-simple.md)
