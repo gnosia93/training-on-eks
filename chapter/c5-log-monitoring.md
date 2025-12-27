@@ -94,7 +94,7 @@ cat <<EOF > trust-policy.json
         {
             "Effect": "Allow",
             "Principal": {
-                "Federated": "arn:aws:iam::${AWS_ACCOUNT}:oidc-provider/oidc.eks.${AWS_REGION}.amazonaws.com/id/${OIDC}"
+                "Federated": "arn:aws:iam::${ACCOUNT_ID}:oidc-provider/oidc.eks.${AWS_REGION}.amazonaws.com/id/${OIDC}"
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
