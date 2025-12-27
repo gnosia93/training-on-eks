@@ -232,7 +232,9 @@ gateway:
      enabled: true
      existingSecret: loki-basic-auth
 
-# Since we are using basic auth, we need to pass the username and password to the canary
+test:
+  enabled: false
+
 lokiCanary:
   enabled: false
 
