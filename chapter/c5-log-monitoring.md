@@ -35,7 +35,7 @@ managedNodeGroups:
     privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
     iam:
       withAddonPolicies:
-        ebs: true         # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
+        ebs: true                     # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
 EOF
 
 eksctl create nodegroup -f ng-loki.yaml
