@@ -463,7 +463,8 @@ alloy:
       // url 은 프로토콜(http)과 API 경로(/loki/api/v1/push) 추가 필요. 
       loki.write "grafana_loki" {
         endpoint {
-          url = "loki-gateway.loki.svc.cluster.local"
+      //    url = "loki-gateway.loki.svc.cluster.local"
+           url = "http://loki-gateway.loki.svc.cluster.local//loki/api/v1/push"
         }
       }
 
