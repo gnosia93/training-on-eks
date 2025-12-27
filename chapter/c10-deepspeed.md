@@ -2,7 +2,7 @@
 * [Llama-3-8B](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.py)
 * [Llama-3-8B Config](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.json)
   
-### 주요 Config ###
+#### Config 설정 ####
 * gradient_checkpointing=True
 역전파 시 필요한 중간 연산 결과를 저장하지 않고 다시 계산하여 메모리 사용량을 줄임(8B 이상의 모델에서는 필수)
 * bf16=True
@@ -12,7 +12,7 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 * meta device 초기화
 수십 GB의 모델을 한 GPU가 먼저 다 읽으려 하면 시작하자마자 OOM 발생함. AutoModel.from_config 사용하면 모델을 실제 메모리에 올리기 전에 구조만 파악하고, DeepSpeed가 각 GPU에 쪼개서 로드하도록 유도.
 
-### 훈련 시작 ###
+#### 훈련 시작 ####
 ```
 torchrun --nproc_per_node=8 train_large_model.py
 ```
