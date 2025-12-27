@@ -138,6 +138,11 @@ kubectl create secret generic canary-basic-auth \
 export MY_OFFICE_IP="122.36.213.114/32"
 
 cat <<EOF > loki-values.yaml
+# 모든 컴포넌트에 공통으로 적용되는 설정
+global:
+  nodeSelector:
+    alpha.eksctl.io/nodegroup-name: ng-loki
+
 loki:
    schemaConfig:
      configs:
