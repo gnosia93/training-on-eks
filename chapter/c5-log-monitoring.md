@@ -140,35 +140,47 @@ export MY_OFFICE_IP="122.36.213.114/32"
 cat <<EOF > loki-values.yaml
 # 모든 컴포넌트에 공통으로 적용되는 설정
 common:
-  nodeSelector:
-    alpha.eksctl.io/nodegroup-name: ng-loki
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 read:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 write:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 backend:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 gateway:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 chunksCache:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 resultsCache:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 distributor:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 ingester:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 queryFrontend:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 queryScheduler:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 indexGateway:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 compactor:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
+  affinity: {}
 ruler:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-
+  affinity: {}
 
 loki:
    schemaConfig:
