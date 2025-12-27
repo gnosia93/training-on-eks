@@ -1,6 +1,6 @@
 
 ### 1. Node Exporter 설정 (EFA 지표 수집) ###
-기본적으로 node_exporter는 CPU, 메모리 등을 수집하지만, EFA 지표를 가져오기 위해서는 ethtool 콜렉터가 활성화되어야 합니다.
+기본적으로 node_exporter는 CPU, 메모리 등을 수집하지만, EFA 지표를 가져오기 위해서는 ethtool 콜렉터가 활성화되어야 한다.
 
 
 #### 프로메테우스 스택 기본 설정 ####
