@@ -329,34 +329,10 @@ kubectl apply -f nginx.yaml
 #### 카펜터 인스턴스 프로파일 삭제 #### 
 ```
 ROLE_NAME="eksctl-KarpenterNodeRole-training-on-eks"
-
-# 1. 역할에 연결된 인스턴스 프로파일 목록 가져오기
-echo "조회 중인 역할: $ROLE_NAME"
-PROFILES=$(aws iam list-instance-profiles-for-role --role-name "$ROLE_NAME" --query 'InstanceProfiles[*].InstanceProfileName' --output text)
-
-if [ -z "$PROFILES" ] || [ "$PROFILES" == "None" ]; then
-    echo "해당 역할에 연결된 인스턴스 프로파일이 없습니다."
-    exit 0
-fi
-
-# 2. 루프를 돌며 프로파일 이름 출력 및 삭제
-for PROFILE_NAME in $PROFILES; do
-    echo "-------------------------------------------"
-    echo "처리 중인 프로파일: $PROFILE_NAME"
-
-    # 역할에서 프로파일 분리 (삭제를 위해 필수)
-    echo "1) 역할 분리 중..."
-    aws iam remove-role-from-instance-profile --instance-profile-name "$PROFILE_NAME" --role-name "$ROLE_NAME"
-    
-    # 인스턴스 프로파일 삭제
-    echo "2) 프로파일 삭제 중..."
-    aws iam delete-instance-profile --instance-profile-name "$PROFILE_NAME"
-    
-    echo "결과: $PROFILE_NAME 삭제 완료"
-done
-
-echo "-------------------------------------------"
-echo "모든 작업이 완료되었습니다."
+for p in $(aws iam list-attached-role-policies --role-name "$ROLE_NAME" --query 'AttachedPolicies[*].PolicyArn' --output text); do aws iam detach-role-policy --role-name "$ROLE_NAME" --policy-arn "$p"; done
+for p in $(aws iam list-role-policies --role-name "$ROLE_NAME" --query 'PolicyNames[*]' --output text); do aws iam delete-role-policy --role-name "$ROLE_NAME" --policy-name "$p"; done
+for i in $(aws iam list-instance-profiles-for-role --role-name "$ROLE_NAME" --query 'InstanceProfiles[*].InstanceProfileName' --output text); do aws iam remove-role-from-instance-profile --instance-profile-name "$i" --role-name "$ROLE_NAME"; aws iam delete-instance-profile --instance-profile-name "$i"; done
+aws iam delete-role --role-name "$ROLE_NAME"
 ```
 #### 클러스터 삭제 ####
 ```
