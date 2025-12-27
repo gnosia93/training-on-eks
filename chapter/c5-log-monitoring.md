@@ -15,36 +15,7 @@ export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.r
 export OIDC=$(aws eks describe-cluster --name training-on-eks --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
 ```
 
-#### 1. loki-ng 노드그룹 추가 ####
-```
-cat <<EOF > ng-loki.yaml
-apiVersion: eksctl.io/v1alpha5
-kind: ClusterConfig
-
-metadata:
-  name: training-on-eks   # 기존 클러스터 이름
-  region: ${AWS_REGION}   # 실제 사용 중인 리전
-
-managedNodeGroups:
-  - name: ng-loki
-    instanceType: m7i.2xlarge
-    desiredCapacity: 2
-    minSize: 2
-    maxSize: 3
-    amiFamily: AmazonLinux2023
-    privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
-    iam:
-      withAddonPolicies:
-        ebs: true                     # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
-EOF
-
-eksctl create nodegroup -f ng-loki.yaml
-```
-"ebs: true" 설정은 loki-ng 노드 그룹의 노드들에게 EBS 볼륨을 생성,삭제,연결(Attach),해제(Detach)할 수 있는 권한을 부여한다는 의미이다.  
-
-
-
-#### 2. S3 버킷생성 ####
+#### 1. S3 버킷생성 ####
 Loki를 배포하기 전에 두 개의 S3 버킷을 생성해야 한다. 첫 번째는 로그 데이터(Chunks)를 저장하기 위한 것이고, 두 번째는 알람 규칙(Alert Rules)을 저장하기 위한 것이다.
 Loki는 로그 정보를 인덱스와 실제 데이터(Chunks)로 나누어 저장하는데, 로컬 디스크(EBS) 대신 S3를 주 저장소로 사용함으로써 비용을 절감하고 공간을 무제한으로 사용할 수 있게 된다. 
 ```
@@ -57,7 +28,7 @@ export CHUNK_BUCKET=$(echo ${CHUNK_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
 export RULER_BUCKET=$(echo ${RULER_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
 ```
 
-#### 3. IAM 역할 및 정책 ####
+#### 2. IAM 역할 및 정책 ####
 ```
 cat <<EOF > loki-s3-policy.json
 {
@@ -112,7 +83,7 @@ aws iam create-role --role-name LokiServiceAccountRole --assume-role-policy-docu
 aws iam attach-role-policy --role-name LokiServiceAccountRole --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/LokiS3AccessPolicy
 ```
 
-#### 4. lock 네임스페이스 생성 ####
+#### 3. loki 네임스페이스 생성 ####
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -120,7 +91,7 @@ helm repo update
 kubectl create namespace loki
 ```
 
-#### 5. Loki 인증 설정 #### 
+#### 4. Loki 인증 설정 #### 
 ```
 sudo dnf install httpd-tools -y
 
@@ -133,7 +104,7 @@ kubectl create secret generic canary-basic-auth \
   -n loki
 ```
 
-#### 6. Loki 헬름 차트 설정 ####
+#### 5. Loki 헬름 차트 설정 ####
 ```
 export MY_OFFICE_IP="122.36.213.114/32"
 
@@ -254,7 +225,7 @@ singleBinary:
 EOF
 ```
 
-#### 7. Loki 배포하기 ####
+#### 6. Loki 배포하기 ####
 ```
 helm install loki grafana/loki -n loki \
     --values loki-values.yaml 
