@@ -15,7 +15,7 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 * meta device 초기화
 수십 GB의 모델을 한 GPU가 먼저 다 읽으려 하면 시작하자마자 OOM 발생함. AutoModel.from_config 사용하면 모델을 실제 메모리에 올리기 전에 구조만 파악하고, DeepSpeed가 각 GPU에 쪼개서 로드하도록 유도.
 
-### g6e.8xlarge EFA 사양 ###
+### 훈련 인스턴스 - g6e.8xlarge / EFA ###
 ```
 $ aws ec2 describe-instance-types \
     --instance-types g6e.8xlarge \
