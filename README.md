@@ -30,7 +30,7 @@
    - [장애노드 식별 및 자동 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-auto-recovery.md)
    - [훈련 자동 복구/재실행](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-trainjob.md) 
 
-* [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-lustre-eks.md)
+* [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-lustre-eks.md)
    
 ## 레퍼런스 ## 
 
