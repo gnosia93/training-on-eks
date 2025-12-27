@@ -76,8 +76,41 @@ print("학습 완료!")
   }
 }
 ```
-
-
+[requirements.txt]
 ```
+# 1. 핵심 딥러닝 프레임워크 (CUDA 12.x 호환 버전 권장)
+torch>=2.4.0
+torchvision
+torchaudio
+
+# 2. 대규모 학습 최적화 및 분산 처리
+deepspeed>=0.15.0
+accelerate>=0.34.0
+
+# 3. 모델 가속 및 커스텀 커널 (FlashAttention 등)
+triton>=3.0.0
+flash-attn>=2.6.0
+
+# 4. 모델 허브 및 트랜스포머 라이브러리
+transformers>=4.44.0
+diffusers
+safetensors
+
+# 5. 데이터셋 및 평가
+datasets
+evaluate
+scikit-learn
+
+# 6. 유틸리티 및 모니터링
+tensorboard
+wandb
+tqdm
+psutil
+pyyaml
+```
+
+### 실행하기 ###
+```
+pip install -r requirements.txt
 torchrun --nproc_per_node=2 train.py --deepspeed --deepspeed_config ds_config.json
 ```
