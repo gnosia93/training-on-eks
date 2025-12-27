@@ -51,8 +51,8 @@ spec:
           llama-3-8b.py 
     resourcesPerNode:
       limits:
-        nvidia.com/gpu: "1"
-        vpc.amazonaws.com/efa: "${EFA_COUNT}"                      
+        nvidia.com/gpu: "${EFA_NUM}"
+        vpc.amazonaws.com/efa: "${EFA_NUM}"                      
     securityContext:
       capabilities:                                   # EFA 통신을 위해 메모리 잠금 권한 필요
         add: ["IPC_LOCK"]  
