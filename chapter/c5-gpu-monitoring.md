@@ -47,7 +47,7 @@ kubectl patch svc prometheus-grafana -n monitoring -p '{
 }'
 
 kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
-kubectl get svc -n monitoring | grep prometheus-grafana | awk '{print $4}'
+kubectl get svc -n monitoring | grep prometheus-grafana | awk '{print $4,$5}'
 ```
 [결과]
 ```
