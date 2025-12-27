@@ -26,3 +26,6 @@
 
 ## 연산 성능 ##
 엔비디아는 H100(Hopper) 세대부터 FP8을 본격 도입했고, 최신 B200(Blackwell)에서는 FP4까지 지원하며 성능을 비약적으로 높였습니다.
+
+### 1. 세대별 연산 성능 비교표 (Tensor Core 활용 시) ###
+단위: TFLOPS (Tera Floating Point Operations Per Second)
