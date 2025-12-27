@@ -51,7 +51,6 @@ node_exporter의 ethtool 콜렉터는 노드의 /sys/class/net/ 경로에 있는
 ### 3. Grafana 대시보드 연결 ###
 
 Grafana 대시보드에서 우측의 [New 버튼] -> [Import 서브메뉴] 을 선택한 다음 아래 대시보드를 임포트 한다. 
-* NVIDIA DCGM Exporter (ID: 12239): GPU 사용률, 메모리, 온도와 함께 EFA 성능을 통합 관리하기에 가장 좋다.
 * Node Exporter Full (ID: 1860): 전체 네트워크 인터페이스(RDMA 포함) 성능을 상세히 볼 수 있다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/node-exporter-full.png)
   
