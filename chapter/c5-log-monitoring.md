@@ -141,46 +141,46 @@ cat <<EOF > loki-values.yaml
 # 모든 컴포넌트에 공통으로 적용되는 설정
 common:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 read:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 write:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 backend:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 gateway:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 chunksCache:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 resultsCache:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 distributor:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 ingester:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 queryFrontend:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 queryScheduler:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 indexGateway:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 compactor:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 ruler:
   nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: {}
+  affinity: null
 
 loki:
    schemaConfig:
@@ -301,8 +301,7 @@ EOF
 #### 7. Loki 배포하기 ####
 ```
 helm install loki grafana/loki -n loki \
-    --values loki-values.yaml \
-    --set common.nodeSelector.eks.amazonaws.com/nodegroup=ng-loki
+    --values loki-values.yaml 
 ```
 [결과]
 ```
