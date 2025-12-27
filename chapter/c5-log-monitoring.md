@@ -138,50 +138,6 @@ kubectl create secret generic canary-basic-auth \
 export MY_OFFICE_IP="122.36.213.114/32"
 
 cat <<EOF > loki-values.yaml
-# 모든 컴포넌트에 공통으로 적용되는 설정
-common:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-read:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-write:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-backend:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-gateway:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-chunksCache:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-resultsCache:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-distributor:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-ingester:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-queryFrontend:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-queryScheduler:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-indexGateway:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-compactor:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-ruler:
-  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
-  affinity: null
-
 loki:
    schemaConfig:
      configs:
