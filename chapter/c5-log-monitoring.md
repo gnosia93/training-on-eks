@@ -28,9 +28,9 @@ metadata:
 managedNodeGroups:
   - name: ng-loki
     instanceType: m7i.2xlarge
-    desiredCapacity: 1
-    minSize: 1
-    maxSize: 1
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 3
     amiFamily: AmazonLinux2023
     privateNetworking: true           # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
     iam:
