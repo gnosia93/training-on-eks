@@ -16,8 +16,13 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 
 * EFA / G 타입 인스턴스 / PCIe 
 ```
+export CLUSTER_NAME="training-on-eks"
+export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
+
 export INSTANCE_TYPE=g6e.8xlarge              
-export AZ=ap-northeast-2                 
+export AZ=${AWS_REGION}a                 
 export NODE_NUM=4                     
 
 cd ~/training-on-eks/samples/deepspeed
