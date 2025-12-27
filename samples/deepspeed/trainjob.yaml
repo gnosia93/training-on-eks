@@ -21,6 +21,9 @@ spec:
             emptyDir:
               medium: Memory
               sizeLimit: "64Gi"               # shared memory 공간을 기본값(64Mi) 에서 64Gi 로 설정 / num_workers 와 연관됨.
+        securityContext:
+          capabilities:                                   # EFA 통신을 위해 메모리 잠금 권한 필요
+            add: ["IPC_LOCK"]  
 
   runtimeRef:
     name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묶음)
@@ -53,7 +56,4 @@ spec:
       limits:
         nvidia.com/gpu: "${EFA_NUM}"
         vpc.amazonaws.com/efa: "${EFA_NUM}"                      
-    securityContext:
-      capabilities:                                   # EFA 통신을 위해 메모리 잠금 권한 필요
-        add: ["IPC_LOCK"]  
-
+ 
