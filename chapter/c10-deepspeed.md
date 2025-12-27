@@ -24,7 +24,27 @@ export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.r
 export INSTANCE_TYPE=g6e.8xlarge              
 export AZ=${AWS_REGION}a                 
 export NODE_NUM=4                     
+```
 
+* g6e.8xlarge EFA 사양
+```
+$ aws ec2 describe-instance-types \
+    --instance-types g6e.8xlarge \
+    --query "InstanceTypes[*].{InstanceType:InstanceType, \
+        EfaSupported:NetworkInfo.EfaSupported, \
+        MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, \
+        NetworkPerformance:NetworkInfo.NetworkPerformance}" --output table
+--------------------------------------------------------------------------------
+|                             DescribeInstanceTypes                            |
++--------------+---------------+------------------------+----------------------+
+| EfaSupported | InstanceType  | MaxNetworkInterfaces   | NetworkPerformance   |
++--------------+---------------+------------------------+----------------------+
+|  True        |  g6e.8xlarge  |  8                     |  25 Gigabit          |
++--------------+---------------+------------------------+----------------------+
+```
+
+
+```
 cd ~/training-on-eks/samples/deepspeed
 kubectl apply -f trainjob.yaml
 kubectl exec -it llama-3-8b -- /bin/bash
