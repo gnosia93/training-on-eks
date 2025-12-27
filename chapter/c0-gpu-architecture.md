@@ -29,6 +29,6 @@
 
 ### 1. 세대별 연산 성능 비교표 (Tensor Core 활용 시) ###
 단위: TFLOPS (Tera Floating Point Operations Per Second)
-
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-calc.png)
 
 *Blackwell 세대부터는 전통적인 FP32 성능보다 AI용 저정밀도(FP8, FP4) 연산 최적화에 집중하여 공식 수치를 추론 기반으로 발표합니다.
