@@ -87,6 +87,6 @@
 
 ### 1. 세대별 대표 모델 클럭 비교 (Boost Clock 기준) ###
 
-
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-clock.png)
 *B200의 경우 전력 소모량(TDP 1,000W)이 급증하면서 클럭을 높이기보다는 2개의 다이를 연결해 코어 숫자를 확보하는 방향을 선택했습니다.
 
