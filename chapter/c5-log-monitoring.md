@@ -337,30 +337,31 @@ For more information, read our documentation about multi-tenancy: https://grafan
 ```
 
 ```
-kubectl get pods -n loki -o wide
+kubectl get pods -n loki
 ```
 [결과]
 ```
-NAME                                    READY   STATUS    RESTARTS   AGE   IP           NODE                                            NOMINATED NODE   READINESS GATES
-loki-chunks-cache-0                     2/2     Running   0          17s   10.0.6.162   ip-10-0-6-239.ap-northeast-2.compute.internal   <none>           <none>
-loki-compactor-0                        0/1     Running   0          17s   10.0.4.63    ip-10-0-4-115.ap-northeast-2.compute.internal   <none>           <none>
-loki-distributor-f68976f8f-hmpvd        0/1     Running   0          18s   10.0.6.4     ip-10-0-6-239.ap-northeast-2.compute.internal   <none>           <none>
-loki-distributor-f68976f8f-sd892        0/1     Running   0          18s   10.0.4.46    ip-10-0-4-115.ap-northeast-2.compute.internal   <none>           <none>
-loki-distributor-f68976f8f-tgnjq        0/1     Running   0          18s   10.0.6.166   ip-10-0-6-164.ap-northeast-2.compute.internal   <none>           <none>
-loki-gateway-6f6d8c796f-cpgmq           0/1     Running   0          18s   10.0.6.241   ip-10-0-6-239.ap-northeast-2.compute.internal   <none>           <none>
-loki-index-gateway-0                    0/1     Running   0          17s   10.0.4.206   ip-10-0-4-115.ap-northeast-2.compute.internal   <none>           <none>
-loki-ingester-0                         0/1     Running   0          17s   10.0.6.16    ip-10-0-6-239.ap-northeast-2.compute.internal   <none>           <none>
-loki-ingester-1                         0/1     Running   0          17s   10.0.4.233   ip-10-0-4-115.ap-northeast-2.compute.internal   <none>           <none>
-loki-ingester-2                         0/1     Running   0          17s   10.0.6.75    ip-10-0-6-164.ap-northeast-2.compute.internal   <none>           <none>
-loki-querier-5867f585f5-5f45l           0/1     Running   0          17s   10.0.4.37    ip-10-0-4-115.ap-northeast-2.compute.internal   <none>           <none>
-loki-querier-5867f585f5-nhssm           0/1     Running   0          17s   10.0.6.63    ip-10-0-6-239.ap-northeast-2.compute.internal   <none>           <none>
-loki-querier-5867f585f5-sbvrv           0/1     Running   0          17s   10.0.6.68    ip-10-0-6-164.ap-northeast-2.compute.internal   <none>           <none>
-loki-query-frontend-646bd6f4df-58mfx    0/1     Running   0          17s   10.0.4.149   ip-10-0-4-115.ap-northeast-2.compute.internal   <none>           <none>
-loki-query-frontend-646bd6f4df-wrlcs    0/1     Running   0          17s   10.0.6.186   ip-10-0-6-239.ap-northeast-2.compute.internal   <none>           <none>
-loki-query-scheduler-7b75c5fdc9-c5zzn   0/1     Running   0          17s   10.0.4.26    ip-10-0-4-115.ap-northeast-2.compute.internal   <none>           <none>
-loki-query-scheduler-7b75c5fdc9-gcg68   0/1     Running   0          17s   10.0.6.127   ip-10-0-6-239.ap-northeast-2.compute.internal   <none>           <none>
-loki-results-cache-0                    2/2     Running   0          17s   10.0.4.212   ip-10-0-4-115.ap-northeast-2.compute.internal   <none>           <none>
-loki-ruler-0                            0/1     Running   0          17s   10.0.6.251   ip-10-0-6-239.ap-northeast-2.compute.internal   <none>           <none>
+NAME                                    READY   STATUS    RESTARTS   AGE
+loki-chunks-cache-0                     2/2     Running   0          54s
+loki-compactor-0                        1/1     Running   0          54s
+loki-distributor-f68976f8f-g42jp        1/1     Running   0          54s
+loki-distributor-f68976f8f-h5dkb        1/1     Running   0          53s
+loki-distributor-f68976f8f-xmt6h        1/1     Running   0          53s
+loki-gateway-6f6d8c796f-t9qzn           1/1     Running   0          54s
+loki-index-gateway-0                    1/1     Running   0          54s
+loki-index-gateway-1                    1/1     Running   0          25s
+loki-ingester-0                         1/1     Running   0          54s
+loki-ingester-1                         1/1     Running   0          53s
+loki-ingester-2                         1/1     Running   0          53s
+loki-querier-5867f585f5-2htk4           1/1     Running   0          53s
+loki-querier-5867f585f5-kzb4q           1/1     Running   0          54s
+loki-querier-5867f585f5-z6npv           1/1     Running   0          53s
+loki-query-frontend-646bd6f4df-jjwh7    1/1     Running   0          54s
+loki-query-frontend-646bd6f4df-ldq45    1/1     Running   0          53s
+loki-query-scheduler-7b75c5fdc9-f95gk   1/1     Running   0          54s
+loki-query-scheduler-7b75c5fdc9-qnqnk   1/1     Running   0          53s
+loki-results-cache-0                    2/2     Running   0          54s
+loki-ruler-0                            1/1     Running   0          54s 
 ```
 
 
