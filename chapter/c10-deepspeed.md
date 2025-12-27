@@ -12,16 +12,7 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 * meta device 초기화
 수십 GB의 모델을 한 GPU가 먼저 다 읽으려 하면 시작하자마자 OOM 발생함. AutoModel.from_config 사용하면 모델을 실제 메모리에 올리기 전에 구조만 파악하고, DeepSpeed가 각 GPU에 쪼개서 로드하도록 유도.
 
-### 훈련 시작 ###
-
-```
-export CLUSTER_NAME="training-on-eks"
-export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
-export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)              
-```
-
-#### g6e.8xlarge EFA 사양 ####
+### g6e.8xlarge EFA 사양 ###
 ```
 $ aws ec2 describe-instance-types \
     --instance-types g6e.8xlarge \
@@ -38,15 +29,18 @@ $ aws ec2 describe-instance-types \
 +--------------+---------------+------------------------+----------------------+
 ```
 
+### 훈련 시작 ###
 ```
+export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
 export INSTANCE_TYPE=g6e.8xlarge              
 export AZ=${AWS_REGION}a                 
-export NODE_NUM=4
-export GPU_NUM=1              # g6e.8xlarge 타입은 GPU 가 1장이다.
-export EFA_NUM=8
+export NODE_NUM=4                     # g6e.8xlarge 4대 
+export GPU_NUM=1                      # g6e.8xlarge 타입은 GPU 가 1장이다.
+export EFA_NUM=8                      # 200Gbp 사용
 
 cd ~/training-on-eks/samples/deepspeed
 kubectl apply -f trainjob.yaml
+
 kubectl exec -it llama-3-8b -- /bin/bash
 fi_info -p efa
 ```
