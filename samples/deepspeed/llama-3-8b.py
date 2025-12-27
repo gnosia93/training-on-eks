@@ -23,7 +23,7 @@ tokenized_datasets = dataset.map(tokenize_function, batched=True, remove_columns
 
 # 4. 학습 인자 설정 (DeepSpeed 설정 포함)
 training_args = TrainingArguments(
-    output_dir="./llama3-deepspeed",
+    output_dir="/data/fsx",                        # 분산 체크 포인트 위치                
     per_device_train_batch_size=4,
     gradient_accumulation_steps=4,                 # 실제 배치 사이즈 = 4 * 4 * GPU개수
     learning_rate=2e-5,
