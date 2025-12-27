@@ -42,7 +42,7 @@ $ aws ec2 describe-instance-types \
 export INSTANCE_TYPE=g6e.8xlarge              
 export AZ=${AWS_REGION}a                 
 export NODE_NUM=4
-export 
+export EFA_COUNT=8
 
 cd ~/training-on-eks/samples/deepspeed
 kubectl apply -f trainjob.yaml
