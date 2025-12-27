@@ -58,6 +58,9 @@ kubectl apply -f trainjob.yaml
 kubectl exec -it llama-3-8b -- /bin/bash
 fi_info -p efa
 ```
+
+### 훈련 모니터링 ###
+
  
 ## 레퍼런스 ##
 * [Simple DeepSpeed](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed-simple.md)
