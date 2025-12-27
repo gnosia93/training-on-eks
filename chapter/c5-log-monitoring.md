@@ -141,25 +141,25 @@ cat <<EOF > loki-values.yaml
 # 모든 컴포넌트에 공통으로 적용되는 설정
 global:
   nodeSelector:
-    alpha.eksctl.io/nodegroup-name: ng-loki
+    eks.amazonaws.com/nodegroup: ng-loki
 read:
   nodeSelector:
-    alpha.eksctl.io/nodegroup-name: ng-loki
+    eks.amazonaws.com/nodegroup: ng-loki
 write:
   nodeSelector:
-    alpha.eksctl.io/nodegroup-name: ng-loki
+    eks.amazonaws.com/nodegroup: ng-loki
 backend:
   nodeSelector:
-    alpha.eksctl.io/nodegroup-name: ng-loki
+    eks.amazonaws.com/nodegroup: ng-loki
 gateway:
   nodeSelector:
-    alpha.eksctl.io/nodegroup-name: ng-loki
+    eks.amazonaws.com/nodegroup: ng-loki
 chunksCache:
   nodeSelector:
-    alpha.eksctl.io/nodegroup-name: ng-loki
+    eks.amazonaws.com/nodegroup: ng-loki
 resultsCache:
   nodeSelector:
-    alpha.eksctl.io/nodegroup-name: ng-loki
+    eks.amazonaws.com/nodegroup: ng-loki
 
 loki:
    schemaConfig:
@@ -281,7 +281,7 @@ EOF
 ```
 helm install loki grafana/loki -n loki \
     --values loki-values.yaml \
-    --set common.nodeSelector."alpha\.eksctl\.io/nodegroup-name"=ng-loki
+    --set common.nodeSelector.eks.amazonaws.com/nodegroup=ng-loki
 ```
 [결과]
 ```
