@@ -173,6 +173,37 @@ eksctl create cluster -f cluster.yaml
 ```
 #### 참고 - 클러스터 삭제 ####
 ```
+ROLE_NAME="eksctl-KarpenterNodeRole-training-on-eks"
+
+# 1. 역할에 연결된 인스턴스 프로파일 목록 가져오기
+echo "조회 중인 역할: $ROLE_NAME"
+PROFILES=$(aws iam list-instance-profiles-for-role --role-name "$ROLE_NAME" --query 'InstanceProfiles[*].InstanceProfileName' --output text)
+
+if [ -z "$PROFILES" ] || [ "$PROFILES" == "None" ]; then
+    echo "해당 역할에 연결된 인스턴스 프로파일이 없습니다."
+    exit 0
+fi
+
+# 2. 루프를 돌며 프로파일 이름 출력 및 삭제
+for PROFILE_NAME in $PROFILES; do
+    echo "-------------------------------------------"
+    echo "처리 중인 프로파일: $PROFILE_NAME"
+
+    # 역할에서 프로파일 분리 (삭제를 위해 필수)
+    echo "1) 역할 분리 중..."
+    aws iam remove-role-from-instance-profile --instance-profile-name "$PROFILE_NAME" --role-name "$ROLE_NAME"
+    
+    # 인스턴스 프로파일 삭제
+    echo "2) 프로파일 삭제 중..."
+    aws iam delete-instance-profile --instance-profile-name "$PROFILE_NAME"
+    
+    echo "결과: $PROFILE_NAME 삭제 완료"
+done
+
+echo "-------------------------------------------"
+echo "모든 작업이 완료되었습니다."
+
+
 eksctl delete cluster -f cluster.yaml
 ```
 EKS 에서 클러스터 시큐리티 그룹은 컨트롤 플레인과 워커노드 사이의 통신을 가능하게 한다. 컨트롤 플레인은 10250 포트를 통해 노드의 큐블렛과 통신하고 워커노드는 443 포트를 이용하여 컨트롤 플레인의 API 서버에 접근을 시도한다. 아래 명령어는 클러스터 시큐리티 그룹에 "karpenter.sh/discovery=${CLUSTER_NAME}" 태크가 존재하는지 확인하는 스크립트이다. 카펜터가 노드를 생성할때, 이와 동일한 태크를 가진 시큐리티 그룹을 찾아 신규 노드에 할당하게 된다. 시큐리티 그룹 검색에 실패하게 되는 경우, EC2 인스턴스는 생성되지만 EKS 클러스터에 조인하지 못한다.  
