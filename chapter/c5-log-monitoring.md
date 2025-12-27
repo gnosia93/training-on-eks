@@ -262,6 +262,103 @@ helm install --values loki-values.yaml loki grafana/loki -n loki \
 kubectl get pods -n loki
 ```
 
+[결과]
+```
+NAME: loki
+LAST DEPLOYED: Sat Dec 27 15:06:47 2025
+NAMESPACE: loki
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+NOTES:
+***********************************************************************
+ Welcome to Grafana Loki
+ Chart version: 6.49.0
+ Chart Name: loki
+ Loki version: 3.6.3
+***********************************************************************
+
+** Please be patient while the chart is being deployed **
+
+Tip:
+
+  Watch the deployment status using the command: kubectl get pods -w --namespace loki
+
+If pods are taking too long to schedule make sure pod affinity can be fulfilled in the current cluster.
+
+***********************************************************************
+Installed components:
+***********************************************************************
+* gateway
+* compactor
+* index gateway
+* query scheduler
+* ruler
+* distributor
+* ingester
+* querier
+* query frontend
+
+
+***********************************************************************
+Sending logs to Loki
+***********************************************************************
+
+Loki has been configured with a gateway (nginx) to support reads and writes from a single component.
+
+You can send logs from inside the cluster using the cluster DNS:
+
+http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push
+
+You can test to send data from outside the cluster by port-forwarding the gateway to your local machine:
+
+  kubectl port-forward --namespace loki svc/loki-gateway 3100:80 &
+
+And then using http://127.0.0.1:3100/loki/api/v1/push URL as shown below:
+
+
+curl -H "Content-Type: application/json" -XPOST -s "http://127.0.0.1:3100/loki/api/v1/push"  \
+--data-raw "{\"streams\": [{\"stream\": {\"job\": \"test\"}, \"values\": [[\"$(date +%s)000000000\", \"fizzbuzz\"]]}]}" \
+-H X-Scope-OrgId:foo
+
+
+Then verify that Loki did receive the data using the following command:
+
+
+curl "http://127.0.0.1:3100/loki/api/v1/query_range" --data-urlencode 'query={job="test"}' -H X-Scope-OrgId:foo | jq .data.result
+
+
+***********************************************************************
+Connecting Grafana to Loki
+***********************************************************************
+
+If Grafana operates within the cluster, you'll set up a new Loki datasource by utilizing the following URL:
+
+http://loki-gateway.loki.svc.cluster.local/
+
+***********************************************************************
+Multi-tenancy
+***********************************************************************
+
+Loki is configured with auth enabled (multi-tenancy) and expects tenant headers (`X-Scope-OrgID`) to be set for all API calls.
+
+You must configure Grafana's Loki datasource using the `HTTP Headers` section with the `X-Scope-OrgID` to target a specific tenant.
+For each tenant, you can create a different datasource.
+
+The agent of your choice must also be configured to propagate this header.
+For example, when using Promtail you can use the `tenant` stage. https://grafana.com/docs/loki/latest/send-data/promtail/stages/tenant/
+
+When not provided with the `X-Scope-OrgID` while auth is enabled, Loki will reject reads and writes with a 404 status code `no org id`.
+
+You can also use a reverse proxy, to automatically add the `X-Scope-OrgID` header as suggested by https://grafana.com/docs/loki/latest/operations/authentication/
+
+For more information, read our documentation about multi-tenancy: https://grafana.com/docs/loki/latest/operations/multi-tenancy/
+
+> When using curl you can pass `X-Scope-OrgId` header using `-H X-Scope-OrgId:foo` option, where foo can be replaced with the tenant of your choice.
+```
+
+
 ### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/collect/logs-in-kubernetes/) ###
 Alloy는 기본적으로 "어디서 읽고 어디로 보낼지"에 대한 Pipeline 설정이 필요하다. 노드 파일 시스템의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며,  
 Loki를 목적지를 설정하고 쿠버네티스 Pod를 탐색하도록 구성해야 한다. 
