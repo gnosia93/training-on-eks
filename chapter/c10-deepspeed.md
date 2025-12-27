@@ -41,6 +41,9 @@ kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifest
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
 ```
 
+### 갱 스케줄링 ###
+* 이 예제는 갱 스케줄링 지원하지 않는다. 즉 카펜터에서 GPU 노드를 프러비저닝 하는 즉시 파드가 스케줄링 된다.  
+
 ### 훈련 시작 ###
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
