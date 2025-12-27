@@ -32,6 +32,7 @@ training_args = TrainingArguments(
     logging_steps=10,
     deepspeed="llama-3-8b-stage3.json", 
     save_strategy="epoch",
+    save_total_limit=2,     
     gradient_checkpointing=True,                   # 메모리 절약을 위한 재계산
 )
 
@@ -43,4 +44,9 @@ trainer = Trainer(
 )
 
 trainer.train()
+
+# 6. 학습 종료 후 최종 모델 및 토크나이저 저장
+# 이 과정은 추후 배포를 위해 분산된 가중치를 하나로 병합하는 시도를 포함합니다.
+trainer.save_model("./llama3-deepspeed-final")
+tokenizer.save_pretrained("./llama3-deepspeed-final")
 
