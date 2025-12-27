@@ -142,6 +142,24 @@ cat <<EOF > loki-values.yaml
 global:
   nodeSelector:
     alpha.eksctl.io/nodegroup-name: ng-loki
+read:
+  nodeSelector:
+    alpha.eksctl.io/nodegroup-name: ng-loki
+write:
+  nodeSelector:
+    alpha.eksctl.io/nodegroup-name: ng-loki
+backend:
+  nodeSelector:
+    alpha.eksctl.io/nodegroup-name: ng-loki
+gateway:
+  nodeSelector:
+    alpha.eksctl.io/nodegroup-name: ng-loki
+chunksCache:
+  nodeSelector:
+    alpha.eksctl.io/nodegroup-name: ng-loki
+resultsCache:
+  nodeSelector:
+    alpha.eksctl.io/nodegroup-name: ng-loki
 
 loki:
    schemaConfig:
