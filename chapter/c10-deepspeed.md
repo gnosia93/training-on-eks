@@ -21,6 +21,9 @@ export INSTANCE_TYPE=g6e.8xlarge
 export AZ=ap-northeast-2                 
 export NODE_NUM=4                     
 
+kubectl apply -f efa-test-pod.yaml
+kubectl exec -it efa-test-pod -- /bin/bash
+fi_info -p efa
 ```
  
 ## 레퍼런스 ##
