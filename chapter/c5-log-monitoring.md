@@ -9,7 +9,7 @@ Grafana Loki는 Grafana Labs에서 개발한 오픈소스 로그 집계 시스�
 ### [Log Backend(Loki) 설치](https://grafana.com/docs/loki/latest/setup/install/helm/deployment-guides/aws/) ###
 #### 1. loki-ng 노드그룹 추가 ####
 ```
-cat <<EOF > loki-ng.yaml
+cat <<EOF > ng-loki.yaml
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
@@ -18,7 +18,7 @@ metadata:
   region: ap-northeast-2  # 실제 사용 중인 리전
 
 managedNodeGroups:
-  - name: loki-ng
+  - name: ng-loki
     instanceType: m7i.2xlarge
     desiredCapacity: 1
     minSize: 1
@@ -30,7 +30,7 @@ managedNodeGroups:
         ebs: true         # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
 EOF
 
-eksctl create nodegroup -f loki-ng.yaml
+eksctl create nodegroup -f ng-loki.yaml
 ```
 "ebs: true" 설정은 loki-ng 노드 그룹의 노드들에게 EBS 볼륨을 생성,삭제,연결(Attach),해제(Detach)할 수 있는 권한을 부여한다는 의미이다.  
 
