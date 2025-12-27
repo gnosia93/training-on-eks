@@ -7,6 +7,13 @@ Grafana Loki는 Grafana Labs에서 개발한 오픈소스 로그 집계 시스�
 * 높은 효율성과 가성비: S3와 같은 객체 스토리지 연동으로 대용량 학습 로그를 저렴하게 보관하며, 인덱싱 최적화를 통해 전문 검색 엔진 대비 리소스를 적게 사용하면서도 현대적인 분석 환경을 제공.
   
 ### [Log Backend(Loki) 설치](https://grafana.com/docs/loki/latest/setup/install/helm/deployment-guides/aws/) ###
+```
+export CLUSTER_NAME="training-on-eks"
+export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
+```
+
 #### 1. loki-ng 노드그룹 추가 ####
 ```
 cat <<EOF > ng-loki.yaml
@@ -15,7 +22,7 @@ kind: ClusterConfig
 
 metadata:
   name: training-on-eks   # 기존 클러스터 이름
-  region: ap-northeast-2  # 실제 사용 중인 리전
+  region: ${AWS_REGION}   # 실제 사용 중인 리전
 
 managedNodeGroups:
   - name: ng-loki
@@ -40,9 +47,10 @@ eksctl create nodegroup -f ng-loki.yaml
 Loki를 배포하기 전에 두 개의 S3 버킷을 생성해야 한다. 첫 번째는 로그 데이터(Chunks)를 저장하기 위한 것이고, 두 번째는 알람 규칙(Alert Rules)을 저장하기 위한 것이다.
 Loki는 로그 정보를 인덱스와 실제 데이터(Chunks)로 나누어 저장하는데, 로컬 디스크(EBS) 대신 S3를 주 저장소로 사용함으로써 비용을 절감하고 공간을 무제한으로 사용할 수 있게 된다. 
 ```
-aws s3api create-bucket --bucket  <YOUR CHUNK BUCKET NAME e.g. `loki-aws-dev-chunks`> --region <S3 region your account is on, e.g. `eu-west-2`> --create-bucket-configuration LocationConstraint=<S3 region your account is on, e.g. `eu-west-2`> \
-
-aws s3api create-bucket --bucket  <YOUR RULER BUCKET NAME e.g. `loki-aws-dev-ruler`> --region <S3 REGION your account is on, e.g. `eu-west-2`> --create-bucket-configuration LocationConstraint=<S3 REGION your account is on, e.g. `eu-west-2`>
+aws s3api create-bucket --bucket loki-aws-dev-chunks-${ACCOUNT_ID} --region ${AWS_REGION} \
+  --create-bucket-configuration LocationConstraint=${AWS_REGION}
+aws s3api create-bucket --bucket loki-aws-dev-ruler-${ACCOUNT_ID} --region ${AWS_REGION} \
+  --create-bucket-configuration LocationConstraint=${AWS_REGION}
 ```
 
 #### 3. Defining IAM roles and policies ####
