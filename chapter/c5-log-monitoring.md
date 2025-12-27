@@ -11,18 +11,34 @@ Grafana Loki는 Grafana Labs에서 개발한 오픈소스 로그 집계 시스�
 ```
 addons:
   - name: aws-ebs-csi-driver             <----- csi 애드온 설치
+```
+
+```
+cat <<EOF > loki-ng.yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: training-on-eks   # 기존 클러스터 이름
+  region: ap-northeast-2  # 실제 사용 중인 리전
 
 managedNodeGroups:
-  - name: loki-workers
+  - name: loki-ng
     instanceType: m7i.2xlarge
     desiredCapacity: 3
     minSize: 2
     maxSize: 3
     amiFamily: AmazonLinux2023
-    iam:                                  <---- iam 생성.
+    iam:
       withAddonPolicies:
-        ebs: true
+        ebs: true         # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
+EOF
+
+eksctl create nodegroup -f loki-ng.yaml
 ```
+"ebs: true" 설정은 loki-ng 노드 그룹의 노드들에게 EBS 볼륨을 생성,삭제,연결(Attach),해제(Detach)할 수 있는 권한을 부여한다는 의미이다.  
+
+
 
 #### 2. S3 버킷생성 ####
 Before deploying Loki, you need to create two S3 buckets; one to store logs (chunks), the second to store alert rules. You can create the bucket using the AWS Management Console or the AWS CLI. The bucket name must be globally unique.
@@ -246,11 +262,12 @@ lokiCanary:
   enabled: false
 ```
 
-
 #### 7.Deploy Loki ####
 Now that you have created the values.yaml file, you can deploy Loki using the Helm chart.
 ```
-helm install --values values.yaml loki grafana/loki -n loki --create-namespace
+helm install --values values.yaml loki grafana/loki -n loki --create-namespace \
+    --set loki.nodeSelector."alpha\.eksctl\.io/nodegroup-name"=loki-workers
+
 kubectl get pods -n loki
 ```
 It is important to create a namespace called loki as our trust policy is set to allow the IAM role to be used by the loki service account in the loki namespace. This is configurable but make sure to update your service account
