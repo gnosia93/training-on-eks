@@ -34,7 +34,7 @@ prometheus-node-exporter:
     - --collector.ethtool.device-include=^rdma.*
 EOF
 
-helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring
+helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
     -f efa-tuning.yaml \
     --reuse-values             # 기존 설정에 추가
 ```
