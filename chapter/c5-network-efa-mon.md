@@ -1,7 +1,16 @@
 
 ### 1. Node Exporter 설정 (EFA 지표 수집) ###
-기본적으로 node_exporter는 CPU, 메모리 등을 수집하지만, EFA 지표를 가져오기 위해서는 ethtool 콜렉터가 활성화되어야 한다.
 
+Node Exporter 는 헬름으로 프로메테우스 스택을 설치하면 자동으로 설치가 된다. 기본적으로 CPU, 메모리 등을 수집하지만 EFA 지표를 가져오기 위해서는 ethtool 콜렉터가 활성화되어야 한다.
+```
+kubectl get pods -n monitoring -l "app.kubernetes.io/name=prometheus-node-exporter"
+```
+[결과]
+```
+NAME                                        READY   STATUS    RESTARTS   AGE
+prometheus-prometheus-node-exporter-5hgt4   1/1     Running   0          2d14h
+prometheus-prometheus-node-exporter-wf4w6   1/1     Running   0          2d14h
+```
 
 #### 프로메테우스 스택 기본 설정 ####
 스택 전체에 대한 기본 설정을 values.yaml 로 만든다. 여기에는 프로메테우스, 그라파나, alertManager 등의 모듈들의 기본 설정값이 들어 있다.  
