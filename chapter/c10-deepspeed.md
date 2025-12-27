@@ -1,8 +1,8 @@
 ## DeepSpeed Stage3 ##
-* https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.py
-* https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.json
 
-### 훈련 Config ###
+* Llama-3-8B - https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.py
+
+### [훈련 Config](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.json) ###
 * gradient_checkpointing=True
 역전파 시 필요한 중간 연산 결과를 저장하지 않고 다시 계산하여 메모리 사용량을 줄임(8B 이상의 모델에서는 필수)
 * bf16=True
@@ -16,6 +16,8 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 ```
 torchrun --nproc_per_node=8 train_large_model.py
 ```
+* 큐브 플로우 트레이너로 수정..
+* EFA / G 타입 인스턴스 / PCIe 
 
 ## 레퍼런스 ##
 * [Simple DeepSpeed](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed-simple.md)
