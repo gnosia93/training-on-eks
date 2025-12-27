@@ -42,7 +42,8 @@ $ aws ec2 describe-instance-types \
 export INSTANCE_TYPE=g6e.8xlarge              
 export AZ=${AWS_REGION}a                 
 export NODE_NUM=4
-export EFA_COUNT=8
+export GPU_NUM=1              # g6e.8xlarge 타입은 GPU 가 1장이다.
+export EFA_NUM=8
 
 cd ~/training-on-eks/samples/deepspeed
 kubectl apply -f trainjob.yaml
