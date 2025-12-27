@@ -13,12 +13,16 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 수십 GB의 모델을 한 GPU가 먼저 다 읽으려 하면 시작하자마자 OOM 발생함. AutoModel.from_config 사용하면 모델을 실제 메모리에 올리기 전에 구조만 파악하고, DeepSpeed가 각 GPU에 쪼개서 로드하도록 유도.
 
 ### 훈련 시작 ###
-```
-torchrun --nproc_per_node=8 train_large_model.py
-```
-* 큐브 플로우 트레이너로 수정..
+
 * EFA / G 타입 인스턴스 / PCIe 
 
+```
+export INSTANCE_TYPE=g6e.8xlarge              
+export AZ=ap-northeast-2                 
+export NODE_NUM=4                     
+
+```
+ 
 ## 레퍼런스 ##
 * [Simple DeepSpeed](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed-simple.md)
 
