@@ -53,8 +53,8 @@ CHUNK_BUCKET=$(aws s3api create-bucket --bucket loki-aws-dev-chunks-${ACCOUNT_ID
 RULER_BUCKET=$(aws s3api create-bucket --bucket loki-aws-dev-ruler-${ACCOUNT_ID} --region ${AWS_REGION} \
   --create-bucket-configuration LocationConstraint=${AWS_REGION} --query "Location" --output text)
 
-CHUNK_BUCKET=$(echo ${CHUNK_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
-RULER_BUCKET=$(echo ${RULER_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
+export CHUNK_BUCKET=$(echo ${CHUNK_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
+export RULER_BUCKET=$(echo ${RULER_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
 ```
 
 #### 3. IAM 역할 및 정책 ####
@@ -133,8 +133,11 @@ kubectl create secret generic canary-basic-auth \
   -n loki
 ```
 
-#### 6. Loki Helm chart configuration ####
+#### 6. Loki 헬름 차트 설정 ####
 ```
+export MY_OFFICE_IP="122.36.213.114/32"
+
+cat <<EOF > loki-values.yaml
 loki:
    schemaConfig:
      configs:
@@ -147,8 +150,8 @@ loki:
            period: 24h
    storage_config:
      aws:
-       region: <S3 BUCKET REGION> # for example, eu-west-2  
-       bucketnames: <CHUNK BUCKET NAME> # Your actual S3 bucket name, for example, loki-aws-dev-chunks
+       region: ${AWS_REGION}  
+       bucketnames: ${CHUNK_BUCKET}
        s3forcepathstyle: false
    ingester:
        chunk_encoding: snappy
@@ -157,7 +160,7 @@ loki:
    limits_config:
      allow_structured_metadata: true
      volume_enabled: true
-     retention_period: 672h # 28 days retention
+     retention_period: 672h             # 28 days retention
    compactor:
      retention_enabled: true 
      delete_request_store: s3
@@ -166,10 +169,10 @@ loki:
     storage:
       type: s3
       s3:
-        region: <S3 BUCKET REGION> # for example, eu-west-2
-        bucketnames: <RULER BUCKET NAME> # Your actual S3 bucket name, for example, loki-aws-dev-ruler
+        region: ${AWS_REGION}
+        bucketnames: ${RULER_BUCKET}
         s3forcepathstyle: false
-      alertmanager_url: http://prom:9093 # The URL of the Alertmanager to send alerts (Prometheus, Mimir, etc.)
+      alertmanager_url: http://prom:9093       # The URL of the Alertmanager to send alerts (Prometheus, Mimir, etc.)
 
    querier:
       max_concurrent: 4
@@ -177,18 +180,15 @@ loki:
    storage:
       type: s3
       bucketNames:
-        chunks: "<CHUNK BUCKET NAME>" # Your actual S3 bucket name (loki-aws-dev-chunks)
-        ruler: "<RULER BUCKET NAME>" # Your actual S3 bucket name (loki-aws-dev-ruler)
-        # admin: "<Insert s3 bucket name>" # Your actual S3 bucket name (loki-aws-dev-admin) - GEL customers only
+        chunks: "${CHUNK_BUCKET}" 
+        ruler: "${RULER_BUCKET}" 
       s3:
-        region: <S3 BUCKET REGION> # eu-west-2
-        #insecure: false
-      # s3forcepathstyle: false
+        region: ${AWS_REGION}
 
 serviceAccount:
  create: true
  annotations:
-   "eks.amazonaws.com/role-arn": "arn:aws:iam::<Account ID>:role/LokiServiceAccountRole" # The service role you created
+   "eks.amazonaws.com/role-arn": "arn:aws:iam::${ACCOUNT_ID}:role/LokiServiceAccountRole" 
 
 deploymentMode: Distributed
 
@@ -222,31 +222,19 @@ ruler:
  replicas: 1
  maxUnavailable: 1
 
-
 # This exposes the Loki gateway so it can be written to and queried externaly
 gateway:
  service:
    type: LoadBalancer
+   loadBalancerSourceRanges:
+      - ${MY_OFFICE_IP}                       # 내 아이피 로만 접근 가능
  basicAuth: 
      enabled: true
      existingSecret: loki-basic-auth
 
 # Since we are using basic auth, we need to pass the username and password to the canary
 lokiCanary:
-  extraArgs:
-    - -pass=$(LOKI_PASS)
-    - -user=$(LOKI_USER)
-  extraEnv:
-    - name: LOKI_PASS
-      valueFrom:
-        secretKeyRef:
-          name: canary-basic-auth
-          key: password
-    - name: LOKI_USER
-      valueFrom:
-        secretKeyRef:
-          name: canary-basic-auth
-          key: username
+  enabled: false
 
 # Enable minio for storage
 minio:
@@ -261,18 +249,13 @@ write:
 
 singleBinary:
  replicas: 0
+EOF
 ```
 
-* 로키 까나리 disable
-```
-lokiCanary:
-  enabled: false
-```
-
-#### 7.Deploy Loki ####
+#### 7. Loki 배포하기 ####
 Now that you have created the values.yaml file, you can deploy Loki using the Helm chart.
 ```
-helm install --values values.yaml loki grafana/loki -n loki --create-namespace \
+helm install --values loki-values.yaml loki grafana/loki -n loki --create-namespace \
     --set loki.nodeSelector."alpha\.eksctl\.io/nodegroup-name"=loki-workers
 
 kubectl get pods -n loki
