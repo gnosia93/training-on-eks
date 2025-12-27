@@ -7,7 +7,7 @@
 * [DeepSpeed Config](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b-stage3.json)
 * [TrainJob YAML](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/trainjob.yaml)  
 
-### 훈련 설정값 ###
+### 훈련 설정값 (DeepSpeed Config) ###
 * gradient_checkpointing=True
 역전파 시 필요한 중간 연산 결과를 저장하지 않고 다시 계산하여 메모리 사용량을 줄임(8B 이상의 모델에서는 필수)
 * bf16=True
