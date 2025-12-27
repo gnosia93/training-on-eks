@@ -139,47 +139,35 @@ export MY_OFFICE_IP="122.36.213.114/32"
 
 cat <<EOF > loki-values.yaml
 # 모든 컴포넌트에 공통으로 적용되는 설정
-global:
+common:
   nodeSelector:
-    eks.amazonaws.com/nodegroup: ng-loki
+    alpha.eksctl.io/nodegroup-name: ng-loki
 read:
-  nodeSelector:
-    eks.amazonaws.com/nodegroup: ng-loki
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 write:
-  nodeSelector:
-    eks.amazonaws.com/nodegroup: ng-loki
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 backend:
-  nodeSelector:
-    eks.amazonaws.com/nodegroup: ng-loki
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 gateway:
-  nodeSelector:
-    eks.amazonaws.com/nodegroup: ng-loki
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 chunksCache:
-  nodeSelector:
-    eks.amazonaws.com/nodegroup: ng-loki
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 resultsCache:
-  nodeSelector:
-    eks.amazonaws.com/nodegroup: ng-loki
-
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 distributor:
-  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 ingester:
-  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 queryFrontend:
-  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 queryScheduler:
-  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 indexGateway:
-  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 compactor:
-  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 ruler:
-  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
-
-
-
-
-
+  nodeSelector: { alpha.eksctl.io/nodegroup-name: ng-loki }
 
 
 loki:
