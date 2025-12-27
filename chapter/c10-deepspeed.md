@@ -1,6 +1,6 @@
 ## DeepSpeed Stage3 ##
 
-* Llama-3-8B - https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.py
+* [Llama-3-8B](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.py)
 
 ### [훈련 Config](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.json) ###
 * gradient_checkpointing=True
