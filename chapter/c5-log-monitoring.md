@@ -370,7 +370,7 @@ Alloy는 fluentBit 와 같은 로그 수집기로 "데이터를 어디서 읽어
 Loki를 타켓으로 설정하고 쿠버네티스 Pod를 탐색하도록 구성해야 한다. 
 
 ```
-cat <<EOF > alloy-values.yaml
+cat <<'EOF' > alloy-values.yaml
 alloy:
   configMap:
     create: true
@@ -440,7 +440,7 @@ alloy:
           source_labels = ["__meta_kubernetes_pod_container_id"]
           action = "replace"
           target_label = "container_runtime"
-          regex = '^(\\S+):\\/\\/.+$'
+          regex = "^(\\S+):\\/\\/.+$"
           replacement = "$1"
         }
       }
