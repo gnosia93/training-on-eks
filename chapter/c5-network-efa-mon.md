@@ -3,22 +3,31 @@
 기본적으로 node_exporter는 CPU, 메모리 등을 수집하지만, EFA 지표를 가져오기 위해서는 ethtool 콜렉터가 활성화되어야 합니다.
 
 
+#### 프로메테우스 스택 기본 설정 ####
+스택 전체에 대한 기본 설정을 values.yaml 로 만든다. 여기에는 프로메테우스, 그라파나, alertManager 등의 모듈들의 기본 설정값이 들어 있다.  
 ```
 helm show values prometheus/kube-prometheus-stack > values.yaml
 ```
 
-
-
-
-
-#### 헬름(Helm)으로 설치 시 설정 ####
-이미 Prometheus Stack을 사용 중이라면 values.yaml 파일에 아래 내용을 추가하여 업그레이드합니다.
+#### 프로메테우스 변경 내용 조회 ####
+프로메테우스에 대해서 사용자가 수정한 설정값을 보여준다. 
 ```
+helm get values prometheus -n monitoring > my-prometheus-values.yaml
+```
+
+#### efa 모니니터링 설정 ####
+efa 를 모니터링 하기위해서 collector.ethtool 를 추가한다. --reuse-values 옵션을 이용하여 기존 설정에 Update 한다. 이 옵션을 사용하지 않으면 기존에 설정했던 내용은 default 값으로 변경된다.         
+```
+cat <<EOF > efa-tuning.yaml
 prometheus-node-exporter:
   extraArgs:
-    - --collector.ethtool  # ethtool 콜렉터 활성화
-    # 특정 디바이스만 필터링하고 싶을 경우 아래 옵션 추가 (선택사항)
-    # - --collector.ethtool.device-include=^rdma.* 
+    - --collector.ethtool
+    - --collector.ethtool.device-include=^rdma.*
+EOF
+
+helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring
+    -f efa-tuning.yaml \
+    --reuse-values             # 기존 설정에 추가
 ```
 
 ```
