@@ -64,6 +64,7 @@ fi_info -p efa
 * 노드 모니터링
 * EFA 모니터링
 * 러스터 모니터링.
+* 훈련 로그 모니터링.
  
 ## 레퍼런스 ##
 * [Simple DeepSpeed](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed-simple.md)
