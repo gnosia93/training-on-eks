@@ -253,15 +253,12 @@ EOF
 ```
 
 #### 7. Loki 배포하기 ####
-Now that you have created the values.yaml file, you can deploy Loki using the Helm chart.
 ```
-helm install --values loki-values.yaml loki grafana/loki -n loki --create-namespace \
-    --set loki.nodeSelector."alpha\.eksctl\.io/nodegroup-name"=loki-workers
+helm install --values loki-values.yaml loki grafana/loki -n loki \
+    --set loki.nodeSelector."alpha\.eksctl\.io/nodegroup-name"=ng-loki
 
 kubectl get pods -n loki
 ```
-It is important to create a namespace called loki as our trust policy is set to allow the IAM role to be used by the loki service account in the loki namespace. This is configurable but make sure to update your service account
-
 
 ### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/collect/logs-in-kubernetes/) ###
 Alloy는 기본적으로 "어디서 읽고 어디로 보낼지"에 대한 Pipeline 설정이 필요하다. 노드 파일 시스템의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며,  
