@@ -445,11 +445,41 @@ alloy:
         }
       }
 
+      //loki.source.file "pod_logs" {
+      //  targets    = discovery.relabel.pod_logs.output
+      //  forward_to = [loki.process.pod_logs.receiver]
+      //}
+
+      //loki.process "pod_logs" {
+      //  stage.static_labels {
+      //     values = {
+      //        cluster = "training-on-eks",
+      //      }
+      //  }
+      //  forward_to = [loki.write.grafana_loki.receiver]
+      //}
+
+      // 필수: 로그를 실제로 보낼 Loki 주소 설정
+      // url 은 프로토콜(http)과 API 경로(/loki/api/v1/push) 추가 필요. 
+      //loki.write "grafana_loki" {
+      //  endpoint {
+      //    url = "loki-gateway.loki.svc.cluster.local"
+      //     url = "http://loki-gateway.loki.svc.cluster.local//loki/api/v1/push"
+      //  }
+      //}
+
+      // 2. 중요: 와일드카드 경로를 실제 파일 목록으로 확장
+      local.file_match "pod_logs" {
+        path_targets = discovery.relabel.pod_logs.output
+      }
+
+      // 3. 확장된 파일 타겟(targets)을 전달받아 읽기
       loki.source.file "pod_logs" {
-        targets    = discovery.relabel.pod_logs.output
+        targets    = local.file_match.pod_logs.targets // 수정됨: file_match의 output을 사용
         forward_to = [loki.process.pod_logs.receiver]
       }
 
+      // 4. 로그 프로세싱 (정적 레이블 추가)
       loki.process "pod_logs" {
         stage.static_labels {
             values = {
@@ -459,14 +489,13 @@ alloy:
         forward_to = [loki.write.grafana_loki.receiver]
       }
 
-      // 필수: 로그를 실제로 보낼 Loki 주소 설정
-      // url 은 프로토콜(http)과 API 경로(/loki/api/v1/push) 추가 필요. 
+      // 5. Loki로 전송
       loki.write "grafana_loki" {
         endpoint {
-      //    url = "loki-gateway.loki.svc.cluster.local"
-           url = "http://loki-gateway.loki.svc.cluster.local//loki/api/v1/push"
+           // URL 수정: 중복 슬래시 제거
+           url = "loki-gateway.loki.svc.cluster.local"
         }
-      }
+      } 
 
 # 필수: 노드의 로그 파일(/var/log/pods)에 접근하기 위한 설정
 controller:
