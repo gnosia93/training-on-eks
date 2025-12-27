@@ -14,19 +14,14 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 
 ### 훈련 시작 ###
 
-* EFA / G 타입 인스턴스 / PCIe 
 ```
 export CLUSTER_NAME="training-on-eks"
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
-
-export INSTANCE_TYPE=g6e.8xlarge              
-export AZ=${AWS_REGION}a                 
-export NODE_NUM=4                     
+export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)              
 ```
 
-* g6e.8xlarge EFA 사양
+#### g6e.8xlarge EFA 사양 ####
 ```
 $ aws ec2 describe-instance-types \
     --instance-types g6e.8xlarge \
@@ -43,8 +38,12 @@ $ aws ec2 describe-instance-types \
 +--------------+---------------+------------------------+----------------------+
 ```
 
-
 ```
+export INSTANCE_TYPE=g6e.8xlarge              
+export AZ=${AWS_REGION}a                 
+export NODE_NUM=4
+export 
+
 cd ~/training-on-eks/samples/deepspeed
 kubectl apply -f trainjob.yaml
 kubectl exec -it llama-3-8b -- /bin/bash
