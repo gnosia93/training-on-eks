@@ -7,12 +7,7 @@ Grafana Loki는 Grafana Labs에서 개발한 오픈소스 로그 집계 시스�
 * 높은 효율성과 가성비: S3와 같은 객체 스토리지 연동으로 대용량 학습 로그를 저렴하게 보관하며, 인덱싱 최적화를 통해 전문 검색 엔진 대비 리소스를 적게 사용하면서도 현대적인 분석 환경을 제공.
   
 ### [Log Backend(Loki) 설치](https://grafana.com/docs/loki/latest/setup/install/helm/deployment-guides/aws/) ###
-#### 1. cluster.yaml 변경 ####
-```
-addons:
-  - name: aws-ebs-csi-driver             <----- csi 애드온 설치
-```
-
+#### loki-ng 노드그룹 추가 ####
 ```
 cat <<EOF > loki-ng.yaml
 apiVersion: eksctl.io/v1alpha5
