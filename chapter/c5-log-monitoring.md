@@ -491,11 +491,7 @@ helm install alloy grafana/alloy --namespace alloy --create-namespace -f alloy-v
 
 Pod 의 로그가 제대로 수집되어 있는지 확인한다. 
 ```
-# Alloy 팟 이름 확인
-kubectl get pods -n alloy
-
-# Alloy 로그 실시간 확인
-kubectl logs -f -n alloy <alloy-pod-이름>
+kubectl logs -f -n alloy -l app.kubernetes.io/name=alloy
 ```
 
 ### [Grafana Dashboard 설정]() ###
