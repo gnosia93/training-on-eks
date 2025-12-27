@@ -53,7 +53,7 @@ spec:
       limits:
         nvidia.com/gpu: "1"
         vpc.amazonaws.com/efa: "1"                      
-      securityContext:
-        capabilities:                                   # EFA 통신을 위해 메모리 잠금 권한 필요
-          add: ["IPC_LOCK"]  
-EOF
+    securityContext:
+      capabilities:                                   # EFA 통신을 위해 메모리 잠금 권한 필요
+        add: ["IPC_LOCK"]  
+
