@@ -44,7 +44,7 @@ kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifest
 ### 갱 스케줄링 ###
 * 이 예제는 갱 스케줄링 지원하지 않는다. 즉 카펜터에서 GPU 노드를 프러비저닝 하는 즉시 파드가 스케줄링 된다.  
 
-### 체크포인팅 ###
+### 체크 포인팅 ###
 체크포인트를 병렬 분산 파일 시스템인 러스터에 저장할 예정이다. 러스터 파일 시스템을 설치하지 않은 경우 [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-lustre-eks.md)를 참조해서 러스터를 설치한다.   
 
 ### 훈련 시작 ###
