@@ -122,6 +122,8 @@ kubectl create namespace loki
 
 #### 5. Loki 인증 설정 #### 
 ```
+sudo dnf install httpd-tools -y
+
 htpasswd -c .htpasswd loki
 kubectl create secret generic loki-basic-auth --from-file=.htpasswd -n loki
 
