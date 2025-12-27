@@ -161,6 +161,27 @@ resultsCache:
   nodeSelector:
     eks.amazonaws.com/nodegroup: ng-loki
 
+distributor:
+  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+ingester:
+  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+queryFrontend:
+  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+queryScheduler:
+  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+indexGateway:
+  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+compactor:
+  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+ruler:
+  nodeSelector: { eks.amazonaws.com/nodegroup: ng-loki }
+
+
+
+
+
+
+
 loki:
    schemaConfig:
      configs:
