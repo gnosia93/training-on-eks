@@ -108,10 +108,10 @@ sudo dnf install httpd-tools -y
 htpasswd -c .htpasswd loki
 kubectl create secret generic loki-basic-auth --from-file=.htpasswd -n loki
 
-kubectl create secret generic canary-basic-auth \
-  --from-literal=username=loki \
-  --from-literal=password=loki-wow! \
-  -n loki
+#kubectl create secret generic canary-basic-auth \
+#  --from-literal=username=loki \
+#  --from-literal=password=loki-wow! \
+#  -n loki
 ```
 
 #### 5. Loki 헬름 차트 설정 ####
