@@ -366,15 +366,15 @@ loki-ruler-0                            1/1     Running   0          54s
 
 
 ### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/collect/logs-in-kubernetes/) ###
-Alloy는 기본적으로 "어디서 읽고 어디로 보낼지"에 대한 Pipeline 설정이 필요하다. 노드 파일 시스템의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며,  
-Loki를 목적지를 설정하고 쿠버네티스 Pod를 탐색하도록 구성해야 한다. 
+Alloy는 fluentBit 와 같은 로그 수집기로 "데이터를 어디서 읽어서 어디로 보낼지"에 대한 파이프라인 설정을 해야 한다. 노드의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며,  
+Loki를 타켓으로 설정하고 쿠버네티스 Pod를 탐색하도록 구성해야 한다. 
 
-[alloy-values.yaml]
 ```
+cat <<EOF > alloy-values.yaml
 alloy:
   configMap:
     create: true
-    # 여기에 제시하신 .alloy 설정 내용을 넣습니다.
+    # 여기에 제시하신 .alloy 설정 내용을 넣는다.
     content: |
       discovery.kubernetes "pod" {
         role = "pod"
@@ -480,12 +480,12 @@ extraVolumeMounts:
   - name: varlog
     mountPath: /var/log
     readOnly: true
+EOF
 ```
-Alloy 문법: discovery → source → process → write로 이어지는 파이프라인 흐름(receiver 및 output 참조)이 정확합니다
+Alloy 설정은 discovery → source → process → write로 이어지는 파이프라인 흐름(receiver 및 output 참조)이다.
 
 ```
-helm install alloy grafana/alloy --namespace alloy --create-namespace \
-  -f alloy-values.yaml
+helm install alloy grafana/alloy --namespace alloy --create-namespace -f alloy-values.yaml
 ```
 
 Pod 의 로그가 제대로 수집되어 있는지 확인한다. 
