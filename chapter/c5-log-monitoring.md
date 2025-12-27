@@ -47,16 +47,18 @@ eksctl create nodegroup -f ng-loki.yaml
 Loki를 배포하기 전에 두 개의 S3 버킷을 생성해야 한다. 첫 번째는 로그 데이터(Chunks)를 저장하기 위한 것이고, 두 번째는 알람 규칙(Alert Rules)을 저장하기 위한 것이다.
 Loki는 로그 정보를 인덱스와 실제 데이터(Chunks)로 나누어 저장하는데, 로컬 디스크(EBS) 대신 S3를 주 저장소로 사용함으로써 비용을 절감하고 공간을 무제한으로 사용할 수 있게 된다. 
 ```
-aws s3api create-bucket --bucket loki-aws-dev-chunks-${ACCOUNT_ID} --region ${AWS_REGION} \
-  --create-bucket-configuration LocationConstraint=${AWS_REGION}
-aws s3api create-bucket --bucket loki-aws-dev-ruler-${ACCOUNT_ID} --region ${AWS_REGION} \
-  --create-bucket-configuration LocationConstraint=${AWS_REGION}
+CHUNK_BUCKET=$(aws s3api create-bucket --bucket loki-aws-dev-chunks-${ACCOUNT_ID} --region ${AWS_REGION} \
+  --create-bucket-configuration LocationConstraint=${AWS_REGION} --query "Location" --output text)
+RULER_BUCKET=$(aws s3api create-bucket --bucket loki-aws-dev-ruler-${ACCOUNT_ID} --region ${AWS_REGION} \
+  --create-bucket-configuration LocationConstraint=${AWS_REGION} --query "Location" --output text)
+
+CHUNK_BUCKET=$(echo ${CHUNK_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
+RULER_BUCKET=$(echo ${RULER_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
 ```
 
-#### 3. Defining IAM roles and policies ####
-The recommended method for connecting Loki to AWS S3 is to use an IAM role. 
-[loki-s3-policy.json]
+#### 3. IAM 역할 및 정책 ####
 ```
+cat <<EOF > loki-s3-policy.json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -70,17 +72,16 @@ The recommended method for connecting Loki to AWS S3 is to use an IAM role.
                 "s3:DeleteObject"
             ],
             "Resource": [
-                "arn:aws:s3:::< CHUNK BUCKET NAME >",
-                "arn:aws:s3:::< CHUNK BUCKET NAME >/*",
-                "arn:aws:s3:::< RULER BUCKET NAME >",
-                "arn:aws:s3:::< RULER BUCKET NAME >/*"
+                "arn:aws:s3:::${CHUNK_BUCKET}",
+                "arn:aws:s3:::${CHUNK_BUCKET}/*",
+                "arn:aws:s3:::${RULER_BUCKET}",
+                "arn:aws:s3:::${RULER_BUCKET}/*"
             ]
         }
     ]
 }
-```
+EOF
 
-```
 aws iam create-policy --policy-name LokiS3AccessPolicy --policy-document file://loki-s3-policy.json
 ```
 
