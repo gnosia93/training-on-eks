@@ -112,7 +112,7 @@ aws iam create-role --role-name LokiServiceAccountRole --assume-role-policy-docu
 aws iam attach-role-policy --role-name LokiServiceAccountRole --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/LokiS3AccessPolicy
 ```
 
-#### 4. Deploying the Helm chart ####
+#### 4. lock 네임스페이스 생성 ####
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -120,15 +120,14 @@ helm repo update
 kubectl create namespace loki
 ```
 
-#### 5. Loki Basic Authentication ####
-Loki by default does not come with any authentication. Since we will be deploying Loki to AWS and exposing the gateway to the internet, we recommend adding at least basic authentication. In this guide we will give Loki a username and password
+#### 5. Loki 인증 설정 #### 
 ```
-htpasswd -c .htpasswd <username>
+htpasswd -c .htpasswd loki
 kubectl create secret generic loki-basic-auth --from-file=.htpasswd -n loki
 
 kubectl create secret generic canary-basic-auth \
-  --from-literal=username=<USERNAME> \
-  --from-literal=password=<PASSWORD> \
+  --from-literal=username=loki \
+  --from-literal=password=loki-wow! \
   -n loki
 ```
 
