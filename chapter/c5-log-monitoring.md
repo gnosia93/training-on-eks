@@ -107,11 +107,9 @@ cat <<EOF > trust-policy.json
     ]
 }
 EOF
-```
 
-```
 aws iam create-role --role-name LokiServiceAccountRole --assume-role-policy-document file://trust-policy.json
-aws iam attach-role-policy --role-name LokiServiceAccountRole --policy-arn arn:aws:iam::<Account ID>:policy/LokiS3AccessPolicy
+aws iam attach-role-policy --role-name LokiServiceAccountRole --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/LokiS3AccessPolicy
 ```
 
 #### 4. Deploying the Helm chart ####
