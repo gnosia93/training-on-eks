@@ -32,7 +32,7 @@
 
 * [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-lustre-eks.md)
 
-* [c10. DeepSpeed](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed.md)
+* [c10. DeepSpeed 테스트](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed.md)
    
 ## 레퍼런스 ## 
 
