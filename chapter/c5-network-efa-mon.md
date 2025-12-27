@@ -13,19 +13,19 @@ prometheus-prometheus-node-exporter-wf4w6   1/1     Running   0          2d14h
 ```
 
 #### 프로메테우스 스택 기본 설정 ####
-스택 전체에 대한 기본 설정을 values.yaml 로 만든다. 여기에는 프로메테우스, 그라파나, alertManager 등의 모듈들의 기본 설정값이 들어 있다.  
+헬름은 차트가 제공하는 기본 설정값을 조회하는 기능을 제공해 준다. 여기서는 프로메테우스 스택이 제공하는 프로메테우스, 그라파나, alertManager 등의 모든 모듈들의 기본 설정값을 values.yaml 파일에 저정하고 있다.    
 ```
 helm show values prometheus/kube-prometheus-stack > values.yaml
 ```
 
 #### 프로메테우스 변경 내용 조회 ####
-프로메테우스에 대해서 사용자가 수정한 설정값을 보여준다. 
+프로메테우스 모듈에 대해서 사용자가 수정한 설정값만을 보여준다. 
 ```
 helm get values prometheus -n monitoring > my-prometheus-values.yaml
 ```
 
 #### efa 모니니터링 설정 ####
-efa 를 모니터링 하기위해서 collector.ethtool 를 추가한다. --reuse-values 옵션을 이용하여 기존 설정에 Update 한다. 이 옵션을 사용하지 않으면 기존에 설정했던 내용은 default 값으로 변경된다.         
+efa 네트워크 인터페이스를 모니터링 하기위해서 collector.ethtool를 추가해야 한다. --reuse-values 옵션을 이용하여 기존 설정에 추가하도록 한다. 이 옵션을 사용하지 않으면 기존에 설정했던 내용은 default 값으로 변경된다.         
 ```
 cat <<EOF > efa-tuning.yaml
 prometheus-node-exporter:
@@ -38,11 +38,7 @@ helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring
     -f efa-tuning.yaml \
     --reuse-values             # 기존 설정에 추가
 ```
-
-```
-helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f values.yaml
-```
-EFA는 리눅스 커널에서 네트워크 인터페이스로 인식됩니다. node_exporter의 ethtool 콜렉터는 노드의 /sys/class/net/ 경로에 있는 통계 정보를 읽어 node_net_ethtool 형태의 메트릭으로 변환합니다.
+node_exporter의 ethtool 콜렉터는 노드의 /sys/class/net/ 경로에 있는 통계 정보를 읽어 node_net_ethtool 형태의 메트릭으로 변환한다.
 
 ### 2. 수집되는 주요 EFA 메트릭 ###
 정상적으로 설정되면 Prometheus에서 다음과 같은 쿼리로 EFA 지표를 확인할 수 있습니다.
