@@ -114,3 +114,21 @@ pyyaml
 pip install -r requirements.txt
 torchrun --nproc_per_node=2 train.py --deepspeed --deepspeed_config ds_config.json
 ```
+
+### 통신 버퍼 ###
+DeepSpeed에서 이 메모리 공간을 부르는 공식 명칭은 통신 버퍼(Communication Buffer) 또는 파라미터 버퍼(Parameter Buffer)입니다.
+설정 파일(ds_config.json)의 옵션 명칭에 따라 실무에서는 보통 다음과 같이 구분해서 부릅니다:
+
+* All-Gather 버퍼 (All-Gather Buffer):
+allgather_bucket_size 설정과 관련된 버퍼입니다.
+순전파(Forward)와 역전파(Backward) 과정에서 다른 GPU로부터 모델 조각(Shard)들을 모아와서 온전한 파라미터로 복원할 때 사용하는 공간입니다.
+
+* 리듀스 버퍼 (Reduce Buffer):
+reduce_bucket_size 설정과 관련된 버퍼입니다.
+역전파 과정에서 계산된 기울기(Gradient)를 다시 쪼개고 다른 GPU들과 합칠(Reduce) 때 사용하는 공간입니다.
+
+* 플랫 버퍼 (Flat Buffer):
+DeepSpeed가 여러 개의 작은 파라미터들을 통신 효율을 위해 하나의 커다란 연속된 메모리 덩어리로 묶어두는데, 이를 플랫 버퍼라고 부르기도 합니다.
+```
+
+
