@@ -31,6 +31,8 @@
    - [훈련 자동 복구/재실행](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-trainjob.md) 
 
 * [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-lustre-eks.md)
+
+* [c10. All For One](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-all-for-one.md)
    
 ## 레퍼런스 ## 
 
