@@ -15,14 +15,14 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 ### 훈련 시작 ###
 
 * EFA / G 타입 인스턴스 / PCIe 
-
 ```
 export INSTANCE_TYPE=g6e.8xlarge              
 export AZ=ap-northeast-2                 
 export NODE_NUM=4                     
 
-kubectl apply -f efa-test-pod.yaml
-kubectl exec -it efa-test-pod -- /bin/bash
+cd ~/training-on-eks/samples/deepspeed
+kubectl apply -f trainjob.yaml
+kubectl exec -it llama-3-8b -- /bin/bash
 fi_info -p efa
 ```
  
