@@ -29,6 +29,18 @@ $ aws ec2 describe-instance-types \
 +--------------+---------------+------------------------+----------------------+
 ```
 
+### 큐브플로우 Trainer 설치 ###
+```
+sudo dnf install git -y
+
+export VERSION=v2.1.0
+kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=${VERSION}"
+kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
+
+kubectl get pods -n kubeflow-system
+kubectl get clustertrainingruntimes
+```
+
 ### 훈련 시작 ###
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
