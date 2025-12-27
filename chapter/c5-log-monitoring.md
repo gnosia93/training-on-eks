@@ -256,12 +256,12 @@ EOF
 
 #### 7. Loki 배포하기 ####
 ```
-helm install --values loki-values.yaml loki grafana/loki -n loki \
-    --set loki.nodeSelector."alpha\.eksctl\.io/nodegroup-name"=ng-loki
+helm install loki grafana/loki -n loki \
+    --values loki-values.yaml \
+    --set common.nodeSelector."alpha\.eksctl\.io/nodegroup-name"=ng-loki
 
 kubectl get pods -n loki
 ```
-
 [결과]
 ```
 NAME: loki
