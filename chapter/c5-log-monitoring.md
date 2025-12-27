@@ -33,6 +33,13 @@ export RULER_BUCKET=$(echo ${RULER_BUCKET} | cut -d'/' -f3 | cut -d'.' -f1)
 
 #### 2. IAM 역할 및 정책 ####
 ```
+aws iam detach-role-policy --role-name LokiServiceAccountRole --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/LokiS3AccessPolicy 2>/dev/null
+aws iam delete-role --role-name LokiServiceAccountRole 2>/dev/null
+aws iam delete-policy --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/LokiS3AccessPolicy 2>/dev/null
+```
+
+
+```
 cat <<EOF > loki-s3-policy.json
 {
     "Version": "2012-10-17",
