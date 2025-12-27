@@ -108,7 +108,7 @@
 
 ### 1. 세대별 코어 개수 상세 비교 ###
 엔비디아 GPU는 일반 연산을 담당하는 CUDA 코어와 AI 연산에 특화된 텐서 코어로 구성됩니다. (데이터 센터용 모델에는 레이 트레이싱을 위한 RT 코어가 탑재되지 않거나 비활성화되는 경우가 많습니다.)
-
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-core.png)
 
 ### 2. 각 코어의 역할 차이 ###
 #### CUDA 코어 (일반 연산): ####
