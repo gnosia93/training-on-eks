@@ -20,9 +20,9 @@ metadata:
 managedNodeGroups:
   - name: loki-ng
     instanceType: m7i.2xlarge
-    desiredCapacity: 3
+    desiredCapacity: 2
     minSize: 2
-    maxSize: 3
+    maxSize: 2
     amiFamily: AmazonLinux2023
     iam:
       withAddonPolicies:
