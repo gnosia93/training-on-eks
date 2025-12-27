@@ -52,3 +52,6 @@
 * 모델 추론(Inference): FP8 및 FP4 성능이 압도적인 B200이 가장 효율적입니다.
 
 더 구체적인 벤치마크나 특정 모델 간의 상세 비교가 필요하시면 말씀해 주세요. 관련 기술 문서는 NVIDIA Data Center 솔루션 페이지에서 확인할 수 있습니다.
+
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gpu-gen-perf.png)
+
