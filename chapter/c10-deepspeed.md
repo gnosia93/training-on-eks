@@ -79,11 +79,12 @@ spec:
 ### 훈련 시작 ###
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
-export INSTANCE_TYPE=g6e.8xlarge           # 훈련 인스턴스 타입   
+export INSTANCE_TYPE=g6e.8xlarge               # 훈련 인스턴스 타입   
 export AZ=${AWS_REGION}a                 
-export NODE_NUM=4                          # 4대 
-export GPU_PER_NODE=1                      # g6e.8xlarge 타입은 GPU 가 1장이다.
-export EFA_PER_NODE=8                      # 200Gbp 사용
+export NODE_NUM=4                              # 4대 
+export GPU_PER_NODE=1                          # g6e.8xlarge 타입은 GPU 가 1장이다.
+export EFA_PER_NODE=8                          # 200Gbp 사용
+export HF_TOKEN="<your huggingface token>"     # Llama-3 모델은 HF 인증이 필요.
 
 cd ~/training-on-eks/samples/deepspeed
 envsubst < trainjob.yaml | kubectl apply -f -            # envsubst 는 trainjob.yaml 파일 내부의 환경변수를 실제 값으로 치환해 준다.
