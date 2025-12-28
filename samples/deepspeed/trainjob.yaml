@@ -39,6 +39,7 @@ spec:
     numProcPerNode: auto                      # 노드별 프로세스 갯수                                                                               
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
 
+    # 이전 설정: --nproc_per_node=1 (동적 설정을 위해 gpu로 변경함)
     command:
       - /bin/bash
       - -c
@@ -52,7 +53,7 @@ spec:
         echo "Master Address: ${PET_MASTER_ADDR}" && \
         echo "Master Port: ${PET_MASTER_PORT}" && \
         torchrun \
-          --nproc_per_node=1 \
+          --nproc_per_node=gpu \
           --rdzv_id=llama-3-8b-job \
           --rdzv_backend=c10d \
           --rdzv_endpoint=${PET_MASTER_ADDR}:${PET_MASTER_PORT} \
