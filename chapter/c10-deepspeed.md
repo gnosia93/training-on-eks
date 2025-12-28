@@ -86,6 +86,11 @@ kubectl exec -it llama-3-8b -- /bin/bash
 fi_info -p efa
 ```
 
+카펜터 노드 확인
+```
+kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
+```
+
 * 러스터에 저장하도록 코드를 수정해야 한다..
 
 ### 훈련 모니터링 ###
