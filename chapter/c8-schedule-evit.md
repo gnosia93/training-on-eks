@@ -1,5 +1,8 @@
 ## 노드 주요 레이블 ##
 ```
+feature.node.kubernetes.io/pci-10de.present=true                           # HW - NVIDIA
+feature.node.kubernetes.io/pci-1d0f.present=true                           # HW - EFA
+feature.node.kubernetes.io/rdma.available=true                             # HW - RDMA 기능 탑재  
 node.kubernetes.io/instance-type=p4d.24xlarge
 topology.ebs.csi.aws.com/zone=ap-northeast-2b
 topology.k8s.aws/network-node-layer-1=nn-c79422f4e61deb9ca                 # TOR 스위치
@@ -19,11 +22,10 @@ System Info:
 ```
 
 ### 리눅스 OS 에서 제공하는 ID (Node 식별용) ###
+
 * /etc/machine-id: 운영체제 설치 시 생성되는 OS 레벨의 고유 ID입니다. 시스템 전체에서 가장 흔하게 '시스템 ID'로 사용됩니다.
 * /sys/class/dmi/id/product_uuid: 하드웨어(BIOS)에서 제공하는 System UUID입니다. 가상 머신이나 물리 서버 자체를 식별할 때 가장 정확합니다.
 * /proc/sys/kernel/random/boot_id: 부팅할 때마다 새로 생성되는 ID입니다. 시스템이 재부팅되었는지 여부를 확인하는 용도로 유용합니다.
-
-
 
 ## 노드 배제 ##
 
