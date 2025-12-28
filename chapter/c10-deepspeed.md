@@ -53,11 +53,11 @@ kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifest
 ### 훈련 시작 ###
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
-export INSTANCE_TYPE=g6e.8xlarge              
+export INSTANCE_TYPE=g6e.8xlarge           # 훈련 인스턴스 타입   
 export AZ=${AWS_REGION}a                 
-export NODE_NUM=4                     # g6e.8xlarge 4대 
-export GPU_NUM=1                      # g6e.8xlarge 타입은 GPU 가 1장이다.
-export EFA_NUM=8                      # 200Gbp 사용
+export NODE_NUM=4                          # 4대 
+export GPU_PER_NODE=1                      # g6e.8xlarge 타입은 GPU 가 1장이다.
+export EFA_PER_NODE=8                      # 200Gbp 사용
 
 cd ~/training-on-eks/samples/deepspeed
 kubectl apply -f trainjob.yaml
