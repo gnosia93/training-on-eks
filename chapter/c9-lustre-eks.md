@@ -391,6 +391,8 @@ else
     echo "삭제할 보안 그룹(fsx-lustre-sg)이 존재하지 않습니다."
 fi
 
+echo "CSI driver 삭제 ..."
+helm uninstall fsx-csi-driver -n fsx-csi
 
 echo "=== 모든 리소스 삭제 요청 완료 ==="
 ```
