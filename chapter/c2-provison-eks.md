@@ -305,8 +305,8 @@ eksctl delete cluster -f cluster.yaml
 ## 레퍼런스 ##
 
 * [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
-* [eksctl EKS 설치 예제](https://www.kubeai.org/installation/eks/)
 * [Enable an IAM User or IAM Role to access an EKS cluster](https://www.javierinthecloud.com/enable-an-iam-user-or-iam-role-to-access-an-eks-cluster/)
+* [AI/ML 워크로드용 Amazon EKS 클러스터 구성](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/ml-cluster-configuration.html)
 
 
 
