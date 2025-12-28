@@ -119,7 +119,7 @@ export EFA_PER_NODE=8                          # 200Gbp 사용
 export HF_TOKEN="<your huggingface token>"     # Llama-3 모델은 HF 인증이 필요.
 
 cd ~/training-on-eks/samples/deepspeed
-envsubst < trainjob.yaml | kubectl apply -f -            # envsubst 는 trainjob.yaml 파일 내부의 환경변수를 실제 값으로 치환해 준다.
+envsubst '$INSTANCE_TYPE $NODE_NUM $GPU_PER_NODE $EFA_PER_NODE $HF_TOKEN' < trainjob.yaml | kubectl apply -f - 
 ```
 
 훈련 작업에 참여하는 파드 리스트를 조회한다. 
