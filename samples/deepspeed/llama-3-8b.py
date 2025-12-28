@@ -12,6 +12,9 @@ transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
 
 def main():
+    # 시작 시간 기록
+    start_time = time.time()
+
     # 1. 모델 및 토크나이저 설정 (Llama-3-8B 예시)
     model_name = "meta-llama/Meta-Llama-3-8B"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -67,6 +70,18 @@ def main():
     )
     
     trainer.train()
+    
+    # 종료 시간 기록 및 소요 시간 계산
+    end_time = time.time()
+    total_seconds = end_time - start_time
+    readable_time = str(timedelta(seconds=int(total_seconds)))
+
+    # 메인 프로세스(Rank 0)에서만 결과 출력
+    if trainer.is_world_process_zero():
+        print(f"\n" + "="*30)
+        print(f"Total Training Time: {readable_time} (HH:MM:SS)")
+        print(f"Total Seconds: {total_seconds:.2f}s")
+        print("="*30 + "\n")
 
     # 6. 학습 종료 후 최종 모델 및 토크나이저 저장
     # 마스터 노드(Rank 0)에서만 실행하여 파일 중복 쓰기 방지
@@ -84,4 +99,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
