@@ -64,6 +64,10 @@ spec:
               add: ["IPC_LOCK"]
 ```
 
+* trainjob 명령어
+  * 잡 확인 - kubectl get trainjob                       
+  * 잡 삭제 - kubectl delete trainjob llama-3-8b        
+
 ### 갱 스케줄링 ###
 이 예제에서는 갱 스케줄링 기능을 활성화 하지 않는다. 즉 카펜터에서 GPU 노드를 프러비저닝 하는 즉시 파드가 스케줄링 된다.  
 
@@ -83,13 +87,10 @@ cd ~/training-on-eks/samples/deepspeed
 envsubst < trainjob.yaml | kubectl apply -f -            # envsubst 는 trainjob.yaml 파일 내부의 환경변수를 실제 값으로 치환해 준다.
 ```
 
-* 훈련잡 확인
+#### trainjob 명령어 #### 
 ```
-kubectl get trainjob
-```
-* 훈련잡 삭제
-```
-kubectl delete trainjob llama-3-8b
+kubectl get trainjob                       # 잡 확인
+kubectl delete trainjob llama-3-8b         # 잡 삭제
 ```
 
 ```
