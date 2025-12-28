@@ -22,7 +22,7 @@ export PRIV_SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$
         --query "Subnets[0].SubnetId" --output text)
 export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
 export FSX_SG="fsx-lustre-sg"
-
+export FSX_S3Policy="FSxLustreS3Policy"
 
 # S3 버킷 생성
 aws s3 mb s3://${BUCKET_NAME} --region ${AWS_REGION}           
@@ -102,7 +102,7 @@ cat <<EOF > s3-policy.json
 }
 EOF
 
-S3_POLICY_ARN=$(aws iam create-policy --policy-name FSxLustreS3Policy --policy-document file://s3-policy.json --query Policy.Arn --output text)
+S3_POLICY_ARN=$(aws iam create-policy --policy-name ${FSX_S3Policy} --policy-document file://s3-policy.json --query Policy.Arn --output text)
 aws iam attach-role-policy --role-name "FSxLustreRole" --policy-arn $S3_POLICY_ARN
 ```
 
