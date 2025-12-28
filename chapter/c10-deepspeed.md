@@ -27,13 +27,13 @@ $ aws ec2 describe-instance-types \
         MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, \
         MaxEfaInterfaces:NetworkInfo.EfaInfo.MaximumEfaInterfaces, \
         NetworkPerformance:NetworkInfo.NetworkPerformance}" --output table
---------------------------------------------------------------------------------
-|                             DescribeInstanceTypes                            |
-+--------------+---------------+------------------------+----------------------+
-| EfaSupported | InstanceType  | MaxNetworkInterfaces   | NetworkPerformance   |
-+--------------+---------------+------------------------+----------------------+
-|  True        |  g6e.8xlarge  |  8                     |  25 Gigabit          |
-+--------------+---------------+------------------------+----------------------+
+----------------------------------------------------------------------------------------------------
+|                                       DescribeInstanceTypes                                      |
++--------------+---------------+-------------------+------------------------+----------------------+
+| EfaSupported | InstanceType  | MaxEfaInterfaces  | MaxNetworkInterfaces   | NetworkPerformance   |
++--------------+---------------+-------------------+------------------------+----------------------+
+|  True        |  g6e.8xlarge  |  1                |  8                     |  25 Gigabit          |
++--------------+---------------+-------------------+------------------------+----------------------+
 ```
 
 ### 카펜터 노드풀 및 디바이스 플러그인 설치 ###
