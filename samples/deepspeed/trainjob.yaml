@@ -47,11 +47,11 @@ spec:
         cd /workspace/code/samples/deepspeed
         huggingface-cli login --token "${HF_TOKEN}"
         echo "=== Launching Distributed Training ==="
-        echo "Master Address: ${PET_MASTER_ADDR}"
-        echo "Master Port: ${PET_MASTER_PORT}"
-        echo "=================================="
         pip install -r requirements.txt && \
         echo "pip 설치 완료, 학습을 시작합니다..." && \
+        echo "Master Address: ${PET_MASTER_ADDR}" \
+        echo "Master Port: ${PET_MASTER_PORT}" \
+        export PET_MASTER_ADDR=llama-3-8b \
         torchrun \
           --nproc_per_node=1 \
           --rdzv_id=llama-3-8b-job \
