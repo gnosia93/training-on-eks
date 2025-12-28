@@ -109,7 +109,7 @@ spec:
 체크포인트를 병렬 분산 파일 시스템인 러스터에 저장할 예정이다. 러스터가 없는 경우 [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-lustre-eks.md)를 참조해서 러스터를 설치한다.   
 
 ### 훈련 시작 ###
-envsubst 유틸리티를 사용하여 환경변수 값을 선택적으로 치환해 준다 (파리미터로 나열된 환경변수만 치환)
+envsubst 는 파리미터로 나열된 환경변수만 치환해 준다. 
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
 export INSTANCE_TYPE=g6e.8xlarge               # 훈련 인스턴스 타입   
