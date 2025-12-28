@@ -190,8 +190,8 @@ ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  
 fs-0159be19ce80d8e03  AVAILABLE  1200         Default    Variable    knwe5bev   SCRATCH_2
 ```
 
-
-### 7. PV/PVC 배포 ###
+## EKS 연결하기 ##
+### 1. PV/PVC 배포 ###
 ```
 FSx_DNS=$(aws fsx describe-file-systems --file-system-ids ${FSx_ID} --query "FileSystems[0].{DNSName:DNSName}" --output text)
 FSx_MOUNT=$(aws fsx describe-file-systems --file-system-ids ${FSx_ID} --query "FileSystems[0].{MountName:LustreConfiguration.MountName}" --output text)
@@ -242,17 +242,7 @@ EOF
 kubectl apply -f fsx-pvc.yaml
 ```
 
-
-
-
-
-
-
-
-
-
-
-## Pod 마운트 테스트 ##
+### 2. Pod 마운트 테스트 ###
 ```
 cat <<EOF > pod-fsx.yaml
 apiVersion: v1
@@ -404,6 +394,9 @@ fi
 
 echo "CSI driver 삭제 ..."
 helm uninstall fsx-csi-driver -n fsx-csi
+echo "k8s PV/PVC 삭제 ..."
+kubectl delete pvc fsx-pvc
+kubectl delete pv fsx-pv
 
 echo "=== 모든 리소스 삭제 요청 완료 ==="
 ```
