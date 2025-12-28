@@ -25,7 +25,7 @@ def main():
     
     # 2. 아주 큰 모델을 초기화할 때 메모리 효율을 위해 'meta' 장치 사용
     # ZeRO-3는 이 설정을 통해 모델을 로드하면서 즉시 GPU들에 분산시킨다.
-    config = AutoConfig.from_pretrained(model_name)
+    # config = AutoConfig.from_pretrained(model_name)
     # model = AutoModelForCausalLM.from_config(config) 
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
