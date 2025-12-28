@@ -45,6 +45,25 @@ kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifest
 
 kubectl get clustertrainingruntimes
 ```
+efa 관련 설정을 추가하기 위해 torch-distributed 런타임을 수정한다. 
+```
+kubectl edit clustertrainingruntime torch-distributed 
+```
+```
+apiVersion: trainer.kubeflow.org/v1alpha1
+kind: ClusterTrainingRuntime
+metadata:
+  name: torch-distributed
+spec:
+  template:
+    spec:
+      containers:
+        - name: node
+          # EFA 및 분산 학습을 위한 보안 설정 추가
+          securityContext:
+            capabilities:
+              add: ["IPC_LOCK"]
+```
 
 ### 갱 스케줄링 ###
 이 예제에서는 갱 스케줄링 기능을 활성화 하지 않는다. 즉 카펜터에서 GPU 노드를 프러비저닝 하는 즉시 파드가 스케줄링 된다.  
