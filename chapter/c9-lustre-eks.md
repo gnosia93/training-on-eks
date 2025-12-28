@@ -176,7 +176,34 @@ EOF
 kubectl apply -f fsx-pvc.yaml
 ```
 
-### 6. Pod 테스트 ####
+### 6. 생성 상태 확인 ###
+```
+echo "FSx 파일 시스템 [$FSx_ID] 상태를 확인합니다..."
+while true; do
+    STATUS=$(aws fsx describe-file-systems \
+        --file-system-ids "$FSx_ID" \
+        --query "FileSystems[0].Lifecycle" \
+        --output text 2>/dev/null)
+    # 결과가 없는 경우 종료
+    if [ -z "$STATUS" ] || [ "$STATUS" == "None" ]; then
+        echo "오류: 해당 ID를 찾을 수 없습니다."
+        break
+    fi
+
+    echo "[$(date +%H:%M:%S)] 현재 상태: $STATUS"
+    if [ "$STATUS" == "AVAILABLE" ]; then
+        echo "축하합니다! 파일 시스템이 준비되었습니다."
+        break
+    elif [ "$STATUS" == "FAILED" ]; then
+        echo "오류: 파일 시스템 생성에 실패했습니다."
+        break
+    fi
+
+    sleep 3
+done
+```
+
+### 7. Pod 테스트 ####
 ```
 cat <<EOF > pod-fsx.yaml
 apiVersion: v1
@@ -300,7 +327,6 @@ fi
 
 echo "=== 모든 리소스 삭제 요청 완료 ==="
 ```
-
 
 ## 레퍼런스 ##
 
