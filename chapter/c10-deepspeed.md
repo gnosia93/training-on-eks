@@ -21,7 +21,7 @@ Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 �
 ### 훈련 인스턴스 - g6e.8xlarge / EFA ###
 ```
 $ aws ec2 describe-instance-types \
-    --instance-types g6e.8xlarge \
+    --instance-types g6e.12xlarge \
     --query "InstanceTypes[*].{InstanceType:InstanceType, \
         EfaSupported:NetworkInfo.EfaSupported, \
         MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, \
@@ -32,7 +32,7 @@ $ aws ec2 describe-instance-types \
 +--------------+---------------+-------------------+------------------------+----------------------+
 | EfaSupported | InstanceType  | MaxEfaInterfaces  | MaxNetworkInterfaces   | NetworkPerformance   |
 +--------------+---------------+-------------------+------------------------+----------------------+
-|  True        |  g6e.8xlarge  |  1                |  8                     |  25 Gigabit          |
+|  True        |  g6e.12xlarge |  1                |  10                    |  100 Gigabit         |
 +--------------+---------------+-------------------+------------------------+----------------------+
 ```
 
@@ -113,7 +113,7 @@ spec:
 envsubst 는 파리미터로 나열된 환경변수만 치환해 준다. 
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
-export INSTANCE_TYPE=g6e.8xlarge               # 훈련 인스턴스 타입   
+export INSTANCE_TYPE=g6e.12xlarge              # 훈련 인스턴스 타입   
 export AZ=${AWS_REGION}a                 
 export NODE_NUM=4                              # 4대 
 export GPU_PER_NODE=1                          # g6e.8xlarge 타입은 GPU 가 1장이다.
