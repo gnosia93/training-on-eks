@@ -56,13 +56,14 @@ def main():
         per_device_train_batch_size=4,
         gradient_accumulation_steps=4,                 # 실제 배치 사이즈 = 4 * 4 * GPU개수
         learning_rate=2e-5,
-        num_train_epochs=3,
+        max_steps=50,                                  # 딱 50번의 스텝만 하고 종료 / 이경우 에포크는 무시됨   
+        num_train_epochs=1,
         bf16=True,                                     # A100/H100/B200 GPU 권장
-        logging_steps=10,
+        logging_steps=5,
         deepspeed="llama-3-8b-stage3.json", 
         save_strategy="epoch",
         save_total_limit=2,     
-        gradient_checkpointing=True,                   # 메모리 절약을 위한 재계산
+        gradient_checkpointing=False,                  # 메모리 절약을 위한 재계산
         log_level="info",                              # 메인 프로세스 로그 레벨
         log_level_replica="warning",                   # 나머지 워커 노드 로그 제한
     )
