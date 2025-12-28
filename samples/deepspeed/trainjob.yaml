@@ -48,16 +48,14 @@ spec:
         pip install -r requirements.txt
         huggingface-cli login --token "${HF_TOKEN}"
         echo "=== Launching Distributed Training ==="
-        export MASTER_ADDR=\${PET_MASTER_ADDR}                 # ${PET_MASTER_ADDR} 앞에 \(이스케이스)하여, 문자열로 취급되도록 한다.      
-        export MASTER_PORT=\${PET_MASTER_PORT:-29500}          # 이값은 kubectl 시점이 아닌, 컨테이너 동작시 내부적으로 채워지는 환경변수이다.    
-        echo "Master Address: \${MASTER_ADDR}"
-        echo "Master Port: \${MASTER_PORT}"
+        echo "Master Address: ${PET_MASTER_ADDR}"
+        echo "Master Port: ${PET_MASTER_PORT}"
         echo "=================================="
         torchrun \
           --nproc_per_node=1 \
           --rdzv_id=llama-3-8b-job \
           --rdzv_backend=c10d \
-          --rdzv_endpoint=\${MASTER_ADDR}:\${MASTER_PORT} \
+          --rdzv_endpoint=${PET_MASTER_ADDR}:${PET_MASTER_PORT} \
           llama-3-8b.py 
     resourcesPerNode:
       limits:
