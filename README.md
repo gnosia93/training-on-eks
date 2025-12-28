@@ -36,7 +36,7 @@
 
 ## Appendix ##
 
-* [A1. 카펜터 오류 메시지 핸들링](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
+* [A1. 카펜터 오류 핸들링](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
    
 ## 레퍼런스 ## 
 
