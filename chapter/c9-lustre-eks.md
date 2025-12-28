@@ -333,28 +333,37 @@ SG_ID=$(aws ec2 describe-security-groups \
 if [ -n "$SG_ID" ] && [ "$SG_ID" != "None" ]; then
     echo "보안 그룹 발견: $SG_ID. 규칙 삭제 및 그룹 삭제를 시작합니다..."
 
-    # 인바운드 규칙 삭제
-    RULES=$(aws ec2 describe-security-groups --group-ids "$SG_ID" --query "SecurityGroups[0].IpPermissions" --output json)
+    # 1. 인바운드 규칙(Ingress) 삭제
+    # [주의] describe-security-groups는 리스트를 반환하므로 명확히 객체를 지정해야 함
+    INGRESS_RULES=$(aws ec2 describe-security-groups --group-ids "$SG_ID" --query "SecurityGroups[0].IpPermissions" --output json)
+    
     if [ "$INGRESS_RULES" != "[]" ] && [ "$INGRESS_RULES" != "null" ]; then
-        # 인바운드 규칙 삭제 실행
-        aws ec2 revoke-security-group-ingress --group-id "$SG_ID" --ip-permissions "$RULES"
-        echo "성공: 모든 인바운드 규칙이 제거되었습니다."
+        echo "인바운드 규칙 제거 중..."
+        aws ec2 revoke-security-group-ingress --group-id "$SG_ID" --ip-permissions "$INGRESS_RULES"
     fi
 
-    # 아웃바운드 규칙 삭제
-    EGRESS_RULES=$(aws ec2 describe-security-groups --group-ids "$SG_ID" --query "SecurityGroups.IpPermissionsEgress" --output json)
+    # 2. 아웃바운드 규칙(Egress) 삭제
+    # [주의] 모든 보안 그룹은 기본적으로 모든 허용 아웃바운드 규칙을 가짐
+    EGRESS_RULES=$(aws ec2 describe-security-groups --group-ids "$SG_ID" --query "SecurityGroups[0].IpPermissionsEgress" --output json)
+    
     if [ "$EGRESS_RULES" != "[]" ] && [ "$EGRESS_RULES" != "null" ]; then
-        # 아웃바운드 규칙 삭제 실행 (revoke-security-group-egress)
+        echo "아웃바운드 규칙 제거 중..."
         aws ec2 revoke-security-group-egress --group-id "$SG_ID" --ip-permissions "$EGRESS_RULES"
-        echo "성공: 모든 아웃바운드 규칙이 제거되었습니다."
     fi
 
-    # 보안 그룹 최종 삭제
-    aws ec2 delete-security-group --group-id $SG_ID
-    echo "성공적으로 삭제되었습니다."
+    # 3. 보안 그룹 최종 삭제
+    # 다른 리소스(ENI 등)에서 사용 중이면 삭제가 실패할 수 있으므로 잠시 대기 후 실행
+    echo "보안 그룹 최종 삭제 중..."
+    sleep 2
+    if aws ec2 delete-security-group --group-id "$SG_ID"; then
+        echo "성공: 보안 그룹이 성공적으로 삭제되었습니다."
+    else
+        echo "오류: 보안 그룹이 다른 리소스에 의해 사용 중일 수 있습니다."
+    fi
 else
     echo "삭제할 보안 그룹(fsx-lustre-sg)이 존재하지 않습니다."
 fi
+
 
 echo "=== 모든 리소스 삭제 요청 완료 ==="
 ```
