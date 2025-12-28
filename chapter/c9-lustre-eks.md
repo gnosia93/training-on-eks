@@ -43,6 +43,7 @@ aws ec2 authorize-security-group-egress --group-id ${FSX_SG_ID} --protocol -1 --
 # 테스트용 FSx for Lustre 생성 (SCRATCH_2, 1200 GiB, ENI)
 FSx_ID=$(aws fsx create-file-system \
     --file-system-type LUSTRE \
+    --file-system-type-version "2.15" \
     --storage-capacity 1200 \
     --subnet-ids ${PRIV_SUBNET_ID} \
     --security-group-ids ${FSX_SG_ID} \
@@ -56,6 +57,7 @@ FSx_ID=$(aws fsx create-file-system \
 # 운영용 FSx for Lustre 생성 (PERSISTENT_2, 38400 GiB, EFA)
 #FSx_ID=$(aws fsx create-file-system \
 #    --file-system-type LUSTRE \
+#    --file-system-type-version "2.15" \
 #    --storage-capacity 38400 \
 #    --subnet-ids ${PRIV_SUBNET_ID} \
 #    --security-group-ids ${FSX_SG_ID} \
