@@ -158,7 +158,7 @@ metadata:
   name: fsx-pv
 spec:
   capacity:
-    storage: 38400Gi # FSx 생성 용량과 일치시킴
+    storage: 1200Gi                       # FSx 생성 용량과 일치시킴 - 운영용은 38400
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -181,7 +181,7 @@ spec:
   storageClassName: fsx-sc
   resources:
     requests:
-      storage: 38400Gi
+      storage: 1200Gi                      # FSx 생성 용량과 일치시킴 - 운영용은 38400  
   volumeName: fsx-pv 
 EOF
 
