@@ -76,12 +76,12 @@ aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonSSMManaged
 ### EKS 노드그룹 ###
 ```
 aws eks create-nodegroup \
-    --cluster-name traing-on-eks \
+    --cluster-name training-on-eks \
     --nodegroup-name "ng-deepspeed" \
     --launch-template name="deepspeed-launch-template",version=1 \
     --scaling-config minSize=2,maxSize=2,desiredSize=2 \
     --subnets "subnet-0e7be3e3155f668ed","subnet-00b7e6cc786475a22" \
-    --node-role trainig-on-eks-AmazonEKSNodeRole
+    --node-role "arn:aws:iam::499514681453:role/trainig-on-eks-AmazonEKSNodeRole"
 ```
 
 ### 카펜터 Capacity Block ###
