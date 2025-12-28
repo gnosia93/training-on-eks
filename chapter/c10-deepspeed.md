@@ -148,18 +148,23 @@ kubectl describe pod llama-3-8b-node-0-1-zf275
 kubectl get nodes -o custom-columns="NAME:.metadata.name, \
    INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
    ARCH:.status.nodeInfo.architecture, \
-   OS:.status.nodeInfo.osImage, \
    GPU:.status.capacity['nvidia\.com/gpu'], \
-   CAPACITY:.metadata.labels['karpenter\.sh/capacity-type']"
+   EFA:.status.capacity['vpc\.amazonaws\.com/efa'], \
+   ZONE:.metadata.labels['topology\.kubernetes\.io/zone'], \
+   CAPACITY:.metadata.labels['karpenter\.sh/capacity-type']" \
+| sed 's/\.ap-northeast-2\.compute\.internal//g' | column -t
 ```
 [결과]
 ```
-NAME                                                INSTANCE       ARCH       OS                             GPU       CAPACITY
-ip-10-0-4-96.ap-northeast-2.compute.internal    g6e.8xlarge    amd64      Amazon Linux 2023.9.20251208   1         spot
-ip-10-0-5-17.ap-northeast-2.compute.internal    g6e.8xlarge    amd64      Amazon Linux 2023.9.20251208   1         on-demand
-ip-10-0-5-251.ap-northeast-2.compute.internal   g6e.8xlarge    amd64      Amazon Linux 2023.9.20251208   1         on-demand
-ip-10-0-5-55.ap-northeast-2.compute.internal    g6e.8xlarge    amd64      Amazon Linux 2023.9.20251208   1         on-demand
-...
+NAME           INSTANCE      ARCH   GPU     EFA     ZONE             CAPACITY
+ip-10-0-5-202  g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
+ip-10-0-5-238  c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2b  <none>
+ip-10-0-5-37   g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
+ip-10-0-5-38   g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
+ip-10-0-5-41   g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
+ip-10-0-5-61   c6i.2xlarge   amd64  <none>  <none>  ap-northeast-2b  <none>
+ip-10-0-7-12   c6i.2xlarge   amd64  <none>  <none>  ap-northeast-2d  <none>
+ip-10-0-7-56   c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2d  <none>
 ```
 
 
