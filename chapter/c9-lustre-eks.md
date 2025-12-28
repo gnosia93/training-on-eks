@@ -246,12 +246,7 @@ S3 에 파일을 업로드 하고 Pod 에서 조회되는지 확인한다.
 ```
 echo "Hello FSx Lustre" > test-file.txt
 aws s3 cp test-file.txt s3://${BUCKET_NAME}/
-
-# Pod 내부 접속
-kubectl exec -it pod-fsx -- /bin/bash
-
-cd /data/fsx
-ls -l
+kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 ```
 
 ## 리소스 삭제 ##
