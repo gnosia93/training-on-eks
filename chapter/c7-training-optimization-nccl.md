@@ -84,7 +84,8 @@ mpirun -n 16 -N 8 --hostfile hosts \
 * EFA 설정을 template의 env 섹션에 포함합니다.
 
 
-
+## NCCL Topoloty 설정 ##
+* 강제로 경로를 설정하는 방법을 다룬다.
 
 
 ----
