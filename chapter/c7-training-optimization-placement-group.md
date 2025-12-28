@@ -1,7 +1,7 @@
 EKS 에서 Placement Group 및 Capacity Block 설정은 EC2 론치 템플릿을 사용한다.   
 
-## 클러스터 배치 그룹(Cluster Placement Group) ##
-네트워크 지연 시간을 줄이려면, EKS 노드 그룹 생성 시 AWS 수준에서 Cluster Placement Group을 적용해야 한다. 
+## 배치 그룹(Placement Group) ##
+네트워크 지연 시간을 줄이려면, EKS 노드 그룹 생성 시 Placement Group을 적용해야 한다. 이는 EKS 노드가 생성될 때 도일 랙 또는 통신 홉을 최소화 하는 인접 랙 또는 근거리 랙에 서버를 배치하는 기능이다.  
 ```
 aws ec2 create-placement-group \
     --group-name "deepspeed-placement-group" \
