@@ -46,8 +46,7 @@ aws fsx create-file-system \
     --lustre-configuration "DeploymentType=SCRATCH_2,\
         ImportPath=s3://${BUCKET_NAME},\
         ExportPath=s3://${BUCKET_NAME}/export,\
-        AutoImportPolicy=NEW_CHANGED_DELETED,\
-        MetadataConfiguration={Mode=AUTOMATIC}" \
+        AutoImportPolicy=NEW_CHANGED_DELETED}" \
     --query "FileSystem.FileSystemId" --output text
 
 
