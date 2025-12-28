@@ -275,6 +275,30 @@ if aws s3 ls "s3://${BUCKET_NAME}" 2>/dev/null; then
     echo "버킷 삭제 완료."
 fi
 
+# 7. 시큐리티 그룹 삭제
+SG_ID=$(aws ec2 describe-security-groups \
+    --filters "Name=group-name,Values=fsx-lustre-sg" \
+    --query "SecurityGroups[0].GroupId" \
+    --output text)
+
+if [ -n "$SG_ID" ] && [ "$SG_ID" != "None" ]; then
+    echo "보안 그룹 발견: $SG_ID. 규칙 삭제 및 그룹 삭제를 시작합니다..."
+
+    # 인바운드 규칙 삭제
+    aws ec2 revoke-security-group-ingress --group-id $SG_ID \
+        --ip-permissions "$(aws ec2 describe-security-groups --group-ids $SG_ID --query "SecurityGroups[0].IpPermissions" --output json)"
+
+    # 아웃바운드 규칙 삭제
+    aws ec2 revoke-security-group-egress --group-id $SG_ID \
+        --ip-permissions "$(aws ec2 describe-security-groups --group-ids $SG_ID --query "SecurityGroups[0].IpPermissionsEgress" --output json)"
+
+    # 보안 그룹 최종 삭제
+    aws ec2 delete-security-group --group-id $SG_ID
+    echo "성공적으로 삭제되었습니다."
+else
+    echo "삭제할 보안 그룹(fsx-lustre-sg)이 존재하지 않습니다."
+fi
+
 echo "=== 모든 리소스 삭제 요청 완료 ==="
 ```
 
