@@ -50,8 +50,10 @@ node_exporter의 ethtool 콜렉터는 노드의 /sys/class/net/ 경로에 있는
 
 ### 3. Grafana 대시보드 연결 ###
 
-Grafana 대시보드에서 우측의 [New 버튼] -> [Import 서브메뉴] 을 선택한 다음 대시보드 Node Exporter Full(ID: 1860)를 임포트 한다. 
+* Grafana 대시보드에서 우측의 [New 버튼] -> [Import 서브메뉴] 을 선택한 다음 대시보드 Node Exporter Full(ID: 1860)를 임포트 한다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/node-exporter-full.png)
+
+* Grafana 대시보드에서 우측의 [New 버튼] -> [Import 서브메뉴] 을 선택한 다음 대시보드 Node/Network(ID: 22273)를 임포트 한다. 
   
 
 
