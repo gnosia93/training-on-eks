@@ -11,3 +11,13 @@ ClearML은 인프라 정보(GPU/EFA)부터 모델 실험 데이터까지 훈련�
 helm repo add clearml https://clearml.github.io/clearml-helm-charts
 helm repo update
 ```
+```
+helm install clearml clearml/clearml-server -f values.yaml --namespace clearml --create-namespace
+
+```
+
+```
+pip install clearml
+clearml-init
+```
+& 명령어를 실행하면 URL 입력창이 뜹니다. ClearML 웹 UI의 Settings > Workspace > Create new credentials에서 복사한 API 키를 붙여넣으세요.
