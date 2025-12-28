@@ -2,8 +2,45 @@
 
 ## 클러스터 배치 그룹(Cluster Placement Group) ##
 네트워크 지연 시간을 줄이려면, EKS 노드 그룹 생성 시 AWS 수준에서 Cluster Placement Group을 적용해야 한다. 
+```
+aws ec2 create-placement-group \
+    --group-name "deepspeed-placement-group" \
+    --strategy cluster
+```
 
-### EKS 노드그룹 -- 확인필요 ###
+### 론치 템플릿 ###
+```
+cat <<'EOF' > launch-template-data.json
+{
+    "InstanceType": "p4d.24xlarge",
+    "Placement": {
+        "GroupName": "deepspeed-placement-group"
+    },
+    "BlockDeviceMappings": [
+        {
+            "DeviceName": "/dev/xvda",
+            "Ebs": {
+                "VolumeSize": 500,
+                "VolumeType": "gp3"
+            }
+        }
+    ],
+    "TagSpecifications": [
+        {
+            "ResourceType": "instance",
+            "Tags": [{ "Key": "Name", "Value": "eks-deepspeed-node" }]
+        }
+    ]
+}
+EOF
+
+aws ec2 create-launch-template \
+    --launch-template-name "deepspeed-launch-template" \
+    --launch-template-data file://launch-template-data.json
+```
+
+
+### EKS 노드그룹 ###
 노드그룹은 placement group 및 Capacity Block 설정을 지원한다. 
 ```
 aws ec2 create-placement-group --group-name "ml-training-pg" --strategy cluster
