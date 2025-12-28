@@ -45,7 +45,7 @@ kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifest
 
 kubectl get clustertrainingruntimes
 ```
-efa 관련 설정을 추가하기 위해 torch-distributed 런타임을 수정한다. 
+* efa 관련 설정을 추가하기 위해 torch-distributed 런타임을 수정한다. 
 ```
 $ kubectl edit clustertrainingruntime torch-distributed 
 
