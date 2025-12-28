@@ -296,6 +296,8 @@ if [ "$POLICY_ARN" != "None" ] && [ -n "$POLICY_ARN" ]; then
     aws iam detach-role-policy --role-name "${ROLE_NAME}" --policy-arn "${POLICY_ARN}" 2>/dev/null
     aws iam delete-policy --policy-arn "${POLICY_ARN}"
     echo "정책 삭제 완료: ${POLICY_ARN}"
+else
+    echo "${FSX_S3Policy} 정책이 이미 삭제되었습니다."
 fi
 
 # 3. FSx_Lustre_CSI_Driver_Role이 남아있을 경우 직접 삭제
@@ -324,6 +326,20 @@ FSX_IDS=$(aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='L
 for fs_id in $FSX_IDS; do
     aws fsx delete-file-system --file-system-id "${fs_id}"
     echo "삭제 요청됨: ${fs_id} (완전 삭제까지 시간이 소요될 수 있습니다)"
+
+    # 삭제 완료 확인 루프
+    while true; do
+        # 해당 ID의 파일 시스템 상태 확인
+        STATUS=$(aws fsx describe-file-systems --file-system-ids "${fs_id}" --query "FileSystems[0].Lifecycle" --output text 2>/dev/null)
+        
+        # 상태가 없거나(이미 삭제됨) 에러가 발생하면 루프 종료
+        if [ -z "$STATUS" ] || [ "$STATUS" == "None" ]; then
+            echo "성공: ${fs_id} 삭제 완료."
+            break
+        fi
+        echo "현재 상태: ${STATUS}... (30초 후 다시 확인)"
+        sleep 30
+    done
 done
 
 # 5. S3 버킷 삭제 (내부 객체 모두 삭제 후 버킷 제거)
