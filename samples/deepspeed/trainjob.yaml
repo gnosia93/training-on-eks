@@ -51,6 +51,7 @@ spec:
         echo "Master Port: ${PET_MASTER_PORT}"
         echo "=================================="
         pip install -r requirements.txt && \
+        echo "pip 설치 완료, 학습을 시작합니다..." && \
         torchrun \
           --nproc_per_node=1 \
           --rdzv_id=llama-3-8b-job \
