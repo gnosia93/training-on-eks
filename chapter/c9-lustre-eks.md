@@ -78,7 +78,7 @@ eksctl create iamserviceaccount \
     --name fsx-csi-sa \
     --namespace fsx-csi \
     --cluster ${CLUSTER_NAME} \
-    --role-name "FSxLustreRole" \
+    --role-name "${FSX_ROLE}" \
     --attach-policy-arn arn:aws:iam::aws:policy/AmazonFSxFullAccess \
     --approve \
     --override-existing-serviceaccounts
