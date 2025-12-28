@@ -195,37 +195,9 @@ aws ec2 describe-security-groups \
 ```
 
 ### 추가적인 억세스 설정 ###
-클러스터 생성이 완료되면 아래 추가적인 억세스 설정 이 필요하다. 카펜터 버전 1.8.1 (EKS 1.3.4) 에는 아래의 두가지 설정이 누락되어 있어서 패치가 필요하다. 패치를 하지 않는 경우 카펜터가 프러비저닝한 노드가 클러스터에 조인되지 않는다. (노드 describe 시 Not Ready 상태)  
+클러스터 생성이 완료되면 아래 추가적인 억세스 설정 이 필요하다. 카펜터 버전 1.8.1 (EKS 1.3.4) 에는 아래의 설정이 누락되어 있어서 패치가 필요하다. 패치를 하지 않는 경우 카펜터가 프러비저닝한 노드가 클러스터에 조인되지 않는다. (노드 describe 시 Not Ready 상태)  
 
-#### 1. eksctl-training-on-eks-iamservice-role 에 정책 추가 (OIDC 정책 누락) ####
-``` 
-{
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Sid": "VisualEditor0",
-			"Effect": "Allow",
-			"Action": "eks:DescribeCluster",
-			"Resource": "arn:aws:eks:${AWS_REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
-		},
- 		{
-            "Effect": "Allow",
-            "Action": [
-		        "iam:CreateInstanceProfile",
-                "iam:DeleteInstanceProfile",
-                "iam:GetInstanceProfile",
-                "iam:TagInstanceProfile",
-                "iam:AddRoleToInstanceProfile",
-                "iam:RemoveRoleFromInstanceProfile",
-                "iam:ListInstanceProfiles"
-		    ],
-            "Resource": "*"
-        }
-	]
-}
-```
-
-아래 명령어를 이용하여 인라인 정책으로 eksctl-training-on-eks-iamservice-role 에 추가한다.
+* eksctl-training-on-eks-iamservice-role 에 정책 추가(OIDC 정책 누락)
 ```
 aws iam put-role-policy \
     --role-name eksctl-training-on-eks-iamservice-role \
@@ -254,21 +226,6 @@ aws iam put-role-policy \
             }
         ]
     }"
-```
-
-
-
-#### 2. IAM Identity Mapping #### 
-* 이 설정은 하지 않아도 된다.. 삭제예정 
-```
-eksctl create iamidentitymapping \
-  --username system:node:{{EC2PrivateDNSName}} \
-  --cluster "${CLUSTER_NAME}" \
-  --arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-eks-iamservice-role" \
-  --group system:bootstrappers \
-  --group system:nodes
-
-kubectl describe configmap aws-auth -n kube-system
 ```
 
 ## nginx 실행해 보기 ##
