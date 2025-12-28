@@ -1,6 +1,7 @@
 import torch
 import transformers 
 from transformers import AutoModelForCausalLM, AutoConfig, Trainer, TrainingArguments, AutoTokenizer
+from transformers import DataCollatorForLanguageModeling
 from datasets import load_dataset
 import os
 import logging
@@ -11,17 +12,21 @@ transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
 
 def main():
-    print("...4")
-
     # 1. 모델 및 토크나이저 설정 (Llama-3-8B 예시)
     model_name = "meta-llama/Meta-Llama-3-8B"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.padding_side = "right" 
     
     # 2. 아주 큰 모델을 초기화할 때 메모리 효율을 위해 'meta' 장치 사용
     # ZeRO-3는 이 설정을 통해 모델을 로드하면서 즉시 GPU들에 분산시킨다.
     config = AutoConfig.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_config(config) 
+    # model = AutoModelForCausalLM.from_config(config) 
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        torch_dtype=torch.bfloat16,                  # training_args의 bf16과 일치
+        attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상
+    )
     
     # 3. 데이터셋 로드 (간단한 예시)
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")
@@ -48,8 +53,11 @@ def main():
         log_level_replica="warning",                   # 나머지 워커 노드 로그 제한
     )
     
+    # mlm=False로 설정하여 Next Token Prediction 학습 진행
+    # data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
+    data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+
     # 5. 트레이너 실행
-    data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
     trainer = Trainer(
         model=model,
         args=training_args,
