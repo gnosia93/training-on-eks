@@ -205,18 +205,23 @@ done
 
 ### 7. 러스터 성능 조회 ####
 ```
-aws fsx describe-file-systems \
-    --query "FileSystems[?FileSystemType=='LUSTRE'].{
-        ID: FileSystemId,
-        Type: LustreConfiguration.DeploymentType,
-        StorageType: StorageType,
-        Capacity: StorageCapacity,
-        Throughput: LustreConfiguration.PerUnitStorageThroughput,
-        MountName: LustreConfiguration.MountName
-    }" \
-    --output table
+aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" --output json | jq -r '
+  ["ID", "Status", "Storage_GiB", "Unit_MB/s", "Total_MB/s", "MountName", "Type"],
+  (.[] | [
+    .FileSystemId, 
+    .Lifecycle, 
+    .StorageCapacity, 
+    .LustreConfiguration.PerUnitStorageThroughput, 
+    ((.StorageCapacity / 1024) * .LustreConfiguration.PerUnitStorageThroughput), 
+    .LustreConfiguration.MountName, 
+    .LustreConfiguration.DeploymentType
+  ]) | @tsv' | column -t -s $'\t'
 ```
-
+[결과]
+```
+ID                    Status     Storage_GiB  Unit_MBps  Total_MBps  MountName  Type
+fs-07ac8c09c8b9e1981  AVAILABLE  38400        125        4687.5      nelu5bev   PERSISTENT_2
+```
 
 ### 8. Pod 테스트 ####
 ```
