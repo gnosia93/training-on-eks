@@ -283,8 +283,8 @@ echo "=== EKS FSx for Lustre 리소스 삭제 시작 ==="
 # 1. eksctl iamserviceaccount 삭제 (IAM Role과 연관성 제거)
 echo "1. eksctl iamserviceaccount 삭제 중..."
 eksctl delete iamserviceaccount \
-    --name fsx-csi-driver-controller-sa \
-    --namespace fsx-csi-driver \
+    --name fsx-csi-sa \
+    --namespace fsx-csi \
     --cluster ${CLUSTER_NAME} \
     --wait
 
