@@ -223,7 +223,7 @@ ID                    Status     Storage_GiB  Unit_MBps  Total_MBps  MountName  
 fs-07ac8c09c8b9e1981  AVAILABLE  38400        125        4687.5      nelu5bev   PERSISTENT_2
 ```
 
-### 8. Pod 테스트 ####
+## Pod 마운트 테스트 ##
 ```
 cat <<EOF > pod-fsx.yaml
 apiVersion: v1
