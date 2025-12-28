@@ -1,6 +1,6 @@
 ## 카펜터 로그 확인 방법 ##
 
-[!https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/karpenter-message-1.png]
+![https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/karpenter-message-1.png]
 
 ```
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
