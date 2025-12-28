@@ -49,7 +49,7 @@ spec:
         huggingface-cli login --token "${HF_TOKEN}"
         echo "=== Launching Distributed Training ==="
         export MASTER_ADDR=\${PET_MASTER_ADDR}                 # ${PET_MASTER_ADDR} 앞에 \(이스케이스)하여, 문자열로 취급되도록 한다.      
-        export MASTER_PORT=\${PET_MASTER_PORT:-29500}          # 이값은 컨테이너 실행시 내부적으로 채워진다.   
+        export MASTER_PORT=\${PET_MASTER_PORT:-29500}          # 이값은 kubectl 시점이 아닌, 컨테이너 동작시 내부적으로 채워지는 환경변수이다.    
         echo "Master Address: \${MASTER_ADDR}"
         echo "Master Port: \${MASTER_PORT}"
         echo "=================================="
