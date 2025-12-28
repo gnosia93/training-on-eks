@@ -1,12 +1,20 @@
+import os
+import logging
+import time
+import datetime
+from datetime import timedelta
 import torch
 import transformers 
 from transformers import AutoModelForCausalLM, AutoConfig, Trainer, TrainingArguments, AutoTokenizer
 from transformers import DataCollatorForLanguageModeling
+from transformers import TrainerCallback
 from datasets import load_dataset
-import os
-import logging
-import time
-from datetime import timedelta
+
+class SimpleTimeCallback(TrainerCallback):
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if logs:
+            # 현재 시간을 YYYY-MM-DD HH:MM:SS 형태로 추가
+            logs["time"] = datetime.datetime.now().strftime("%H:%M:%S")
 
 # [로그 설정] 
 # transformers 라이브러리의 로그 레벨을 INFO로 설정하여 학습 과정(Loss 등)을 확인합니다.
@@ -68,7 +76,8 @@ def main():
         model=model,
         args=training_args,
         train_dataset=tokenized_datasets,
-        data_collator=data_collator
+        data_collator=data_collator,
+        callbacks=[SimpleTimeCallback()] 
     )
     
     trainer.train()
