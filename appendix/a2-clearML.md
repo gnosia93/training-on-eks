@@ -36,3 +36,21 @@ task.connect(params)
 # 이후 모델 훈련 코드...
 # GPU/CPU/네트워크 트래픽은 ClearML이 자동으로 수집합니다.
 ```
+
+[values.yaml]
+```
+config:
+  # 스토리지 설정을 S3로 지정
+  files_host: "https://s3.amazonaws.com"
+  
+  # AWS 자격 증명 (IRSA 사용 시 생략 가능하지만, 명시적 설정이 안정적임)
+  aws:
+    s3:
+      # S3 버킷 이름 및 지역 설정
+      bucket: "your-clearml-artifacts-bucket"
+      region: "ap-northeast-2"
+      # 필요 시 Access Key 입력 (IRSA 미사용 시)
+      key: "YOUR_AWS_ACCESS_KEY"
+      secret: "YOUR_AWS_SECRET_KEY"
+
+```
