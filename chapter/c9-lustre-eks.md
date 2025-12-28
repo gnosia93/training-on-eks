@@ -203,7 +203,22 @@ while true; do
 done
 ```
 
-### 7. Pod 테스트 ####
+### 7. 러스터 성능 조회 ####
+```
+aws fsx describe-file-systems \
+    --query "FileSystems[?FileSystemType=='LUSTRE'].{
+        ID: FileSystemId,
+        Type: LustreConfiguration.DeploymentType,
+        StorageType: StorageType,
+        Capacity: StorageCapacity,
+        Throughput: LustreConfiguration.PerUnitStorageThroughput,
+        MountName: LustreConfiguration.MountName
+    }" \
+    --output table
+```
+
+
+### 8. Pod 테스트 ####
 ```
 cat <<EOF > pod-fsx.yaml
 apiVersion: v1
