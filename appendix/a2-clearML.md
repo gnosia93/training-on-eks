@@ -20,4 +20,19 @@ helm install clearml clearml/clearml-server -f values.yaml --namespace clearml -
 pip install clearml
 clearml-init
 ```
-& 명령어를 실행하면 URL 입력창이 뜹니다. ClearML 웹 UI의 Settings > Workspace > Create new credentials에서 복사한 API 키를 붙여넣으세요.
+* 명령어를 실행하면 URL 입력창이 뜹니다. ClearML 웹 UI의 Settings > Workspace > Create new credentials에서 복사한 API 키를 붙여넣으세요.
+
+[코드]
+```
+from clearml import Task
+
+# 프로젝트명과 실험 이름을 지정하여 초기화
+task = Task.init(project_name="My_Project", task_name="EFA_Training_Run_01")
+
+# 인스턴스 타입이나 EFA 여부를 파라미터로 저장 (나중에 검색 가능)
+params = {'instance_type': 'p4d.24xlarge', 'efa': True, 'epochs': 100}
+task.connect(params)
+
+# 이후 모델 훈련 코드...
+# GPU/CPU/네트워크 트래픽은 ClearML이 자동으로 수집합니다.
+```
