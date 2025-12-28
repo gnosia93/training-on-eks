@@ -326,12 +326,20 @@ if [ -n "$SG_ID" ] && [ "$SG_ID" != "None" ]; then
     echo "보안 그룹 발견: $SG_ID. 규칙 삭제 및 그룹 삭제를 시작합니다..."
 
     # 인바운드 규칙 삭제
-    aws ec2 revoke-security-group-ingress --group-id $SG_ID \
-        --ip-permissions "$(aws ec2 describe-security-groups --group-ids $SG_ID --query "SecurityGroups[0].IpPermissions" --output json)"
+    RULES=$(aws ec2 describe-security-groups --group-ids "$SG_ID" --query "SecurityGroups[0].IpPermissions" --output json)
+    if [ "$INGRESS_RULES" != "[]" ] && [ "$INGRESS_RULES" != "null" ]; then
+        # 인바운드 규칙 삭제 실행
+        aws ec2 revoke-security-group-ingress --group-id "$SG_ID" --ip-permissions "$RULES"
+        echo "성공: 모든 인바운드 규칙이 제거되었습니다."
+    fi
 
     # 아웃바운드 규칙 삭제
-    aws ec2 revoke-security-group-egress --group-id $SG_ID \
-        --ip-permissions "$(aws ec2 describe-security-groups --group-ids $SG_ID --query "SecurityGroups[0].IpPermissionsEgress" --output json)"
+    EGRESS_RULES=$(aws ec2 describe-security-groups --group-ids "$SG_ID" --query "SecurityGroups.IpPermissionsEgress" --output json)
+    if [ "$EGRESS_RULES" != "[]" ] && [ "$EGRESS_RULES" != "null" ]; then
+        # 아웃바운드 규칙 삭제 실행 (revoke-security-group-egress)
+        aws ec2 revoke-security-group-egress --group-id "$SG_ID" --ip-permissions "$EGRESS_RULES"
+        echo "성공: 모든 아웃바운드 규칙이 제거되었습니다."
+    fi
 
     # 보안 그룹 최종 삭제
     aws ec2 delete-security-group --group-id $SG_ID
