@@ -139,7 +139,6 @@ helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
 
 ### 5. PV/PVC 배포 ###
 ```
-#FSxID=$(aws fsx describe-file-systems --file-system-ids ${FSX_ID} --query "FileSystems[0].{FileSystemId:FileSystemId}" --output text)
 FSx_DNS=$(aws fsx describe-file-systems --file-system-ids ${FSx_ID} --query "FileSystems[0].{DNSName:DNSName}" --output text)
 FSx_MOUNT=$(aws fsx describe-file-systems --file-system-ids ${FSx_ID} --query "FileSystems[0].{MountName:LustreConfiguration.MountName}" --output text)
 echo ${FSx_ID} ${FSx_DNS} ${FSx_MOUNT}
