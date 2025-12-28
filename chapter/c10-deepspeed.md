@@ -5,6 +5,7 @@
 
 * [Llama-3-8B Trainer](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.py)
 * [DeepSpeed Config](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b-stage3.json)
+* [requirements.txt](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/requirements.txt)
 * [TrainJob YAML](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/trainjob.yaml)  
 
 ### 훈련 설정값 (DeepSpeed Config) ###
