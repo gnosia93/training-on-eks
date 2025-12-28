@@ -57,8 +57,16 @@ def main():
     # 6. 학습 종료 후 최종 모델 및 토크나이저 저장
     # 마스터 노드(Rank 0)에서만 실행하여 파일 중복 쓰기 방지
     if training_args.local_rank in [-1, 0]:
-        trainer.save_model("/data/fsx/llama3-deepspeed-final")
-        tokenizer.save_pretrained("/data/fsx/llama3-deepspeed-final")
+        print("\n--- 학습 완료! 최종 모델 저장 중 ---")
+        final_save_path = os.path.join(training_args.output_dir, "final_model")
+        
+        # Trainer.save_model은 ZeRO-3로 분산된 가중치를 자동으로 통합하여 저장합니다.
+        trainer.save_model(final_save_path)
+        
+        # 추론 시 필요한 토크나이저 설정 파일들을 함께 저장
+        tokenizer.save_pretrained(final_save_path)
+        
+        print(f"모델과 토크나이저가 저장되었습니다: {final_save_path}")
 
 
 if __name__ == "__main__":
