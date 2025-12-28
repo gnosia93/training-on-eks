@@ -80,10 +80,9 @@ def main():
 
     # 메인 프로세스(Rank 0)에서만 결과 출력
     if trainer.is_world_process_zero():
-        print(f"\n" + "="*30)
-        print(f"Total Training Time: {readable_time} (HH:MM:SS)")
-        print(f"Total Seconds: {total_seconds:.2f}s")
-        print("="*30 + "\n")
+        print(f"\n[학습 종료 보고서]")
+        print(f"최종 소요 시간: {readable_time}")
+        print(f"전체 초 단위: {total_seconds:.2f}s")
 
     # 6. 학습 종료 후 최종 모델 및 토크나이저 저장
     # 마스터 노드(Rank 0)에서만 실행하여 파일 중복 쓰기 방지
