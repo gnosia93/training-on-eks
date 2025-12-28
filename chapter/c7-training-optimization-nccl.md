@@ -39,31 +39,48 @@ aws ec2 create-launch-template \
     --launch-template-data file://launch-template-data.json
 ```
 
+### 노드 롤 ###
+```
+cat <<EOF > node-role-trust-relationship.json 
+{
+    "Version":"2012-10-17",		 	 	 
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sts:AssumeRole"
+            ],
+            "Principal": {
+                "Service": [
+                    "ec2.amazonaws.com"
+                ]
+            }
+        }
+    ]
+}
+
+aws iam create-role --role-name trainig-on-eks-AmazonEKSNodeRole \
+  --assume-role-policy-document file://"node-role-trust-relationship.json"
+
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy \
+  --role-name trainig-on-eks-AmazonEKSNodeRole
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly \
+  --role-name trainig-on-eks-AmazonEKSNodeRole
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy \
+  --role-name trainig-on-eks-AmazonEKSNodeRole
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore \
+  --role-name trainig-on-eks-AmazonEKSNodeRole
+```
 
 ### EKS 노드그룹 ###
-노드그룹은 placement group 및 Capacity Block 설정을 지원한다. 
 ```
-aws ec2 create-placement-group --group-name "ml-training-pg" --strategy cluster
-
-eksctl create nodegroup \
-  --cluster ${CLUSTER_NAME} \
-  --name efa-gpu-nodes \
-  --node-type p4d.24xlarge \
-  --placement-group "ml-training-pg" \
-  --nodes 8 \
-  --node-zones "ap-northeast-2a"       # 반드시 동일 AZ 지정
-```
-cluster 배치 그룹 내에서 노드 생성이 실패(InsufficientCapacity)한다면, 해당 AZ에 가용 자원이 부족한 것이다. 
-이 경우 다른 AZ를 시도하거나 AWS EC2 Capacity Blocks를 통해 사전에 자원을 예약하는 방식이 있다.
-```
-eksctl create nodegroup \
-  --cluster ${CLUSTER_NAME} \
-  --name ml-capacity-block-nodes \
-  --node-type p5.48xlarge \
-  --nodes 16 \
-  --placement-group "ml-training-pg" \
-  --capacity-reservation-id cr-0123456789abcdefg \
-  --node-zones "ap-northeast-2a"
+aws eks create-nodegroup \
+    --cluster-name traing-on-eks \
+    --nodegroup-name "ng-deepspeed" \
+    --launch-template name="deepspeed-launch-template",version=1 \
+    --scaling-config minSize=2,maxSize=2,desiredSize=2 \
+    --subnets "subnet-0e7be3e3155f668ed","subnet-00b7e6cc786475a22"
+    --node-role trainig-on-eks-AmazonEKSNodeRole
 ```
 
 ### 카펜터 Capacity Block ###
@@ -160,6 +177,7 @@ mpirun -n 16 -N 8 --hostfile hosts \
 
 ## 레퍼런스 ##
 
+* https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html
 * https://docs.aws.amazon.com/cli/latest/reference/eks/create-nodegroup.html
 * https://github.com/eksctl-io/eksctl/tree/main
   
