@@ -5,6 +5,8 @@ from transformers import DataCollatorForLanguageModeling
 from datasets import load_dataset
 import os
 import logging
+import time
+from datetime import timedelta
 
 # [로그 설정] 
 # transformers 라이브러리의 로그 레벨을 INFO로 설정하여 학습 과정(Loss 등)을 확인합니다.
