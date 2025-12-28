@@ -81,7 +81,18 @@ export EFA_PER_NODE=8                      # 200Gbp 사용
 
 cd ~/training-on-eks/samples/deepspeed
 envsubst < trainjob.yaml | kubectl apply -f -            # envsubst 는 trainjob.yaml 파일 내부의 환경변수를 실제 값으로 치환해 준다.
+```
 
+* 훈련잡 확인
+```
+kubectl get trainjob
+```
+* 훈련잡 삭제
+```
+kubectl delete trainjob llama-3-8b
+```
+
+```
 kubectl exec -it llama-3-8b -- /bin/bash
 fi_info -p efa
 ```
