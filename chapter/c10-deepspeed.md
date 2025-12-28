@@ -25,6 +25,7 @@ $ aws ec2 describe-instance-types \
     --query "InstanceTypes[*].{InstanceType:InstanceType, \
         EfaSupported:NetworkInfo.EfaSupported, \
         MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, \
+        MaxEfaInterfaces:NetworkInfo.EfaInfo.MaximumEfaInterfaces, \
         NetworkPerformance:NetworkInfo.NetworkPerformance}" --output table
 --------------------------------------------------------------------------------
 |                             DescribeInstanceTypes                            |
