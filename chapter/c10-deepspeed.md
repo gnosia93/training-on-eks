@@ -187,6 +187,11 @@ sudo dmesg | tail -n 20
 [640860.091582] LustreError: 2527767:0:(super25.c:187:lustre_fill_super()) llite: Unable to mount <unknown>: rc = -22
 
 
+sudo yum remove -y lustre-client lustre-client-modules
+sudo amazon-linux-extras disable lustre
+
+
+
 aws fsx describe-file-systems \
   --file-system-ids fs-0b3956b37951325ab \
   --region ap-northeast-2 \
