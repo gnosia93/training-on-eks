@@ -21,6 +21,8 @@ export PRIV_SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$
         "Name=tag:Name,Values=*priv-subnet-1*" \
         --query "Subnets[0].SubnetId" --output text)
 export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
+export FSX_SG="fsx-lustre-sg"
+
 
 # S3 버킷 생성
 aws s3 mb s3://${BUCKET_NAME} --region ${AWS_REGION}           
@@ -28,7 +30,7 @@ aws s3 mb s3://${BUCKET_NAME} --region ${AWS_REGION}
 # FSX 시큐리티 그룹 생성
 NODE_SG_ID=$(aws eks describe-cluster --name ${CLUSTER_NAME} \
     --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
-FSX_SG_ID=$(aws ec2 create-security-group --group-name fsx-lustre-sg \
+FSX_SG_ID=$(aws ec2 create-security-group --group-name ${FSX_SG} \
     --description "Allow Lustre traffic" --vpc-id ${VPC_ID} --query GroupId --output text)
 aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} \
     --protocol tcp --port 988  --source-group ${NODE_SG_ID}
