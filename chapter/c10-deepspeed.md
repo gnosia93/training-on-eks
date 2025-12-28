@@ -80,7 +80,7 @@ export GPU_PER_NODE=1                      # g6e.8xlarge 타입은 GPU 가 1장�
 export EFA_PER_NODE=8                      # 200Gbp 사용
 
 cd ~/training-on-eks/samples/deepspeed
-kubectl apply -f trainjob.yaml
+envsubst < trainjob.yaml | kubectl apply -f -            # envsubst 는 trainjob.yaml 파일 내부의 환경변수를 실제 값으로 치환해 준다.
 
 kubectl exec -it llama-3-8b -- /bin/bash
 fi_info -p efa
