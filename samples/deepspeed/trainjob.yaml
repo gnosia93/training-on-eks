@@ -7,9 +7,9 @@ spec:
     - targetJobs:
         - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
       spec:
-        securityContext:
-              capabilities:                                           # EFA 통신을 위해 메모리 잠금 권한 필요
-                add: ["IPC_LOCK"]  
+        #securityContext:
+        #      capabilities:                                           # EFA 통신을 위해 메모리 잠금 권한 필요
+        #        add: ["IPC_LOCK"]  
         nodeSelector:
           node.kubernetes.io/instance-type: ${INSTANCE_TYPE}              
           topology.kubernetes.io/zone: ${AZ}                 
