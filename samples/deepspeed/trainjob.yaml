@@ -8,11 +8,11 @@ spec:
         - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
       spec:
         #securityContext:
-        #      capabilities:                                           # EFA 통신을 위해 메모리 잠금 권한 필요
+        #      capabilities:                                          # EFA 통신을 위해 메모리 잠금 권한 필요
         #        add: ["IPC_LOCK"]  
         nodeSelector:
           node.kubernetes.io/instance-type: ${INSTANCE_TYPE}              
-          topology.kubernetes.io/zone: ${AZ}                 
+        #  topology.kubernetes.io/zone: ${AZ}                         # AZ 레벨 인스턴스 용량 부족으로 제거 -> 리전 단위로 용량 확보                 
 
         containers:
           - name: node                                                # -name: node 은 상당히 중요한 설정값 / ClusterTrainingRuntime 에 있는 컨테이너 이름이 node 이다.
