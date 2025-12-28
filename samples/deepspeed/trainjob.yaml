@@ -60,6 +60,6 @@ spec:
           llama-3-8b.py 
     resourcesPerNode:
       limits:
-        nvidia.com/gpu: "${EFA_NUM}"
-        vpc.amazonaws.com/efa: "${EFA_NUM}"                      
+        nvidia.com/gpu: "${GPU_PER_NODE}"
+        vpc.amazonaws.com/efa: "${EFA_PER_NODE}"                      
  
