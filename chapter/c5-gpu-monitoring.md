@@ -1,4 +1,5 @@
-본 워크샵에서는 EBS CSI 드라이버를 설치하지 않는다. 실제 프로덕션 환경에서는 EBS CSI 드라이버를 먼저 설치한 후 PVC 위에 프로메테우스 스택을 설치해야 한다.  
+본 워크샵에서는 프로메테우스의 스토리지 옵션을 CSI 타입으로 변경하지 않는다. 이 경우 수집된 데이터는 컨테이너 파일 시스템에 남아 있게 되고 컨테이너를 재시작하는 경우 수집된 데이터는 사라진다. 
+
 ## [Prometheus Stack 설치](https://github.com/prometheus-operator/kube-prometheus) ##
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
