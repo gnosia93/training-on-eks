@@ -160,5 +160,6 @@ mpirun -n 16 -N 8 --hostfile hosts \
 
 ## 레퍼런스 ##
 
+* https://docs.aws.amazon.com/cli/latest/reference/eks/create-nodegroup.html
 * https://github.com/eksctl-io/eksctl/tree/main
   
