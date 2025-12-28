@@ -58,6 +58,7 @@ cat <<EOF > node-role-trust-relationship.json
         }
     ]
 }
+EOF
 
 aws iam create-role --role-name trainig-on-eks-AmazonEKSNodeRole \
   --assume-role-policy-document file://"node-role-trust-relationship.json"
