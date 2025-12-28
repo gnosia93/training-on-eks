@@ -35,5 +35,5 @@ py-cpuinfo
 # pip install flash-attn을 실행하면 런타임 GPU 사양에 맞춰 어텐션 코드를 기계어로 번역(컴파일)
 # 컴파일 타임이 20-30분 정도 소요되므로, 별도의 컨테이너 이미지를 사전에 빌드하는게 좋다..
 # 본 워크샵에서는 실행시 매번 컴파일 하는 것으로 .. 
-flash-attn --no-build-isolation
+flash-attn
 
