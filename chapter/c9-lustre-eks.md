@@ -22,6 +22,7 @@ export PRIV_SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$
         --query "Subnets[0].SubnetId" --output text)
 export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
 export FSX_SG="fsx-lustre-sg"
+export FSX_ROLE="FSxLustreRole"
 export FSX_S3Policy="FSxLustreS3Policy"
 
 # S3 버킷 생성
@@ -103,7 +104,7 @@ cat <<EOF > s3-policy.json
 EOF
 
 S3_POLICY_ARN=$(aws iam create-policy --policy-name ${FSX_S3Policy} --policy-document file://s3-policy.json --query Policy.Arn --output text)
-aws iam attach-role-policy --role-name "FSxLustreRole" --policy-arn $S3_POLICY_ARN
+aws iam attach-role-policy --role-name ${FSX_ROLE} --policy-arn $S3_POLICY_ARN
 ```
 
 ### 3. lustre 파일시스템 조회 ###
@@ -276,7 +277,6 @@ kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 export CLUSTER_NAME="training-on-eks"
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
-export ROLE_NAME="FSxLustreRole"
 
 echo "=== EKS FSx for Lustre 리소스 삭제 시작 ==="
 
@@ -299,14 +299,23 @@ if [ "$POLICY_ARN" != "None" ] && [ -n "$POLICY_ARN" ]; then
 fi
 
 # 3. FSx_Lustre_CSI_Driver_Role이 남아있을 경우 직접 삭제
-echo "3. IAM 역할(${ROLE_NAME}) 삭제 중..."
-if aws iam get-role --role-name "${ROLE_NAME}" 2>/dev/null; then
+echo "3. IAM 역할(${FSX_ROLE}) 삭제 중..."
+if aws iam get-role --role-name "${FSX_ROLE}" 2>/dev/null; then
     # 연결된 모든 정책 해제
-    for p_arn in $(aws iam list-attached-role-policies --role-name "${ROLE_NAME}" --query 'AttachedPolicies[].PolicyArn' --output text); do
-        aws iam detach-role-policy --role-name "${ROLE_NAME}" --policy-arn "${p_arn}"
+    for p_arn in $(aws iam list-attached-role-policies --role-name "${FSX_ROLE}" --query 'AttachedPolicies[].PolicyArn' --output text); do
+        aws iam detach-role-policy --role-name "${FSX_ROLE}" --policy-arn "${p_arn}"
     done
-    aws iam delete-role --role-name "${ROLE_NAME}"
+    # 인라인 정책이 남아있으면 delete-role 명령이 실패합니다.
+    INLINE_POLICIES=$(aws iam list-role-policies --role-name "${FSX_ROLE}" --query 'PolicyNames[]' --output text)
+    for p_name in $INLINE_POLICIES; do
+        aws iam delete-role-policy --role-name "${FSX_ROLE}" --policy-name "${p_name}"
+        echo "인라인 정책 삭제 완료: ${p_name}"
+    done 
+
+    aws iam delete-role --role-name "${FSX_ROLE}"
     echo "역할 삭제 완료."
+else
+    echo "${FSX_ROLE}" 이 이미 삭제되었습니다."
 fi
 
 # 4. FSx for Lustre 파일 시스템 삭제
