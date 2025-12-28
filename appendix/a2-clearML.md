@@ -10,10 +10,7 @@ ClearML은 인프라 정보(GPU/EFA)부터 모델 실험 데이터까지 훈련�
 ```
 helm repo add clearml https://clearml.github.io/clearml-helm-charts
 helm repo update
-```
-```
 helm install clearml clearml/clearml-server -f values.yaml --namespace clearml --create-namespace
-
 ```
 
 ```
