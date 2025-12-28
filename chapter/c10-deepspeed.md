@@ -34,6 +34,8 @@ $ aws ec2 describe-instance-types \
 |  True        |  g6e.8xlarge  |  8                     |  25 Gigabit          |
 +--------------+---------------+------------------------+----------------------+
 ```
+
+### 카펜터 노드풀 및 디바이스 플러그인 설치 ###
 * "kubectl get nodepool" 명령어로 gpu 노드풀이 존재하는 지 확인한다. 없으면 [C3. GPU 노드 준비하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)를 참고하여 생성한다. 
 
 * efa 디바이스 플러그인 설치
@@ -55,7 +57,7 @@ aws-efa-k8s-device-plugin   0         0         0       0            0          
 ```
 efa 플러그인 설치 시점에는 efa 인터페이스를 지원하는 노드가 없는 관계로 데몬수가 0 으로 표시된다. 
 
-# 큐브플로우 Trainer 설치 ###
+### 큐브플로우 Trainer 설치 ###
 ```
 sudo dnf install git -y
 
