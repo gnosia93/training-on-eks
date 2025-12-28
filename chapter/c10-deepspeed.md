@@ -88,11 +88,40 @@ cd ~/training-on-eks/samples/deepspeed
 envsubst < trainjob.yaml | kubectl apply -f -            # envsubst 는 trainjob.yaml 파일 내부의 환경변수를 실제 값으로 치환해 준다.
 ```
 
-#### trainjob 명령어 #### 
+훈련 작업에 참여하는 파드 리스트를 조회한다. 
 ```
-kubectl get trainjob                       # 잡 확인
-kubectl delete trainjob llama-3-8b         # 잡 삭제
+kubectl get pods
 ```
+[결과]
+```
+NAME                        READY   STATUS              RESTARTS   AGE
+llama-3-8b-node-0-0-8bnd8   0/1     ContainerCreating   0          86s
+llama-3-8b-node-0-1-zf275   0/1     ContainerCreating   0          86s
+llama-3-8b-node-0-2-qnwc6   0/1     ContainerCreating   0          86s
+llama-3-8b-node-0-3-r455m   0/1     ContainerCreating   0          86s
+```
+
+카펜터가 프로비저닝 한 노드 리스트를 조회한다. 
+```
+kubectl get nodes -o custom-columns="NAME:.metadata.name, \
+   INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
+   ARCH:.status.nodeInfo.architecture, \
+   OS:.status.nodeInfo.osImage, \
+   GPU:.status.capacity['nvidia\.com/gpu'], \
+   CAPACITY:.metadata.labels['karpenter\.sh/capacity-type']"
+```
+[결과]
+```
+NAME                                                INSTANCE       ARCH       OS                             GPU       CAPACITY
+ip-10-0-4-96.ap-northeast-2.compute.internal    g6e.8xlarge    amd64      Amazon Linux 2023.9.20251208   1         spot
+ip-10-0-5-17.ap-northeast-2.compute.internal    g6e.8xlarge    amd64      Amazon Linux 2023.9.20251208   1         on-demand
+ip-10-0-5-251.ap-northeast-2.compute.internal   g6e.8xlarge    amd64      Amazon Linux 2023.9.20251208   1         on-demand
+ip-10-0-5-55.ap-northeast-2.compute.internal    g6e.8xlarge    amd64      Amazon Linux 2023.9.20251208   1         on-demand
+...
+```
+
+
+
 
 ```
 kubectl exec -it llama-3-8b -- /bin/bash
