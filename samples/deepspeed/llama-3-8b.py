@@ -25,7 +25,8 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         torch_dtype=torch.bfloat16,                  # training_args의 bf16과 일치
-        attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상
+        attn_implementation="sdpa"                   # sdpa(Scaled Dot Product Attention) 사용
+    #   attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상 / flash-attn 미설치 
     )
     
     # 3. 데이터셋 로드 (간단한 예시)
