@@ -290,7 +290,7 @@ eksctl delete iamserviceaccount \
 
 # 2. 커스텀 S3 정책 삭제
 echo "2. IAM 정책(FSxLustreS3IntegrationPolicy) 삭제 중..."
-POLICY_ARN=$(aws iam list-policies --scope Local --query "Policies[?PolicyName=='FSxLustreS3Policy'].Arn" --output text)
+POLICY_ARN=$(aws iam list-policies --scope Local --query "Policies[?PolicyName==${FSX_S3Policy}].Arn" --output text)
 if [ "$POLICY_ARN" != "None" ] && [ -n "$POLICY_ARN" ]; then
     # 역할이 아직 남아있을 경우를 대비해 연결 해제 시도
     aws iam detach-role-policy --role-name "${ROLE_NAME}" --policy-arn "${POLICY_ARN}" 2>/dev/null
