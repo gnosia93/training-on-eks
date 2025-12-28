@@ -54,12 +54,11 @@ GPU UUID 를 알기위해서는 다음과 같이 두가지 방법이 가능하�
 * kubectl exec -it <파드이름> -- env | grep NVIDIA_VISIBLE_DEVICES
 
 ```
-kubectl exec -it pytorch-dist-job-worker-1 -n pytorch -- env | grep NVIDIA_VISIBLE_DEVICES
+kubectl exec -it llama-3-8b-node-0-3-f86kr -- env | grep NVIDIA_VISIBLE_DEVICES
 ```
 [결과]
 ```
-Defaulted container "pytorch" out of: pytorch, init-pytorch (init)
-NVIDIA_VISIBLE_DEVICES=GPU-5c126807-49db-0b13-1200-87ce24163cc9
+NVIDIA_VISIBLE_DEVICES=GPU-ed120cef-ac44-2b15-ef0c-b708dc75f92f
 ```
 
 nvidia-smi -L 로 확인한 UUID 값을 NVIDIA_VISIBLE_DEVICES 환경 변수값으로 주입하면 특정 GPU 들만 선택적으로 사용할 수 있다.    <---- 테스트 필요함..      
