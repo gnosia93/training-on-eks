@@ -42,6 +42,8 @@ sudo dnf install git -y
 export VERSION=v2.1.0
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=${VERSION}"
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
+
+kubectl get clustertrainingruntimes
 ```
 
 ### 갱 스케줄링 ###
