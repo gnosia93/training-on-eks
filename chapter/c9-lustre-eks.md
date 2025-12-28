@@ -317,7 +317,7 @@ if aws iam get-role --role-name "${FSX_ROLE}" 2>/dev/null; then
     aws iam delete-role --role-name "${FSX_ROLE}"
     echo "역할 삭제 완료."
 else
-    echo "${FSX_ROLE}" 이 이미 삭제되었습니다."
+    echo "${FSX_ROLE} 이 이미 삭제되었습니다."
 fi
 
 # 4. FSx for Lustre 파일 시스템 삭제
