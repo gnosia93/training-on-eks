@@ -1,4 +1,4 @@
-<< 테스트 필요 >>
+EKS 에서 Placement Group 설정은 EC2 론치 템플릿을 사용하여 설정할 수 있다. 또한 Capacity Block 설정도 론치 템플릿에 가능하다.   
 
 ## 클러스터 배치 그룹(Cluster Placement Group) ##
 네트워크 지연 시간을 줄이려면, EKS 노드 그룹 생성 시 AWS 수준에서 Cluster Placement Group을 적용해야 한다. 
@@ -8,7 +8,7 @@ aws ec2 create-placement-group \
     --strategy cluster
 ```
 
-### 론치 템플릿 ###
+### EC2 론치 템플릿 ###
 ```
 cat <<'EOF' > launch-template-data.json
 {
@@ -16,6 +16,11 @@ cat <<'EOF' > launch-template-data.json
     "Placement": {
         "GroupName": "deepspeed-placement-group"
     },
+//    "CapacityReservationSpecification": {
+//        "CapacityReservationTarget": {
+//            "CapacityReservationId": "cr-xxxxxxxxxxxxxxxxx"
+//        }
+//    },
     "BlockDeviceMappings": [
         {
             "DeviceName": "/dev/xvda",
@@ -80,7 +85,7 @@ aws eks create-nodegroup \
     --nodegroup-name "ng-deepspeed" \
     --launch-template name="deepspeed-launch-template",version=1 \
     --scaling-config minSize=2,maxSize=2,desiredSize=2 \
-    --subnets "subnet-0e7be3e3155f668ed","subnet-00b7e6cc786475a22" \
+    --subnets "subnet-0e7be3e3155f668ed" "subnet-00b7e6cc786475a22" \
     --node-role "arn:aws:iam::499514681453:role/trainig-on-eks-AmazonEKSNodeRole"
 ```
 
