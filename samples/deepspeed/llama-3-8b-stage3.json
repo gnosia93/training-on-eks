@@ -13,11 +13,6 @@
         "stage3_param_persistence_threshold": "auto",
         "stage3_max_live_parameters": 1e9,
         "stage3_max_reuse_distance": 1e9,
-        
-        /* 
-           기본값인 false를 유지하여 매 에폭 저장 시 
-           모든 가중치를 하나로 합치지 않고 분산 저장합니다. 
-        */
         "stage3_gather_16bit_weights_on_model_save": false
     },
     "gradient_clipping": "auto",
