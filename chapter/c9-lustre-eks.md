@@ -172,8 +172,7 @@ spec:
       storage: 38400Gi
   volumeName: fsx-pv 
 EOF
-```
-```
+
 kubectl apply -f fsx-pvc.yaml
 ```
 
