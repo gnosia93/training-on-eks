@@ -328,7 +328,7 @@ fi
 # 6. 시큐리티 그룹 삭제
 echo "6. 보안 그룹(fsx-lustre-sg) 삭제 중..."
 SG_ID=$(aws ec2 describe-security-groups \
-    --filters "Name=group-name,Values=fsx-lustre-sg" \
+    --filters "Name=group-name,Values=${FSX_SG}" \
     --query "SecurityGroups[0].GroupId" \
     --output text)
 
