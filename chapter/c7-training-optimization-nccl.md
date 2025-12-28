@@ -1,4 +1,4 @@
-EKS 에서 Placement Group 설정은 EC2 론치 템플릿을 사용하여 설정할 수 있다. 또한 Capacity Block 설정도 론치 템플릿에 가능하다.   
+EKS 에서 Placement Group 및 Capacity Block 설정은 EC2 론치 템플릿을 사용한다.   
 
 ## 클러스터 배치 그룹(Cluster Placement Group) ##
 네트워크 지연 시간을 줄이려면, EKS 노드 그룹 생성 시 AWS 수준에서 Cluster Placement Group을 적용해야 한다. 
@@ -89,7 +89,7 @@ aws eks create-nodegroup \
     --node-role "arn:aws:iam::499514681453:role/trainig-on-eks-AmazonEKSNodeRole"
 ```
 
-### 카펜터 Capacity Block ###
+### 참고 - 카펜터 Capacity Block ###
 카펜터는 ODCR 과 Capacity Block 설정을 지원하지만 (아래 메뉴얼 참고), Placement Group 은 명시적으로 지원하지 않는다. 
 * https://karpenter.sh/docs/tasks/odcrs/
 * https://karpenter.sh/docs/concepts/nodeclasses/
