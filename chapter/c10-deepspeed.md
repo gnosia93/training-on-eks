@@ -100,6 +100,10 @@ llama-3-8b-node-0-1-zf275   0/1     ContainerCreating   0          86s
 llama-3-8b-node-0-2-qnwc6   0/1     ContainerCreating   0          86s
 llama-3-8b-node-0-3-r455m   0/1     ContainerCreating   0          86s
 ```
+Pod 상태 상세정보 및 이벤트(Events)를 확인한다. 설정오류 및 기타 원인으로 인해 컨테이너가 작업을 시작하지 못하는 경우 그 원인을 쉽게 파악할 수 있다.  
+```
+kubectl describe pod llama-3-8b-node-0-1-zf275
+```
 
 카펜터가 프로비저닝 한 노드 리스트를 조회한다. 
 ```
