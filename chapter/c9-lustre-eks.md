@@ -38,7 +38,7 @@ aws ec2 authorize-security-group-ingress --group-id ${FSX_SG_ID} --protocol -1 -
 aws ec2 authorize-security-group-egress --group-id ${FSX_SG_ID} --protocol -1 --port -1 --source-group ${FSX_SG_ID}
 
 # 테스트용 FSx for Lustre 생성 (SCRATCH_2, 1200 GiB, ENI)
-aws fsx create-file-system \
+FSx_ID=$(aws fsx create-file-system \
     --file-system-type LUSTRE \
     --storage-capacity 1200 \
     --subnet-ids ${PRIV_SUBNET_ID} \
@@ -47,7 +47,7 @@ aws fsx create-file-system \
         ImportPath=s3://${BUCKET_NAME},\
         ExportPath=s3://${BUCKET_NAME}/export,\
         AutoImportPolicy=NEW_CHANGED_DELETED" \
-    --query "FileSystem.FileSystemId" --output text
+    --query "FileSystem.FileSystemId" --output text)
 
 
 # 운영용 FSx for Lustre 생성 (PERSISTENT_2, 38400 GiB, EFA)
