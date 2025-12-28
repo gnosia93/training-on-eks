@@ -33,7 +33,7 @@ $ aws ec2 describe-instance-types \
 |  True        |  g6e.8xlarge  |  8                     |  25 Gigabit          |
 +--------------+---------------+------------------------+----------------------+
 ```
-* "kubectl get nodepool" 명령어로 gpu 노드풀이 존재하는 지 확인한다. 없으면 [GPU 노드 준비](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)를 참고하여 생성한다. 
+* "kubectl get nodepool" 명령어로 gpu 노드풀이 존재하는 지 확인한다. 없으면 [C3. GPU 노드 준비하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)를 참고하여 생성한다. 
 
 ### 큐브플로우 Trainer 설치 ###
 ```
