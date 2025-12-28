@@ -46,9 +46,10 @@ spec:
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
         cd /workspace/code/samples/deepspeed
         pip install -r requirements.txt
+        huggingface-cli login --token "${HF_TOKEN}"
         echo "=== Launching Distributed Training ==="
-        export MASTER_ADDR=\${PET_MASTER_ADDR}
-        export MASTER_PORT=\${PET_MASTER_PORT:-29500}
+        export MASTER_ADDR=\${PET_MASTER_ADDR}                 # ${PET_MASTER_ADDR} 앞에 \(이스케이스)하여, 문자열로 취급되도록 한다.      
+        export MASTER_PORT=\${PET_MASTER_PORT:-29500}          # 이값은 컨테이너 실행시 내부적으로 채워진다.   
         echo "Master Address: \${MASTER_ADDR}"
         echo "Master Port: \${MASTER_PORT}"
         echo "=================================="
