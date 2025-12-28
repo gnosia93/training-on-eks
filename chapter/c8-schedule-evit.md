@@ -61,25 +61,8 @@ kubectl exec -it llama-3-8b-node-0-3-f86kr -- env | grep NVIDIA_VISIBLE_DEVICES
 NVIDIA_VISIBLE_DEVICES=GPU-ed120cef-ac44-2b15-ef0c-b708dc75f92f
 ```
 
-확인된 UUID 값을 NVIDIA_VISIBLE_DEVICES 환경 변수값으로 주입하면 특정 GPU 들만 선택적으로 사용할 수 있다.        
-```
-spec:
-  pytorchReplicaSpecs:
-    Worker:
-      template:
-        spec:
-          containers:
-          - name: pytorch
-            env:
-            # 특정 UUID의 GPU만 사용하도록 명시 (나머지는 배제됨)
-            # nvidia-smi -L 로 확인한 UUID 입력
-            - name: NVIDIA_VISIBLE_DEVICES
-              value: "GPU-8e3d6f21-...,GPU-f2a3b4c5-..." 
-            # 또는 특정 GPU 인덱스만 제외하고 싶을 때 (예: 0번 제외)
-            # - name: CUDA_VISIBLE_DEVICES
-            #   value: "1,2,3"
-```
-
+* 노드당 1개의 GPU 를 가진 노드라면 노드라벨로 관리 가능
+* 멀티 GPU 인 경우는 ?? 
 
 
 
