@@ -121,6 +121,8 @@ export EFA_PER_NODE=1                          # 100Gbp 사용
 export HF_TOKEN="<your huggingface token>"     # Llama-3 모델은 HF 인증이 필요.
 
 cd ~/training-on-eks/samples/deepspeed
+kubectl get trainjob 
+kubectl delete trainjob llama-3-8b
 envsubst '$INSTANCE_TYPE $NODE_NUM $GPU_PER_NODE $EFA_PER_NODE $HF_TOKEN' < trainjob.yaml | kubectl apply -f - 
 ```
 
