@@ -10,6 +10,8 @@ transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
 
 def main():
+    print("...4")
+
     # 1. 모델 및 토크나이저 설정 (Llama-3-8B 예시)
     model_name = "meta-llama/Meta-Llama-3-8B"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -69,5 +71,9 @@ def main():
         print(f"모델과 토크나이저가 저장되었습니다: {final_save_path}")
 
 
+print("...1")
 if __name__ == "__main__":
+    print("...2")
     main()
+    print("...3")
+
