@@ -36,6 +36,19 @@ $ aws ec2 describe-instance-types \
 ```
 * "kubectl get nodepool" 명령어로 gpu 노드풀이 존재하는 지 확인한다. 없으면 [C3. GPU 노드 준비하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)를 참고하여 생성한다. 
 
+* efa 디바이스 플러그인 설치
+```
+helm repo add eks https://aws.github.io/eks-charts
+helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
+
+# operator:exists toleration 부여 
+kubectl patch ds aws-efa-k8s-device-plugin -n kube-system --type='json' -p='[
+  {"op": "add", "path": "/spec/template/spec/tolerations/-", "value": {"operator": "Exists"}}
+]'
+# 플러그인 설치 확인
+kubectl get ds aws-efa-k8s-device-plugin -n kube-system
+``` 
+
 ### 큐브플로우 Trainer 설치 ###
 ```
 sudo dnf install git -y
