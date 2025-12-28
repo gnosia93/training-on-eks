@@ -1,3 +1,15 @@
+## 카펜터 메시지 확인 방법 ##
+```
+kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
+```
+[결과]
+```
+...
+{"level":"ERROR","time":"2025-12-28T06:02:04.189Z","logger":"controller","message":"could not schedule pod","commit":"1ad0d78","controller":"provisioner","namespace":"","name":"","reconcileID":"165e8c95-70a3-42f3-b2ec-cb7b3ea2c3f4","Pod":{"name":"llama-3-8b-node-0-2-dxnht","namespace":"default"},"error":"no instance type which had enough resources and the required offering met the scheduling requirements, requirements=karpenter.k8s.aws/ec2nodeclass In [gpu], karpenter.k8s.aws/instance-category In [g p], karpenter.sh/capacity-type In [on-demand spot], karpenter.sh/nodepool In [gpu], kubernetes.io/arch In [amd64], node.kubernetes.io/instance-type In [g6e.8xlarge], nodeType In [nvidia], topology.kubernetes.io/zone In [ap-northeast-2a], resources={\"cpu\":\"345m\",\"memory\":\"664Mi\",\"nvidia.com/gpu\":\"1\",\"pods\":\"10\",\"vpc.amazonaws.com/efa\":\"8\"}"}
+...
+...
+```
+
 ## "error":"no instance type which had enough resources and the required offering met the scheduling requirements ##
 
 이 에러는 Kubernetes의 Karpenter 가 Pod 에서 요구한 리소스를 제공할 수 있는 EC2 인스턴스를 찾지 못했을 때 발생한다.
