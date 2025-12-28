@@ -219,20 +219,23 @@ done
 ```
 aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" --output json | jq -r '
   ["ID", "Status", "Storage_GiB", "Unit_MB/s", "Total_MB/s", "MountName", "Type"],
-  (.[] | [
-    .FileSystemId, 
-    .Lifecycle, 
-    .StorageCapacity, 
-    .LustreConfiguration.PerUnitStorageThroughput, 
-    ((.StorageCapacity / 1024) * .LustreConfiguration.PerUnitStorageThroughput), 
-    .LustreConfiguration.MountName, 
-    .LustreConfiguration.DeploymentType
-  ]) | @tsv' | column -t -s $'\t'
+  (.[] | 
+    (.LustreConfiguration.PerUnitStorageThroughput // 0 | tonumber) as $unit |
+    [
+      .FileSystemId, 
+      .Lifecycle, 
+      .StorageCapacity, 
+      (if $unit == 0 then "Default" else $unit end), 
+      (if $unit == 0 then "Variable" else (($unit * .StorageCapacity / 1024) | floor) end), 
+      .LustreConfiguration.MountName, 
+      .LustreConfiguration.DeploymentType
+    ]
+  ) | @tsv' | column -t -s $'\t'
 ```
 [결과]
 ```
-ID                    Status     Storage_GiB  Unit_MBps  Total_MBps  MountName  Type
-fs-07ac8c09c8b9e1981  AVAILABLE  38400        125        4687.5      nelu5bev   PERSISTENT_2
+ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  Type
+fs-0159be19ce80d8e03  AVAILABLE  1200         Default    Variable    knwe5bev   SCRATCH_2
 ```
 
 ## Pod 마운트 테스트 ##
