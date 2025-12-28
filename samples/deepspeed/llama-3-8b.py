@@ -49,10 +49,12 @@ def main():
     )
     
     # 5. 트레이너 실행
+    data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=tokenized_datasets,
+        data_collator=data_collator
     )
     
     trainer.train()
