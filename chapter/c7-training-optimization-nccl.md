@@ -80,7 +80,7 @@ aws eks create-nodegroup \
     --nodegroup-name "ng-deepspeed" \
     --launch-template name="deepspeed-launch-template",version=1 \
     --scaling-config minSize=2,maxSize=2,desiredSize=2 \
-    --subnets "subnet-0e7be3e3155f668ed","subnet-00b7e6cc786475a22"
+    --subnets "subnet-0e7be3e3155f668ed","subnet-00b7e6cc786475a22" \
     --node-role trainig-on-eks-AmazonEKSNodeRole
 ```
 
