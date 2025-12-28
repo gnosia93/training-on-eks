@@ -125,7 +125,7 @@ aws fsx describe-file-systems \
 ### 4. Amazon FSx CSI 드라이버 설치 ### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
 ```
-kubectl create namespace fsx-csi-driver
+kubectl create namespace fsx-csi
 helm repo add aws-fsx-csi-driver https://kubernetes-sigs.github.io/aws-fsx-csi-driver
 helm repo update
 
