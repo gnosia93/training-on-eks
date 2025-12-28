@@ -289,7 +289,7 @@ kubectl apply -f nginx.yaml
 
 
 ## 클러스터 삭제 ##
-#### 카펜터 인스턴스 프로파일 삭제 #### 
+#### 1. 카펜터 인스턴스 프로파일 삭제 #### 
 ```
 ROLE_NAME="eksctl-KarpenterNodeRole-training-on-eks"
 for p in $(aws iam list-attached-role-policies --role-name "$ROLE_NAME" --query 'AttachedPolicies[*].PolicyArn' --output text); do aws iam detach-role-policy --role-name "$ROLE_NAME" --policy-arn "$p"; done
@@ -297,7 +297,7 @@ for p in $(aws iam list-role-policies --role-name "$ROLE_NAME" --query 'PolicyNa
 for i in $(aws iam list-instance-profiles-for-role --role-name "$ROLE_NAME" --query 'InstanceProfiles[*].InstanceProfileName' --output text); do aws iam remove-role-from-instance-profile --instance-profile-name "$i" --role-name "$ROLE_NAME"; aws iam delete-instance-profile --instance-profile-name "$i"; done
 aws iam delete-role --role-name "$ROLE_NAME"
 ```
-#### 클러스터 삭제 ####
+#### 2. 클러스터 삭제 ####
 ```
 eksctl delete cluster -f cluster.yaml
 ```
