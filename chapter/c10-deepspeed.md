@@ -47,9 +47,15 @@ kubectl patch ds aws-efa-k8s-device-plugin -n kube-system --type='json' -p='[
 ]'
 # 플러그인 설치 확인
 kubectl get ds aws-efa-k8s-device-plugin -n kube-system
-``` 
+```
+[결과]
+```
+NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+aws-efa-k8s-device-plugin   0         0         0       0            0           <none>          27s
+```
+efa 플러그인 설치 시점에는 efa 인터페이스를 지원하는 노드가 없는 관계로 데몬수가 0 으로 표시된다. 
 
-### 큐브플로우 Trainer 설치 ###
+# 큐브플로우 Trainer 설치 ###
 ```
 sudo dnf install git -y
 
