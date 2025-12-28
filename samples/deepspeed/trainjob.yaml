@@ -45,12 +45,12 @@ spec:
       - |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
         cd /workspace/code/samples/deepspeed
-        pip install -r requirements.txt
         huggingface-cli login --token "${HF_TOKEN}"
         echo "=== Launching Distributed Training ==="
         echo "Master Address: ${PET_MASTER_ADDR}"
         echo "Master Port: ${PET_MASTER_PORT}"
         echo "=================================="
+        pip install -r requirements.txt && \
         torchrun \
           --nproc_per_node=1 \
           --rdzv_id=llama-3-8b-job \
