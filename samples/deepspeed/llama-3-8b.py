@@ -16,22 +16,19 @@ class SimpleTimeCallback(TrainerCallback):
             # 현재 시간을 YYYY-MM-DD HH:MM:SS 형태로 추가
             logs["time"] = datetime.datetime.now().strftime("%H:%M:%S")
 
-# [로그 설정] 
 # transformers 라이브러리의 로그 레벨을 INFO로 설정하여 학습 과정(Loss 등)을 확인합니다.
 transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
 
 def main():
-    # 시작 시간 기록
     start_time = time.time()
 
-    # 1. 모델 및 토크나이저 설정 (Llama-3-8B 예시)
     model_name = "meta-llama/Meta-Llama-3-8B"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right" 
     
-    # 2. 아주 큰 모델을 초기화할 때 메모리 효율을 위해 'meta' 장치 사용
+    # 아주 큰 모델을 초기화할 때 메모리 효율을 위해 'meta' 장치 사용
     # ZeRO-3는 이 설정을 통해 모델을 로드하면서 즉시 GPU들에 분산시킨다.
     # config = AutoConfig.from_pretrained(model_name)
     # model = AutoModelForCausalLM.from_config(config) 
@@ -42,9 +39,7 @@ def main():
     #   attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상 / flash-attn 미설치 
     )
     
-    # 3. 데이터셋 로드 (간단한 예시)
-    dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")
-    
+    dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
     def tokenize_function(examples):
         return tokenizer(examples["text"], truncation=True, max_length=512)
     
@@ -54,7 +49,7 @@ def main():
     training_args = TrainingArguments(
         output_dir="/data/fsx",                        # 분산 체크 포인트 위치                
         per_device_train_batch_size=4,
-        gradient_accumulation_steps=4,                 # 실제 배치 사이즈 = 4 * 4 * GPU개수
+        gradient_accumulation_steps=4,                 # 실제 배치 사이즈 = 4 * 4 * GPU 개수
         learning_rate=2e-5,
         max_steps=50,                                  # 딱 50번의 스텝만 하고 종료 / 이경우 에포크는 무시됨   
         num_train_epochs=1,
@@ -72,7 +67,6 @@ def main():
     # data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
-    # 5. 트레이너 실행
     trainer = Trainer(
         model=model,
         args=training_args,
@@ -94,8 +88,7 @@ def main():
         print(f"최종 소요 시간: {readable_time}")
         print(f"전체 초 단위: {total_seconds:.2f}s")
 
-    # 6. 학습 종료 후 최종 모델 및 토크나이저 저장
-    # 마스터 노드(Rank 0)에서만 실행하여 파일 중복 쓰기 방지
+    # 학습 종료 후 최종 모델 및 토크나이저 저장
     if training_args.local_rank in [-1, 0]:
         print("\n--- 학습 완료! 최종 모델 저장 중 ---")
         final_save_path = os.path.join(training_args.output_dir, "final_model")
@@ -110,5 +103,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
