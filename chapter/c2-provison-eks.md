@@ -199,40 +199,39 @@ aws ec2 describe-security-groups \
 
 * eksctl-training-on-eks-iamservice-role 에 정책 추가(OIDC 정책 누락)
 ```
+POLICY_JSON=$(cat <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "eks:DescribeCluster",
+            "Resource": "arn:aws:eks:${AWS_REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateInstanceProfile",
+                "iam:DeleteInstanceProfile",
+                "iam:GetInstanceProfile",
+                "iam:TagInstanceProfile",
+                "iam:AddRoleToInstanceProfile",
+                "iam:RemoveRoleFromInstanceProfile",
+                "iam:ListInstanceProfiles"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+)
+
 aws iam put-role-policy \
     --role-name eksctl-training-on-eks-iamservice-role \
     --policy-name EKS_OIDC_Support_Policy \
-    --policy-document '{
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Sid": "VisualEditor0",
-                "Effect": "Allow",
-                "Action": "eks:DescribeCluster",
-                "Resource": "arn:aws:eks:${AWS_REGION}:${AWS_ACCOUNT_ID}:cluster/${CLUSTER_NAME}"
-            },
-            {
-                "Effect": "Allow",
-                "Action": [
-                    "iam:CreateInstanceProfile",
-                    "iam:DeleteInstanceProfile",
-                    "iam:GetInstanceProfile",
-                    "iam:TagInstanceProfile",
-                    "iam:AddRoleToInstanceProfile",
-                    "iam:RemoveRoleFromInstanceProfile",
-                    "iam:ListInstanceProfiles"
-                ],
-                "Resource": "*"
-            }
-        ]
-    }'
+    --policy-document "$POLICY_JSON"
 ```
-
-
-
-
-
-
 
 
 
