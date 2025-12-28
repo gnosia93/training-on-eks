@@ -1,5 +1,7 @@
 << 작성중 ..>>
 
+## NCCL 최적화 ##
+
 ### 1. EFA 환경 최적화 (AWS 필수 설정) ###
 AWS의 고속 네트워크망을 제대로 쓰려면 NCCL이 EFA를 기본 통신 계층으로 사용하도록 강제해야 합니다.
 * FI_PROVIDER="efa": 통신 프로바이더를 EFA로 지정합니다.
@@ -16,6 +18,14 @@ AWS의 고속 네트워크망을 제대로 쓰려면 NCCL이 EFA를 기본 통�
 * NCCL_BUFFSIZE: 통신 버퍼 크기입니다. 기본값은 2MB(2097152)이나, 대규모 모델 훈련 시 4194304 (4MB) 또는 8388608 (8MB)로 늘리면 성능이 향상될 수 있습니다.
 * NCCL_P2P_LEVEL: GPU 간 P2P(Point-to-Point) 통신 방식을 제어합니다. (예: 5는 NVLink를 통한 직접 연결 사용)
 * NCCL_IB_DISABLE=1: AWS EFA 사용 시 InfiniBand(IB) 관련 에러가 발생한다면 이를 비활성화하여 EFA만 타도록 유도합니다.
+
+
+## 설정 확인 ##
+설정 후 파드가 실행되면 로그(kubectl logs <pod-name>)를 확인한다. NCCL_DEBUG=INFO 덕분에 다음과 같은 로그가 찍혀야 정상이다.
+* NCCL INFO NET/OFI Selected Provider is efa (EFA가 정상 선택됨)
+* NCCL INFO NET/OFI Using Profile efa
+* NCCL INFO Using network AWS Libfabric
+
 
 ## 레퍼런스 ##
 
