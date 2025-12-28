@@ -33,6 +33,10 @@
 * [C9. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-lustre-eks.md)
 
 * [C10. DeepSpeed 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed.md)
+
+## Appendix ##
+
+* [A1. 카펜터 오류 메시지]()
    
 ## 레퍼런스 ## 
 
