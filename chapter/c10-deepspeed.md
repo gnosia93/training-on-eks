@@ -40,6 +40,13 @@ $ aws ec2 describe-instance-types \
 
 * nvidia 디바이스 플러그인 설치
 ```
+helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
+helm repo update
+helm install nvdp nvdp/nvidia-device-plugin \
+  --namespace nvidia \
+  --create-namespace \
+  --version 0.18.0 \
+  --set gfd.enabled=true
 ```  
 
 * efa 디바이스 플러그인 설치
