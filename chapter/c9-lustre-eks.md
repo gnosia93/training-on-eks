@@ -140,7 +140,58 @@ helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
     --set controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/FSxLustreRole
 ```
 
-### 5. PV/PVC 배포 ###
+### 5. 생성 상태 확인 ###
+```
+echo "FSx 파일 시스템 [$FSx_ID] 상태를 확인합니다..."
+while true; do
+    STATUS=$(aws fsx describe-file-systems \
+        --file-system-ids "$FSx_ID" \
+        --query "FileSystems[0].Lifecycle" \
+        --output text 2>/dev/null)
+    # 결과가 없는 경우 종료
+    if [ -z "$STATUS" ] || [ "$STATUS" == "None" ]; then
+        echo "오류: 해당 ID를 찾을 수 없습니다."
+        break
+    fi
+
+    echo "[$(date +%H:%M:%S)] 현재 상태: $STATUS"
+    if [ "$STATUS" == "AVAILABLE" ]; then
+        echo "축하합니다! 파일 시스템이 준비되었습니다."
+        break
+    elif [ "$STATUS" == "FAILED" ]; then
+        echo "오류: 파일 시스템 생성에 실패했습니다."
+        break
+    fi
+
+    sleep 5
+done
+```
+
+### 6. 러스터 성능 조회 ####
+```
+aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" --output json | jq -r '
+  ["ID", "Status", "Storage_GiB", "Unit_MB/s", "Total_MB/s", "MountName", "Type"],
+  (.[] | 
+    (.LustreConfiguration.PerUnitStorageThroughput // 0 | tonumber) as $unit |
+    [
+      .FileSystemId, 
+      .Lifecycle, 
+      .StorageCapacity, 
+      (if $unit == 0 then "Default" else $unit end), 
+      (if $unit == 0 then "Variable" else (($unit * .StorageCapacity / 1024) | floor) end), 
+      .LustreConfiguration.MountName, 
+      .LustreConfiguration.DeploymentType
+    ]
+  ) | @tsv' | column -t -s $'\t'
+```
+[결과]
+```
+ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  Type
+fs-0159be19ce80d8e03  AVAILABLE  1200         Default    Variable    knwe5bev   SCRATCH_2
+```
+
+
+### 7. PV/PVC 배포 ###
 ```
 FSx_DNS=$(aws fsx describe-file-systems --file-system-ids ${FSx_ID} --query "FileSystems[0].{DNSName:DNSName}" --output text)
 FSx_MOUNT=$(aws fsx describe-file-systems --file-system-ids ${FSx_ID} --query "FileSystems[0].{MountName:LustreConfiguration.MountName}" --output text)
@@ -191,55 +242,15 @@ EOF
 kubectl apply -f fsx-pvc.yaml
 ```
 
-### 6. 생성 상태 확인 ###
-```
-echo "FSx 파일 시스템 [$FSx_ID] 상태를 확인합니다..."
-while true; do
-    STATUS=$(aws fsx describe-file-systems \
-        --file-system-ids "$FSx_ID" \
-        --query "FileSystems[0].Lifecycle" \
-        --output text 2>/dev/null)
-    # 결과가 없는 경우 종료
-    if [ -z "$STATUS" ] || [ "$STATUS" == "None" ]; then
-        echo "오류: 해당 ID를 찾을 수 없습니다."
-        break
-    fi
 
-    echo "[$(date +%H:%M:%S)] 현재 상태: $STATUS"
-    if [ "$STATUS" == "AVAILABLE" ]; then
-        echo "축하합니다! 파일 시스템이 준비되었습니다."
-        break
-    elif [ "$STATUS" == "FAILED" ]; then
-        echo "오류: 파일 시스템 생성에 실패했습니다."
-        break
-    fi
 
-    sleep 5
-done
-```
 
-### 7. 러스터 성능 조회 ####
-```
-aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" --output json | jq -r '
-  ["ID", "Status", "Storage_GiB", "Unit_MB/s", "Total_MB/s", "MountName", "Type"],
-  (.[] | 
-    (.LustreConfiguration.PerUnitStorageThroughput // 0 | tonumber) as $unit |
-    [
-      .FileSystemId, 
-      .Lifecycle, 
-      .StorageCapacity, 
-      (if $unit == 0 then "Default" else $unit end), 
-      (if $unit == 0 then "Variable" else (($unit * .StorageCapacity / 1024) | floor) end), 
-      .LustreConfiguration.MountName, 
-      .LustreConfiguration.DeploymentType
-    ]
-  ) | @tsv' | column -t -s $'\t'
-```
-[결과]
-```
-ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  Type
-fs-0159be19ce80d8e03  AVAILABLE  1200         Default    Variable    knwe5bev   SCRATCH_2
-```
+
+
+
+
+
+
 
 ## Pod 마운트 테스트 ##
 ```
