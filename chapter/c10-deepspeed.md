@@ -105,7 +105,7 @@ Pod 상태 상세정보 및 이벤트(Events)를 확인한다. 설정오류 및 
 kubectl describe pod llama-3-8b-node-0-1-zf275
 ```
 
-카펜터가 프로비저닝 한 노드 리스트를 조회한다. 
+카펜터가 프로비저닝 한 노드 리스트를 조회한다. 만약 GPU 노드가 보이지 않는다면 카펜터 로그를 확인해 봐야 한다. 
 ```
 kubectl get nodes -o custom-columns="NAME:.metadata.name, \
    INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
@@ -124,20 +124,6 @@ ip-10-0-5-55.ap-northeast-2.compute.internal    g6e.8xlarge    amd64      Amazon
 ...
 ```
 
-
-
-
-```
-kubectl exec -it llama-3-8b -- /bin/bash
-fi_info -p efa
-```
-
-카펜터 노드 확인
-```
-kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
-```
-
-* 러스터에 저장하도록 코드를 수정해야 한다..
 
 ### 훈련 모니터링 ###
 * GPU 모니터링
