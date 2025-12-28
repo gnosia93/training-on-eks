@@ -23,9 +23,9 @@ spec:
            #     name: fsx
             
         volumes:
-          - name: fsx
-            persistentVolumeClaim:
-              claimName: fsx-pvc             
+       #   - name: fsx
+       #     persistentVolumeClaim:
+       #       claimName: fsx-pvc             
           - name: dshm
             emptyDir:
               medium: Memory
