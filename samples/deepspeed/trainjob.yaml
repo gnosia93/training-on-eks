@@ -7,7 +7,7 @@ spec:
     - targetJobs:
         - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
       metadata:
-        name: llama-3-8b
+#        name: llama-3-8b
         annotations:
           karpenter.sh/do-not-disrupt: "true"                         # Karpenter의 노드 회수 방지
       spec:
