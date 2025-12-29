@@ -30,11 +30,9 @@ llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Connected all trees
 #### 2. 성능 차이 (Bottleneck) ###
 * NVLink 속도: 최신 GPU(A100/H100/GB200) 기준 노드 내부 통신은 보통 600 GB/s [NVLink 3.0] ~ 1,800 GB/s [NVLink 5.0]
 * 네트워크(EFA) 속도: EFA 는 100Gbps ~ 400Gbps (약 12.5GB/s ~ 50GB/s) 수준 제공.
-즉, 같은 물리 노드 안에 있는 GPU끼리 대화하는데 속도가 10배 이상 느려지는 결과를 초래한다. 
 
 #### 3. 기술적 예외 (Pod Affinity & Shared Memory) ####
 hostNetwork: true를 사용하고 IPC 설정을 정교하게 하면 파드가 달라도 NVLink를 쓸 수는 있지만, 설정이 매우 까다롭고 보안상 권장되지 않는다.
-
 
 #### cf. GPU별 개별 Pod 설정 ####
 만약 개별 GPU 별로 하나의 Pod 를 할당하고 싶다면 아래와 같은 설정으로 가능하다. 하지만 이는 성능을 대가로 관리 편의성을 얻는 선택이 된다. 
