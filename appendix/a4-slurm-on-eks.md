@@ -3,14 +3,14 @@ Slurm 컴포넌트 간 보안 통신(TLS)을 위해 필수입니다.
 ```
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
-helm install cert-manager jetstack/cert-manager \
-  --namespace cert-manager --create-namespace \
+helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace \
   --set crds.enabled=true
 ```
 
-### 2. Slinky Slurm Operator 설치 ###
-Slinky Helm 차트 레포지토리 추가한다.
+### 2. Slinky Slurm CRD / Operator 설치 ###
 ```
+helm install slurm-operator-crds oci://ghcr.io/slinkyproject/charts/slurm-operator-crds
+
 helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
   --namespace slinky-system \
   --create-namespace
