@@ -20,7 +20,7 @@ NCCL INFO NCCL version 2.27.3+cuda12.9
 llama-3-8b-node-0-0:194:724 [3] ... cudaDev 3 nvmlDev 3 busId 3e000 commId ... rank 3 nranks 16
 ```
 
-#### 로그 ####
+#### RANK 0 로그 ####
 ```
 llama-3-8b-node-0-0:191:191 [0] NCCL INFO NCCL_SOCKET_IFNAME set by environment to ^docker0,lo
 llama-3-8b-node-0-0:191:191 [0] NCCL INFO Bootstrap: Using eth0:10.0.5.28<0>
