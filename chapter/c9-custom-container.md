@@ -1,3 +1,6 @@
+## 소프트웨어 설치 위치 ##
+호스트에는 드라이버만, 컨테이너에는 CUDA를 설치하는 것이 표준이다.
+
 ### 1. 호스트(Host) 설치 ###
 호스트는 하드웨어를 직접 제어하는 핵심 요소를 담당합니다.
 * NVIDIA 커널 드라이버 (GPU Driver): 하드웨어와 OS를 연결하는 가장 기초적인 소프트웨어입니다. (예: nvidia-smi를 실행했을 때 나오는 드라이버 버전)
@@ -7,13 +10,8 @@
 ### 2. 컨테이너(Container)에 설치 ###
 애플리케이션 실행에 필요한 환경은 모두 컨테이너 안에 담깁니다.
 * CUDA 툴킷 (CUDA Toolkit): nvcc 컴파일러, 라이브러리(cuBLAS, cuDNN 등)가 여기에 포함됩니다. 컨테이너 내부의 앱은 이 라이브러리를 사용합니다.
-* NCCL (NVIDIA Collective Communications Library): GPU P2P 통신을 담당하는 핵심 라이브러리입니다. 보통 PyTorch나 TensorFlow 이미지 안에 내장되어 있습니다.
+* NCCL (NVIDIA Collective Communications Library): GPU P2P 통신을 담당하는 핵심 라이브러리입니다. 보통 PyTorch나 TensorFlow 이미지 안에 내장되어 있습니다. P2P 통신 관점에서는, 호스트의 드라이버가 NVLink/PCIe P2P를 지원하는 상태여야 하고, 컨테이너 내부의 NCCL이 이를 활용하도록 설정(NCCL_P2P_DISABLE=0)되어야 최종적으로 최적화가 완성된다.
 * 딥러닝 프레임워크: PyTorch, TensorFlow, JAX 등
-
-### 호스트에는 드라이버만, 컨테이너에는 CUDA를 ~ ###
-* 많은 분이 실수하는 부분이 호스트에 CUDA 전체를 설치하는 것입니다. 하지만 EKS나 Docker 환경에서는 호스트에 드라이버만 최신으로 유지하고, CUDA 버전은 컨테이너 이미지(FROM nvidia/cuda:xxx)에서 결정하는 것이 가장 깔끔하고 관리가 쉽습니다.
-* P2P 통신 관점에서는, 호스트의 드라이버가 NVLink/PCIe P2P를 지원하는 상태여야 하고, 컨테이너 내부의 NCCL이 이를 활용하도록 설정(NCCL_P2P_DISABLE=0)되어야 최종적으로 최적화가 완성됩니다.
-
 
 ### 'CUDA 드라이버' vs 'CUDA 툴킷'의 차이 ###
 이 둘을 구분하면 왜 드라이버만 호스트에 까는지 명확해집니다.
@@ -29,6 +27,23 @@
 * 컨테이너 (Pod): 사용하려는 PyTorch나 CUDA 버전에 맞는 이미지를 가져옵니다.
 * 연결: 컨테이너가 실행될 때 호스트의 드라이버 파일을 컨테이너 내부로 마운트(연결)하여 사용합니다.
 
+
+## NVIDIA Container Toolkit ##
+NVIDIA Container Toolkit은 호스트 OS에 설치된 NVIDIA GPU 드라이버와 컨테이너(Docker, K8s) 사이를 연결해 주는 '다리' 역할을 하는 소프트웨어 패키지이다.
+일반적인 컨테이너(Docker 등)는 호스트의 하드웨어와 격리되어 있다. 특히 GPU는 복잡한 커널 드라이버가 필요한데, 컨테이너 안에 무거운 드라이버를 통째로 넣을 수는 없다.
+이때 컨테이너 툴킷이 있으면, 컨테이너가 실행될 때 호스트의 GPU 드라이버 자원(라이브러리, 실행 파일 등)을 컨테이너 내부로 자동으로 마운트(연결)해 준다.
+컨테이너 내 프로세스가 호스트의 GPU를 내 것처럼 인식하게 하고, 호스트의 libcuda.so 같은 핵심 라이브러리와 nvidia-smi 같은 도구를 컨테이너 안으로 노출시켜 준다.
+GPU 간 P2P 통신에 필요한 장치 노드(/dev/nvidiactl 등)를 컨테이너가 사용할 수 있도록 권한을 부여해 준다.
+
+* nvidia-container-cli: 실제 컨테이너 안에 GPU 장치를 넣어주는 하위 레벨 도구
+* nvidia-container-runtime: Docker 같은 런타임이 GPU를 사용할 수 있게 중간에서 가로채서 처리해 주는 엔진
+* libnvidia-container: 하드웨어 리소스 처리를 위한 라이브러리
+
+#### 설치 순서 ####
+* 호스트에 NVIDIA 드라이버 설치
+* 호스트에 Docker 또는 Containerd 설치
+* 호스트에 NVIDIA Container Toolkit 설치
+* 컨테이너 실행 (예: docker run --gpus all ...) 
 
 
 ```
