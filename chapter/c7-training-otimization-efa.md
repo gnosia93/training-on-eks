@@ -211,13 +211,6 @@ NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE  
 aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
 ```
 
-#### 2-4. VPC CNI 설정 (Optional) ####       
-```
-kubectl set env daemonset/aws-node -n kube-system ENABLE_EFA_SUPPORT=true
-kubectl get daemonset aws-node -n kube-system -o yaml | grep ENABLE_EFA_SUPPORT
-```
-EKS 클러스터의 aws-node (VPC CNI)가 EFA를 지원하도록 설정되어야 한다.
-
 ### 3. EFA 테스트 ### 
 nodeSelector 를 이용하여 Karpenter가 관리하는 gpu-efa 노드풀을 사용하여 파드가 스케줄링되도록 한다 (특정 노드풀을 쓰도록 강제하는 방식)
 ```
