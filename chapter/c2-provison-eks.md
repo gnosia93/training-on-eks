@@ -41,7 +41,7 @@ ARCH="arm64"
 if [ "$(uname -m)" != 'aarch64' ]; then
   ARCH="amd64"
 fi
-echo ${ARCH}
+echo ${ARCH}" architecture detected .."
 curl --silent --location "https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_${ARCH}.tar.gz" | tar xz -C /tmp
 sudo mv /tmp/k9s /usr/local/bin/
 k9s version
