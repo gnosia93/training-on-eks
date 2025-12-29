@@ -2,24 +2,23 @@
 호스트에는 드라이버만, 컨테이너에는 CUDA를 설치하는 것이 표준이다.
 
 ### 1. 호스트(Host) 설치 ###
-호스트는 하드웨어를 직접 제어하는 핵심 요소를 담당합니다.
-* NVIDIA 커널 드라이버 (GPU Driver): 하드웨어와 OS를 연결하는 가장 기초적인 소프트웨어입니다. (예: nvidia-smi를 실행했을 때 나오는 드라이버 버전)
-* NVIDIA Container Toolkit (구 nvidia-docker2): 컨테이너가 호스트의 GPU 드라이버를 인식하고 사용할 수 있도록 다리 역할을 해주는 도구입니다.
-* CUDA 커널 (선택적): 사실 호스트에는 CUDA 전체를 깔 필요가 없습니다. 드라이버에 포함된 CUDA 드라이버(libcuda.so)만 있으면 컨테이너를 돌리는 데 충분합니다.
+호스트에는 하드웨어를 직접 제어하는데 필요한 소프트웨어를 설치해야 한다.  
+* NVIDIA 커널 드라이버 (GPU Driver): 하드웨어와 OS를 연결하는 가장 기초적인 소프트웨어이다. (예: nvidia-smi를 실행했을 때 나오는 드라이버 버전)
+* NVIDIA Container Toolkit (구 nvidia-docker2): 컨테이너가 호스트의 GPU 드라이버를 인식하고 사용할 수 있도록 다리 역할을 해주는 도구이다.
+* CUDA 커널 (선택적): 사실 호스트에는 CUDA 전체를 깔 필요가 없다. 드라이버에 포함된 CUDA 드라이버(libcuda.so)만 있으면 컨테이너를 돌리는 데 충분하다.
 
 ### 2. 컨테이너(Container)에 설치 ###
-애플리케이션 실행에 필요한 환경은 모두 컨테이너 안에 담깁니다.
-* CUDA 툴킷 (CUDA Toolkit): nvcc 컴파일러, 라이브러리(cuBLAS, cuDNN 등)가 여기에 포함됩니다. 컨테이너 내부의 앱은 이 라이브러리를 사용합니다.
-* NCCL (NVIDIA Collective Communications Library): GPU P2P 통신을 담당하는 핵심 라이브러리입니다. 보통 PyTorch나 TensorFlow 이미지 안에 내장되어 있습니다. P2P 통신 관점에서는, 호스트의 드라이버가 NVLink/PCIe P2P를 지원하는 상태여야 하고, 컨테이너 내부의 NCCL이 이를 활용하도록 설정(NCCL_P2P_DISABLE=0)되어야 최종적으로 최적화가 완성된다.
+애플리케이션 실행에 필요한 환경은 모두 컨테이너 안에 넣는다.
+* CUDA 툴킷 (CUDA Toolkit): nvcc 컴파일러, 라이브러리(cuBLAS, cuDNN 등)가 여기에 포함되는데 컨테이너 내부의 앱은 이 라이브러리를 사용한다.
+* NCCL (NVIDIA Collective Communications Library): GPU P2P 통신을 담당하는 핵심 라이브러리로 보통 PyTorch나 TensorFlow 이미지 안에 내장되어 있다. P2P 통신 관점에서는 호스트의 드라이버가 NVLink/PCIe P2P를 지원하는 상태여야 하고, 컨테이너 내부의 NCCL이 이를 활용하도록 설정(NCCL_P2P_DISABLE=0)되어야 한다.
 * 딥러닝 프레임워크: PyTorch, TensorFlow, JAX 등
 
 ### 'CUDA 드라이버' vs 'CUDA 툴킷'의 차이 ###
-이 둘을 구분하면 왜 드라이버만 호스트에 까는지 명확해집니다.
-* CUDA 드라이버 (libcuda.so 등): 호스트에 설치된 NVIDIA 드라이버에 포함되어 있습니다. GPU와 직접 대화하는 역할을 하며, 호스트에만 존재해야 합니다.
-* CUDA 툴킷 (nvcc, libcudart.so 등): 개발 도구와 라이브러리 모음입니다. 이는 컨테이너 안에 포함됩니다. 컨테이너 내부의 앱이 이 툴킷을 통해 명령을 내리면, 호스트의 드라이버가 이를 전달받아 GPU를 구동합니다.   
-    * nvcc: CUDA C/C++ 컴파일러 (툴킷의 핵심)
-    * nvprof / nsys: 성능 분석(Profiling) 도구
-    * cuBLAS, cuDNN: 딥러닝 연산 가속 라이브러리
+* CUDA 드라이버 (libcuda.so 등): 호스트에 설치된 NVIDIA 드라이버에 포함되어 있다. GPU와 직접 대화하는 역할을 하며, 호스트에만 존재해야 한다.
+* CUDA 툴킷 (nvcc, libcudart.so 등): 개발 도구와 라이브러리 모음으로, 컨테이너 내부의 앱이 이 툴킷을 통해 명령을 내리면 호스트의 드라이버가 이를 전달받아 GPU를 구동한다.   
+  * nvcc: CUDA C/C++ 컴파일러 (툴킷의 핵심)
+  * nvprof / nsys: 성능 분석(Profiling) 도구
+  * cuBLAS, cuDNN: 딥러닝 연산 가속 라이브러리
 
 ## NVIDIA Container Toolkit ##
 NVIDIA Container Toolkit은 호스트 OS에 설치된 NVIDIA GPU 드라이버와 컨테이너(Docker, K8s) 사이를 연결해 주는 '다리' 역할을 하는 소프트웨어 패키지이다.
