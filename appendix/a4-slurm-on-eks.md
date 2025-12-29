@@ -15,6 +15,8 @@ kubectl get crd | grep slinky
 
 helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
   --namespace slinky --create-namespace
+
+kubectl api-resources | grep slurm
 ```
 
 ### 3. Slurm 클러스터(Pod) 배포 ###
