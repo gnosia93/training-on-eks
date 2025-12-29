@@ -23,7 +23,7 @@
    - [EFA 사용하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md)
    - [Placement Group 설정](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-placement-group.md) 
    - [NCCL 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-nccl.md)
-   - [멀티 GPU 통신 토폴로지](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-pod.md)
+   - [멀티 GPU 통신 토폴로지](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-intra-topology.md)
       
 * C8. 훈련 스케줄링 및 복원력 
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
