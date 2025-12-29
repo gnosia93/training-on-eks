@@ -41,11 +41,4 @@ trainer:
         vpc.amazonaws.com: "1"                 # (EFA 사용 시) 1개 할당
 ```
 
-
-
-
-* 노드 내부: NVLink로 초고속 통신
-* 노드 간: EFA(RDMA)로 초고속 통신
-
-* 권장 사항:
-  * 
+ 
