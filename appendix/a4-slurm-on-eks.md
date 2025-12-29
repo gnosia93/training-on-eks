@@ -30,7 +30,7 @@ export GPU_PER_NODE=1
 export EFA_PER_NODE=1
 
 cat <<EOF > slurm-cluster.yaml
-# 1. Slurm Controller (slurmctld) 설정
+# 1. Slurm Controller (slurmctld)
 apiVersion: slinky.slurm.net/v1beta1
 kind: Controller
 metadata:
@@ -38,9 +38,13 @@ metadata:
   namespace: slinky
 spec:
   replicas: ${SLURM_CTRL_NODE_NUM}
-  image: "ghcr.io/slinkyproject/slurmctld:${SLURM_VERSION}" 
+  template:
+    spec:
+      containers:
+        - name: slurmctld
+          image: "ghcr.io/slinkyproject/slurmctld:${SLURM_VERSION}"
 ---
-# 2. Slurm Worker Nodes (slurmd / Partition 설정)
+# 2. Slurm Worker Nodes (slurmd)
 apiVersion: slinky.slurm.net/v1beta1
 kind: NodeSet
 metadata:
@@ -48,13 +52,17 @@ metadata:
   namespace: slinky
 spec:
   replicas: ${SLURM_WORKER_NODE_NUM}
-  image: "ghcr.io/slinkyproject/slurmd:${SLURM_VERSION}"
-  resources:
-    limits:
-      nvidia.com/gpu: "${GPU_PER_NODE}"
-      vpc.amazonaws.com/efa: "${EFA_PER_NODE}"
+  template:
+    spec:
+      containers:
+        - name: slurmd
+          image: "ghcr.io/slinkyproject/slurmd:${SLURM_VERSION}"
+          resources:
+            limits:
+              nvidia.com/gpu: "${GPU_PER_NODE}"
+              vpc.amazonaws.com/efa: "${EFA_PER_NODE}"
 ---
-# 3. Slurm Login Node (ssh/접속용)
+# 3. Slurm Login Node
 apiVersion: slinky.slurm.net/v1beta1
 kind: LoginSet
 metadata:
@@ -62,7 +70,11 @@ metadata:
   namespace: slinky
 spec:
   replicas: ${SLURM_LOGIN_NODE_NUM}
-  image: "ghcr.io/slinkyproject/slurmrestd:${SLURM_VERSION}"    
+  template:
+    spec:
+      containers:
+        - name: login
+          image: "ghcr.io/slinkyproject/slurmrestd:${SLURM_VERSION}"    
 EOF
 ```
 ```
