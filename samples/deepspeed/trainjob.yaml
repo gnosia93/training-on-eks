@@ -8,6 +8,10 @@ spec:
   podTemplateOverrides:
     - targetJobs:
         - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
+      metadata:
+        name: llama-3-8b
+        annotations:
+          karpenter.sh/do-not-disrupt: "true"                         # Karpenter의 노드 회수 방지
       spec:
         #securityContext:
         #      capabilities:                                          # EFA 통신을 위해 메모리 잠금 권한 필요
