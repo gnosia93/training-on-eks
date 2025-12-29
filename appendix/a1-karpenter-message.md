@@ -8,6 +8,17 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## 오류 메시지 ##
 
+### 노드의 잦은 Not Ready 상태로의 변경 ###
+훈련 도중 노드가 Not Ready 상태로 변경되면, 해당 노드에서 실행중인 파드는 쿠버네티스로 부터 종료 시그널을 받게 된다. 종료 시그널을 받은 파드는 진행중인 작업을 중단하고 종료하게 되는데, 이경우 NCCL 통신이 broken 되어 전체 작업이 비정상적으로 종료한다. 쿠버네티스에서는 이를 방지하게 위해서 아래와 같이 두가지 설정이 필요하다.
+
+#### 1. 파드 annotation 설정 ####
+
+#### 2. 카펜터 Consolidation 정책 조정 ####
+
+
+
+
+
 ### "error":"no instance type which had enough resources and the required offering met the scheduling requirements ###
 
 이 에러는 Kubernetes의 Karpenter 가 Pod 에서 요구한 리소스를 제공할 수 있는 EC2 인스턴스를 찾지 못했을 때 발생한다.
