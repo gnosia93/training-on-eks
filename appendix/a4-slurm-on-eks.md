@@ -15,20 +15,18 @@ helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
 ```
 
 ### 3. Slurm 파드 배포 ###
-EKS 클러스터에 slurmctld, slurmd, login 파드들을 배포한다.
+EKS 에 슬럼 클러스터 데몬인 slurmctld, slurmd, login 등을 Pod 형태로 배포한다.
 ```
+export SLURM_VERSION="25.11"
 apiVersion: slurm.slinky.io/v1alpha1
 kind: SlurmCluster
 metadata:
   name: slurm-on-eks
 spec:
-  # Slurm 버전 지정 (2025년 기준 25.11 권장)
-  version: "25.11"
-  # 관리자 노드 설정
+  version: "${SLURM_VERSION}"
   controller:
-    replicas: 1
-  # 실제 계산을 수행할 워커 노드(파드) 설정
-  workerGroups:
+    replicas: 1                         # 관리자 노드 설정 (slurmctld)
+  workerGroups:                         # 워커 노드(파드) 설정 (slurmd)
     - name: "gpu-partition"
       replicas: 2
       resources:
