@@ -14,13 +14,13 @@ helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
   --create-namespace
 ```
 
-### 3. Slurm 클러스터(파드들) 배포 ###
-이제 실제로 slurmctld, slurmd, login 파드들을 띄웁니다. 이를 위해 slurm-cluster.yaml 파일을 작성해야 합니다.
+### 3. Slurm 파드 배포 ###
+EKS 클러스터에 slurmctld, slurmd, login 파드들을 배포한다.
 ```
 apiVersion: slurm.slinky.io/v1alpha1
 kind: SlurmCluster
 metadata:
-  name: my-slurm-cluster
+  name: slurm-on-eks
 spec:
   # Slurm 버전 지정 (2025년 기준 25.11 권장)
   version: "25.11"
@@ -112,5 +112,6 @@ Slinky를 도입하면 연구자는 기존과 똑같이 sbatch 명령어로 AI �
 더 자세한 아키텍처 다이어그램이나 기술 문서는 Slinky 공식 GitHub에서 확인할 수 있습니다
 
 ## 레퍼런스 ##
+* https://slinky.schedmd.com/en/latest/
 * https://www.schedmd.com/introducing-slinky-slurm-kubernetes/
 * [Running Slurm on Amazon EKS with Slinky](https://aws.amazon.com/ko/blogs/containers/running-slurm-on-amazon-eks-with-slinky/#:~:text=The%20Slinky%20Project%20is%20an%20open%20source,NodeSet%20resources%20deployed%20within%20a%20Kubernetes%20environment.)
