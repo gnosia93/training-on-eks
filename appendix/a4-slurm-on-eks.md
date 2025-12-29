@@ -12,8 +12,7 @@ helm install cert-manager jetstack/cert-manager --namespace cert-manager --creat
 helm install slurm-operator-crds oci://ghcr.io/slinkyproject/charts/slurm-operator-crds
 
 helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
-  --namespace slinky-system \
-  --create-namespace
+  --namespace slinky --create-namespace
 ```
 
 ### 3. Slurm 클러스터(Pod) 배포 ###
