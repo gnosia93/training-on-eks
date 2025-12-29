@@ -1,4 +1,5 @@
-## 인트라-노드 통신 (Intra-node Communication) ##
+## 인트라-노드 통신 ##
+하나의 서버 또는 파드에서 지원하는 GPU 간의 통신 방식은 다음과 같다.  
 * GPU P2P 
   * NVLink / NVSwitch: 전용 고속 브릿지 통신
   * PCIe : PCIe 버스를 통한 직접 통신
