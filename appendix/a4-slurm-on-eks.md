@@ -9,7 +9,8 @@ helm install cert-manager jetstack/cert-manager --namespace cert-manager --creat
 
 ### 2. Slinky Slurm CRD / Operator 설치 ###
 ```
-helm install slurm-operator-crds oci://ghcr.io/slinkyproject/charts/slurm-operator-crds
+helm install slurm-operator-crds oci://ghcr.io/slinkyproject/charts/slurm-operator-crds \
+  --namespace slinky --create-namespace
 
 helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
   --namespace slinky --create-namespace
