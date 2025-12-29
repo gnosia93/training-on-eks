@@ -1,3 +1,14 @@
+### 1. 호스트(Host) 설치 ###
+호스트는 하드웨어를 직접 제어하는 핵심 요소를 담당합니다.
+* NVIDIA 커널 드라이버 (GPU Driver): 하드웨어와 OS를 연결하는 가장 기초적인 소프트웨어입니다. (예: nvidia-smi를 실행했을 때 나오는 드라이버 버전)
+* NVIDIA Container Toolkit (구 nvidia-docker2): 컨테이너가 호스트의 GPU 드라이버를 인식하고 사용할 수 있도록 다리 역할을 해주는 도구입니다.
+* CUDA 커널 (선택적): 사실 호스트에는 CUDA 전체를 깔 필요가 없습니다. 드라이버에 포함된 CUDA 드라이버(libcuda.so)만 있으면 컨테이너를 돌리는 데 충분합니다.
+
+### 2. 컨테이너(Container)에 설치 ###
+애플리케이션 실행에 필요한 환경은 모두 컨테이너 안에 담깁니다.
+* CUDA 툴킷 (CUDA Toolkit): nvcc 컴파일러, 라이브러리(cuBLAS, cuDNN 등)가 여기에 포함됩니다. 컨테이너 내부의 앱은 이 라이브러리를 사용합니다.
+* NCCL (NVIDIA Collective Communications Library): GPU P2P 통신을 담당하는 핵심 라이브러리입니다. 보통 PyTorch나 TensorFlow 이미지 안에 내장되어 있습니다.
+* 딥러닝 프레임워크: PyTorch, TensorFlow, JAX 등
 
 ```
 # 1. 최적화된 NVIDIA 공식 이미지 사용 (CUDA, cuDNN, NCCL 포함)
