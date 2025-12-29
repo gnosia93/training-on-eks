@@ -203,15 +203,6 @@ llama-3-8b-node-0-0:193:1069 [0] NCCL INFO [Service thread] Connection closed by
 llama-3-8b-node-0-0:194:635 [3] NCCL INFO [Service thread] Connection closed by localRank 2
 llama-3-8b-node-0-0:194:1072 [3] NCCL INFO [Service thread] Connection closed by localRank 2
 ```
-#### EFA 모니터링 ####
-
-
-#### GPU 모니터링 ####
-
-#### 노드 모니터링 ####
-
-#### 훈련 로그 실시간 확인 ###
-
 
  
 ## 레퍼런스 ##
