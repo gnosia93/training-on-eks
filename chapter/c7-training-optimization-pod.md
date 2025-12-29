@@ -28,7 +28,7 @@ llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Connected all trees
 * 3[3] -> 글로벌 랭크 3 / 로컬 랭크 3, 8[0] -> 글로벌 랭크 8 / 로컬 랭크 0  
 
 #### 2. 성능 차이 (Bottleneck) ###
-* NVLink 속도: 최신 GPU(A100/H100) 기준 노드 내부 통신은 보통 300GB/s ~ 900GB/s.
+* NVLink 속도: 최신 GPU(A100/H100) 기준 노드 내부 통신은 보통 600GB/s [NVLink 3.0] ~ 1,800 GB/s [NVLink 5.0]
 * 네트워크(EFA) 속도: EFA 는 100Gbps ~ 400Gbps (약 12.5GB/s ~ 50GB/s) 수준 제공.
 즉, 같은 물리 노드 안에 있는 GPU끼리 대화하는데 속도가 10배 이상 느려지는 결과를 초래한다. 
 
