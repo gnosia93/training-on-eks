@@ -220,64 +220,8 @@ llama-3-8b-node-0-0:194:1072 [3] NCCL INFO [Service thread] Connection closed by
 
 #### 노드 모니터링 ####
 
-#### 훈련 로그 실시간 확인 ####
+#### 훈련 로그 실시간 확인 ###
 
-
-
-
-
-
----
-
-## 러스터 디버깅 ##
-```
-kubectl run -i --tty debug --image=ubuntu --restart=Never -- /bin/bash
-
-sudo dnf install -y lustre-client
-sudo modprobe lustre
-lsmod | grep lustre
-
-sudo mkdir -p /mnt/test
-sudo mount -t lustre fs-0b3956b37951325ab.fsx.ap-northeast-2.amazonaws.com@tcp:/znqu5bev /mnt/test
-sudo dmesg | tail -n 20
-
-[640442.326609] Lustre: Client version (2.15.6). Server MGS version (2.10.5.0) is much older than client. Consider upgrading server
-[640442.328129] LustreError: 16a-d: Server MGS version (2.10.5.0) refused connection from this client with an incompatible version (2.15.6).  Client must be recompiled
-[640442.330114] LustreError: 2525281:0:(client.c:1255:ptlrpc_import_delay_req()) @@@ IMP_CLOSED  req@00000000d14def7e x1852753199497408/t0(0) o101->MGC10.0.4.14@tcp@10.0.4.14@tcp:26/25 lens 328/344 e 0 to 0 dl 0 ref 2 fl Rpc:QU/0/ffffffff rc 0/-1 job:''
-[640442.333114] LustreError: 156-2: The client profile 'znqu5bev-client' could not be read from the MGS.  Does that filesystem exist?
-[640442.334728] Lustre: Unmounted znqu5bev-client
-[640442.335581] LustreError: 2525281:0:(super25.c:187:lustre_fill_super()) llite: Unable to mount <unknown>: rc = -22
-[640533.303338] Lustre: Client version (2.15.6). Server MGS version (2.10.5.0) is much older than client. Consider upgrading server
-[640533.304843] LustreError: 16a-d: Server MGS version (2.10.5.0) refused connection from this client with an incompatible version (2.15.6).  Client must be recompiled
-[640533.306869] LustreError: 2525882:0:(client.c:1255:ptlrpc_import_delay_req()) @@@ IMP_CLOSED  req@00000000235de8a6 x1852753199497792/t0(0) o101->MGC10.0.4.14@tcp@10.0.4.14@tcp:26/25 lens 328/344 e 0 to 0 dl 0 ref 2 fl Rpc:QU/0/ffffffff rc 0/-1 job:''
-[640533.309807] LustreError: 2525882:0:(client.c:1255:ptlrpc_import_delay_req()) Skipped 2 previous similar messages
-[640533.311222] LustreError: 156-2: The client profile 'znqu5bev-client' could not be read from the MGS.  Does that filesystem exist?
-[640533.312853] Lustre: Unmounted znqu5bev-client
-[640533.313441] LustreError: 2525882:0:(super25.c:187:lustre_fill_super()) llite: Unable to mount <unknown>: rc = -22
-[640860.081236] Lustre: Client version (2.15.6). Server MGS version (2.10.5.0) is much older than client. Consider upgrading server
-[640860.082733] LustreError: 16a-d: Server MGS version (2.10.5.0) refused connection from this client with an incompatible version (2.15.6).  Client must be recompiled
-[640860.084756] LustreError: 2527767:0:(client.c:1255:ptlrpc_import_delay_req()) @@@ IMP_CLOSED  req@000000002c3d430f x1852753199498176/t0(0) o101->MGC10.0.4.14@tcp@10.0.4.14@tcp:26/25 lens 328/344 e 0 to 0 dl 0 ref 2 fl Rpc:QU/0/ffffffff rc 0/-1 job:''
-[640860.087714] LustreError: 2527767:0:(client.c:1255:ptlrpc_import_delay_req()) Skipped 2 previous similar messages
-[640860.089127] LustreError: 156-2: The client profile 'znqu5bev-client' could not be read from the MGS.  Does that filesystem exist?
-[640860.090782] Lustre: Unmounted znqu5bev-client
-[640860.091582] LustreError: 2527767:0:(super25.c:187:lustre_fill_super()) llite: Unable to mount <unknown>: rc = -22
-
-
-sudo yum remove -y lustre-client lustre-client-modules
-sudo amazon-linux-extras disable lustre
-
-
-
-aws fsx describe-file-systems \
-  --file-system-ids fs-0b3956b37951325ab \
-  --region ap-northeast-2 \
-  --query "FileSystems[0].LustreConfiguration.MountName" \
-  --output text
-
-sudo dnf install -y telnet
-telnet fs-0b3956b37951325ab.fsx.ap-northeast-2.amazonaws.com 988
-
-```
 
  
 ## 레퍼런스 ##
