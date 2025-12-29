@@ -178,6 +178,21 @@ ip-10-0-7-56   True     c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2d  <n
 ```
 kubectl logs -f llama-3-8b-node-0-0-k9rb7
 ```
+[결과]
+```
+Cloning into '/workspace/code'...
+⚠️  Warning: 'huggingface-cli login' is deprecated. Use 'hf auth login' instead.
+The token has not been saved to the git credentials helper. Pass `add_to_git_credential=True` in this function directly or `--add-to-git-credential` if using via `hf`CLI if you want to set the git credential as well.
+Token is valid (permission: read).
+The token `training-on-eks` has been saved to /root/.cache/huggingface/stored_tokens
+Your token has been saved to /root/.cache/huggingface/token
+Login successful.
+The current active token is: `training-on-eks`
+=== Launching Distributed Training ===
+Requirement already satisfied: torch>=2.4.0 in /usr/local/lib/python3.12/site-packages (from -r requirements.txt (line 2)) (2.8.0+cu129)
+Requirement already satisfied
+...
+```
 
 * GPU 모니터링
 * 노드 모니터링
