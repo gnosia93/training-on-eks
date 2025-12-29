@@ -10,6 +10,10 @@
 * NCCL (NVIDIA Collective Communications Library): GPU P2P 통신을 담당하는 핵심 라이브러리입니다. 보통 PyTorch나 TensorFlow 이미지 안에 내장되어 있습니다.
 * 딥러닝 프레임워크: PyTorch, TensorFlow, JAX 등
 
+### 호스트에는 드라이버만, 컨테이너에는 CUDA를 ~ ###
+* 많은 분이 실수하는 부분이 호스트에 CUDA 전체를 설치하는 것입니다. 하지만 EKS나 Docker 환경에서는 호스트에 드라이버만 최신으로 유지하고, CUDA 버전은 컨테이너 이미지(FROM nvidia/cuda:xxx)에서 결정하는 것이 가장 깔끔하고 관리가 쉽습니다.
+* P2P 통신 관점에서는, 호스트의 드라이버가 NVLink/PCIe P2P를 지원하는 상태여야 하고, 컨테이너 내부의 NCCL이 이를 활용하도록 설정(NCCL_P2P_DISABLE=0)되어야 최종적으로 최적화가 완성됩니다.
+
 ```
 # 1. 최적화된 NVIDIA 공식 이미지 사용 (CUDA, cuDNN, NCCL 포함)
 FROM nvcr.io/nvidia/pytorch:24.12-py3
