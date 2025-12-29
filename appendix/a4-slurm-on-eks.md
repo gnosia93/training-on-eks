@@ -3,7 +3,6 @@
 ## Slurm on EKS ##
 
 ### 1. cert-manager 설치 ###
-Slurm 컴포넌트 간 보안 통신(TLS)을 위해 필수입니다.
 ```
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
@@ -26,81 +25,7 @@ helm install slurm oci://ghcr.io/slinkyproject/charts/slurm \
 ```
 
 
-EKS 에 슬럼 클러스터 데몬인 slurmctld, slurmd, login 등을 Pod 형태로 배포한다.
-```
-export SLURM_VERSION="25.11"
-export SLURM_CTRL_NODE_NUM=1
-export SLURM_WORKER_NODE_NUM=2
-export SLURM_LOGIN_NODE_NUM=1
-export GPU_PER_NODE=1
-export EFA_PER_NODE=1
 
-cat <<EOF > slurm-cluster.yaml
-# 1. Slurm Controller (slurmctld)
-apiVersion: slinky.slurm.net/v1beta1
-kind: Controller
-metadata:
-  name: slurm-controller
-  namespace: slinky
-spec:
-  # 모든 필드명은 소문자로 시작해야 합니다 (key, name)
-  jwtHs256KeyRef:
-    name: slurm-jwt-key
-    key: jwt-key
-  slurmKeyRef:
-    name: slurm-key
-    key: slurm-key
-  template:
-    spec:
-      containers:
-        - name: slurmctld
-          image: "ghcr.io/slinkyproject/slurmctld:23.11.10"
----
-# 2. Slurm Worker Nodes (slurmd)
-apiVersion: slinky.slurm.net/v1beta1
-kind: NodeSet
-metadata:
-  name: gpu-partition
-  namespace: slinky
-spec:
-  replicas: ${SLURM_WORKER_NODE_NUM}
-  controllerRef:
-    name: slurm-controller
-  updateStrategy:
-    type: RollingUpdate
-  template:
-    spec:
-      containers:
-        - name: slurmd
-          image: "ghcr.io/slinkyproject/slurmd:23.11.10"
-          resources:
-            limits:
-              nvidia.com/gpu: "${GPU_PER_NODE}"
-              vpc.amazonaws.com/efa: "${EFA_PER_NODE}"
----
-# 3. Slurm Login Node
-apiVersion: slinky.slurm.net/v1beta1
-kind: LoginSet
-metadata:
-  name: login-node
-  namespace: slinky
-spec:
-  replicas: ${SLURM_LOGIN_NODE_NUM}
-  controllerRef:
-    name: slurm-controller
-  sssdConfRef:
-    name: sssd-config
-    key: sssd.conf
-  template:
-    spec:
-      containers:
-        - name: login
-          image: "ghcr.io/slinkyproject/slurmrestd:23.11.10"
-EOF
-```
-```
-kubectl apply -f slurm-cluster.yaml
-```
 
 
 
