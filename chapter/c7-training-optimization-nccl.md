@@ -3,6 +3,8 @@
 ## NCCL 로그 ##
 
 #### efa 관련 분석 ####
+
+아래 RANK 0 로그에 대한 efa 관련 분석내용으로, efa 플러그인이 정상적으로 로딩되어 16 rank의 훈련 작업이 시작되었다. 
 ```
 # EFA 플러그인 로드 - AWS OFI(Open Fabric Interface) NCCL 플러그인(libnccl-net.so, aws-ofi-nccl)
 NCCL INFO NET/Plugin: Successfully loaded external plugin libnccl-net.so
@@ -19,6 +21,7 @@ NCCL INFO NCCL version 2.27.3+cuda12.9
 # 프로세스 및 GPU 매핑 - 16 랭크 구성
 llama-3-8b-node-0-0:194:724 [3] ... cudaDev 3 nvmlDev 3 busId 3e000 commId ... rank 3 nranks 16
 ```
+
 
 #### RANK 0 로그 ####
 ```
