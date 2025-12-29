@@ -224,10 +224,6 @@ llama-3-8b-node-0-0:194:1072 [3] NCCL INFO [Service thread] Connection closed by
 
 
 
-## 인터커넥트 타입별 소요시간 ##
-
-* EFA - 2441.04s
-* ENI - 
 
 
 
