@@ -6,7 +6,7 @@ helm repo update
 helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --set installCRDs=true
 ```
 
-### 2. Slinky Slurm Operator 설치 ###
+### 2. Slinky Slurm Operator 설치 ###
 Slinky Helm 차트 레포지토리 추가한다.
 ```
 helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
