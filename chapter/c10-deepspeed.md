@@ -146,6 +146,7 @@ kubectl describe pod llama-3-8b-node-0-1-zf275
 카펜터가 프로비저닝 한 노드 리스트를 조회한다. 만약 GPU 노드가 보이지 않는다면 카펜터 로그를 확인해 봐야 한다. 
 ```
 kubectl get nodes -o custom-columns="NAME:.metadata.name, \
+   STATUS:.status.conditions[?(@.type=='Ready')].status, \
    INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
    ARCH:.status.nodeInfo.architecture, \
    GPU:.status.capacity['nvidia\.com/gpu'], \
