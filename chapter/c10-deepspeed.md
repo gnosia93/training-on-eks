@@ -208,7 +208,7 @@ Requirement already satisfied
 
 
 
-## 인터커넥트 타입별 소요시간 비교 ##
+## 인터커넥트 타입별 소요시간 ##
 
 * EFA - 2441.04s
 * ENI - 
