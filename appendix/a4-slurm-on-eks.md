@@ -20,6 +20,16 @@ kubectl api-resources | grep slurm
 ```
 
 ### 3. Slurm 클러스터(Pod) 배포 ###
+```
+# JWT 인증용 키 생성
+kubectl create secret generic slurm-jwt-key -n slinky --from-literal=jwt-key=$(openssl rand -base64 32)
+
+# Slurm 내부 통신용 인증 키 (munge.key 역할) 생성
+kubectl create secret generic slurm-key -n slinky --from-literal=slurm-key=$(openssl rand -base64 32)
+
+```
+
+
 EKS 에 슬럼 클러스터 데몬인 slurmctld, slurmd, login 등을 Pod 형태로 배포한다.
 ```
 export SLURM_VERSION="25.11"
@@ -34,15 +44,21 @@ cat <<EOF > slurm-cluster.yaml
 apiVersion: slinky.slurm.net/v1beta1
 kind: Controller
 metadata:
-  name: slurm-controller # 이 이름이 아래 ref의 대상이 됩니다.
+  name: slurm-controller
   namespace: slinky
 spec:
-  # v1beta1 Controller는 replicas 대신 template 구조를 주로 사용합니다.
+  # JWT 및 Slurm Key 참조 추가 (필수)
+  jwtHs256KeyRef:
+    name: slurm-jwt-key
+    key: jwt-key
+  slurmKeyRef:
+    name: slurm-key
+    key: slurm-key
   template:
     spec:
       containers:
         - name: slurmctld
-          image: "ghcr.io/slinkyproject/slurmctld:${SLURM_VERSION}"
+          image: "ghcr.io/slinkyproject/slurmctld:23.11.10" # 예시 버전
 ---
 # 2. Slurm Worker Nodes (slurmd)
 apiVersion: slinky.slurm.net/v1beta1
@@ -53,12 +69,15 @@ metadata:
 spec:
   replicas: ${SLURM_WORKER_NODE_NUM}
   controllerRef:
-    name: slurm-controller # 위 Controller의 metadata.name과 일치해야 함
+    name: slurm-controller
+  # 업데이트 전략 명시 (필수)
+  updateStrategy:
+    type: RollingUpdate
   template:
     spec:
       containers:
         - name: slurmd
-          image: "ghcr.io/slinkyproject/slurmd:${SLURM_VERSION}"
+          image: "ghcr.io/slinkyproject/slurmd:23.11.10"
           resources:
             limits:
               nvidia.com/gpu: "${GPU_PER_NODE}"
@@ -73,18 +92,18 @@ metadata:
 spec:
   replicas: ${SLURM_LOGIN_NODE_NUM}
   controllerRef:
-    name: slurm-controller # 위 Controller의 metadata.name과 일치해야 함
-  # v1beta1 LoginSet은 인증 설정을 위해 sssdConfRef를 요구합니다.
-  # 만약 별도 설정이 없다면 빈 ConfigMap을 만들거나 기존 설정을 참조해야 합니다.
+    name: slurm-controller
+  # SSSD ConfigMap의 내부 Key(파일명) 명시 (필수)
   sssdConfRef:
-    name: sssd-config # 아래 생성할 ConfigMap 이름
+    name: sssd-config
+    key: sssd.conf
   template:
     spec:
       containers:
         - name: login
-          image: "ghcr.io/slinkyproject/slurmrestd:${SLURM_VERSION}"
+          image: "ghcr.io/slinkyproject/slurmrestd:23.11.10"
 ---
-# 4. (필수) LoginSet을 위한 기본 SSSD ConfigMap
+# 4. SSSD ConfigMap
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -96,7 +115,7 @@ data:
     services = nss, pam
     domains = default
     [domain/default]
-    id_provider = local   
+    id_provider = local
 EOF
 ```
 ```
