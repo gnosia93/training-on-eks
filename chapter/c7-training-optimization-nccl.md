@@ -466,18 +466,11 @@ AWS의 고속 네트워크망을 제대로 쓰려면 NCCL이 EFA를 기본 통�
 * NCCL_DEBUG_SUBSYS=GRAPH,INIT,ENV: 토폴로지 구성과 환경 변수 인식 과정을 더 자세히 들여다볼 때 사용합니다.
 
 ### 3. 주요 환경 변수 튜닝 (Performance Tuning) ###
-훈련 속도(Throughput)를 높이기 위해 다음 변수들을 조정해 보며 최적값을 찾아야 합니다.
-* NCCL_BUFFSIZE: 통신 버퍼 크기입니다. 기본값은 2MB(2097152)이나, 대규모 모델 훈련 시 4194304 (4MB) 또는 8388608 (8MB)로 늘리면 성능이 향상될 수 있습니다.
-* NCCL_P2P_LEVEL: GPU 간 P2P(Point-to-Point) 통신 방식을 제어합니다. (예: 5는 NVLink를 통한 직접 연결 사용)
-* NCCL_IB_DISABLE=1: AWS EFA 사용 시 InfiniBand(IB) 관련 에러가 발생한다면 이를 비활성화하여 EFA만 타도록 유도합니다.
-
-
-## 설정 확인 ##
-설정 후 파드가 실행되면 로그(kubectl logs <pod-name>)를 확인한다. NCCL_DEBUG=INFO 덕분에 다음과 같은 로그가 찍혀야 정상이다.
-* NCCL INFO NET/OFI Selected Provider is efa (EFA가 정상 선택됨)
-* NCCL INFO NET/OFI Using Profile efa
-* NCCL INFO Using network AWS Libfabric
-
+훈련 속도(Throughput)를 높이기 위해 다음 변수들을 조정해 보며 최적값을 찾아야 한다.
+* NCCL_BUFFSIZE: 통신 버퍼 크기입니다. 기본값은 2MB(2097152)이나, 대규모 모델 훈련 시 4194304 (4MB) 또는 8388608 (8MB)로 늘리면 성능이 향상될 수 있다.
+* NCCL_P2P_LEVEL: GPU 간 P2P(Point-to-Point) 통신 방식을 제어한다. (예: 5는 NVLink를 통한 직접 연결 사용)
+* NCCL_IB_DISABLE=1: AWS EFA 사용 시 InfiniBand(IB) 관련 에러가 발생한다면 이를 비활성화하여 EFA만 타도록 유도한다.
+* NCCL_P2P_DISABLE=1: GPU 간 P2P(Peer-to-Peer) 통신을 비활성화 하는 것으로 NVLink 사용이 차단된다.
 
 ## 레퍼런스 ##
 
