@@ -18,7 +18,11 @@
 ### 'CUDA 드라이버' vs 'CUDA 툴킷'의 차이 ###
 이 둘을 구분하면 왜 드라이버만 호스트에 까는지 명확해집니다.
 * CUDA 드라이버 (libcuda.so 등): 호스트에 설치된 NVIDIA 드라이버에 포함되어 있습니다. GPU와 직접 대화하는 역할을 하며, 호스트에만 존재해야 합니다.
-* CUDA 툴킷 (nvcc, libcudart.so 등): 개발 도구와 라이브러리 모음입니다. 이는 컨테이너 안에 포함됩니다. 컨테이너 내부의 앱이 이 툴킷을 통해 명령을 내리면, 호스트의 드라이버가 이를 전달받아 GPU를 구동합니다.
+* CUDA 툴킷 (nvcc, libcudart.so 등): 개발 도구와 라이브러리 모음입니다. 이는 컨테이너 안에 포함됩니다. 컨테이너 내부의 앱이 이 툴킷을 통해 명령을 내리면, 호스트의 드라이버가 이를 전달받아 GPU를 구동합니다.   
+    * nvcc: CUDA C/C++ 컴파일러 (툴킷의 핵심)
+    * nvprof / nsys: 성능 분석(Profiling) 도구
+    * cuBLAS, cuDNN: 딥러닝 연산 가속 라이브러리
+
 
 ### EKS/컨테이너 환경에서의 구성 (Best Practice) ###
 * 호스트 (Node): NVIDIA 드라이버와 NVIDIA Container Toolkit만 설치합니다. (EKS의 경우 GPU 최적화 AMI를 사용하면 이미 설치되어 있습니다.)
