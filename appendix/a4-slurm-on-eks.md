@@ -106,35 +106,10 @@ EOF
 kubectl apply -f slurm-cluster.yaml
 ```
 
-### 4. 설치 확인 및 사용 ###
-```
-kubectl get pods -n slinky --show-labels
-```
-[결과]
-```
-NAME                                      READY   STATUS    RESTARTS   AGE   LABELS
-slurm-operator-56d865fbc7-g4qvx           1/1     Running   0          17m   app.kubernetes.io/instance=slurm-operator,app.kubernetes.io/managed-by=Helm,app.kubernetes.io/name=slurm-operator,app.kubernetes.io/version=25.11,helm.sh/chart=slurm-operator-1.0.1,pod-template-hash=56d865fbc7
-slurm-operator-webhook-57cf4d6d85-28pf4   1/1     Running   0          17m   app.kubernetes.io/instance=slurm-operator,app.kubernetes.io/managed-by=Helm,app.kubernetes.io/name=slurm-operator-webhook,app.kubernetes.io/version=25.11,helm.sh/chart=slurm-operator-1.0.1,pod-template-hash=57cf4d6d85
-```
 
 
 
-
-
-Login 파드 접속:
-bash
-kubectl exec -it <login-pod-name> -n slinky-system -- /bin/bash
-```
-
-```
-# 노드 상태 확인
-sinfo
-
-# 간단한 작업 제출
-srun -N 2 hostname
-```
-
-💡 실무 운영을 위한 핵심 팁 (2025년 가이드)
+💡 실무 운영을 위한 핵심 팁 
 
 * 공유 스토리지 (필수): Slurm은 모든 파드가 동일한 /home이나 /data를 공유해야 합니다. Amazon FSx for Lustre를 EKS의 PVC로 연결하여 각 파드에 마운트하는 설정을 slurm-cluster.yaml의 volumes 섹션에 반드시 추가해야 합니다.
 * 자동 확장 (Karpenter): 워커 노드가 모자랄 때 AWS 인스턴스를 자동으로 띄우고 싶다면, EKS에 Karpenter를 설치하고 Slinky의 NodeSet과 연동하십시오.
