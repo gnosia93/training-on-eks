@@ -133,10 +133,10 @@ kubectl get pods
 [결과]
 ```
 NAME                        READY   STATUS              RESTARTS   AGE
-llama-3-8b-node-0-0-8bnd8   0/1     ContainerCreating   0          86s
-llama-3-8b-node-0-1-zf275   0/1     ContainerCreating   0          86s
-llama-3-8b-node-0-2-qnwc6   0/1     ContainerCreating   0          86s
-llama-3-8b-node-0-3-r455m   0/1     ContainerCreating   0          86s
+llama-3-8b-node-0-0-k9rb7   0/1     ContainerCreating   0                 3m30s
+llama-3-8b-node-0-1-7rkwd   0/1     ContainerCreating   0                 3m30s
+llama-3-8b-node-0-2-d6564   0/1     ContainerCreating   0                 3m30s
+llama-3-8b-node-0-3-prtxr   0/1     ContainerCreating   0                 3m30s
 ```
 Pod 상태 상세정보 및 이벤트(Events)를 확인한다. 설정오류 및 기타 원인으로 인해 컨테이너가 작업을 시작하지 못하는 경우 그 원인을 쉽게 파악할 수 있다.  
 ```
@@ -173,6 +173,13 @@ ip-10-0-7-56   True     c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2d  <n
 
 
 ### 훈련 모니터링 ###
+
+* rank 0 관찰
+```
+kubectl -f logs llama-3-8b-node-0-0-k9rb7
+```
+
+
 * GPU 모니터링
 * 노드 모니터링
 * EFA 모니터링
