@@ -38,6 +38,6 @@
 ## Appendix ##
 
 * [A1. 카펜터 에러 메시지](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
-* [A2. clearML](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-clearML.md)
+* [A2. clearML & GPU P2P](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-clearML.md)
 * [A3. 토폴리지별 훈련 성능](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a3.training-perf-topology.md)
 * [A4. Slurm on EKS](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a4-slurm-on-eks.md)
