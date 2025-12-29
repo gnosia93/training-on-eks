@@ -1,4 +1,4 @@
-## 소프트웨어 설치 위치 ##
+## 어디에 무엇을 설치해야 할까? ##
 호스트에는 드라이버만, 컨테이너에는 CUDA를 설치하는 것이 표준이다.
 
 ### 1. 호스트(Host) 설치 ###
@@ -20,13 +20,6 @@
     * nvcc: CUDA C/C++ 컴파일러 (툴킷의 핵심)
     * nvprof / nsys: 성능 분석(Profiling) 도구
     * cuBLAS, cuDNN: 딥러닝 연산 가속 라이브러리
-
-
-### EKS/컨테이너 환경에서의 구성 (Best Practice) ###
-* 호스트 (Node): NVIDIA 드라이버와 NVIDIA Container Toolkit만 설치합니다. (EKS의 경우 GPU 최적화 AMI를 사용하면 이미 설치되어 있습니다.)
-* 컨테이너 (Pod): 사용하려는 PyTorch나 CUDA 버전에 맞는 이미지를 가져옵니다.
-* 연결: 컨테이너가 실행될 때 호스트의 드라이버 파일을 컨테이너 내부로 마운트(연결)하여 사용합니다.
-
 
 ## NVIDIA Container Toolkit ##
 NVIDIA Container Toolkit은 호스트 OS에 설치된 NVIDIA GPU 드라이버와 컨테이너(Docker, K8s) 사이를 연결해 주는 '다리' 역할을 하는 소프트웨어 패키지이다.
