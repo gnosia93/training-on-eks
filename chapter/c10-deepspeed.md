@@ -174,7 +174,11 @@ ip-10-0-7-56   True     c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2d  <n
 
 ### 훈련 모니터링 ###
 
-#### rank 0를 통한 훈련 관찰 ####
+#### Job Pod 관찰 ###
+k9s 로 TrainJob 의 파드들이 실행되고 있는지 확인한다. 
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/k9s.png)
+
+#### 마스터 (rank 0) 관찰 ####
 ```
 kubectl logs -f llama-3-8b-node-0-0-k9rb7
 ```
