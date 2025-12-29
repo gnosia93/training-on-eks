@@ -1,12 +1,14 @@
-## 인트라-노드 통신 ##
-하나의 서버 또는 파드에서 지원하는 GPU 간의 통신 방식은 다음과 같다.  
-* GPU P2P 
-  * NVLink / NVSwitch: 전용 고속 브릿지 통신
-  * PCIe : PCIe 버스를 통한 직접 통신
-* SHM (Shared Memory): 시스템 메모리(RAM)를 거치는 통신.
+## 인트라-노드 토폴로지 ##
 
+EC2 인스턴스 또는 하나의 Pod 내부에서 사용 가능한 GPU 간의 통신은 다음과 같이 3가지 종류가 있다. 이중 GPU P2P 는 SHM(Shared Memory) 방식과는 달리 CPU 및 시스템 메모리(RAM) 가 통신에 참여하지 않기 때문에 훨씬 빠른 전송 속도를 제공해 준다.    
 GPU P2P(Peer-to-Peer)는 멀티 GPU 시스템 내에서 두 개 이상의 GPU가 CPU나 메인 메모리(RAM)를 거치지 않고 서로의 메모리에 직접 접근하여 데이터를 주고받는 기술이다.
-NCCL 로그 표기에 각각 [NVL], [P2P], [SHM] 형태로 기록이 되는데 통신 성능은 [NVL] >> [P2P] >> [SHM] 이다.
+분산 훈련시 NCCL 로그에 각각 [NVL], [P2P], [SHM] 형태로 기록이 되는데 통신 성능은 [NVL] >>> [P2P] > [SHM] 이다.
+
+* GPU P2P 
+  * NVLink / NVSwitch
+  * PCIe BUS
+* SHM (Shared Memory)
+
 
 ## 멀티 GPU 환경에서의 Pod 배치 ##
 
