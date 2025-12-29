@@ -124,6 +124,7 @@ py-cpuinfo
 flash-attn
 ```
 
+도커 이미지를 만들어서 ecr 에 푸시한다.
 ```
 aws ecr create-repository --repository-name my-dl-repo --region ${AWS_REGION}
 aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS \
@@ -131,6 +132,5 @@ aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS
 docker build -t my-dl-image .
 docker tag my-dl-image:latest 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com
 docker push 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com
-
 ```   
 
