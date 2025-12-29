@@ -55,6 +55,7 @@ GPU 간 P2P 통신에 필요한 장치 노드(/dev/nvidiactl 등)를 컨테이�
 3. NGC 이미지는 이미 최적화된 NCCL, cuDNN, TransformerEngine 등을 포함하고 있으므로, pip install torch를 실행할 필요는 없다.
 
 ### 2. 이미지 만들기 ###
+[dockerfile]
 ```
 # 1. 최적화된 NVIDIA 공식 이미지 사용 (CUDA, cuDNN, NCCL 포함)
 FROM nvcr.io/nvidia/pytorch:24.12-py3
@@ -84,6 +85,44 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 ```
 
+[requirements.txt]
+```
+# 핵심 프레임워크 (이미지에 포함되어 있으나 버전 고정을 위해 명시)
+torch>=2.4.0
+torchvision
+torchaudio
+
+# Hugging Face 생태계 (Llama-3 학습 필수)
+transformers>=4.40.0
+datasets>=2.19.0
+accelerate>=0.30.0
+evaluate
+tokenizers>=0.19.0
+
+# 분산 학습 및 최적화
+deepspeed>=0.14.0
+mpi4py                      # Multi-node 통신 보조
+
+# 데이터 처리 및 유틸리티
+sentencepiece               # Llama 토크나이저 대응
+protobuf
+numpy<2.0.0                 # PyTorch 호환성을 위해 1.x 유지 권장
+pandas
+tqdm
+pyyaml
+
+# AWS 및 클라우드 환경
+boto3                       # S3/FSx 연동용
+fsspec>=2024.3.1
+huggingface_hub             # Llama-3 게이트 모델 인증용
+
+# 성능 모니터링 (필요 시 선택)
+psutil
+py-cpuinfo
+
+# 플래시 어탠서2 커널
+flash-attn
+```
 
    
 
