@@ -1,8 +1,6 @@
-## NCCL 로그 ##
+## NCCL EFA 플러그인 로딩 확인 ##
 
-#### efa 관련 분석 ####
-
-아래 RANK 0 로그에 대한 efa 관련 분석내용으로, efa 플러그인이 정상적으로 로딩되어 16 rank의 훈련 작업이 시작되었다. 
+RANK 0 로그 확인을 통해 nccl 이 efa 플러그인 성공적으로 로딩했는지 확인 한다. 아래 RANK 0 로그를 기준으로 체크할 로그는 아래와 같다.
 ```
 # EFA 플러그인 로드 - AWS OFI(Open Fabric Interface) NCCL 플러그인(libnccl-net.so, aws-ofi-nccl)
 NCCL INFO NET/Plugin: Successfully loaded external plugin libnccl-net.so
