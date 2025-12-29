@@ -32,6 +32,7 @@ llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Connected all trees
 
 #### 3. 기술적 예외 (Pod Affinity & Shared Memory) ####
 hostNetwork: true를 사용하고 IPC 설정을 정교하게 하면 파드가 달라도 NVLink를 쓸 수는 있지만, 설정이 매우 까다롭고 보안상 권장되지 않는다.
+컨테이너 환경에서 리소스 격리가 기본 원칙이기 때문에 동일 노드의 다른 파드의 GPU 정보를 확인할 수 없다.
 
 #### cf. GPU별 개별 Pod 설정 ####
 만약, 개별 GPU 별로 하나의 Pod 를 할당하고 싶다면 아래와 같은 설정으로 가능하다. 하지만 이는 성능을 대가로 관리 편의성을 얻는 선택이 된다. 
