@@ -4,19 +4,9 @@
 이번 챕터에서는 Llama-3-8B 모델을 허깅 페이스 trainer / deepspeed 라이브러리를 이용하여 훈련 한다. 
 
 * [Llama-3-8B Trainer](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b.py)
-* [DeepSpeed Config](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b-stage3.json)
+* [DeepSpeed 설정](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/llama-3-8b-stage3.json)
 * [requirements.txt](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/requirements.txt)
 * [TrainJob YAML](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/trainjob.yaml)  
-
-### DeepSpeed 설정 ###
-* gradient_checkpointing=True
-역전파 시 필요한 중간 연산 결과를 저장하지 않고 다시 계산하여 메모리 사용량을 줄임(8B 이상의 모델에서는 필수)
-* bf16=True
-FP16은 값이 갑자기 커지면(Overflow) 학습이 망가질 수 있는데, BFloat16은 표현 범위가 넓어 안정적임.
-* offload_param & offload_optimizer
-Stage 3 설정 중 offload를 활성화하면, GPU 메모리가 가득 찼을 때 모델 파라미터를 CPU RAM으로 자미 이동함. 학습 속도는 느려지지만 훨씬 더 큰 모델을 학습할 수 있음.
-* meta device 초기화
-수십 GB의 모델을 한 GPU가 먼저 다 읽으려 하면 시작하자마자 OOM 발생함. AutoModel.from_config 사용하면 모델을 실제 메모리에 올리기 전에 구조만 파악하고, DeepSpeed가 각 GPU에 쪼개서 로드하도록 유도.
 
 ### 훈련 인스턴스 - g6e.8xlarge / EFA ###
 ```
