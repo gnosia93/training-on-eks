@@ -1,4 +1,4 @@
-## 인트라-노드 토폴로지 ##
+## 멀티 GPU 통신 토폴로지 ##
 
 EC2 인스턴스 또는 하나의 Pod 내부에서 사용 가능한 GPU 간의 통신은 다음과 같이 3가지 종류가 있다. 이중 GPU P2P 는 SHM(Shared Memory) 방식과는 달리 CPU 및 시스템 메모리(RAM) 가 통신에 참여하지 않기 때문에 훨씬 빠른 전송 속도를 제공해 준다.    
 GPU P2P(Peer-to-Peer)는 멀티 GPU 시스템 내에서 두 개 이상의 GPU가 CPU나 메인 메모리(RAM)를 거치지 않고 서로의 메모리에 직접 접근하여 데이터를 주고받는 기술이다.
@@ -9,6 +9,21 @@ GPU P2P(Peer-to-Peer)는 멀티 GPU 시스템 내에서 두 개 이상의 GPU가
   * PCIe BUS
 * SHM (Shared Memory)
 
+### P2P 지원 여부 확인 ###
+토폴로지 확인은 호스트 터미널에서 nvidia-smi topo -m 를 이용하면 확인할 수 있다. 
+* NV# (예: NV1, NV2): NVLink로 연결됨 (최상급 속도).
+* PIX, PXB, PHB: PCIe를 통해 연결됨 
+* SYS 또는 SOC: CPU를 거쳐야 하므로 P2P 통신이 불가능하고 성능이 낮음.
+
+### 컨테이너 실행 필수 옵션 ###
+* hostIPC: true
+컨테이너가 호스트의 IPC(Inter-Process Communication) 네임스페이스를 공유하게 하여 GPU 간 P2P 핸드쉐이크를 가능하게 한다.
+* resource limit:
+nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
+
+P2P 통신 라이브러리인 NCCL을 사용하는 경우 컨테이너 환경변수를 통해 통신 경로를 강제할 수 있다.  
+* NCCL_P2P_DISABLE=0 (기본값이지만 명시 가능)
+* NCCL_DEBUG=INFO 를 설정하여 P2P [NVLink] 또는 P2P [PCIe] 여부를 확인할 수 있다.
 
 ## 멀티 GPU 환경에서의 Pod 배치 ##
 
