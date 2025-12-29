@@ -1,6 +1,26 @@
 << 작성중 ..>>
 
 ## NCCL 로그 ##
+
+#### efa 관련 분석 ####
+```
+# EFA 플러그인 로드 - AWS OFI(Open Fabric Interface) NCCL 플러그인(libnccl-net.so, aws-ofi-nccl)
+NCCL INFO NET/Plugin: Successfully loaded external plugin libnccl-net.so
+NCCL INFO NET/OFI Initializing aws-ofi-nccl 1.16.2
+
+# EFA 프로바이더 선택
+NCCL INFO NET/OFI Setting provider_filter to efa
+NCCL INFO NET/OFI Selected provider is efa, fabric is efa (found 1 nics)
+
+# GPU 및 NCCL 버전 확인 - CUDA 13.0
+NCCL INFO cudaDriverVersion 13000
+NCCL INFO NCCL version 2.27.3+cuda12.9
+
+# 프로세스 및 GPU 매핑 - 16 랭크 구성
+llama-3-8b-node-0-0:194:724 [3] ... cudaDev 3 nvmlDev 3 busId 3e000 commId ... rank 3 nranks 16
+```
+
+#### 로그 ####
 ```
 llama-3-8b-node-0-0:191:191 [0] NCCL INFO NCCL_SOCKET_IFNAME set by environment to ^docker0,lo
 llama-3-8b-node-0-0:191:191 [0] NCCL INFO Bootstrap: Using eth0:10.0.5.28<0>
