@@ -26,7 +26,7 @@ NCCL 사용시 각각 [NVL], [P2P], [SHM] 형태로 로그가 기록이 되는�
 * resource limit:  
   nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
 
-P2P 통신 라이브러리인 NCCL을 사용하는 경우 컨테이너 환경변수를 통해 통신 경로를 강제할 수 있다.  
+NCCL을 사용하는 경우 컨테이너 환경변수를 통해 통신 경로를 강제할 수 있다.  
 * NCCL_P2P_DISABLE=0 (P2P 통신 활성화, 기본값임)
 * NCCL_DEBUG=INFO 를 설정하면 P2P [NVLink] 또는 P2P [PCIe] 여부를 확인할 수 있다.
 
