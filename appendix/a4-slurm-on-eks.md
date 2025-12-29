@@ -40,8 +40,7 @@ spec:
         limits:
           nvidia.com/gpu: "${GPU_PER_NODE}"
           vpc.amazonaws.com/efa: "${EFA_PER_NODE}"                      
-  # 사용자 접속용 노드
-  login:
+  login:                                         # 로그인 노드 - 유저는 로그인 노드에 접속하여 배치 작업을 제출한다.   
     replicas: "${SLURM_LOGIN_NODE_NUM}"
 EOF
 ```
