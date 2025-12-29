@@ -22,4 +22,5 @@ Slinky를 도입하면 연구자는 기존과 똑같이 sbatch 명령어로 AI �
 더 자세한 아키텍처 다이어그램이나 기술 문서는 Slinky 공식 GitHub에서 확인할 수 있습니다
 
 ## 레퍼런스 ##
+* https://www.schedmd.com/introducing-slinky-slurm-kubernetes/
 * [Running Slurm on Amazon EKS with Slinky](https://aws.amazon.com/ko/blogs/containers/running-slurm-on-amazon-eks-with-slinky/#:~:text=The%20Slinky%20Project%20is%20an%20open%20source,NodeSet%20resources%20deployed%20within%20a%20Kubernetes%20environment.)
