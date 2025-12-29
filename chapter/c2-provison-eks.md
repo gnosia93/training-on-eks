@@ -37,12 +37,14 @@ helm version
 
 #### 4. k9s 설치 ####
 ```
-
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-
-
-
+ARCH="arm64"
+if [ "$(uname -m)" != 'aarch64' ]; then
+  ARCH="amd64"
+fi
+echo ${ARCH}
+curl --silent --location "https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_${ARCH}.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/k9s /usr/local/bin/
+k9s version
 ```
 
 
