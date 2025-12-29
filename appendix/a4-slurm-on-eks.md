@@ -123,18 +123,20 @@ kubectl apply -f slurm-cluster.yaml
 ```
 
 ### 4. 설치 확인 및 사용 ###
-모든 파드가 정상적으로 뜨면, Login 파드에 접속하여 Slurm 명령어를 사용할 수 있습니다.
 ```
-kubectl get pods -n slinky
+kubectl get pods -n slinky --show-labels
 ```
 [결과]
 ```
-NAME                                      READY   STATUS    RESTARTS   AGE
-slurm-operator-56d865fbc7-g4qvx           1/1     Running   0          13m
-slurm-operator-webhook-57cf4d6d85-28pf4   1/1     Running   0          13m
-# slurmctld-xxx, slurmd-xxx, login-xxx 파드들이 떠 있어야 함
+NAME                                      READY   STATUS    RESTARTS   AGE   LABELS
+slurm-operator-56d865fbc7-g4qvx           1/1     Running   0          17m   app.kubernetes.io/instance=slurm-operator,app.kubernetes.io/managed-by=Helm,app.kubernetes.io/name=slurm-operator,app.kubernetes.io/version=25.11,helm.sh/chart=slurm-operator-1.0.1,pod-template-hash=56d865fbc7
+slurm-operator-webhook-57cf4d6d85-28pf4   1/1     Running   0          17m   app.kubernetes.io/instance=slurm-operator,app.kubernetes.io/managed-by=Helm,app.kubernetes.io/name=slurm-operator-webhook,app.kubernetes.io/version=25.11,helm.sh/chart=slurm-operator-1.0.1,pod-template-hash=57cf4d6d85
 ```
-```
+
+
+
+
+
 Login 파드 접속:
 bash
 kubectl exec -it <login-pod-name> -n slinky-system -- /bin/bash
