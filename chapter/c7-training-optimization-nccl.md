@@ -1,6 +1,8 @@
 ## NCCL EFA 플러그인 로딩 확인 ##
 
 RANK 0 로그를 열어 nccl 이 efa 플러그인 성공적으로 로딩했는지 확인한다. 아래 [RANK 0 로그 예시] 에서 확인할 항목들은 아래와 같다. 이 항목들을 로그에서 관찰할 수 있다면 nccl 이 efa 를 이용하여 분산 학습을 하고 있다는 것을 의미한다.  
+
+[efa 플러그인 관련 항목]
 ```
 # 1. EFA 플러그인 로드 - AWS OFI(Open Fabric Interface) NCCL 플러그인(libnccl-net.so, aws-ofi-nccl)
 NCCL INFO NET/Plugin: Successfully loaded external plugin libnccl-net.so
