@@ -14,7 +14,7 @@ helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
   --create-namespace
 ```
 
-### 3. Slurm 파드 배포 ###
+### 3. Slurm 클러스터(Pod) 배포 ###
 EKS 에 슬럼 클러스터 데몬인 slurmctld, slurmd, login 등을 Pod 형태로 배포한다.
 ```
 export SLURM_VERSION="25.11"
