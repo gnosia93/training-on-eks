@@ -1,25 +1,24 @@
 ## NCCL EFA 플러그인 로딩 확인 ##
 
-RANK 0 로그 확인을 통해 nccl 이 efa 플러그인 성공적으로 로딩했는지 확인 한다. 아래 RANK 0 로그를 기준으로 체크할 로그는 아래와 같다.
+RANK 0 로그를 확인하여 nccl 이 efa 플러그인 성공적으로 로딩했는지 체크한다. 아래 [RANK 0 로그 예시] 에서 확인할 항목들은 다음과 같다.
 ```
-# EFA 플러그인 로드 - AWS OFI(Open Fabric Interface) NCCL 플러그인(libnccl-net.so, aws-ofi-nccl)
+# 1. EFA 플러그인 로드 - AWS OFI(Open Fabric Interface) NCCL 플러그인(libnccl-net.so, aws-ofi-nccl)
 NCCL INFO NET/Plugin: Successfully loaded external plugin libnccl-net.so
 NCCL INFO NET/OFI Initializing aws-ofi-nccl 1.16.2
 
-# EFA 프로바이더 선택
+# 2. EFA 프로바이더 선택
 NCCL INFO NET/OFI Setting provider_filter to efa
 NCCL INFO NET/OFI Selected provider is efa, fabric is efa (found 1 nics)
 
-# GPU 및 NCCL 버전 확인 - CUDA 13.0
+# 3. GPU 및 NCCL 버전 확인 - CUDA 13.0
 NCCL INFO cudaDriverVersion 13000
 NCCL INFO NCCL version 2.27.3+cuda12.9
 
-# 프로세스 및 GPU 매핑 - 16 랭크 구성
+# 4. 프로세스 및 GPU 매핑 - 16 랭크 구성
 llama-3-8b-node-0-0:194:724 [3] ... cudaDev 3 nvmlDev 3 busId 3e000 commId ... rank 3 nranks 16
 ```
 
-
-#### RANK 0 로그 ####
+#### RANK 0 로그 예시 #### 
 ```
 llama-3-8b-node-0-0:191:191 [0] NCCL INFO NCCL_SOCKET_IFNAME set by environment to ^docker0,lo
 llama-3-8b-node-0-0:191:191 [0] NCCL INFO Bootstrap: Using eth0:10.0.5.28<0>
