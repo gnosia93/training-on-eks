@@ -83,7 +83,6 @@ aws iam add-role-to-instance-profile \
 
 efa 노드풀을 생성한다.
 ```
-
 cat <<EOF > efa-nodepool.yaml
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
