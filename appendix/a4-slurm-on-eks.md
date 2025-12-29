@@ -26,23 +26,6 @@ helm install slurm oci://ghcr.io/slinkyproject/charts/slurm \
 
 
 
-
-
-
-
-💡 실무 운영을 위한 핵심 팁 
-
-* 공유 스토리지 (필수): Slurm은 모든 파드가 동일한 /home이나 /data를 공유해야 합니다. Amazon FSx for Lustre를 EKS의 PVC로 연결하여 각 파드에 마운트하는 설정을 slurm-cluster.yaml의 volumes 섹션에 반드시 추가해야 합니다.
-* 자동 확장 (Karpenter): 워커 노드가 모자랄 때 AWS 인스턴스를 자동으로 띄우고 싶다면, EKS에 Karpenter를 설치하고 Slinky의 NodeSet과 연동하십시오.
-* 고속 네트워크: GPU 간 통신(Multi-node training)이 중요하다면, EKS 노드 그룹 생성 시 EFA(Elastic Fabric Adapter) 옵션을 활성화해야 Slurm 환경에서도 최대 성능이 나옵니다
-
-
-
-
-
-
-
-
 ---
 
 Slinky 프로젝트는 Slurm의 개발사인 SchedMD가 직접 주도하여 만든 오픈소스 툴킷으로, 2025년 기준 EKS에서 Slurm을 운영하는 가장 발전된 방식입니다. 
