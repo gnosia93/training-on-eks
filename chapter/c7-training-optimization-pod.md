@@ -9,6 +9,8 @@ NCCL 사용시 각각 [NVL], [P2P], [SHM] 형태로 로그가 기록이 되는�
   * PCIe BUS
 * SHM (Shared Memory)
 
+멀티 GPU 환경에서 최적의 훈련 퍼포먼스를 확보하기 위해 GPU P2P 활성화는 선택이 아닌 필수 사항이다.
+
 ### P2P 지원 여부 확인 ###
 토폴로지 확인은 호스트 터미널에서 nvidia-smi topo -m 를 이용하면 확인할 수 있다. 
 * NV# (예: NV1, NV2): NVLink로 연결됨 (최상급 속도).
