@@ -18,6 +18,13 @@ helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
 EKS 에 슬럼 클러스터 데몬인 slurmctld, slurmd, login 등을 Pod 형태로 배포한다.
 ```
 export SLURM_VERSION="25.11"
+export SLURM_CTRL_NODE_NUM=1
+export SLURM_WORKER_NODE_NUM=2
+export SLURM_LOGIN_NODE_NUM=1
+export GPU_PER_NODE=1
+export EFA_PER_NODE=1
+
+cat <<EOF > slurm-cluster.yaml
 apiVersion: slurm.slinky.io/v1alpha1
 kind: SlurmCluster
 metadata:
@@ -25,16 +32,18 @@ metadata:
 spec:
   version: "${SLURM_VERSION}"
   controller:
-    replicas: 1                         # 관리자 노드 설정 (slurmctld)
-  workerGroups:                         # 워커 노드(파드) 설정 (slurmd)
+    replicas: "${SLURM_CTRL_NODE_NUM}"           # 관리자 노드 설정 (slurmctld)
+  workerGroups:                                  # 워커 노드(파드) 설정 (slurmd)
     - name: "gpu-partition"
-      replicas: 2
+      replicas: "${SLURM_WORKER_NODE_NUM}"
       resources:
         limits:
-          nvidia.com: 8
+          nvidia.com/gpu: "${GPU_PER_NODE}"
+          vpc.amazonaws.com/efa: "${EFA_PER_NODE}"                      
   # 사용자 접속용 노드
   login:
-    replicas: 1
+    replicas: "${SLURM_LOGIN_NODE_NUM}"
+EOF
 ```
 ```
 kubectl apply -f slurm-cluster.yaml
