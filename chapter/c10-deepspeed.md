@@ -197,12 +197,22 @@ Requirement already satisfied: torch>=2.4.0 in /usr/local/lib/python3.12/site-pa
 Requirement already satisfied
 ...
 ```
+#### EFA 모니터링 ####
 
-* GPU 모니터링
-* 노드 모니터링
-* EFA 모니터링
-* 러스터 모니터링.
-* 훈련 로그 모니터링.
+
+#### GPU 모니터링 ####
+
+#### 노드 모니터링 ####
+
+#### 훈련 로그 실시간 확인 ####
+
+
+
+
+
+
+
+---
 
 ## 러스터 디버깅 ##
 ```
