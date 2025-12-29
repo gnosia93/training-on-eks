@@ -18,15 +18,19 @@ NCCL 사용시 각각 [NVL], [P2P], [SHM] 형태로 로그가 기록이 되는�
 * SYS 또는 SOC: CPU를 거쳐야 하므로 P2P 통신이 불가능하고 성능이 낮음.
 
 ### 컨테이너 필수 옵션 ###
+
 * hostIPC: true  
+
 컨테이너가 호스트의 IPC(Inter-Process Communication) 네임스페이스를 공유하게 하여 GPU 간 P2P 핸드쉐이크를 가능하게 한다.
+이때 주의할 점은 한 컨테이너 안에 통신에 필요한 모든 GPU를 몰아 넣어야 한다는 것이다. GPU P2P는 기본적으로 같은 메모리 주소 체계를 공유하는 동일 프로세스 또는 공유 메모리로 묶인 그룹 내에서만 작동하기 때문이다.
 
 * resource limit:  
+
 nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
 
 P2P 통신 라이브러리인 NCCL을 사용하는 경우 컨테이너 환경변수를 통해 통신 경로를 강제할 수 있다.  
-* NCCL_P2P_DISABLE=0 (기본값이지만 명시 가능)
-* NCCL_DEBUG=INFO 를 설정하여 P2P [NVLink] 또는 P2P [PCIe] 여부를 확인할 수 있다.
+* NCCL_P2P_DISABLE=0 (P2P 통신 활성화, 기본값임)
+* NCCL_DEBUG=INFO 를 설정하면 P2P [NVLink] 또는 P2P [PCIe] 여부를 확인할 수 있다.
 
 ## 멀티 GPU 환경에서의 Pod 배치 ##
 
