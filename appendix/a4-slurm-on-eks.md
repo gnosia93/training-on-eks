@@ -7,30 +7,22 @@ Slurm 컴포넌트 간 보안 통신(TLS)을 위해 필수입니다.
 ```
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
-helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace \
-  --set crds.enabled=true
+helm install cert-manager jetstack/cert-manager \
+  --set 'crds.enabled=true' \
+  --namespace cert-manager --create-namespace
 ```
 
 ### 2. Slinky Slurm CRD / Operator 설치 ###
 ```
-helm install slurm-operator-crds oci://ghcr.io/slinkyproject/charts/slurm-operator-crds \
-  --namespace slinky --create-namespace
-kubectl get crd | grep slinky
-
+helm install slurm-operator-crds oci://ghcr.io/slinkyproject/charts/slurm-operator-crds
 helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
-  --namespace slinky --create-namespace
-
-kubectl api-resources | grep slurm
+  --namespace=slinky --create-namespace
 ```
 
 ### 3. Slurm 클러스터(Pod) 배포 ###
 ```
-# JWT 인증용 키 생성
-kubectl create secret generic slurm-jwt-key -n slinky --from-literal=jwt-key=$(openssl rand -base64 32)
-
-# Slurm 내부 통신용 인증 키 (munge.key 역할) 생성
-kubectl create secret generic slurm-key -n slinky --from-literal=slurm-key=$(openssl rand -base64 32)
-
+helm install slurm oci://ghcr.io/slinkyproject/charts/slurm \
+  --namespace=slurm --create-namespace
 ```
 
 
