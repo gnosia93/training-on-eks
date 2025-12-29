@@ -103,14 +103,11 @@ spec:
 envsubst 는 파리미터로 나열된 환경변수만 치환해 준다. 
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
-#export INSTANCE_TYPE=g6e.12xlarge              # 훈련 인스턴스 타입   
-export INSTANCE_TYPE=p4d.24xlarge
+export INSTANCE_TYPE=g6e.12xlarge              # 훈련 인스턴스 타입   
 export AZ=${AWS_REGION}a                 
-#export NODE_NUM=4                              # 4대 
-export NODE_NUM=2  
-export GPU_PER_NODE=8                          # g6e.12xlarge 타입은 GPU 가 4장이다.
-#export EFA_PER_NODE=1                          # 100Gbp 사용
-export EFA_PER_NODE=4                          # 100Gbp 사용
+export NODE_NUM=4                              # 4대 
+export GPU_PER_NODE=4                          # g6e.12xlarge 타입은 GPU 가 4장이다.
+export EFA_PER_NODE=1                          # 100Gbp 사용
 export HF_TOKEN="<your huggingface token>"     # Llama-3 모델은 HF 인증이 필요.
 
 cd ~/training-on-eks/samples/deepspeed
