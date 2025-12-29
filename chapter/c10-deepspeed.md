@@ -157,15 +157,18 @@ kubectl get nodes -o custom-columns="NAME:.metadata.name, \
 ```
 [결과]
 ```
-NAME           INSTANCE      ARCH   GPU     EFA     ZONE             CAPACITY
-ip-10-0-5-202  g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
-ip-10-0-5-238  c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2b  <none>
-ip-10-0-5-37   g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
-ip-10-0-5-38   g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
-ip-10-0-5-41   g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
-ip-10-0-5-61   c6i.2xlarge   amd64  <none>  <none>  ap-northeast-2b  <none>
-ip-10-0-7-12   c6i.2xlarge   amd64  <none>  <none>  ap-northeast-2d  <none>
-ip-10-0-7-56   c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2d  <none>
+NAME           STATUS   INSTANCE      ARCH   GPU     EFA     ZONE             CAPACITY
+ip-10-0-4-157  Unknown  g6e.12xlarge  amd64  4       1       ap-northeast-2a  on-demand
+ip-10-0-4-27   Unknown  g6e.12xlarge  amd64  4       1       ap-northeast-2a  on-demand
+ip-10-0-5-202  True     g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
+ip-10-0-5-226  True     g6e.12xlarge  amd64  4       1       ap-northeast-2b  spot
+ip-10-0-5-238  True     c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2b  <none>
+ip-10-0-5-37   Unknown  g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
+ip-10-0-5-38   True     g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
+ip-10-0-5-41   Unknown  g6e.12xlarge  amd64  4       1       ap-northeast-2b  on-demand
+ip-10-0-5-61   True     c6i.2xlarge   amd64  <none>  <none>  ap-northeast-2b  <none>
+ip-10-0-7-12   True     c6i.2xlarge   amd64  <none>  <none>  ap-northeast-2d  <none>
+ip-10-0-7-56   True     c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2d  <none>
 ```
 
 
