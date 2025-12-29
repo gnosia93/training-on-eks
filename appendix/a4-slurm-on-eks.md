@@ -47,7 +47,7 @@ metadata:
   name: slurm-controller
   namespace: slinky
 spec:
-  # JWT 및 Slurm Key 참조 추가 (필수)
+  # 모든 필드명은 소문자로 시작해야 합니다 (key, name)
   jwtHs256KeyRef:
     name: slurm-jwt-key
     key: jwt-key
@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
         - name: slurmctld
-          image: "ghcr.io/slinkyproject/slurmctld:23.11.10" # 예시 버전
+          image: "ghcr.io/slinkyproject/slurmctld:23.11.10"
 ---
 # 2. Slurm Worker Nodes (slurmd)
 apiVersion: slinky.slurm.net/v1beta1
@@ -70,7 +70,6 @@ spec:
   replicas: ${SLURM_WORKER_NODE_NUM}
   controllerRef:
     name: slurm-controller
-  # 업데이트 전략 명시 (필수)
   updateStrategy:
     type: RollingUpdate
   template:
@@ -93,7 +92,6 @@ spec:
   replicas: ${SLURM_LOGIN_NODE_NUM}
   controllerRef:
     name: slurm-controller
-  # SSSD ConfigMap의 내부 Key(파일명) 명시 (필수)
   sssdConfRef:
     name: sssd-config
     key: sssd.conf
@@ -102,20 +100,6 @@ spec:
       containers:
         - name: login
           image: "ghcr.io/slinkyproject/slurmrestd:23.11.10"
----
-# 4. SSSD ConfigMap
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: sssd-config
-  namespace: slinky
-data:
-  sssd.conf: |
-    [sssd]
-    services = nss, pam
-    domains = default
-    [domain/default]
-    id_provider = local
 EOF
 ```
 ```
