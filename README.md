@@ -39,5 +39,5 @@
 
 * [A1. 카펜터 에러 메시지](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
 * [A2. clearML](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-clearML.md)
-* [A3. 토폴리지별 소요시간]()
+* [A3. 토폴리지별 훈련 성능]()
 
