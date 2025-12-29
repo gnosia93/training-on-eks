@@ -1,5 +1,96 @@
+### 1. cert-manager 설치 ###
+Slurm 컴포넌트 간 보안 통신(TLS)을 위해 필수입니다.
+```
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --set installCRDs=true
+```
+
+### 2. Slinky Slurm Operator 설치 ###
+Slinky Helm 차트 레포지토리 추가
+
+```
+helm install slurm-operator oci://ghcr.io/slinkyproject/charts/slurm-operator \
+  --namespace slinky-system \
+  --create-namespace
+```
+
+### 3. Slurm 클러스터(파드들) 배포 ###
+이제 실제로 slurmctld, slurmd, login 파드들을 띄웁니다. 이를 위해 slurm-cluster.yaml 파일을 작성해야 합니다.
+```
+apiVersion: slurm.slinky.io/v1alpha1
+kind: SlurmCluster
+metadata:
+  name: my-slurm-cluster
+spec:
+  # Slurm 버전 지정 (2025년 기준 25.11 권장)
+  version: "25.11"
+  # 관리자 노드 설정
+  controller:
+    replicas: 1
+  # 실제 계산을 수행할 워커 노드(파드) 설정
+  workerGroups:
+    - name: "gpu-partition"
+      replicas: 2
+      resources:
+        limits:
+          nvidia.com: 8
+  # 사용자 접속용 노드
+  login:
+    replicas: 1
+```
+```
+kubectl apply -f slurm-cluster.yaml
+```
+
+### 4. 설치 확인 및 사용 ###
+모든 파드가 정상적으로 뜨면, Login 파드에 접속하여 Slurm 명령어를 사용할 수 있습니다.
+```
+kubectl get pods -n slinky-system
+# slurmctld-xxx, slurmd-xxx, login-xxx 파드들이 떠 있어야 함
+```
+```
+Login 파드 접속:
+bash
+kubectl exec -it <login-pod-name> -n slinky-system -- /bin/bash
+```
+
+```
+# 노드 상태 확인
+sinfo
+
+# 간단한 작업 제출
+srun -N 2 hostname
+```
+
+💡 실무 운영을 위한 핵심 팁 (2025년 가이드)
+
+* 공유 스토리지 (필수): Slurm은 모든 파드가 동일한 /home이나 /data를 공유해야 합니다. Amazon FSx for Lustre를 EKS의 PVC로 연결하여 각 파드에 마운트하는 설정을 slurm-cluster.yaml의 volumes 섹션에 반드시 추가해야 합니다.
+* 자동 확장 (Karpenter): 워커 노드가 모자랄 때 AWS 인스턴스를 자동으로 띄우고 싶다면, EKS에 Karpenter를 설치하고 Slinky의 NodeSet과 연동하십시오.
+* 고속 네트워크: GPU 간 통신(Multi-node training)이 중요하다면, EKS 노드 그룹 생성 시 EFA(Elastic Fabric Adapter) 옵션을 활성화해야 Slurm 환경에서도 최대 성능이 나옵니다
+
+
+
+
+
+
+
+
+---
+
 Slinky 프로젝트는 Slurm의 개발사인 SchedMD가 직접 주도하여 만든 오픈소스 툴킷으로, 2025년 기준 EKS에서 Slurm을 운영하는 가장 발전된 방식입니다. 
 이 프로젝트의 핵심은 Slurm의 강력한 스케줄링 능력(HPC용)과 Kubernetes의 유연한 인프라 관리 능력을 하나로 합치는 데 있습니다. 
+
+
+
+
+
+
+
+
+
+
+
 
 ### 1. 주요 구성 요소 ###
 Slinky는 단순히 데몬을 띄우는 것을 넘어, Kubernetes 네이티브하게 작동하기 위해 여러 프로젝트로 나뉩니다: 
