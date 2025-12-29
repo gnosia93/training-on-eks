@@ -30,23 +30,39 @@ export GPU_PER_NODE=1
 export EFA_PER_NODE=1
 
 cat <<EOF > slurm-cluster.yaml
-apiVersion: slurm.slinky.io/v1alpha1
-kind: SlurmCluster
+# 1. Slurm Controller (slurmctld) 설정
+apiVersion: slinky.slurm.net/v1beta1
+kind: Controller
 metadata:
-  name: slurm-on-eks
+  name: slurmctld
+  namespace: slinky
 spec:
-  version: "${SLURM_VERSION}"
-  controller:
-    replicas: "${SLURM_CTRL_NODE_NUM}"           # 관리자 노드 설정 (slurmctld)
-  workerGroups:                                  # 워커 노드(파드) 설정 (slurmd)
-    - name: "gpu-partition"
-      replicas: "${SLURM_WORKER_NODE_NUM}"
-      resources:
-        limits:
-          nvidia.com/gpu: "${GPU_PER_NODE}"
-          vpc.amazonaws.com/efa: "${EFA_PER_NODE}"                      
-  login:                                         # 로그인 노드 - 유저는 로그인 노드에 접속하여 배치 작업을 제출한다.   
-    replicas: "${SLURM_LOGIN_NODE_NUM}"
+  replicas: ${SLURM_CTRL_NODE_NUM}
+  image: "ghcr.io/slinkyproject/slurmctld:${SLURM_VERSION}" 
+---
+# 2. Slurm Worker Nodes (slurmd / Partition 설정)
+apiVersion: slinky.slurm.net/v1beta1
+kind: NodeSet
+metadata:
+  name: gpu-partition
+  namespace: slinky
+spec:
+  replicas: ${SLURM_WORKER_NODE_NUM}
+  image: "ghcr.io/slinkyproject/slurmd:${SLURM_VERSION}"
+  resources:
+    limits:
+      nvidia.com/gpu: "${GPU_PER_NODE}"
+      vpc.amazonaws.com/efa: "${EFA_PER_NODE}"
+---
+# 3. Slurm Login Node (ssh/접속용)
+apiVersion: slinky.slurm.net/v1beta1
+kind: LoginSet
+metadata:
+  name: login-node
+  namespace: slinky
+spec:
+  replicas: ${SLURM_LOGIN_NODE_NUM}
+  image: "ghcr.io/slinkyproject/slurmrestd:${SLURM_VERSION}"    
 EOF
 ```
 ```
