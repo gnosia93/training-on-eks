@@ -17,7 +17,7 @@ NCCL 사용시 각각 [NVL], [P2P], [SHM] 형태로 로그가 기록이 되는�
 * PIX, PXB, PHB: PCIe를 통해 연결됨 
 * SYS 또는 SOC: CPU를 거쳐야 하므로 P2P 통신이 불가능하고 성능이 낮음.
 
-### 컨테이너 실행 필수 옵션 ###
+### 컨테이너 필수 옵션 ###
 * hostIPC: true  
 컨테이너가 호스트의 IPC(Inter-Process Communication) 네임스페이스를 공유하게 하여 GPU 간 P2P 핸드쉐이크를 가능하게 한다.
 
