@@ -10,6 +10,22 @@
 * (4파드 x  8GPU): 하나의 파드(컨테이너) 안에 GPU 8장이 모두 보이는 구조로, NCCL은 이들이 같은 메모리 주소 공간에 있음을 인지하고 NVLink 또는 PCIe P2P(Peer-to-Peer)를 통해 통신한다.
 * (32파드 x 1GPU): 각 파드는 완전히 격리된 환경에서 동작하므로 데이터를 보낼 때 GPU 0 -> 호스트 메모리 -> 네트워크 카드(EFA/TCP) -> 호스트 메모리 -> GPU 1의 복잡한 경로를 거치게 된다.
 
+```
+llama-3-8b-node-0-0:195:1185 [3] NCCL INFO Channel 00 : 3[3] -> 2[2] via SHM/direct/direct
+llama-3-8b-node-0-0:195:1185 [3] NCCL INFO Channel 01 : 3[3] -> 2[2] via SHM/direct/direct
+llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 01/0 : 0[0] -> 4[0] [send] via NET/Socket/0
+llama-3-8b-node-0-0:194:1186 [2] NCCL INFO Channel 00 : 2[2] -> 1[1] via SHM/direct/direct
+llama-3-8b-node-0-0:194:1186 [2] NCCL INFO Channel 01 : 2[2] -> 1[1] via SHM/direct/direct
+llama-3-8b-node-0-0:193:1187 [1] NCCL INFO Channel 00 : 1[1] -> 0[0] via SHM/direct/direct
+llama-3-8b-node-0-0:193:1187 [1] NCCL INFO Channel 01 : 1[1] -> 0[0] via SHM/direct/direct
+llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 00/0 : 8[0] -> 0[0] [receive] via NET/Socket/0
+llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 00/0 : 0[0] -> 8[0] [send] via NET/Socket/0
+llama-3-8b-node-0-0:195:1185 [3] NCCL INFO Connected all trees
+llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 01/0 : 4[0] -> 0[0] [receive] via NET/Socket/0
+llama-3-8b-node-0-0:194:1186 [2] NCCL INFO Connected all trees
+llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Connected all trees
+```
+
 #### 2. 성능 차이 (Bottleneck) ###
 * NVLink 속도: 최신 GPU(A100/H100) 기준 노드 내부 통신은 보통 300GB/s ~ 900GB/s.
 * 네트워크(EFA) 속도: EFA 는 100Gbps ~ 400Gbps (약 12.5GB/s ~ 50GB/s) 수준 제공.
