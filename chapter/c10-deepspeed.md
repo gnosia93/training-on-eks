@@ -196,6 +196,22 @@ The current active token is: `training-on-eks`
 Requirement already satisfied: torch>=2.4.0 in /usr/local/lib/python3.12/site-packages (from -r requirements.txt (line 2)) (2.8.0+cu129)
 Requirement already satisfied
 ...
+
+{'train_runtime': 2307.9654, 'train_samples_per_second': 5.546, 'train_steps_per_second': 0.022, 'train_loss': 2.096866226196289, 'epoch': 0.35, 'time': '02:25:32'}
+100%|██████████| 50/50 [38:27<00:00, 46.16s/it]
+
+[학습 종료 보고서]
+최종 소요 시간: 0:40:41
+전체 초 단위: 2441.04s
+
+--- 학습 완료! 최종 모델 저장 중 ---
+모델과 토크나이저가 저장되었습니다: /data/fsx/final_model
+llama-3-8b-node-0-0:191:637 [0] NCCL INFO [Service thread] Connection closed by localRank 1
+llama-3-8b-node-0-0:193:634 [0] NCCL INFO [Service thread] Connection closed by localRank 1
+llama-3-8b-node-0-0:191:1071 [0] NCCL INFO [Service thread] Connection closed by localRank 1
+llama-3-8b-node-0-0:193:1069 [0] NCCL INFO [Service thread] Connection closed by localRank 1
+llama-3-8b-node-0-0:194:635 [3] NCCL INFO [Service thread] Connection closed by localRank 2
+llama-3-8b-node-0-0:194:1072 [3] NCCL INFO [Service thread] Connection closed by localRank 2
 ```
 #### EFA 모니터링 ####
 
