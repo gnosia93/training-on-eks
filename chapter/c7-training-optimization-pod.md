@@ -1,3 +1,10 @@
+## 인트라-노드 통신 (Intra-node Communication) ##
+* NVLink / NVSwitch: 전용 고속 브릿지 통신.
+* P2P (PCIe): PCIe 버스를 통한 직접 통신.
+* SHM (Shared Memory): 시스템 메모리(RAM)를 거치는 통신.
+* NCCL 로그 표기: [P2P], [NVL], [SHM]
+
+
 ## 멀티 GPU 환경에서의 Pod 배치 ##
 
 현재 AWS 의 가속 인스턴스들은 GPU 1, 4, 8 개 타입의 인스턴스들을 제공하고 있다. 하나의 노드에 GPU를 여러개 가지고 있는 경우 Pod를 어떤식으로 배치하는 것이 통신 효율성을 최대화 할 수 있는지에 대해서 다루고자 한다.   
