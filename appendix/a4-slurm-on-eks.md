@@ -34,10 +34,10 @@ cat <<EOF > slurm-cluster.yaml
 apiVersion: slinky.slurm.net/v1beta1
 kind: Controller
 metadata:
-  name: slurmctld
+  name: slurm-controller # 이 이름이 아래 ref의 대상이 됩니다.
   namespace: slinky
 spec:
-  replicas: ${SLURM_CTRL_NODE_NUM}
+  # v1beta1 Controller는 replicas 대신 template 구조를 주로 사용합니다.
   template:
     spec:
       containers:
@@ -52,6 +52,8 @@ metadata:
   namespace: slinky
 spec:
   replicas: ${SLURM_WORKER_NODE_NUM}
+  controllerRef:
+    name: slurm-controller # 위 Controller의 metadata.name과 일치해야 함
   template:
     spec:
       containers:
@@ -70,11 +72,31 @@ metadata:
   namespace: slinky
 spec:
   replicas: ${SLURM_LOGIN_NODE_NUM}
+  controllerRef:
+    name: slurm-controller # 위 Controller의 metadata.name과 일치해야 함
+  # v1beta1 LoginSet은 인증 설정을 위해 sssdConfRef를 요구합니다.
+  # 만약 별도 설정이 없다면 빈 ConfigMap을 만들거나 기존 설정을 참조해야 합니다.
+  sssdConfRef:
+    name: sssd-config # 아래 생성할 ConfigMap 이름
   template:
     spec:
       containers:
         - name: login
-          image: "ghcr.io/slinkyproject/slurmrestd:${SLURM_VERSION}"    
+          image: "ghcr.io/slinkyproject/slurmrestd:${SLURM_VERSION}"
+---
+# 4. (필수) LoginSet을 위한 기본 SSSD ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sssd-config
+  namespace: slinky
+data:
+  sssd.conf: |
+    [sssd]
+    services = nss, pam
+    domains = default
+    [domain/default]
+    id_provider = local   
 EOF
 ```
 ```
