@@ -38,7 +38,9 @@ helm version
 #### 4. k9s 설치 ####
 ```
 
-k9s_linux_arm64.rpm
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+
 
 
 ```
