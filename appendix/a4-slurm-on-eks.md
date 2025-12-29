@@ -1,6 +1,6 @@
 << 동작하지 않는다. 디버깅 필요 >>
 
-## Slrum On EKS ##
+## Slurm on EKS ##
 
 ### 1. cert-manager 설치 ###
 Slurm 컴포넌트 간 보안 통신(TLS)을 위해 필수입니다.
