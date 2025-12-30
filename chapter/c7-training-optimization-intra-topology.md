@@ -105,6 +105,7 @@ trainer:
         nvidia.com: "1"                        # 파드당 GPU를 1개로 제한
         vpc.amazonaws.com: "1"                 # (EFA 사용 시) 1개 할당
 ```
+## NCCL & P2P ##
 
 ### NCCL Shared Memory 통신의 이해 ####
 #### 1. SHM/direct/direct의 의미 ####
