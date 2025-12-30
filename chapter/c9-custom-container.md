@@ -55,11 +55,10 @@ GPU 간 P2P 통신에 필요한 장치 노드(/dev/nvidiactl 등)를 컨테이�
 
 NGC 이미지는 이미 최적화된 NCCL, cuDNN, TransformerEngine 등을 포함하고 있으므로, pip install torch를 실행할 필요는 없다.
 
-### 2. 이미지 만들기 ###
+### 2. 도커 이미지 만들기 ###
 [dockerfile]
 ```
-# 기반(base) 이미지로는 최적화된 NVIDIA 공식 이미지 사용 (CUDA, cuDNN, NCCL 포함)
-FROM nvcr.io/nvidia/pytorch:24.12-py3                      
+FROM nvcr.io/nvidia/pytorch:24.12-py3                         # <--- 기반(base) 이미지                      
 LABEL maintainer="gnosia93@naver.com"
 
 # 파이썬 출력 속도 향상 및 NCCL 디버깅 활성화
