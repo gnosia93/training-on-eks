@@ -4,6 +4,7 @@
 
 ## 어디에 무엇을 설치해야 할까? ##
 호스트에는 드라이버만, 컨테이너에는 CUDA를 설치하는 것이 표준이다.
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/cust-container.png)
 
 ### 1. 호스트(Host) 설치 ###
 호스트에는 하드웨어를 직접 제어하는데 필요한 소프트웨어를 설치해야 한다.  
