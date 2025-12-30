@@ -41,7 +41,7 @@ GPU 간 P2P 통신에 필요한 장치 노드(/dev/nvidiactl 등)를 컨테이�
 ## 커스텀 도커 이미지 빌드 ##
 
 
-### 1. 기반 이미지 선택 ###
+### 1. 기반(base) 이미지 선택 ###
 
 1. 먼저 호스트 서버에서 nvidia-smi 를 이용하여 CUDA 버전을 확인한다.   
 
@@ -57,8 +57,8 @@ GPU 간 P2P 통신에 필요한 장치 노드(/dev/nvidiactl 등)를 컨테이�
 ### 2. 이미지 만들기 ###
 [dockerfile]
 ```
-# 1. 최적화된 NVIDIA 공식 이미지 사용 (CUDA, cuDNN, NCCL 포함)
-FROM nvcr.io/nvidia/pytorch:24.12-py3
+# 기반(base) 이미지로는 최적화된 NVIDIA 공식 이미지 사용 (CUDA, cuDNN, NCCL 포함)
+FROM nvcr.io/nvidia/pytorch:24.12-py3                      
 LABEL maintainer="gnosia93@naver.com"
 
 # 파이썬 출력 속도 향상 및 NCCL 디버깅 활성화
@@ -73,16 +73,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     && rm -rf /var/lib/apt/lists/*
 
-# 5. 파이썬 라이브러리 설치 (캐시 활용을 위해 requirements.txt 먼저 복사)
+# 파이썬 라이브러리 설치 (캐시 활용을 위해 requirements.txt 먼저 복사)
 WORKDIR /workspace
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 6. 작업 소스 코드 복사
+# 분산 훈련 소스 코드 복사
 # COPY . .
-# 7. 실행 권한 부여 및 진입점 설정 (선택 사항)
+# 실행 권한 부여 및 진입점 설정 (선택 사항)
 # CMD ["python", "train.py"]
-
 ```
 
 [requirements.txt]
