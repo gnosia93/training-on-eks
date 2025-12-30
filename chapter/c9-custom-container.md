@@ -127,12 +127,13 @@ flash-attn
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].RegionName' --output text)
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export REPO_NAME="pytorch-dl"
 
-aws ecr create-repository --repository-name my-dl-repo --region ${AWS_REGION}
+aws ecr create-repository --repository-name ${REPO_NAME} --region ${AWS_REGION}
 aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS \
     --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com
-docker build -t my-dl-image .
-docker tag my-dl-image:latest ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com
+docker build -t ${REPO_NAME} .
+docker tag ${REPO_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com
 docker push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com
 ```   
 
