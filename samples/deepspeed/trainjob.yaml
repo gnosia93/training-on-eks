@@ -36,7 +36,7 @@ spec:
               sizeLimit: "64Gi"               # shared memory 공간을 기본값(64Mi) 에서 64Gi 로 설정 / num_workers 와 연관됨.
       
   runtimeRef:
-    name: torch-distributed                   # torch 분산 백엔드 사용 (관련 파이썬 패키지 묶음)
+    name: torch-distributed                   # torch 분산 백엔드 사용 
 
   trainer:
     numNodes: ${NODE_NUM}                     # 노드수 설정
