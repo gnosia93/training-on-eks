@@ -38,8 +38,7 @@ GPU 간 P2P 통신에 필요한 장치 노드(/dev/nvidiactl 등)를 컨테이�
 * 컨테이너 실행 (예: docker run --gpus all ...) 
 
 
-## 커스텀 도커 이미지 빌드 ##
-
+## pytorch 커스텀 이미지 빌드 ##
 
 ### 1. 기반(base) 이미지 선택 ###
 
