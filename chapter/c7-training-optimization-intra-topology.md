@@ -121,4 +121,22 @@ NCCL은 보통 P2P(Peer-to-Peer) 통신(NVLink 또는 PCIe Direct)을 우선순�
 * 속도 차이: PCIe를 통한 직접 통신(P2P)보다 호스트 메모리를 거치는 SHM 방식이 일반적으로 지연 시간이 길고 대역폭이 낮아 학습 성능이 저하될 수 있다.
 * 해결 방법: 만약 하드웨어가 P2P를 지원한다면, 컨테이너 실행 시 --ipc=host 옵션이나 --privileged 옵션, 혹은 Kubernetes의 hostIPC: true 설정을 통해 격리를 완화하면 P2P(PCIe/NVLink) 통신이 활성화될 수 있다.
 
- 
+### GPU P2P 설정확인 ###
+```
+# nvidia-smi topo -m
+        GPU0    GPU1    GPU2    GPU3    CPU Affinity    NUMA Affinity   GPU NUMA ID
+GPU0     X      NODE    NODE    NODE    0-47    0               N/A
+GPU1    NODE     X      NODE    NODE    0-47    0               N/A
+GPU2    NODE    NODE     X      NODE    0-47    0               N/A
+GPU3    NODE    NODE    NODE     X      0-47    0               N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+```
