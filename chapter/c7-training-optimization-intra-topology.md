@@ -141,3 +141,11 @@ Legend:
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
 GPU가 서로의 메모리에 직접 접근하는 P2P(Peer-to-Peer)가 하드웨어 또는 드라이버 수준에서 활성화되면 PIX나 PXB로 표시된다.
+```
+$ lscpu | grep -i numa
+NUMA node(s):                            2
+NUMA node0 CPU(s):                       0-47,96-143
+NUMA node1 CPU(s):                       48-95,144-191
+```
+
+
