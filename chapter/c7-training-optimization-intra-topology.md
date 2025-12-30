@@ -24,7 +24,18 @@ NCCL 사용시 각각 [NVL], [P2P], [SHM] 형태로 로그가 기록이 되는�
 * hostIPC: true  
   컨테이너가 호스트의 IPC(Inter-Process Communication) 네임스페이스를 공유하게 하여 GPU 간 P2P 핸드쉐이크를 가능하게 한다.
 이때 주의할 점은 한 컨테이너 안에 통신에 필요한 모든 GPU를 몰아 넣어야 한다는 것이다. GPU P2P는 기본적으로 같은 메모리 주소 체계를 공유하는 동일 프로세스 또는 공유 메모리로 묶인 그룹 내에서만 작동하기 때문이다.
-
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: host-ipc-example
+  spec:
+    hostIPC: true  # 호스트의 IPC 네임스페이스 공유 설정
+    containers:
+    - name: shared-memory-app
+      image: ubuntu
+      command: ["/bin/sh", "-c", "sleep 3600"]
+  ```
 * resource limit:  
   nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
 
