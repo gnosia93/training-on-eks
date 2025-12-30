@@ -46,10 +46,10 @@ GPU 간 P2P 통신에 필요한 장치 노드(/dev/nvidiactl 등)를 컨테이�
 1. 먼저 호스트 서버에서 nvidia-smi 를 이용하여 CUDA 버전을 확인한다.   
 
 2. 특정 CUDA 버전에 맞는 태그 찾기. 
-  * NGC 페이지의 "Release Notes" 또는 "Tags" 탭에서 상세 스펙을 확인한다.
-  * NGC PyTorch 컨테이너 페이지에 접속한다.
+  * [NGC Catalog](https://catalog.ngc.nvidia.com/) 페이지에 접속해서 [NVIDIA PyTorch] 를 선택한다. 
+  * Overview 탭 본문에서 [PyTorch Release Notes](https://docs.nvidia.com/deeplearning/frameworks/pytorch-release-notes/index.html) 를 확인한다.
   * 각 태그 설명에 포함된 Framework 및 CUDA 버전을 확인한다. 
-    * 예: 24.10 태그는 보통 CUDA 12.6, Python 3.12, PyTorch 2.5 정도를 포함하고 있다.
+    * 예를들어 24.10 태그는 보통 CUDA 12.6, Python 3.12, PyTorch 2.5 정도를 포함하고 있다.
     * 2025년형 최신 GPU(Blackwell 등)를 쓰신다면 반드시 25.xx 시리즈를 선택해야 최적화된 버전을 사용할 수 있다. 
 
 3. NGC 이미지는 이미 최적화된 NCCL, cuDNN, TransformerEngine 등을 포함하고 있으므로, pip install torch를 실행할 필요는 없다.
