@@ -80,6 +80,7 @@ metadata:
 spec:
   template:
     spec:
+      hostIPC: true
       containers:
         - name: node
           # EFA 및 분산 학습을 위한 보안 설정 추가
