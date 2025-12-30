@@ -52,7 +52,7 @@ GPU 간 P2P 통신에 필요한 장치 노드(/dev/nvidiactl 등)를 컨테이�
     * 예를들어 24.10 태그는 보통 CUDA 12.6, Python 3.12, PyTorch 2.5 정도를 포함하고 있다.
     * 2025년형 최신 GPU(Blackwell 등)를 쓰신다면 반드시 25.xx 시리즈를 선택해야 최적화된 버전을 사용할 수 있다. 
 
-3. NGC 이미지는 이미 최적화된 NCCL, cuDNN, TransformerEngine 등을 포함하고 있으므로, pip install torch를 실행할 필요는 없다.
+NGC 이미지는 이미 최적화된 NCCL, cuDNN, TransformerEngine 등을 포함하고 있으므로, pip install torch를 실행할 필요는 없다.
 
 ### 2. 이미지 만들기 ###
 [dockerfile]
