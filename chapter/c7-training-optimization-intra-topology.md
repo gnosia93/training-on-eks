@@ -122,6 +122,7 @@ NCCL은 보통 P2P(Peer-to-Peer) 통신(NVLink 또는 PCIe Direct)을 우선순�
 * 해결 방법: 만약 하드웨어가 P2P를 지원한다면, 컨테이너 실행 시 --ipc=host 옵션이나 --privileged 옵션, 혹은 Kubernetes의 hostIPC: true 설정을 통해 격리를 완화하면 P2P(PCIe/NVLink) 통신이 활성화될 수 있다.
 
 ### GPU P2P 설정확인 ###
+아래는 g6e.12xlarge 의 GPU 토폴로지 이다. NODE 는 CPU 를 통해서 통신이 발생한다는 것을 의미한다 즉, SHM 이다.
 ```
 # nvidia-smi topo -m
         GPU0    GPU1    GPU2    GPU3    CPU Affinity    NUMA Affinity   GPU NUMA ID
@@ -147,5 +148,6 @@ NUMA node(s):                            2
 NUMA node0 CPU(s):                       0-47,96-143
 NUMA node1 CPU(s):                       48-95,144-191
 ```
+위의 정보를 이 노드는 NUMA 인 것을 확인할 수 있다. 
 
 
