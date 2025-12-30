@@ -106,4 +106,19 @@ trainer:
         vpc.amazonaws.com: "1"                 # (EFA 사용 시) 1개 할당
 ```
 
+### NCCL Shared Memory 통신의 이해 ####
+#### 1. SHM/direct/direct의 의미 ####
+SHM (Shared Memory): 데이터가 GPU 간에 직접 오가는 대신, 호스트의 메인 메모리(RAM)를 거쳐서 전달됨을 뜻이다.
+Direct/Direct: 데이터 복사 과정에서 중간 단계를 최소화하고 메모리 영역에 직접 접근(Direct Access)하여 읽고 쓰는 방식을 사용한다는 로그 상의 세부 상태이다. 
+
+#### 2. 왜 PCIe(P2P)가 아닌 SHM이 사용되었을까? ####
+NCCL은 보통 P2P(Peer-to-Peer) 통신(NVLink 또는 PCIe Direct)을 우선순위로 두지만, 다음과 같은 경우 SHM으로 폴백(Fallback)한다. 
+* 격리 환경의 제한: 컨테이너나 가상화 환경에서 GPU 간 직접적인 P2P 접근 권한이 설정되지 않았을 때 발생한다.
+* 하드웨어 구조 문제: GPU들이 서로 다른 CPU 소켓(NUMA 노드)에 연결되어 있어 PCIe를 통한 직접 통신이 비효율적이라고 판단될 때, 차선책으로 시스템 메모리를 통한 통신을 선택한다.
+* P2P 비활성화: 환경 변수(NCCL_P2P_DISABLE=1) 등을 통해 직접 통신이 명시적으로 꺼져 있는 경우이다. 
+
+#### 3. 성능 영향 ####
+* 속도 차이: PCIe를 통한 직접 통신(P2P)보다 호스트 메모리를 거치는 SHM 방식이 일반적으로 지연 시간이 길고 대역폭이 낮아 학습 성능이 저하될 수 있다.
+* 해결 방법: 만약 하드웨어가 P2P를 지원한다면, 컨테이너 실행 시 --ipc=host 옵션이나 --privileged 옵션, 혹은 Kubernetes의 hostIPC: true 설정을 통해 격리를 완화하면 P2P(PCIe/NVLink) 통신이 활성화될 수 있다.
+
  
