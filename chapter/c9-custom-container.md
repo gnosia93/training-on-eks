@@ -126,11 +126,14 @@ flash-attn
 
 도커 이미지를 만들어서 ecr 에 푸시한다.
 ```
+export AWS_REGION=$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].RegionName' --output text)
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
 aws ecr create-repository --repository-name my-dl-repo --region ${AWS_REGION}
-aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS \
-    --password-stdin 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com
+aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS \
+    --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com
 docker build -t my-dl-image .
-docker tag my-dl-image:latest 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com
-docker push 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com
+docker tag my-dl-image:latest ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com
+docker push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com
 ```   
 
