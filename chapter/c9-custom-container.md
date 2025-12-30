@@ -133,7 +133,7 @@ aws ecr create-repository --repository-name ${REPO_NAME} --region ${AWS_REGION}
 aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS \
     --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com
 
-docker build -t ${REPO_NAME}:latest .
+docker build --platform linux/amd64 -t ${REPO_NAME}:latest .
 IMAGE_ID=$(docker images -q ${REPO_NAME}:latest | head -c 12)
 
 ECR_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
