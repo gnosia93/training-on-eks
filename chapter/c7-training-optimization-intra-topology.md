@@ -140,3 +140,4 @@ Legend:
   PIX  = Connection traversing at most a single PCIe bridge
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
+GPU가 서로의 메모리에 직접 접근하는 P2P(Peer-to-Peer)가 하드웨어 또는 드라이버 수준에서 활성화되면 PIX나 PXB로 표시된다.
