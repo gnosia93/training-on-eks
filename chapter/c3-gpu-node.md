@@ -61,7 +61,7 @@ spec:
     cpu: 1000
   disruption:
     consolidationPolicy: WhenEmpty       # 이전 설정값은 WhenEmptyOrUnderutilized / 노드의 잦은 Not Ready 상태로의 변경으로 인해 수정  
-    consolidateAfter: 10m
+    consolidateAfter: 120m
 ---
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
