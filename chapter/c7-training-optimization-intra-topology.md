@@ -9,6 +9,9 @@ GPU 와 GPU 간의 데이터를 주고 받은 방식에는 아래와 같이 4가
   * GPUDirect RDMA -  다른 노드 GPU 간의 통신 
 * SHM (Shared Memory)
 
+_AWS Nitro 하이퍼바이저는 보안상의 이유로 PCIe Bus 통신이 불가능 한것으로 보인다_  
+
+
 ### P2P 지원 여부 확인 ###
 아래는 g6e.12xlarge 의 GPU 토폴로지로 NODE는 CPU 통신을 의미한다.
 ```
