@@ -73,7 +73,7 @@ Legend:
   ```
   컨테이너 환경에서 host IPC(Inter-Process Communication)를 사용하면 컨테이너가 호스트 머신의 IPC 네임스페이스를 공유하게 된다. 이를 통해 컨테이너 내부의 프로세스가 호스트나 다른 컨테이너의 프로세스와 공유 메모리, 세마포어, 메시지 큐 등을 통해 직접 통신할 수 있다.
 
-* hostNetwork: true
+* hostNetwork: true    
   파드가 호스트의 네트워크 네임스페이스를 공유한다. 주로 고성능 네트워킹(예: GPUDirect RDMA)이 필요한 경우, CNI의 오버헤드를 줄이기 위해 사용한다.
   
 * resource limit:  
