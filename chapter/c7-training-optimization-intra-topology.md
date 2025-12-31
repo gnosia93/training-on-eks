@@ -54,8 +54,6 @@ Legend:
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
 
-* GPU가 서로의 메모리에 직접 접근하는 P2P(Peer-to-Peer)가 하드웨어 또는 드라이버 수준에서 활성화되면 PIX나 PXB로 표시된다.
-
 ### 컨테이너 필수 옵션 ###
 
 * hostIPC: true  
