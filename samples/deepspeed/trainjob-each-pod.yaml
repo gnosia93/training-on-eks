@@ -49,6 +49,8 @@ spec:
         value: "NVL"                          # P2P 경로를 NVLink로 강제
       - name: NCCL_P2P_DIRECT_READ
         value: "0"
+      - name: NCCL_P2P_DIRECT_WRITE
+        value: "1"  
     # 이전 설정: --nproc_per_node=1 (동적 설정을 위해 gpu로 변경함)
     command:
       - /bin/bash
