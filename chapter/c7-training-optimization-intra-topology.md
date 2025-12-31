@@ -10,10 +10,26 @@ GPU 와 GPU 간의 데이터를 주고 받은 방식에는 아래와 같이 4가
 * SHM (Shared Memory)
 
 ### P2P 지원 여부 확인 ###
-토폴로지 확인은 호스트 터미널에서 "nvidia-smi topo -m" 를 이용하여 확인할 수 있다. 
-* NV# (예: NV1, NV2): NVLink로 연결됨 (최상급 속도).
-* PIX, PXB, PHB: PCIe를 통해 연결됨 
-* SYS 또는 SOC: CPU를 거쳐야 하므로 P2P 통신이 불가능하고 성능이 낮음.
+아래는 g6e.12xlarge 의 GPU 토폴로지 이다. NODE는 CPU 를 통해서 통신이 발생한다는 것을 의미한다.
+```
+# nvidia-smi topo -m
+        GPU0    GPU1    GPU2    GPU3    CPU Affinity    NUMA Affinity   GPU NUMA ID
+GPU0     X      NODE    NODE    NODE    0-47    0               N/A
+GPU1    NODE     X      NODE    NODE    0-47    0               N/A
+GPU2    NODE    NODE     X      NODE    0-47    0               N/A
+GPU3    NODE    NODE    NODE     X      0-47    0               N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+```
+* GPU가 서로의 메모리에 직접 접근하는 P2P(Peer-to-Peer)가 하드웨어 또는 드라이버 수준에서 활성화되면 PIX나 PXB로 표시된다.
 
 ### 컨테이너 필수 옵션 ###
 
@@ -117,34 +133,4 @@ NCCL은 보통 P2P(Peer-to-Peer) 통신(NVLink 또는 PCIe Direct)을 우선순�
 #### 3. 성능 영향 ####
 * 속도 차이: PCIe를 통한 직접 통신(P2P)보다 호스트 메모리를 거치는 SHM 방식이 일반적으로 지연 시간이 길고 대역폭이 낮아 학습 성능이 저하될 수 있다.
 * 해결 방법: 만약 하드웨어가 P2P를 지원한다면, 컨테이너 실행 시 --ipc=host 옵션이나 --privileged 옵션, 혹은 Kubernetes의 hostIPC: true 설정을 통해 격리를 완화하면 P2P(PCIe/NVLink) 통신이 활성화될 수 있다.
-
-### GPU P2P 설정확인 ###
-아래는 g6e.12xlarge 의 GPU 토폴로지 이다. NODE 는 CPU 를 통해서 통신이 발생한다는 것을 의미한다 즉, SHM 이다.
-```
-# nvidia-smi topo -m
-        GPU0    GPU1    GPU2    GPU3    CPU Affinity    NUMA Affinity   GPU NUMA ID
-GPU0     X      NODE    NODE    NODE    0-47    0               N/A
-GPU1    NODE     X      NODE    NODE    0-47    0               N/A
-GPU2    NODE    NODE     X      NODE    0-47    0               N/A
-GPU3    NODE    NODE    NODE     X      0-47    0               N/A
-
-Legend:
-
-  X    = Self
-  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
-  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
-  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
-  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
-  PIX  = Connection traversing at most a single PCIe bridge
-  NV#  = Connection traversing a bonded set of # NVLinks
-```
-GPU가 서로의 메모리에 직접 접근하는 P2P(Peer-to-Peer)가 하드웨어 또는 드라이버 수준에서 활성화되면 PIX나 PXB로 표시된다.
-```
-$ lscpu | grep -i numa
-NUMA node(s):                            2
-NUMA node0 CPU(s):                       0-47,96-143
-NUMA node1 CPU(s):                       48-95,144-191
-```
-위의 정보를 이 노드는 NUMA 인 것을 확인할 수 있다. 
-
 
