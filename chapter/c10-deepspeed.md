@@ -87,8 +87,10 @@ spec:
         - name: node
           # EFA 및 분산 학습을 위한 보안 설정 추가
           securityContext:
+            privileged: true                 # 호스트 시스템의 모든 리소스(디바이스)와 커널 기능에 대한 완전한 접근 권한을 부여하는 설정
             capabilities:
               add: ["IPC_LOCK"]
+
 ```
 
 * trainjob 명령어
