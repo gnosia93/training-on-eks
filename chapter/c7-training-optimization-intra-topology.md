@@ -292,17 +292,19 @@ hostNetwork: true를 사용하고 IPC 설정을 정교하게 하면 파드가 �
 #### cf. GPU별 개별 Pod 설정 ####
 
 만약, 운영상 개별 GPU 별로 하나의 Pod 를 할당하고 싶다면 아래와 같은 설정으로 가능하다. 하지만 이는 성능을 대가로 관리 편의성을 얻는 선택으로 권장하진 않는다. 
+아래 예시에서는 16개의 노드(Pod)를 분산 훈련에 사용하고 있는데 노드(Pod)당 1개의 프로세스를 띄우고 있으며, 파드당 리소스는 1 GPU / 1 EFA 인터페이스를 할당하고 있다.
+노드 할당을 담당하는 카펜터는 GPU를 8장 탑재하고 있는 p4d.48xlarge 와 같은 인스턴스를 2대 띄우거나 GPU 4장을 가진 인스턴스를 4 대 띄우거나 아니면 GPU 1 장을 가진 인스턴스를 16대 띄울 수도 있다.  
 ```
 trainer:
-    numNodes: 16                               # 파드(노드 단위)를 16개로 증가
-    numProcPerNode: 1                          # 파드당 프로세스는 1개만 실행
+    numNodes: 16                               # Pod(노드 단위)를 16개 할당
+    numProcPerNode: 1                          # Pod 내부에서 프로세스는 1개만 실행 / Pod 의 리소스 limit 설정이 nvidia.com: "1" 이므로 1 이상의 값을 주면 에러가 발생. 
     image: ...
 
     command:
         # ... (중략) ...
         torchrun \
-          --nnodes=16 \                        # 전체 노드 수를 16으로 명시
-          --nproc_per_node=1 \                 # 파드당 1개 프로세스만 생성
+          --nnodes=16 \                        # 전체 노드 수를 16으로 명시 (생략가능)
+          --nproc_per_node=1 \                 # Pod당 1개 프로세스만 생성 명시 (생략가능)
           --rdzv_id=llama-3-8b-job \
           --rdzv_backend=c10d \
           --rdzv_endpoint=${PET_MASTER_ADDR}:${PET_MASTER_PORT} \
@@ -310,7 +312,7 @@ trainer:
 
     resourcesPerNode:
       limits:
-        nvidia.com: "1"                        # 파드당 GPU를 1개로 제한
+        nvidia.com: "1"                        # Pod GPU를 1개로 제한
         vpc.amazonaws.com: "1"                 # (EFA 사용 시) 1개 할당
 ```
 
