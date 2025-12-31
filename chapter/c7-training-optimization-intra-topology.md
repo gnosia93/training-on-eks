@@ -88,23 +88,23 @@ NCCL을 사용하는 경우 컨테이너 환경변수를 통해 통신 경로를
 물리적으로 같은 장치(서버)안에 있는 GPU 끼리도 NVLink 로 직접 쓰지 못하고 네트워크 스택을 한 번 거쳐야 하는 병목이 생길 가능성이 매우 높다.
 
 #### 1. 통신 경로(Topology) ####
-* (4파드 x  8GPU): 하나의 파드(컨테이너) 안에 GPU 8장이 모두 보이는 구조로, NCCL은 이들이 같은 메모리 주소 공간에 있음을 인지하고 NVLink 또는 PCIe P2P(Peer-to-Peer)를 통해 통신한다.
-* (32파드 x 1GPU): 각 파드는 완전히 격리된 환경에서 동작하므로 데이터를 보낼 때 GPU 0 -> 호스트 메모리 -> 네트워크 카드(EFA/TCP) -> 호스트 메모리 -> GPU 1의 복잡한 경로를 거치게 된다.
+* (1 Pod x  8GPU): 하나의 Pod(컨테이너) 안에 GPU 8장이 모두 보이는 구조로, NCCL은 이들이 같은 메모리 주소 공간에 있음을 인지하고 NVLink 또는 PCIe P2P(Peer-to-Peer)를 통해 통신한다.
+* (8 Pod x 1GPU): 각 파드는 완전히 격리된 환경에서 동작하므로 데이터를 보낼 때 GPU 0 -> 호스트 메모리 -> 네트워크 카드(EFA/TCP) -> 호스트 메모리 -> GPU 1의 복잡한 경로를 거치게 된다.
 
 ```
 llama-3-8b-node-0-0:195:1185 [3] NCCL INFO Channel 00 : 3[3] -> 2[2] via SHM/direct/direct
 llama-3-8b-node-0-0:195:1185 [3] NCCL INFO Channel 01 : 3[3] -> 2[2] via SHM/direct/direct
-llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 01/0 : 0[0] -> 4[0] [send] via NET/Socket/0
 llama-3-8b-node-0-0:194:1186 [2] NCCL INFO Channel 00 : 2[2] -> 1[1] via SHM/direct/direct
-llama-3-8b-node-0-0:194:1186 [2] NCCL INFO Channel 01 : 2[2] -> 1[1] via SHM/direct/direct
-llama-3-8b-node-0-0:193:1187 [1] NCCL INFO Channel 00 : 1[1] -> 0[0] via SHM/direct/direct
-llama-3-8b-node-0-0:193:1187 [1] NCCL INFO Channel 01 : 1[1] -> 0[0] via SHM/direct/direct
+
+llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 01/0 : 0[0] -> 4[0] [send] via NET/Socket/0
 llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 00/0 : 8[0] -> 0[0] [receive] via NET/Socket/0
 llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 00/0 : 0[0] -> 8[0] [send] via NET/Socket/0
+
+llama-3-8b-node-0-0:253:2401 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:253:2401 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:253:2401 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+
 llama-3-8b-node-0-0:195:1185 [3] NCCL INFO Connected all trees
-llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Channel 01/0 : 4[0] -> 0[0] [receive] via NET/Socket/0
-llama-3-8b-node-0-0:194:1186 [2] NCCL INFO Connected all trees
-llama-3-8b-node-0-0:192:1188 [0] NCCL INFO Connected all trees
 ```
 * 3[3] -> 글로벌 랭크 3 / 로컬 랭크 3, 8[0] -> 글로벌 랭크 8 / 로컬 랭크 0  
 
