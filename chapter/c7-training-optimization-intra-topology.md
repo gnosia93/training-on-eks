@@ -1,15 +1,24 @@
-***이 챕터는 동일 서버의 GPU 간의 인터커넥트 통신 매커니즘을 다루는 이론 파트이다. 실습용 스크립트나 테스트 환경은 제공하지 않는다.***  
+***이 챕터는 GPU 간의 인터커넥트 통신 매커니즘을 다루는 이론 파트이다. 실습용 스크립트나 테스트 환경은 제공하지 않는다.***  
 
-## 멀티 GPU 토폴로지 ##
+## GPU 토폴로지 ##
+GPU 와 GPU 간의 통신에는 아래와 같이 4가지 타입이 있다. 이중 P2P 방식은 CPU 의 개입 없이 이뤄지며, 그에 비해 SHM 방식은 동일 서버내에서 CPU 가 개입하게 된다.     
 
-EC2 인스턴스 또는 하나의 Pod 내부에서 사용 가능한 GPU 간의 통신은 다음과 같이 3가지 종류가 있다. 이중 GPU P2P 는 SHM(Shared Memory) 방식과는 달리 CPU 및 시스템 메모리(RAM) 를 사용하지 않기 때문에 훨씬 빠른 전송 속도를 제공해 준다.    
+* GPU P2P 
+  * NVLink / NVSwitch
+  * PCIe BUS
+  * GPUDirect RDMA - 멀티 노드 환경에서 리모트 GPU 와의 통신 
+* SHM (Shared Memory)
+
+
+## 단일 서버 멀티 GPU 토폴로지 ##
+
+1대의 EC2 인스턴스 또는 하나의 Pod 내부에서 사용 가능한 GPU 간의 통신은 다음과 같이 3가지 종류가 있다. 이중 GPU P2P 는 SHM(Shared Memory) 방식과는 달리 CPU 및 시스템 메모리(RAM) 를 사용하지 않기 때문에 훨씬 빠른 전송 속도를 제공해 준다.    
 GPU P2P(Peer-to-Peer)는 멀티 GPU 시스템 내에서 두 개 이상의 GPU가 CPU나 메인 메모리(RAM)를 거치지 않고 서로의 메모리에 직접 접근하여 데이터를 주고받는 기술이다.
 NCCL 사용시 각각 [NVL], [P2P], [SHM] 형태로 로그가 기록이 되는데, 통신 성능은 [NVL] >>> [P2P] > [SHM] 이다.
 
 * GPU P2P 
   * NVLink / NVSwitch
   * PCIe BUS
-  * GPUDirect RDMA
 * SHM (Shared Memory)
 
 멀티 GPU 환경에서 최적의 훈련 퍼포먼스를 확보하기 위해 GPU P2P 활성화는 선택이 아닌 필수 사항이다.
