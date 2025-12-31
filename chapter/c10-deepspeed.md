@@ -80,6 +80,7 @@ metadata:
 spec:
   template:
     spec:
+      shareProcessNamespace: true 
       hostIPC: true
 #      hostNetwork: true
       containers:
