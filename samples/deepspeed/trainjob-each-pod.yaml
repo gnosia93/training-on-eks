@@ -51,6 +51,8 @@ spec:
         value: "0"
       - name: NCCL_P2P_DIRECT_WRITE
         value: "1"  
+      - name: NCCL_CUMEM_HOST_ENABLE
+        value: "0"
     # 이전 설정: --nproc_per_node=1 (동적 설정을 위해 gpu로 변경함)
     command:
       - /bin/bash
