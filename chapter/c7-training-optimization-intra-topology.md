@@ -289,7 +289,7 @@ llama-3-8b-node-0-0:188:765 [0] NCCL INFO Connected all trees
 hostNetwork: true를 사용하고 IPC 설정을 정교하게 하면 파드가 달라도 NVLink를 쓸 수는 있지만, 설정이 매우 까다롭고 보안상 권장되지 않는다.
 
 
-#### cf. GPU별 개별 Pod 설정 ####
+### cf. GPU별 개별 Pod 설정 ###
 
 만약, 운영상 개별 GPU 별로 하나의 Pod 를 할당하고 싶다면 아래와 같은 설정으로 가능하다. 하지만 이는 성능을 대가로 관리 편의성을 얻는 선택으로 권장하진 않는다. 
 아래 예시에서는 16개의 노드(Pod)를 분산 훈련에 사용하고 있는데 노드(Pod)당 1개의 프로세스를 띄우고 있으며, 파드당 리소스는 1 GPU / 1 EFA 인터페이스를 할당하고 있다.
@@ -297,8 +297,8 @@ hostNetwork: true를 사용하고 IPC 설정을 정교하게 하면 파드가 �
 ```
 trainer:
     numNodes: 16                               # Pod(노드 단위)를 16개 할당
-    numProcPerNode: 1                          # Pod 내부에서 프로세스는 1개만 실행 / Pod 의 리소스 limit 설정이 nvidia.com: "1" 이므로 1 이상의 값을 주면 에러가 발생. 
-    image: ...
+    numProcPerNode: 1                          # Pod 내부에서 프로세스는 1개만 실행  
+    image: ...                                 # Pod 의 리소스 limit 설정이 nvidia.com: "1" 이므로 1 이상의 값을 주면 에러 발생.
 
     command:
         # ... (중략) ...
