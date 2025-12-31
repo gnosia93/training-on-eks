@@ -9,6 +9,7 @@ NCCL 사용시 각각 [NVL], [P2P], [SHM] 형태로 로그가 기록이 되는�
 * GPU P2P 
   * NVLink / NVSwitch
   * PCIe BUS
+  * GPUDirect RDMA
 * SHM (Shared Memory)
 
 멀티 GPU 환경에서 최적의 훈련 퍼포먼스를 확보하기 위해 GPU P2P 활성화는 선택이 아닌 필수 사항이다.
