@@ -279,7 +279,7 @@ llama-3-8b-node-0-0:188:764 [0] NCCL INFO Channel 01/0 : 0[0] -> 2[0] [send] via
 llama-3-8b-node-0-0:188:764 [0] NCCL INFO Connected binomial trees
 llama-3-8b-node-0-0:188:765 [0] NCCL INFO Connected all trees
 ```
-* 3[3] -> 글로벌 랭크 3 / 로컬 랭크 3, 8[0] -> 글로벌 랭크 8 / 로컬 랭크 0  
+* 3[0] -> 글로벌 랭크 3 / 로컬 랭크 0  
 
 #### 2. 성능 차이 (Bottleneck) ###
 * NVLink 속도: 최신 GPU(A100/H100/GB200) 기준 노드 내부 통신은 보통 600 GB/s [NVLink 3.0] ~ 1,800 GB/s [NVLink 5.0]
