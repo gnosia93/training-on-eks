@@ -25,6 +25,9 @@ spec:
             volumeMounts:                                             # 이 값을 잘못 설정하는 경우 TrainJob 이 시작되지 않는다. 
               - mountPath: /dev/shm
                 name: dshm
+            env:
+              - name: NCCL_P2P_LEVEL
+                value: "NVL"                              # P2P 경로를 NVLink로 강제
            #   - mountPath: /data/fsx
            #     name: fsx
             
