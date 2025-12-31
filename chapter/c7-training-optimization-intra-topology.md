@@ -1,23 +1,13 @@
 ***이 챕터는 GPU 간의 인터커넥트 통신 매커니즘을 다루는 이론 파트이다. 실습용 스크립트나 테스트 환경은 제공하지 않는다.***  
 
 ## GPU 토폴로지 ##
-GPU 와 GPU 간의 통신(GPU P2P)에는 아래와 같이 4가지 타입이 있다. 이중 P2P 방식은 CPU 의 개입 없이 GPU 가 서로의 메모리(VRAM)에 직접 접근하여 데이터를 주고받는 기술이다. 이에 비해 SHM 방식은 CPU 가 개입하게 되고,      
-CPU의 메모리 복사 과정과 호스트 메모리 대역폭 병목으로 인해 통신 성능이 저하된다.
+GPU 와 GPU 간의 통신(GPU P2P)에는 아래와 같이 4가지 타입이 있다. 이중 P2P 방식은 CPU 의 개입 없이 GPU 가 서로의 메모리(VRAM)에 직접 접근하여 데이터를 주고받는 기술이다. 이에 비해 SHM 방식은 CPU 가 개입하게 되고,
+CPU의 메모리 복사 과정과 호스트 메모리 대역폭 병목으로 인해 통신 성능이 저하된다. NCCL은 GPU 간 데이터 전송 시 지연 시간을 최소화하기 위해 CPU 개입 없이 GPU 메모리에 직접 접근하는 P2P(Peer-to-Peer) 통신 아키텍처를 최우선 순위로 할당한다. 만약 하드웨어 토폴로지나 시스템 제약으로 인해 Direct Access가 차단될 경우, 시스템 메인 메모리를 중간 버퍼로 활용하는 SHM(Shared Memory) 프로토콜을 차선책(Fallback)으로 채택하여 통신 가용성을 보장하게 된다. CGPUDirect RDMA 는 서로 다른 노드의 GPU 간의 통신으로 RoCE, IB, EFA 을 사용하게 된다.  
 
 * GPU P2P 
   * NVLink / NVSwitch
   * PCIe BUS
   * GPUDirect RDMA -  다른 노드 GPU 간의 통신 
-* SHM (Shared Memory)
-
-## 멀티 GPU 토폴로지 ##
-
-단일 서버 또는 하나의 Pod 내부에서 사용 가능한 GPU 간의 통신은 다음과 같이 3가지 종류가 있다. NCCL 사용시 각각 [NVL], [P2P], [SHM] 형태로 로그가 기록이 되는데, 통신 성능은 [NVL] >>> [P2P] > [SHM] 이다.
-멀티 GPU 환경에서 최적의 훈련 퍼포먼스를 확보하기 위해 GPU P2P 활성화는 선택이 아닌 필수 사항이다.
-
-* GPU P2P 
-  * NVLink / NVSwitch
-  * PCIe BUS
 * SHM (Shared Memory)
 
 ### P2P 지원 여부 확인 ###
