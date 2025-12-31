@@ -17,7 +17,7 @@ spec:
         #        add: ["IPC_LOCK"]  
         #hostIPC: true  # 호스트의 IPC 네임스페이스 공유 설정
         nodeSelector:
-          node.kubernetes.io/instance-type: ${INSTANCE_TYPE}              
+          node.kubernetes.io/instance-type: "p4d.24xlarge"              
         #  topology.kubernetes.io/zone: ${AZ}                         # AZ 레벨 인스턴스 용량 부족으로 제거 -> 리전 단위로 용량 확보                 
 
         containers:
