@@ -15,6 +15,16 @@ spec:
         #      capabilities:                                          # EFA 통신을 위해 메모리 잠금 권한 필요
         #        add: ["IPC_LOCK"]  
         #hostIPC: true  # 호스트의 IPC 네임스페이스 공유 설정
+        affinity:
+          podAffinity:
+            # "조건을 만족하지 않으면 아예 배치하지 마라"는 강한 제약 (Hard Constraint)
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    # TrainJob이 생성하는 파드 라벨과 일치시켜야 함
+                    training.kubeflow.org/job-name: "llama-3-8b"
+                topologyKey: "topology.kubernetes.io/zone"
+        
         nodeSelector:
           node.kubernetes.io/instance-type: "p4d.24xlarge"              
         #  topology.kubernetes.io/zone: ${AZ}                         # AZ 레벨 인스턴스 용량 부족으로 제거 -> 리전 단위로 용량 확보                 
