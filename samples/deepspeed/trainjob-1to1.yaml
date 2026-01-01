@@ -22,7 +22,7 @@ spec:
               - labelSelector:
                   matchLabels:
                     # TrainJob이 생성하는 파드 라벨과 일치시켜야 함
-                    training.kubeflow.org/job-name: "llama-3-8b"
+                    jobset.sigs.k8s.io/jobset-name: "llama-3-8b"
                 topologyKey: "topology.kubernetes.io/zone"
         
         nodeSelector:
