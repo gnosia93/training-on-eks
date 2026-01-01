@@ -38,6 +38,6 @@
 ## Appendix ##
 
 * [A1. 트러블 슈팅](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
-* [A2. 토폴리지별 훈련 성능](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a3.training-perf-topology.md)
+* [A2. 토폴리지별 훈련성능](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a3.training-perf-topology.md)
 * [A3. Slurm on EKS](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a4-slurm-on-eks.md)
 * https://tutorials.pytorch.kr/intermediate/TP_tutorial.html
