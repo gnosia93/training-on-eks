@@ -27,6 +27,7 @@ from datasets import load_dataset
 import torch.distributed as dist  
 import deepspeed  
 import gc
+import psutil
 
 # 1. Hugging Face 타임아웃 연장 (데이터셋 로딩 에러 방지)
 os.environ["HF_HUB_READ_TIMEOUT"] = "300"
@@ -75,6 +76,40 @@ class MemoryLoggingCallback(TrainerCallback):
                 # 피크 통계 초기화 (다음 구간의 피크를 보기 위함 - 선택 사항)
                 torch.cuda.reset_peak_memory_stats(device)
 
+class SystemMonitorCallback(TrainerCallback):
+    def __init__(self):
+        # 초기 네트워크 수치 저장
+        net_io = psutil.net_io_counters()
+        self.last_net_sent = net_io.bytes_sent
+        self.last_net_recv = net_io.bytes_recv
+        self.last_time = time.time()
+
+    def on_step_end(self, args, state, control, **kwargs):
+        if state.global_step % args.logging_steps == 0:
+            curr_time = time.time()
+            net_io = psutil.net_io_counters()
+            
+            # 이전 로깅 시점 이후의 전송량 계산 (MB)
+            sent_mb = (net_io.bytes_sent - self.last_net_sent) / (1024 ** 2)
+            recv_mb = (net_io.bytes_recv - self.last_net_recv) / (1024 ** 2)
+            interval = curr_time - self.last_time
+            
+            # 초당 전송 속도 (MB/s)
+            throughput = (sent_mb + recv_mb) / interval
+
+            if torch.cuda.is_available():
+                device = torch.cuda.current_device()
+                allocated = torch.cuda.memory_allocated(device) / (1024 ** 3)
+                
+                print(f"\n[Step {state.global_step}] "
+                      f"Memory: {allocated:.2f}GB | "
+                      f"Net Sent: {sent_mb:.1f}MB, Recv: {recv_mb:.1f}MB | "
+                      f"Throughput: {throughput:.1f}MB/s")
+
+            # 수치 업데이트
+            self.last_net_sent = net_io.bytes_sent
+            self.last_net_recv = net_io.bytes_recv
+            self.last_time = curr_time
 
 # transformers 라이브러리의 로그 레벨을 INFO로 설정하여 학습 과정(Loss 등)을 확인합니다.
 transformers.utils.logging.set_verbosity_info()
@@ -154,7 +189,7 @@ def main():
         args=training_args,
         train_dataset=tokenized_datasets,
         data_collator=data_collator,
-        callbacks=[SimpleTimeCallback(), MemoryLoggingCallback()] 
+        callbacks=[SimpleTimeCallback(), MemoryLoggingCallback(), SystemMonitorCallback()] 
     )
     
     trainer.train()
