@@ -8,6 +8,195 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## 오류 메시지 및 현상 ##
 
+## torch.OutOfMemoryError: CUDA out of memory ##
+```
+Master Address: llama-3-8b-node-0-0.llama-3-8b
+Master Port: 29500
+df: /root/.triton/autotune: No such file or directory
+[Rank 3] GPU Memory Flushed.
+loading configuration file config.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/config.json
+Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 128000,
+  "dtype": "bfloat16",
+  "eos_token_id": 128001,
+  "head_dim": 128,
+  "hidden_act": "silu",
+  "hidden_size": 4096,
+  "initializer_range": 0.02,
+  "intermediate_size": 14336,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 32,
+  "num_hidden_layers": 32,
+  "num_key_value_heads": 8,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_scaling": null,
+  "rope_theta": 500000.0,
+  "tie_word_embeddings": false,
+  "transformers_version": "4.57.3",
+  "use_cache": true,
+  "vocab_size": 128256
+}
+
+loading file tokenizer.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/tokenizer.json
+loading file tokenizer.model from cache at None
+loading file added_tokens.json from cache at None
+loading file special_tokens_map.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/special_tokens_map.json
+loading file tokenizer_config.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/tokenizer_config.json
+loading file chat_template.jinja from cache at None
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+loading configuration file config.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/config.json
+`torch_dtype` is deprecated! Use `dtype` instead!
+Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 128000,
+  "dtype": "bfloat16",
+  "eos_token_id": 128001,
+  "head_dim": 128,
+  "hidden_act": "silu",
+  "hidden_size": 4096,
+  "initializer_range": 0.02,
+  "intermediate_size": 14336,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 32,
+  "num_hidden_layers": 32,
+  "num_key_value_heads": 8,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_scaling": null,
+  "rope_theta": 500000.0,
+  "tie_word_embeddings": false,
+  "transformers_version": "4.57.3",
+  "use_cache": true,
+  "vocab_size": 128256
+}
+
+loading weights file model.safetensors from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/model.safetensors.index.json
+Fetching 4 files: 100%|██████████| 4/4 [03:50<00:00, 57.69s/it]
+Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+Generate config GenerationConfig {
+  "bos_token_id": 128000,
+  "eos_token_id": 128001
+}
+
+Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 113.18it/s]
+loading configuration file generation_config.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/generation_config.json
+Generate config GenerationConfig {
+  "bos_token_id": 128000,
+  "do_sample": true,
+  "eos_token_id": 128001,
+  "max_length": 4096,
+  "temperature": 0.6,
+  "top_p": 0.9
+}
+
+Could not locate the custom_generate/generate.py inside meta-llama/Meta-Llama-3-8B.
+Generating test split: 100%|██████████| 4358/4358 [00:00<00:00, 520703.53 examples/s]
+Generating train split: 100%|██████████| 36718/36718 [00:00<00:00, 988900.72 examples/s]
+Generating validation split: 100%|██████████| 3760/3760 [00:00<00:00, 789160.48 examples/s]
+Map: 100%|██████████| 36718/36718 [00:01<00:00, 23851.83 examples/s]
+PyTorch: setting up devices
+max_steps is given, it will override any value given in num_train_epochs
+Using auto half precision backend
+Detected ZeRO Offload and non-DeepSpeed optimizers: This combination should work as long as the custom optimizer has both CPU and GPU implementation (except LAMB)
+[rank3]:W0101 11:09:46.337000 192 site-packages/torch/utils/cpp_extension.py:2425] TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
+[rank3]:W0101 11:09:46.337000 192 site-packages/torch/utils/cpp_extension.py:2425] If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'] to specific architectures.
+Adam Optimizer #0 is created with AVX512 arithmetic capability.
+Config: alpha=0.000020, betas=(0.900000, 0.999000), weight_decay=0.010000, adam_w=1
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/workspace/code/samples/deepspeed/llama-3-8b.py", line 156, in <module>
+[rank3]:     main()
+[rank3]:   File "/workspace/code/samples/deepspeed/llama-3-8b.py", line 129, in main
+[rank3]:     trainer.train()
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 2325, in train
+[rank3]:     return inner_training_loop(
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 2480, in _inner_training_loop
+[rank3]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank3]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/accelerate/accelerator.py", line 1547, in prepare
+[rank3]:     result = self._prepare_deepspeed(*args)
+[rank3]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/accelerate/accelerator.py", line 2290, in _prepare_deepspeed
+[rank3]:     engine, optimizer, _, lr_scheduler = ds_initialize(**kwargs)
+[rank3]:                                          ^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/__init__.py", line 203, in initialize
+[rank3]:     engine = DeepSpeedEngine(args=args,
+[rank3]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/runtime/engine.py", line 302, in __init__
+[rank3]:     self._configure_distributed_model(model)
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/runtime/engine.py", line 1359, in _configure_distributed_model
+[rank3]:     self.module.to(self.device)
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4343, in to
+[rank3]:     return super().to(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1369, in to
+[rank3]:     return self._apply(convert)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 928, in _apply
+[rank3]:     module._apply(fn)
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 928, in _apply
+[rank3]:     module._apply(fn)
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 928, in _apply
+[rank3]:     module._apply(fn)
+[rank3]:   [Previous line repeated 2 more times]
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 955, in _apply
+[rank3]:     param_applied = fn(param)
+[rank3]:                     ^^^^^^^^^
+[rank3]:   File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1355, in convert
+[rank3]:     return t.to(
+[rank3]:            ^^^^^
+[rank3]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 112.00 MiB. GPU 0 has a total capacity of 39.49 GiB of which 119.38 MiB is free. Including non-PyTorch memory, this process has 8.38 GiB memory in use. Of the allocated memory 7.96 GiB is allocated by PyTorch, and 7.73 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+E0101 11:10:18.826000 7 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 192) of binary: /usr/local/bin/python
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/usr/local/lib/python3.12/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 143, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 277, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+llama-3-8b.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+-----------------------------------------------------
+```
+
+
+
+
+
+
+
+
+
+
+
+
 ### Allocate failed due to no healthy devices present ###
 ```
 Events:
