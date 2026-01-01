@@ -76,6 +76,10 @@ llama-3-8b-node-0-0:194:194 [0] NCCL INFO enqueue.cc:2432 -> 6
 [rank0]:[W101 12:08:33.945328381 ProcessGroupNCCL.cpp:1538] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
 ```
 
+* 동일 서브넷 확인: 4개의 파드가 모두 동일한 Availability Zone(AZ) 및 서브넷에 배치되어 있는지 확인하세요. EFA는 AZ를 넘어가는 통신을 지원하지 않습니다.
+* EFA 드라이버 확인: 모든 노드에서 fi_info -p efa 명령어를 실행했을 때 정상적으로 장치가 인식되는지 확인하십시오.
+* Placement Group: 인스턴스들이 Cluster Placement Group 내에 배치되어 있는지 확인하세요. 분산 학습 시 네트워크 지연을 줄이기 위한 필수 조건입니다.
+* 요약: 이 에러는 보안 그룹 규칙(Self-referential rule)이 없어서 다른 파드의 응답을 거부하고 있을 확률이 가장 높습니다. AWS 콘솔에서 해당 인스턴스들의 보안 그룹에 "Source: 자기 자신의 보안 그룹 ID, Protocol: All" 규칙이 있는지 반드시 확인하시기 바랍니다. NVIDIA NCCL OFI 플러그인 문서에서 관련 오류 코드를 더 상세히 확인할 수 있습니다.
 
 ## torch.OutOfMemoryError: CUDA out of memory ##
 ```
