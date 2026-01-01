@@ -13,3 +13,4 @@ envsubst '$INSTANCE_TYPE $NODE_NUM $GPU_PER_NODE $EFA_PER_NODE $HF_TOKEN' < trai
 
 kubectl get trainjob 
 kubectl get pods 
+nodes
