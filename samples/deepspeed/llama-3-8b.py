@@ -9,6 +9,8 @@ from transformers import AutoModelForCausalLM, AutoConfig, Trainer, TrainingArgu
 from transformers import DataCollatorForLanguageModeling
 from transformers import TrainerCallback
 from datasets import load_dataset
+import torch.distributed as dist  
+import deepspeed  
 
 class SimpleTimeCallback(TrainerCallback):
     def on_log(self, args, state, control, logs=None, **kwargs):
