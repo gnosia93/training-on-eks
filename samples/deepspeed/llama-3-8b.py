@@ -37,8 +37,6 @@ def main():
         torch_dtype=torch.bfloat16,                  # training_args의 bf16과 일치
         attn_implementation="sdpa"                   # sdpa(Scaled Dot Product Attention) 사용
     #   attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상 / flash-attn 미설치 
-        device_map=None,                             # DeepSpeed 사용 시 필수 (DeepSpeed 엔진이 모델 배치를 결정)
-        low_cpu_mem_usage=True                       # device_map="auto"나 특정 장치를 지정하면 Hugging Face의 accelerate 라이브러리가 모델의 레이어들을 여러 GPU에 직접 할당하려고 시도
     )                            
     
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
