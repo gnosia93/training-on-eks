@@ -57,3 +57,6 @@ node_exporter의 ethtool 콜렉터는 노드의 /sys/class/net/ 경로에 있는
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/network-mon.png)  
 
 
+## 레퍼런스 ##
+
+* https://grafana.com/grafana/dashboards/20579-efa-metrics-dev/
