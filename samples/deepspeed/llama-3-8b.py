@@ -21,6 +21,11 @@ transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
 
 def main():
+    # 최우선 순위: 프로세스 그룹 초기화 (랑데뷰 시작)
+    # torchrun으로 실행 시 환경 변수를 읽어 자동으로 4개의 파드를 하나로 묶습니다.
+    if not dist.is_initialized():
+        dist.init_process_group(backend="nccl")
+        
     start_time = time.time()
 
     model_name = "meta-llama/Meta-Llama-3-8B"
