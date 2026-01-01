@@ -73,7 +73,6 @@ def main():
             torch_dtype=torch.bfloat16,
             device_map=None,              # 분산 학습 시 필수: None
             attn_implementation="sdpa",
-            low_cpu_mem_usage=False       # meta 텐서 충돌 방지
         )      
 
     
