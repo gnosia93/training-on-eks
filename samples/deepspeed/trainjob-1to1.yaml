@@ -41,6 +41,8 @@ spec:
     env:
       - name: NCCL_P2P_LEVEL
         value: "NVL"                          # P2P 경로를 NVLink로 강제
+      - name: PYTORCH_CUDA_ALLOC_CONF
+        value: "expandable_segments:True"     # gpu 메모리 조각화 방지
     # 이전 설정: --nproc_per_node=1 (동적 설정을 위해 gpu로 변경함)
     command:
       - /bin/bash
