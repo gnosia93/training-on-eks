@@ -11,6 +11,14 @@
 
 3. 로컬 테스트 방법 (터미널 실행)
     torchrun --nproc_per_node=1 your_script.py
+
+* EFA 모니터링
+1. Network Throughput: ZeRO-3를 사용하면 매 스텝마다 가중치를 다시 모으고 흩뿌리는 과정이 발생하므로, 네트워크 사용량이 주기적으로 튑니다(Spike). 
+   만약 이 속도가 너무 낮다면 EFA 설정이나 보안 그룹 문제를 의심해야 한다.
+2. Sent/Recv 균형: 분산 학습은 데이터를 주고받는 구조이므로 송신(Sent)과 수신(Recv)량이 거의 비슷하게 나타나야 정상. 
+   한쪽이 너무 높다면 특정 파드에 병목이 걸린 것.
+3. EFA 전용 모니터링 (고급): 만약 eth0가 아닌 실제 EFA 장치의 전송량만 보고 싶다면, psutil.net_io_counters(pernic=True)를 사용하여 
+   efa0 인터페이스만 필터링하도록 코드를 수정.
 """
 
 import os
