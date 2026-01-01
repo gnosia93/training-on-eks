@@ -26,6 +26,18 @@ from transformers import TrainerCallback
 from datasets import load_dataset
 import torch.distributed as dist  
 import deepspeed  
+import gc
+
+def flush_gpu_memory():
+    """강제로 GPU 메모리 캐시를 비우고 가비지 컬렉션을 수행합니다."""
+    # 파이썬 수준의 객체 정리
+    gc.collect()
+    # PyTorch 수준의 캐시 비우기
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        # 현재 할당된 메모리 정보 초기화 (선택 사항)
+        torch.cuda.reset_peak_memory_stats()
+    print(f"[Rank {os.environ.get('RANK', '0')}] GPU Memory Flushed.")
 
 class SimpleTimeCallback(TrainerCallback):
     def on_log(self, args, state, control, logs=None, **kwargs):
@@ -38,6 +50,7 @@ transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
 
 def main():
+    flush_gpu_memory()
     # 1. 최우선 순위: 프로세스 그룹 초기화 (랑데뷰 시작)
     # torchrun으로 실행 시 환경 변수를 읽어 자동으로 4개의 파드를 하나로 묶습니다.
     if not dist.is_initialized():
