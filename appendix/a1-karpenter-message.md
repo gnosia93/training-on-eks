@@ -8,6 +8,14 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## 오류 메시지 및 현상 ##
 
+
+### #1. training memory warning ###
+
+[2025-12-31 17:08:24,236] [WARNING] [stage3.py:2236:step] 1 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+
+
+
+
 ### #1. 노드의 잦은 Not Ready 상태로의 변경 ###
 훈련 도중 노드가 Not Ready 상태로 변경되면, 해당 노드에서 실행중인 파드는 쿠버네티스로 부터 종료 시그널을 받게 된다. 시그널(SIGTERM-Signal 15)을 받은 파드는 진행중인 작업을 중단하고 강제 종료 되는데, 이경우 NCCL 통신이 broken 되어 전체 작업이 비정상적으로 끝나게 된다. 이를 방지하게 위해서 카펜터를 쓰는 쿠버네티스 환경에서는 아래와 같이 두가지 설정이 필요하다.
 
