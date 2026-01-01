@@ -7,7 +7,6 @@ spec:
     - targetJobs:
         - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
       metadata:
-#        name: llama-3-8b
         annotations:
           karpenter.sh/do-not-disrupt: "true"                         # Karpenter의 노드 회수 방지
       spec:
@@ -25,13 +24,8 @@ spec:
             volumeMounts:                                             # 이 값을 잘못 설정하는 경우 TrainJob 이 시작되지 않는다. 
               - mountPath: /dev/shm
                 name: dshm
-           #   - mountPath: /data/fsx
-           #     name: fsx
             
         volumes:
-       #   - name: fsx
-       #     persistentVolumeClaim:
-       #       claimName: fsx-pvc             
           - name: dshm
             emptyDir:
               medium: Memory
@@ -41,8 +35,8 @@ spec:
     name: torch-distributed                   # torch 분산 백엔드 사용 
 
   trainer:
-    numNodes: 1                               # 파드수 설정
-    numProcPerNode: 4                         # 파드당 프로세스 갯수                                                                              
+    numNodes: 4                               # 파드수 설정
+    numProcPerNode: 1                         # 파드당 프로세스 갯수                                                                              
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
     env:
       - name: NCCL_P2P_LEVEL
@@ -61,7 +55,7 @@ spec:
         echo "Master Address: ${PET_MASTER_ADDR}" && \
         echo "Master Port: ${PET_MASTER_PORT}" && \
         torchrun \
-          --nproc_per_node=4 \
+          --nproc_per_node=1 \
           --rdzv_id=llama-3-8b-job \
           --rdzv_backend=c10d \
           --rdzv_endpoint=${PET_MASTER_ADDR}:${PET_MASTER_PORT} \
@@ -69,6 +63,6 @@ spec:
           llama-3-8b.py 
     resourcesPerNode:
       limits:
-        nvidia.com/gpu: 4
-        vpc.amazonaws.com/efa: 4                      
+        nvidia.com/gpu: 1
+        vpc.amazonaws.com/efa: 1                      
  
