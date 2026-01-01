@@ -1,3 +1,18 @@
+"""
+* 로컬 PC 테스트 고려사항 
+1. 하드웨어 체크 (VRAM 용량)
+    Llama-3-8B 모델은 BF16 정밀도 기준 모델 크기만 약 16GB.
+    성공 가능: GPU VRAM이 24GB 이상(RTX 3090/4090)이라면 단일 GPU에서도 DeepSpeed 없이 또는 ZeRO-2/3를 켜고 테스트가 가능.
+    실패 가능: VRAM이 8GB~12항GB라면 일반적인 방식으로는 로딩조차 되지 않고 OOM이 발생. 이 경우 4-bit 양자화(bitsandbytes)를 사용해야 테스트할 수 있음.
+
+2. 운영체제 (OS) 제약
+    Linux (권장): DeepSpeed는 리눅스 환경에서 가장 잘 작동하며 설치가 간편.
+    Windows: DeepSpeed 설치가 까다롭다. WSL2(Windows Subsystem for Linux)를 설치하고 그 안에서 실행.
+
+3. 로컬 테스트 방법 (터미널 실행)
+    torchrun --nproc_per_node=1 your_script.py
+"""
+
 import os
 import logging
 import time
