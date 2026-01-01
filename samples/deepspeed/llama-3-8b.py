@@ -65,15 +65,13 @@ def main():
     tokenizer.padding_side = "right" 
 
     # 3. 모델 로딩: 반드시 프로세스 그룹 초기화 후에 실행
-    # deepspeed.zero.Init()을 사용하면 모델을 GPU 0번에 다 올리지 않고 
     # 처음부터 4대의 GPU에 4GB씩 조각내어 생성합니다. (OOM 방지 핵심)
-    with deepspeed.zero.Init():
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype=torch.bfloat16,
-            device_map=None,              # 분산 학습 시 필수: None
-            attn_implementation="sdpa",
-        )      
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        torch_dtype=torch.bfloat16,
+        device_map=None,              # 분산 학습 시 필수: None
+        attn_implementation="sdpa",
+    )      
 
     
     # 아주 큰 모델을 초기화할 때 메모리 효율을 위해 'meta' 장치 사용
