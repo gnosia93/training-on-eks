@@ -6,9 +6,9 @@ spec:
   podTemplateOverrides:
     - targetJobs:
         - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
-      metadata:
-        annotations:
-          karpenter.sh/do-not-disrupt: "true"                         # Karpenter의 노드 회수 방지
+      #metadata:
+      #  annotations:
+      #    karpenter.sh/do-not-disrupt: "true"                         # Karpenter의 노드 회수 방지
       spec:
         # runtimeRef YAML 을 수정해야 한다.
         #securityContext:
