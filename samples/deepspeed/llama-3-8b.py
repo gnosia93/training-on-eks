@@ -32,8 +32,8 @@ import gc
 os.environ["HF_HUB_READ_TIMEOUT"] = "300"
 # 2. 메모리 파편화 방지 (OOM 및 Cache Flush 방지)
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
-# 3. 랑데뷰 타임아웃 10분 
-os.environ["RDZV_TIMEOUT"] = "600"        
+# 3. 랑데뷰 타임아웃 5분 
+os.environ["RDZV_TIMEOUT"] = "300"        
 
 def flush_gpu_memory():
     """강제로 GPU 메모리 캐시를 비우고 가비지 컬렉션을 수행합니다."""
