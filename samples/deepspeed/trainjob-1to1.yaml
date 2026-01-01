@@ -17,6 +17,7 @@ spec:
         #hostIPC: true  # 호스트의 IPC 네임스페이스 공유 설정
         affinity:
           podAffinity:
+            # EFA 는 동일 AZ 안에서만 동작하므로, 하나의 AZ 만 사용하도록 강제한다. 
             # "조건을 만족하지 않으면 아예 배치하지 마라"는 강한 제약 (Hard Constraint)
             requiredDuringSchedulingIgnoredDuringExecution:
               - labelSelector:
