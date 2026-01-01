@@ -58,6 +58,8 @@ def main():
         
     start_time = time.time()
     model_name = "meta-llama/Meta-Llama-3-8B"
+    config = AutoConfig.from_pretrained(model_name)
+
     
     # 2. 토크나이저는 CPU 작업이므로 먼저 진행해도 무관
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -66,12 +68,14 @@ def main():
 
     # 3. 모델 로딩: 반드시 프로세스 그룹 초기화 후에 실행
     # 처음부터 4대의 GPU에 4GB씩 조각내어 생성합니다. (OOM 방지 핵심)
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.bfloat16,
-        device_map=None,              # 분산 학습 시 필수: None
-        attn_implementation="sdpa",
-    )      
+    with deepspeed.zero.Init():
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.bfloat16,
+            device_map=None,              # 분산 학습 시 필수: None
+            attn_implementation="sdpa",
+            low_cpu_mem_usage=False # ZeRO-3 Init과 충돌 방지를 위해 False
+        )      
 
     
     # 아주 큰 모델을 초기화할 때 메모리 효율을 위해 'meta' 장치 사용
@@ -97,7 +101,7 @@ def main():
     # 5. 학습 인자 설정
     training_args = TrainingArguments(
         output_dir="/data/fsx",                        # 분산 체크 포인트 위치                
-        per_device_train_batch_size=4,                 # 40GB에선 1~2로 시작하는 것이 안전함. 하지만 4로 도전
+        per_device_train_batch_size=1,                 # 40GB에선 1~2로 시작하는 것이 안전함.
         gradient_accumulation_steps=4,                 # 실제 배치 사이즈 = 4 * 4 * GPU 개수
         learning_rate=2e-5,
         max_steps=50,                                  # 딱 50번의 스텝만 하고 종료 / 이경우 에포크는 무시됨   
