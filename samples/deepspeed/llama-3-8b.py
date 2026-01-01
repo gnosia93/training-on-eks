@@ -21,39 +21,56 @@ transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
 
 def main():
-    # 최우선 순위: 프로세스 그룹 초기화 (랑데뷰 시작)
+    # 1. 최우선 순위: 프로세스 그룹 초기화 (랑데뷰 시작)
     # torchrun으로 실행 시 환경 변수를 읽어 자동으로 4개의 파드를 하나로 묶습니다.
     if not dist.is_initialized():
         dist.init_process_group(backend="nccl")
         
     start_time = time.time()
-
     model_name = "meta-llama/Meta-Llama-3-8B"
+    
+    # 2. 토크나이저는 CPU 작업이므로 먼저 진행해도 무관
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right" 
+
+    # 3. 모델 로딩: 반드시 프로세스 그룹 초기화 후에 실행
+    # deepspeed.zero.Init()을 사용하면 모델을 GPU 0번에 다 올리지 않고 
+    # 처음부터 4대의 GPU에 4GB씩 조각내어 생성합니다. (OOM 방지 핵심)
+    with deepspeed.zero.Init():
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.bfloat16,
+            device_map=None,              # 분산 학습 시 필수: None
+            attn_implementation="sdpa",
+            low_cpu_mem_usage=True        # CPU RAM 절약
+        )      
+
     
     # 아주 큰 모델을 초기화할 때 메모리 효율을 위해 'meta' 장치 사용
     # ZeRO-3는 이 설정을 통해 모델을 로드하면서 즉시 GPU들에 분산시킨다.
     # config = AutoConfig.from_pretrained(model_name)
     # model = AutoModelForCausalLM.from_config(config) 
+    """
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         torch_dtype=torch.bfloat16,                  # training_args의 bf16과 일치
         attn_implementation="sdpa"                   # sdpa(Scaled Dot Product Attention) 사용
     #   attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상 / flash-attn 미설치 
     )                            
-    
+    """
+
+    # 4. 데이터셋 로드 및 전처리 (전처리 시 CPU 메모리 주의)
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
     def tokenize_function(examples):
         return tokenizer(examples["text"], truncation=True, max_length=512)
     
     tokenized_datasets = dataset.map(tokenize_function, batched=True, remove_columns=["text"])
     
-    # 4. 학습 인자 설정 (DeepSpeed 설정 포함)
+    # 5. 학습 인자 설정
     training_args = TrainingArguments(
         output_dir="/data/fsx",                        # 분산 체크 포인트 위치                
-        per_device_train_batch_size=4,
+        per_device_train_batch_size=4,                 # 40GB에선 1~2로 시작하는 것이 안전함. 하지만 4로 도전
         gradient_accumulation_steps=4,                 # 실제 배치 사이즈 = 4 * 4 * GPU 개수
         learning_rate=2e-5,
         max_steps=50,                                  # 딱 50번의 스텝만 하고 종료 / 이경우 에포크는 무시됨   
@@ -61,11 +78,12 @@ def main():
         bf16=True,                                     # A100/H100/B200 GPU 권장
         logging_steps=5,
         deepspeed="llama-3-8b-stage3.json", 
-        save_strategy="epoch",
-        save_total_limit=2,     
-        gradient_checkpointing=False,                  # 메모리 절약을 위한 재계산
+        save_strategy="no",                            # 테스트 중엔 저장 끔 / save_strategy="epoch",
+  #      save_total_limit=2,     
+        gradient_checkpointing=True,                   # 40GB 환경에선 필수로 True 권장
         log_level="info",                              # 메인 프로세스 로그 레벨
         log_level_replica="warning",                   # 나머지 워커 노드 로그 제한
+        report_to="none"                               # 불필요한 로그 방지
     )
     
     # mlm=False로 설정하여 Next Token Prediction 학습 진행
