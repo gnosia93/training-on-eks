@@ -80,7 +80,7 @@ def main():
         deepspeed="llama-3-8b-stage3.json", 
         save_strategy="no",                            # 테스트 중엔 저장 끔 / save_strategy="epoch",
   #      save_total_limit=2,     
-        gradient_checkpointing=True,                   # 40GB 환경에선 필수로 True 권장
+        gradient_checkpointing=True,                   # 40GB 환경에선 필수로 True 권장 / activation 저장 안함.
         log_level="info",                              # 메인 프로세스 로그 레벨
         log_level_replica="warning",                   # 나머지 워커 노드 로그 제한
         report_to="none"                               # 불필요한 로그 방지
