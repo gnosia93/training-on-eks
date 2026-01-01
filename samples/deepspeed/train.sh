@@ -20,5 +20,5 @@ kubectl delete trainjob llama-3-8b --ignore-not-found=true # 작업이 없어도
 envsubst '$INSTANCE_TYPE $NODE_NUM $GPU_PER_NODE $EFA_PER_NODE $HF_TOKEN' < trainjob-1to1.yaml | kubectl apply -f - 
 
 kubectl get trainjob 
-kubectl get pods 
+kubectl get pods -o wide
 kubectl get nodes
