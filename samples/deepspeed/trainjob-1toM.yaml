@@ -1,0 +1,79 @@
+apiVersion: trainer.kubeflow.org/v1alpha1
+kind: TrainJob
+metadata:
+  name: llama-3-8b
+spec:
+  podTemplateOverrides:
+    - targetJobs:
+        - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
+      #metadata:
+      #  annotations:
+      #    karpenter.sh/do-not-disrupt: "true"                         # Karpenter의 노드 회수 방지
+      spec:
+        # runtimeRef YAML 을 수정해야 한다.
+        #securityContext:
+        #      capabilities:                                          # EFA 통신을 위해 메모리 잠금 권한 필요
+        #        add: ["IPC_LOCK"]  
+        #hostIPC: true  # 호스트의 IPC 네임스페이스 공유 설정
+        affinity:
+          podAffinity:
+            # EFA 는 동일 AZ 안에서만 동작하므로, 하나의 AZ 만 사용하도록 강제한다. 
+            # "조건을 만족하지 않으면 아예 배치하지 마라"는 강한 제약 (Hard Constraint)
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    # TrainJob이 생성하는 파드 라벨과 일치시켜야 함
+                    jobset.sigs.k8s.io/jobset-name: "llama-3-8b"
+                topologyKey: "topology.kubernetes.io/zone"
+        
+        nodeSelector:
+          node.kubernetes.io/instance-type: "p4d.24xlarge"              
+        #  topology.kubernetes.io/zone: ${AZ}                         # AZ 레벨 인스턴스 용량 부족으로 제거 -> 리전 단위로 용량 확보                 
+
+        containers:
+          - name: node                                                # -name: node 은 상당히 중요한 설정값 / ClusterTrainingRuntime 에 있는 컨테이너 이름이 node 이다.
+            volumeMounts:                                             # 이 값을 잘못 설정하는 경우 TrainJob 이 시작되지 않는다. 
+              - mountPath: /dev/shm
+                name: dshm
+            
+        volumes:
+          - name: dshm
+            emptyDir:
+              medium: Memory
+              sizeLimit: "64Gi"               # shared memory 공간을 기본값(64Mi) 에서 64Gi 로 설정 / num_workers 와 연관됨.
+      
+  runtimeRef:
+    name: torch-distributed                   # torch 분산 백엔드 사용 
+
+  trainer:
+    numNodes: 4                               # 파드수 설정
+    numProcPerNode: 1                         # 파드당 프로세스 갯수                                                                              
+    image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
+    env:
+      - name: NCCL_P2P_LEVEL
+        value: "NVL"                          # P2P 경로를 NVLink로 강제
+    # 이전 설정: --nproc_per_node=1 (동적 설정을 위해 gpu로 변경함)
+    command:
+      - /bin/bash
+      - -c
+      - |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        cd /workspace/code/samples/deepspeed
+        huggingface-cli login --token "${HF_TOKEN}"
+        echo "=== Launching Distributed Training ==="
+        pip install -r requirements.txt && \
+        echo "pip 설치 완료, 학습을 시작합니다..." && \
+        echo "Master Address: ${PET_MASTER_ADDR}" && \
+        echo "Master Port: ${PET_MASTER_PORT}" && \
+        torchrun \
+          --nproc_per_node=1 \
+          --rdzv_id=llama-3-8b-job \
+          --rdzv_backend=c10d \
+          --rdzv_endpoint=${PET_MASTER_ADDR}:${PET_MASTER_PORT} \
+          --rdzv_conf=timeout=1200 \
+          llama-3-8b.py 
+    resourcesPerNode:
+      limits:
+        nvidia.com/gpu: 1
+        vpc.amazonaws.com/efa: 1                      
+ 
