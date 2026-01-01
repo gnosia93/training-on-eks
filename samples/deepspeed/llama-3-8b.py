@@ -28,6 +28,10 @@ import torch.distributed as dist
 import deepspeed  
 import gc
 
+# 라이브러리 임포트 전에 타임아웃 설정 (단위: 초)
+os.environ["HF_HUB_READ_TIMEOUT"] = "300"
+
+
 def flush_gpu_memory():
     """강제로 GPU 메모리 캐시를 비우고 가비지 컬렉션을 수행합니다."""
     # 파이썬 수준의 객체 정리
@@ -88,6 +92,13 @@ def main():
     )                            
     """
 
+    # 모든 파드가 동일한 공유 폴더를 바라보게 설정
+    cache_path = "/data/huggingface_cache"
+    if dist.get_rank() == 0:
+        # Rank 0가 공유 폴더에 먼저 다운로드
+        load_dataset("wikitext", "wikitext-2-raw-v1", cache_dir=cache_path)
+    dist.barrier() # 나머지 파드들은 Rank 0가 공유 폴더에 다 쓸 때까지 대기
+    
     # 4. 데이터셋 로드 및 전처리 (전처리 시 CPU 메모리 주의)
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
     def tokenize_function(examples):
