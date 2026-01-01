@@ -94,14 +94,7 @@ def main():
     #   attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상 / flash-attn 미설치 
     )                            
     """
-
-    # 모든 파드가 동일한 공유 폴더를 바라보게 설정
-    cache_path = "/data/huggingface_cache"
-    if dist.get_rank() == 0:
-        # Rank 0가 공유 폴더에 먼저 다운로드
-        load_dataset("wikitext", "wikitext-2-raw-v1", cache_dir=cache_path)
-    dist.barrier() # 나머지 파드들은 Rank 0가 공유 폴더에 다 쓸 때까지 대기
-    
+ 
     # 4. 데이터셋 로드 및 전처리 (전처리 시 CPU 메모리 주의)
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
     def tokenize_function(examples):
