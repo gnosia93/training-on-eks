@@ -37,6 +37,8 @@ def main():
         torch_dtype=torch.bfloat16,                  # training_args의 bf16과 일치
         attn_implementation="sdpa"                   # sdpa(Scaled Dot Product Attention) 사용
     #   attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상 / flash-attn 미설치 
+        device_map=None,                             # DeepSpeed 사용 시 필수
+        low_cpu_mem_usage=True
     )
     
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
