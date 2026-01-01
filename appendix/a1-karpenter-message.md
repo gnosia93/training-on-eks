@@ -8,6 +8,75 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## 오류 메시지 및 현상 ##
 
+## ET/OFI Request 0x7f456c224810 completed with error. RC: 103. Error: 4126 (Unresponsive receiver (reachable by EFA device but handshake failed) My EFA addr: fi_addr_efa://[fe80::c55:2eff:fe44:db5]:0:142160333 My host id: i-07792e0f955a9673b Peer EFA addr ## 
+```
+llama-3-8b-node-0-0:194:713 [0] NCCL INFO [Proxy Progress] Device 0 CPU core 19
+llama-3-8b-node-0-0:194:712 [0] NCCL INFO Channel 00/0 : 3[0] -> 0[0] [receive] via NET/Libfabric/0/GDRDMA
+llama-3-8b-node-0-0:194:712 [0] NCCL INFO Channel 01/0 : 3[0] -> 0[0] [receive] via NET/Libfabric/0/GDRDMA
+llama-3-8b-node-0-0:194:712 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[0] [send] via NET/Libfabric/0/GDRDMA
+llama-3-8b-node-0-0:194:712 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[0] [send] via NET/Libfabric/0/GDRDMA
+
+[2026-01-01 12:08:32] llama-3-8b-node-0-0:194:710 [0] int cm_req_handle_error_entry(nccl_net_ofi_context_t*, fid_cq*, fi_cq_err_entry*, uint16_t):46 NCCL WARN NET/OFI Request 0x7f456c222f60 completed with error. RC: 103. Error: 4126 (Unresponsive receiver (reachable by EFA device but handshake failed) My EFA addr: fi_addr_efa://[fe80::c55:2eff:fe44:db5]:0:142160333 My host id: i-07792e0f955a9673b Peer EFA addr: fi_addr_efa://[fe80::454:14ff:fedd:d5b3]:0:825957744 Peer host id: N/A). Completed length: 0
+llama-3-8b-node-0-0:194:710 [0] NCCL INFO transport/net.cc:753 -> 6
+llama-3-8b-node-0-0:194:712 [0] NCCL INFO transport.cc:198 -> 6
+
+[2026-01-01 12:08:32] llama-3-8b-node-0-0:194:710 [0] int cm_req_handle_error_entry(nccl_net_ofi_context_t*, fid_cq*, fi_cq_err_entry*, uint16_t):46 NCCL WARN NET/OFI Request 0x7f456c224810 completed with error. RC: 103. Error: 4126 (Unresponsive receiver (reachable by EFA device but handshake failed) My EFA addr: fi_addr_efa://[fe80::c55:2eff:fe44:db5]:0:142160333 My host id: i-07792e0f955a9673b Peer EFA addr: fi_addr_efa://[fe80::454:14ff:fedd:d5b3]:0:825957744 Peer host id: N/A). Completed length: 0
+llama-3-8b-node-0-0:194:710 [0] NCCL INFO transport/net.cc:753 -> 6
+llama-3-8b-node-0-0:194:712 [0] NCCL INFO transport/generic.cc:19 -> 6
+llama-3-8b-node-0-0:194:712 [0] NCCL INFO group.cc:146 -> 6
+llama-3-8b-node-0-0:194:712 [0] NCCL INFO group.cc:73 -> 6 [Async thread]
+llama-3-8b-node-0-0:194:194 [0] NCCL INFO group.cc:545 -> 6
+llama-3-8b-node-0-0:194:194 [0] NCCL INFO group.cc:694 -> 6
+llama-3-8b-node-0-0:194:194 [0] NCCL INFO enqueue.cc:2432 -> 6
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/workspace/code/samples/deepspeed/llama-3-8b.py", line 163, in <module>
+[rank0]:     main()
+[rank0]:   File "/workspace/code/samples/deepspeed/llama-3-8b.py", line 136, in main
+[rank0]:     trainer.train()
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 2325, in train
+[rank0]:     return inner_training_loop(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/transformers/trainer.py", line 2480, in _inner_training_loop
+[rank0]:     model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+[rank0]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/accelerate/accelerator.py", line 1547, in prepare
+[rank0]:     result = self._prepare_deepspeed(*args)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/accelerate/accelerator.py", line 2290, in _prepare_deepspeed
+[rank0]:     engine, optimizer, _, lr_scheduler = ds_initialize(**kwargs)
+[rank0]:                                          ^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/__init__.py", line 203, in initialize
+[rank0]:     engine = DeepSpeedEngine(args=args,
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/runtime/engine.py", line 302, in __init__
+[rank0]:     self._configure_distributed_model(model)
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/runtime/engine.py", line 1415, in _configure_distributed_model
+[rank0]:     self._broadcast_model()
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/runtime/engine.py", line 1327, in _broadcast_model
+[rank0]:     dist.broadcast(p.data, groups._get_broadcast_src_rank(), group=self.seq_data_parallel_group)
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/comm/comm.py", line 118, in log_wrapper
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/comm/comm.py", line 225, in broadcast
+[rank0]:     return cdb.broadcast(tensor=tensor, src=src, group=group, async_op=async_op)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/deepspeed/comm/torch.py", line 215, in broadcast
+[rank0]:     return torch.distributed.broadcast(tensor=tensor, src=src, group=group, async_op=async_op)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/usr/local/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py", line 2824, in broadcast
+[rank0]:     work = group.broadcast([tensor], opts)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: torch.distributed.DistBackendError: NCCL error in: /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:3699, remote process exited or there was a network error, NCCL version 2.27.3
+[rank0]: ncclRemoteError: A call failed possibly due to a network error or a remote process exiting prematurely.
+[rank0]: Last error:
+[rank0]: NET/OFI Request 0x7f456c224810 completed with error. RC: 103. Error: 4126 (Unresponsive receiver (reachable by EFA device but handshake failed) My EFA addr: fi_addr_efa://[fe80::c55:2eff:fe44:db5]:0:142160333 My host id: i-07792e0f955a9673b Peer EFA addr: fi_addr_efa://[fe80::454:14ff:fedd:d5b3]:0:825957744 Peer host id: N/A). Completed length: 0
+[rank0]:[W101 12:08:33.945328381 ProcessGroupNCCL.cpp:1538] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+```
+
+
 ## torch.OutOfMemoryError: CUDA out of memory ##
 ```
 Master Address: llama-3-8b-node-0-0.llama-3-8b
