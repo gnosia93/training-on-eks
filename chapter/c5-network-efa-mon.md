@@ -58,5 +58,5 @@ node_exporter의 ethtool 콜렉터는 노드의 /sys/class/net/ 경로에 있는
 
 
 ## 레퍼런스 ##
-
+* https://gallery.ecr.aws/hpc-cloud/efa-node-exporter
 * https://grafana.com/grafana/dashboards/20579-efa-metrics-dev/
