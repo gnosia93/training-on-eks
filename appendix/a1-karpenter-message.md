@@ -8,6 +8,28 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## 오류 메시지 및 현상 ##
 
+### Allocate failed due to no healthy devices present ###
+```
+Events:
+  Type     Reason                    Age                    From               Message
+  ----     ------                    ----                   ----               -------
+  Warning  FailedScheduling          11m                    default-scheduler  0/4 nodes are available: 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/4 nodes are available: 4 Preemption is not helpful for scheduling.
+  Normal   Nominated                 11m                    karpenter          Pod should schedule on: nodeclaim/gpu-v278f
+  Warning  FailedScheduling          10m (x4 over 10m)      default-scheduler  0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+  Warning  FailedScheduling          9m53s (x2 over 9m53s)  default-scheduler  0/5 nodes are available: 1 Insufficient nvidia.com/gpu, 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+  Normal   Scheduled                 9m22s                  default-scheduler  Successfully assigned default/llama-3-8b-node-0-0-w5psk to ip-10-0-5-89.ap-northeast-2.compute.internal
+  Normal   Pulling                   9m20s                  kubelet            Pulling image "public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0"
+  Warning  ExceededGracePeriod       6m31s                  kubelet            Container runtime did not kill the pod within specified grace period.
+  Normal   Pulled                    5m29s                  kubelet            Successfully pulled image "public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0" in 3m51.333s (3m51.333s including waiting). Image size: 12916508213 bytes.
+  Normal   Created                   5m28s                  kubelet            Created container: node
+  Normal   Started                   5m26s                  kubelet            Started container node
+  Normal   Killing                   5m26s                  kubelet            Stopping container node
+  Warning  UnexpectedAdmissionError  3m2s                   kubelet            Allocate failed due to no healthy devices present; cannot allocate unhealthy devices nvidia.com/gpu, which is unexpected
+  Warning  FailedMount               3m2s                   kubelet            MountVolume.SetUp failed for volume "kube-api-access-pj2nv" : object "default"/"kube-root-ca.crt" not registered
+[ec2-user@ip-10-0-0-122 deepspeed]$ 
+```
+
+
 
 ### #1. training memory warning ###
 
