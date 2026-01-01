@@ -52,6 +52,30 @@ class SimpleTimeCallback(TrainerCallback):
             # 현재 시간을 YYYY-MM-DD HH:MM:SS 형태로 추가
             logs["time"] = datetime.datetime.now().strftime("%H:%M:%S")
 
+class MemoryLoggingCallback(TrainerCallback):
+    def on_step_end(self, args, state, control, **kwargs):
+        # 5스텝마다 혹은 원하는 주기에 맞춰 출력 (logging_steps와 연동 권장)
+        if state.global_step % args.logging_steps == 0:
+            if torch.cuda.is_available():
+                # 현재 프로세스가 사용하는 GPU 번호
+                device = torch.cuda.current_device()
+                
+                # 할당된 메모리 (실제 모델+액티베이션이 쓰는 양)
+                allocated = torch.cuda.memory_allocated(device) / (1024 ** 3)
+                # 예약된 메모리 (PyTorch가 드라이버로부터 빌려온 전체 양)
+                reserved = torch.cuda.memory_reserved(device) / (1024 ** 3)
+                # 최대 피크 기록
+                max_mem = torch.cuda.max_memory_allocated(device) / (1024 ** 3)
+
+                print(f"\n[Step {state.global_step}] GPU {device} Memory: "
+                      f"Allocated: {allocated:.2f}GB, "
+                      f"Reserved: {reserved:.2f}GB, "
+                      f"Peak: {max_mem:.2f}GB")
+                
+                # 피크 통계 초기화 (다음 구간의 피크를 보기 위함 - 선택 사항)
+                torch.cuda.reset_peak_memory_stats(device)
+
+
 # transformers 라이브러리의 로그 레벨을 INFO로 설정하여 학습 과정(Loss 등)을 확인합니다.
 transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
@@ -130,7 +154,7 @@ def main():
         args=training_args,
         train_dataset=tokenized_datasets,
         data_collator=data_collator,
-        callbacks=[SimpleTimeCallback()] 
+        callbacks=[SimpleTimeCallback(), MemoryLoggingCallback()] 
     )
     
     trainer.train()
