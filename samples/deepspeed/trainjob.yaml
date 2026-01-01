@@ -45,7 +45,7 @@ spec:
     numProcPerNode: auto                      # 노드별 프로세스 갯수                                                                               
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
 
-    # 이전 설정: --nproc_per_node=1 (동적 설정을 위해 gpu로 변경함)
+    # 이전 설정: --nproc_per_node=1 (동적 설정을 위해 gpu 로 변경, 이 경우 서버에 할당된 모든 gpu 사용, limit 가 4 라도 8개 가진 서버라면 8 개 사용)
     command:
       - /bin/bash
       - -c
