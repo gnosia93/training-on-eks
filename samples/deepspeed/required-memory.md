@@ -12,3 +12,6 @@
 
 #### 최소 필요량: 약 140GB ###
 #### 권장 사양: 160GB 이상의 VRAM (A100 80GB 또는 H100 80GB 2개 이상 필요) ####
+
+
+1. 전체 메모리 계산 공식 Full Fine-tuning에 필요한 총 VRAM은 크게 네 가지 요소의 합으로 계산됩니다.\(\text{Total\ VRAM}=\text{Model\ Weights}+\text{Gradients}+\text{Optimizer\ States}+\text{Activations}\)
