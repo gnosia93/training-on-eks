@@ -22,3 +22,13 @@ envsubst '$INSTANCE_TYPE $NODE_NUM $GPU_PER_NODE $EFA_PER_NODE $HF_TOKEN' < trai
 kubectl get trainjob 
 kubectl get pods -o wide
 kubectl get nodes
+
+kubectl get nodes -o custom-columns="NAME:.metadata.name, \
+   STATUS:.status.conditions[?(@.type=='Ready')].status, \
+   INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
+   ARCH:.status.nodeInfo.architecture, \
+   GPU:.status.capacity['nvidia\.com/gpu'], \
+   EFA:.status.capacity['vpc\.amazonaws\.com/efa'], \
+   ZONE:.metadata.labels['topology\.kubernetes\.io/zone'], \
+   CAPACITY:.metadata.labels['karpenter\.sh/capacity-type']" \
+| sed 's/\.ap-northeast-2\.compute\.internal//g' | column -t
