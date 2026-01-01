@@ -8,6 +8,21 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter
 
 ## 오류 메시지 및 현상 ##
 
+## k8s node describe - Shutdown manager detected shutdown event ##
+The log entry indicates that the kubelet Shutdown Manager has detected a system-level shutdown or reboot event on the node. 
+#### Meaning of the Event ####
+* Detection: The kubelet uses the systemd inhibitor lock mechanism to listen for shutdown signals from the host OS.
+Graceful Termination: Once detected, the kubelet attempts to gracefully shut down pods by sending a SIGTERM signal, allowing them to finish tasks and release resources before the node powers off.
+* Node Status: During this process, the node's status often changes to NotReady to prevent new workloads from being scheduled. 
+#### Potential Impacts ####
+* Stateless Pods: Typically relocated to other healthy nodes by their controllers (e.g., Deployments).
+* Stateful Pods: If the shutdown is not "graceful" enough (e.g., the node loses power before kubelet can finish), pods in a StatefulSet may get stuck in a Terminating state because the API server still thinks they are running on the offline node.
+* Volume Issues: Persistent volumes may remain attached to the shutdown node, preventing them from being remounted elsewhere until a manual timeout or force detachment occurs. 
+#### Recommended Actions ####
+* Check Node Health: If the shutdown was unexpected, inspect host-level logs (e.g., journalctl -u kubelet) to determine why the event was triggered.
+* Verify Pod Migration: Use kubectl get pods -A -o wide to ensure workloads have moved to other nodes.
+* Handle Stuck Pods: For non-graceful shutdowns, if pods are stuck, you can apply an "out-of-service" taint to force volume detachment:
+
 ## ET/OFI Request 0x7f456c224810 completed with error. RC: 103. Error: 4126 (Unresponsive receiver (reachable by EFA device but handshake failed) My EFA addr: fi_addr_efa://[fe80::c55:2eff:fe44:db5]:0:142160333 My host id: i-07792e0f955a9673b Peer EFA addr ## 
 ```
 llama-3-8b-node-0-0:194:713 [0] NCCL INFO [Proxy Progress] Device 0 CPU core 19
