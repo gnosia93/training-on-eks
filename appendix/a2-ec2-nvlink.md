@@ -68,6 +68,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --security-group-ids ${SG_ID} \
     --subnet-id ${SUBNET_ID} \
     --user-data file://userdata.sh \
+    --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":300,"VolumeType":"gp3"}}]' \
     --query 'Instances[0].InstanceId' --output text)
 
 echo "------------------------------------------------"
