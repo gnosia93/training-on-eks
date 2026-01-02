@@ -27,7 +27,7 @@ AMI_ID=$(aws ec2 describe-images \
     --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
     --output text)
 
-if [ "$AMI_ID" == "None" ] || [ -z "$AMI_ID" ]; then
+if [[ "$AMI_ID" == "None"  || -z "$AMI_ID" ]]; then
     echo "AMI를 찾을 수 없습니다. 리전 ID를 확인해주세요."
     exit 1
 fi
