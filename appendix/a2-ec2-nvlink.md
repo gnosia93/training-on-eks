@@ -156,6 +156,12 @@ git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
 pip install -r requirements.txt
 
+# Add CUDA libraries to the linker path
+# Ensure DeepSpeed knows where CUDA is installed
+export CUDA_HOME=/opt/pytorch/cuda
+export LIBRARY_PATH=$LIBRARY_PATH:${CUDA_HOME}/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CUDA_HOME}/lib
+
 export HF_TOKEN=<your token>
 torchrun --nproc_per_node=1 llama-3-8b.py
 #sh train-ec2.sh
