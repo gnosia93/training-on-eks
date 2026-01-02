@@ -50,6 +50,8 @@ spec:
     numProcPerNode: 4                         # 파드당 프로세스 갯수                                                                              
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
     env:
+      - name: NCCL_TOPO_FILE
+        value: ""                             # 빈 값을 할당하여 기존 설정을 덮어씁니다.
       - name: NCCL_P2P_LEVEL
         value: "NVL"                          # P2P 경로를 NVLink로 강제
     command:
