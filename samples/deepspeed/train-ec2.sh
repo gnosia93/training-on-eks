@@ -1,4 +1,12 @@
 #!/bin/bash
+# 1. HF_TOKEN 환경 변수 체크
+if [ -z "${HF_TOKEN}" ]; then
+    echo "Error: HF_TOKEN 환경 변수가 설정되지 않았습니다."
+    echo "Llama-3 모델 학습을 위해 Hugging Face 토큰이 필요합니다."
+    echo "export HF_TOKEN='your_token_here' 명령으로 토큰을 설정해주세요."
+    exit 1  # 스크립트 실행 중단 (종료)
+fi
+
 export NCCL_TOPO_FILE=""
 export NCCL_P2P_LEVEL="NVL"                          # P2P 경로를 NVLink로 강제
 export NCCL_DEBUG="INFO"
@@ -10,11 +18,6 @@ echo "current working directory: $(pwd)"
 huggingface-cli login --token "${HF_TOKEN}"
 echo "=== Launching Distributed Training ==="
 pip install -r requirements.txt && \
-echo "pip 설치 완료, 학습을 시작합니다..." && \
-echo "Master Address: ${PET_MASTER_ADDR}" && \
-echo "Master Port: ${PET_MASTER_PORT}" && \
-
-
 
 torchrun \
   --nproc_per_node=4 \
