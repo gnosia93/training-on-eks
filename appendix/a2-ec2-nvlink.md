@@ -51,10 +51,25 @@ aws ec2 authorize-security-group-ingress \
 # 4. User Data 작성 (VSCode CLI 설치)
 cat <<EOF > userdata.sh
 #!/bin/bash
-apt-get update -y
-curl -Lk 'code.visualstudio.com' --output /home/ubuntu/vscode_cli.tar.gz
-tar -xf /home/ubuntu/vscode_cli.tar.gz -C /home/ubuntu/
-chown ubuntu:ubuntu /home/ubuntu/code
+dnf update -y
+dnf install -y nginx
+
+curl -fsSL code-server.dev | sh
+systemctl enable --now code-server@ec2-user
+
+cat <<EOF > /etc/nginx/conf.d/code-server.conf
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host \$host;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Accept-Encoding gzip;
+    }
+}
 EOF
 
 # 5. 인스턴스 실행 (P4.24xlarge)
