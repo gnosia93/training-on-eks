@@ -16,7 +16,7 @@ _AWS Nitro 하이퍼바이저는 보안상의 이유로 PCIe Bus 통신이 불�
 아래는 g6e.12xlarge 의 GPU 토폴로지로 NODE는 CPU 통신을 의미한다.
 데이터 통신시 PIX / PXB (PCIe Switch)는 메인보드에 있는 별도의 PCIe 스위치 칩에서 데이터가 유턴하여 옆 GPU로 간다. 즉, CPU까지 올라가지 않는다.
 NODE의 PCIe 스위치가 없어서 데이터가 일단 CPU 머리(Host Bridge)까지 올라갔다가 다시 내려오는 구조이다.
-
+NODE의 토폴로지는 GPU 0 → PCIe 슬롯 → CPU 내부 PCIe Controller A → CPU 내부 인터커넥트(Mesh/Ring Bus) → CPU 내부 PCIe Controller B → PCIe 슬롯 → GPU 1 이다.
 ```
 # nvidia-smi topo -m
         GPU0    GPU1    GPU2    GPU3    CPU Affinity    NUMA Affinity   GPU NUMA ID
