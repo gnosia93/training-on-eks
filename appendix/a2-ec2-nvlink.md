@@ -92,6 +92,12 @@ INSTANCE_ID=$(aws ec2 run-instances \
 echo "------------------------------------------------"
 echo "인스턴스 ID: $INSTANCE_ID"
 echo "성공적으로 요청되었습니다. AWS 콘솔에서 상태를 확인하세요."
+
+aws ec2 describe-instances \
+    --region ${AWS_REGION} \
+    --instance-ids ${INSTANCE_ID} \
+    --query 'Reservations[*].Instances[*].PublicDnsName' \
+    --output text
 ```
 
 ### vs code 로그인 ###
