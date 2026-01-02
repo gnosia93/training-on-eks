@@ -102,8 +102,7 @@ aws ec2 describe-instances \
 
 ### vs code 로그인 ###
 ```
-conda env list
-conda activate pytorch
+source /opt/pytorch/bin/activate
 nvidia-smi 
 python -c "import torch; print(f'PyTorch Version: {torch.__version__}'); print(f'GPU Available: {torch.cuda.is_available()}')"
 ```
