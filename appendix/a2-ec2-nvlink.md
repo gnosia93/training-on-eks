@@ -2,7 +2,6 @@
 
 ### 인스턴스 생성 ###
 ```
-#!/bin/bash
 export AWS_REGION="ap-northeast-2"
 export KEY_NAME="aws-kp-2"
 
