@@ -185,7 +185,6 @@ torchrun --nproc_per_node=1 llama-3-8b.py
 ### 멀티 노드 훈련 ###
 4 노드 분산 훈련을 시작한다. 
 ```
-# 컴파일 또는 실행이 완료되면 분산 훈련을 시작한다. 
 sh train-ec2.sh
 ```
 [결과]
