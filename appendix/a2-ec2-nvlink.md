@@ -1,5 +1,6 @@
 ## 인스턴스 준비 ##
 
+### 인스턴스 생성 ###
 ```
 #!/bin/bash
 export AWS_REGION="ap-northeast-2"
@@ -91,13 +92,10 @@ echo "인스턴스 ID: $INSTANCE_ID"
 echo "성공적으로 요청되었습니다. AWS 콘솔에서 상태를 확인하세요."
 ```
 
+### vs code 로그인 ###
 ```
-# 1. 설치된 Conda 환경 목록 확인
 conda env list
-
-# 2. PyTorch 전용 환경 활성화 (가장 최신 버전 선택)
 conda activate pytorch
-
-# 3. 파이썬에서 PyTorch 설치 및 GPU 연결 확인
+nvidia-smi 
 python -c "import torch; print(f'PyTorch Version: {torch.__version__}'); print(f'GPU Available: {torch.cuda.is_available()}')"
 ```
