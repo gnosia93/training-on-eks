@@ -57,7 +57,7 @@ spec:
       - name: NCCL_DEBUG
         value: "INFO"
       - name: NCCL_DEBUG_SUBSYS
-        value: "GRAPH,INIT"
+        value: "GRAPH,INIT,ENV"
     command:
       - /bin/bash
       - -c
