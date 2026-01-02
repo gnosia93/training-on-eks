@@ -188,6 +188,13 @@ torchrun --nproc_per_node=1 llama-3-8b.py
 # 컴파일 또는 실행이 완료되면 분산 훈련을 시작한다. 
 sh train-ec2.sh
 ```
+[결과]
+```
+[학습 종료 보고서]
+최종 소요 시간: 0:15:40
+전체 초 단위: 940.30s
+```
+
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/ec2-train.png)
 
 #### nccl log ####
@@ -762,4 +769,5 @@ CPU Virtual Memory:  used = 134.46 GB, percent = 12.0%
   Number of trainable parameters = 8,030,261,248
   0%|                                                                           
 ```
+
 
