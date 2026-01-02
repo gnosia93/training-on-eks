@@ -23,7 +23,7 @@ echo "------------------------------------------------"
 AMI_ID=$(aws ec2 describe-images \
     --region ${AWS_REGION} \
     --owners amazon \
-    --filters "Name=name,Values=deep-learning-oss-nvidia-driver-*-ubuntu-22.04-*" "Name=state,Values=available" \
+    --filters "Name=name,Values=Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.9 (Amazon Linux 2023)*" "Name=state,Values=available" \
     --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
     --output text)
 
