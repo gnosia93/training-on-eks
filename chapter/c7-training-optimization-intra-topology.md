@@ -100,10 +100,6 @@ Legend:
 * resource limit:  
   nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
 
-NCCL을 사용하는 경우 컨테이너 환경변수를 통해 통신 경로를 강제할 수 있다.  
-* NCCL_P2P_DISABLE=0 (P2P 통신 활성화, 기본값임)
-* NCCL_DEBUG=INFO 를 설정하면 P2P [NVLink] 또는 P2P [PCIe] 여부를 확인할 수 있다.
-
 ## 멀티 GPU 환경에서의 Pod 배치 ##
 
 현재 AWS 의 가속 인스턴스들은 GPU 1, 4, 8 개 타입의 인스턴스들을 제공하고 있다. 하나의 노드에 GPU를 여러개 가지고 있는 경우 Pod를 어떤식으로 배치하는 것이 통신 효율성을 최대화 할 수 있는지에 대해서 다루고자 한다.   
