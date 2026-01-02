@@ -168,7 +168,7 @@ cd ~/training-on-eks/samples/deepspeed
 pip install -r requirements.txt
 ```
 
-### 싱글 노드 훈련 ###
+### 싱글 프로세스 훈련 ###
 ```
 # 처음에는 프로세스 하나로 돌려준다. 이렇게 하는 이유는 2개 이상을 프로세스로 기동하는 경우 Adam 옵티마이저 관련 Lock 발생해서 Hang 이 걸린다.
 # 첫 실행시 Adam 옵티마이저를 컴파일 하는 듯 하다..
@@ -182,8 +182,8 @@ torchrun --nproc_per_node=1 llama-3-8b.py
 전체 초 단위: 1365.22s
 ```
 
-### 멀티 노드 훈련 ###
-4 노드 분산 훈련을 시작한다. 
+### 멀티 프로세스 훈련 ###
+4 개의 프로세스로 분산 훈련을 시작한다. 
 ```
 sh train-ec2.sh
 ```
