@@ -3,7 +3,7 @@
 ### 인스턴스 생성 ###
 ```
 export AWS_REGION="ap-northeast-2"
-export AZ=${$AWS_REGION}b
+export AZ="{$AWS_REGION}b"
 export KEY_NAME="aws-kp-2"
 export INSTANCE_TYPE="p4d.24xlarge"
 
