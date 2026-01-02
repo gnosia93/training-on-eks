@@ -7,10 +7,15 @@ if [ -z "${HF_TOKEN}" ]; then
     exit 1  # 스크립트 실행 중단 (종료)
 fi
 
-export NCCL_TOPO_FILE=""
-export NCCL_P2P_LEVEL="NVL"                          # P2P 경로를 NVLink로 강제
-export NCCL_DEBUG="INFO"
-export NCCL_DEBUG_SUBSYS="GRAPH,INIT,ENV"
+# export NCCL_TOPO_FILE=""
+#export NCCL_P2P_LEVEL="NVL"                          # P2P 경로를 NVLink로 강제
+#export NCCL_DEBUG_SUBSYS="GRAPH,INIT,ENV"
+
+export CUDA_VISIBLE_DEVICES=0,1,2,3  # 8대 중 4대만 사용
+export NCCL_DEBUG=INFO
+export NCCL_IB_DISABLE=1             # AWS 환경에서 종종 필요
+export NCCL_FI_ISV_ENB=0             # EFA(libfabric) 사용 안 함
+
 export MASTER_ADDR=localhost
 export MASTER_PORT=29500   
 
