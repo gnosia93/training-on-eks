@@ -136,6 +136,8 @@ Legend:
 
 ### 훈련시작 ###
 ```
+source /opt/pytorch/bin/activate
+
 sudo mkdir -p /data
 sudo chown ec2-user:ec2-user /data
 sudo dnf update -y
