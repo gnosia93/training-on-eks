@@ -86,6 +86,16 @@ Legend:
       command: ["/bin/sh", "-c", "sleep 3600"]
   ```
   컨테이너 환경에서 host IPC(Inter-Process Communication)를 사용하면 컨테이너가 호스트 머신의 IPC 네임스페이스를 공유하게 된다. 이를 통해 컨테이너 내부의 프로세스가 호스트나 다른 컨테이너의 프로세스와 공유 메모리, 세마포어, 메시지 큐 등을 통해 직접 통신할 수 있다.
+
+* securityContext & shareProcessNamespace
+```
+  securityContext:
+      capabilities:
+        add:
+        - IPC_LOCK
+      privileged: true
+  shareProcessNamespace: true
+```
   
 * resource limit:  
   nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
