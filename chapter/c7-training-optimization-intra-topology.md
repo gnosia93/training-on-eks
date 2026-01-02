@@ -59,8 +59,16 @@ Legend:
   PIX  = Connection traversing at most a single PCIe bridge
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
-#### 토폴로지별 대역폭 ####
+#### 통신 대역폭 ####
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/topology-througput.png)
+
+* 대역폭(Throughput) 비교: NODE 승
+  * NODE: CPU 내부의 PCIe 컨트롤러를 직접 통과합니다. PCIe 6.0 (x16) 기준, 이론적으로 약 128 GB/s의 속도.
+  * EFA: 최신 AWS P5/P6 인스턴스에 탑재된 EFA는 채널당 약 50 GB/s 수준
+  * 단순한 데이터 전송량 자체는 서버 내부 통로인 NODE가 더 높다.
+* 지연 시간(Latency) 및 CPU 부하: EFA 승
+  * NODE의 단점: 데이터가 CPU의 연산 회로와 메모리 컨트롤러를 직접 거쳐야 한다. 만약 CPU가 다른 연산으로 바쁘면 전송 속도가 튀거나 지연 시간이 대폭 늘어 난다. 
+  * EFA의 장점: OS-bypass(RDMA) 기술을 사용한다. 데이터가 CPU를 거치지 않고 네트워크 카드(NIC)에서 GPU 메모리로 직접 꽂히기 때문에, CPU 부하가 거의 없고 지연 시간이 매우 안정적
 
 
 ### 컨테이너 필수 옵션 ###
