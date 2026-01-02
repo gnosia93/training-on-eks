@@ -143,6 +143,12 @@ sudo chown ec2-user:ec2-user /data
 sudo dnf update -y
 sudo dnf install python3-pip -y
 
+df -m
+sudo growpart /dev/nvme0n1 1
+sudo xfs_growfs -d /
+df -m
+
+
 git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
 pip install -r requirements.txt
