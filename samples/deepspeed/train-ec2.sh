@@ -19,6 +19,7 @@ pip install -r requirements.txt
 huggingface-cli login --token "${HF_TOKEN}"
 echo "=== Launching Distributed Training ==="
 torchrun \
+  --log-dir=./training_logs \
   --nproc_per_node=4 \
   --rdzv_id=llama-3-8b-job \
   --rdzv_backend=c10d \
