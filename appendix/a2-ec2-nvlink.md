@@ -170,7 +170,16 @@ pip install -r requirements.txt
 # 첫 실행시 Adam 옵티마이저를 컴파일 하는 듯 하다..
 export HF_TOKEN=<your token>
 torchrun --nproc_per_node=1 llama-3-8b.py
+```
+[결과]
+```
+[학습 종료 보고서]
+최종 소요 시간: 0:22:45
+전체 초 단위: 1365.22s
+```
 
+* 분산 훈련을 시작한다. 
+```
 # 컴파일 또는 실행이 완료되면 분산 훈련을 시작한다. 
 sh train-ec2.sh
 ```
