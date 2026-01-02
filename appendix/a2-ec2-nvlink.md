@@ -1,4 +1,4 @@
-## 인스턴스 준비 ##
+## EC2 NVLK/NCCL 테스트 ##
 
 ### 인스턴스 생성 ###
 ```
@@ -134,6 +134,7 @@ Legend:
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
 
+### 훈련시작 ###
 ```
 git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
