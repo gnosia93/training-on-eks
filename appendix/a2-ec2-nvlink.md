@@ -4,6 +4,7 @@
 ```
 export AWS_REGION="ap-northeast-2"
 export KEY_NAME="aws-kp-2"
+export INSTANCE_TYPE="p4d.24xlarge"
 
 MY_IP=$(curl -s https://checkip.amazonaws.com)/32
 
@@ -78,7 +79,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --region ${AWS_REGION} \
     --image-id ${AMI_ID} \
     --count 1 \
-    --instance-type p4.24xlarge \
+    --instance-type ${INSTANCE_TYPE} \
     --key-name ${KEY_NAME} \
     --security-group-ids ${SG_ID} \
     --subnet-id ${SUBNET_ID} \
