@@ -141,16 +141,6 @@ sudo chown ec2-user:ec2-user /data
 sudo dnf update -y
 sudo dnf install python3-pip -y
 
-sudo dnf install -y cuda-toolkit
-# CUDA 경로 추가
-export CUDA_HOME=/usr/local/cuda
-export PATH=$CUDA_HOME/bin:$PATH
-export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
-
-find /usr/local/cuda -name "libcurand.so*"
-DS_BUILD_CPU_ADAM=1 pip install deepspeed --force-reinstall --no-cache-dir --no-build-isolation
-
-
 git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
 sh train-ec2.sh
