@@ -136,5 +136,7 @@ Legend:
 
 ```
 git clone https://github.com/gnosia93/training-on-eks.git
+cd ~/training-on-eks/samples/deepspeed
+sh train-ec2.sh
 ```
 
