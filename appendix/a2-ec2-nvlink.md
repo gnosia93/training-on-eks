@@ -3,43 +3,25 @@
 ```
 #!/bin/bash
 export AWS_REGION="ap-northeast-2"
+export KEY_NAME="aws-kp-2"
 
-VPC_ID=$(aws ec2 describe-vpcs \
-    --region ${AWS_REGION} \
-    --filters "Name=isDefault,Values=true" \
-    --query 'Vpcs[0].VpcId' \
-    --output text)
-echo "조회된 기본 VPC: $VPC_ID"
-
-SUBNET_ID=$(aws ec2 describe-subnets \
-    --region ${AWS_REGION} \
-    --filters "Name=vpc-id,Values=$VPC_ID" \
-    --query 'Subnets[0].SubnetId' \
-    --output text)
-echo "조회된 기본 서브넷: $SUBNET_ID"
-
-# 4. (참고) 본인의 퍼블릭 IP 자동 조회
-# 수동 입력 대신 현재 실행 중인 PC의 공인 IP를 자동으로 가져옵니다.
 MY_IP=$(curl -s https://checkip.amazonaws.com)/32
-echo "현재 접속 IP 자동 감지: $MY_IP"
+
+VPC_ID=$(aws ec2 describe-vpcs --region ${AWS_REGION} \
+    --filters "Name=isDefault,Values=true" \
+    --query 'Vpcs[0].VpcId' --output text)
+
+SUBNET_ID=$(aws ec2 describe-subnets --region ${AWS_REGION} \
+    --filters "Name=vpc-id,Values=$VPC_ID" \
+    --query 'Subnets[0].SubnetId' --output text)
+
+echo "현재 접속 IP : ${MY_IP}"
+echo "AWS REGION / VPC / 서브냇 : ${AWS_REGION} / ${VPC_ID} / ${SUBNET_ID}"
 echo "------------------------------------------------"
 
-
-# 1. 환경 정보 입력 받기
-read -p "Region ID를 입력하세요 (예: us-east-1): " REGION
-read -p "VPC ID를 입력하세요: " VPC_ID
-read -p "Subnet ID를 입력하세요: " SUBNET_ID
-read -p "허용할 IP 주소 (예: 1.2.3.4/32): " MY_IP
-read -p "사용할 Key Pair 이름: " KEY_NAME
-
-echo "------------------------------------------------"
-echo "$REGION 리전에서 최신 PyTorch Deep Learning AMI 조회 중..."
-
-# 2. 최신 Deep Learning AMI ID 조회 (PyTorch 지원 OSS Nvidia Driver 버전)
-# 2026년 기준 가장 안정적인 'Deep Learning OSS Nvidia Driver v202' 계열을 타겟팅합니다.
+# 최신 Deep Learning AMI ID 조회 (PyTorch 지원 OSS Nvidia Driver 버전)
 AMI_ID=$(aws ec2 describe-images \
-    --region $REGION \
-    --owners amazon \
+    --region ${AWS_REGION} --owners amazon \
     --filters "Name=name,Values=deep-learning-oss-nvidia-driver-*-ubuntu-22.04-*" \
               "Name=state,Values=available" \
     --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
@@ -49,20 +31,22 @@ if [ "$AMI_ID" == "None" ] || [ -z "$AMI_ID" ]; then
     echo "AMI를 찾을 수 없습니다. 리전 ID를 확인해주세요."
     exit 1
 fi
-
-echo "조회된 AMI ID: $AMI_ID"
+echo "조회된 AMI ID: ${AMI_ID}"
 
 # 3. 보안 그룹 생성
 SG_ID=$(aws ec2 create-security-group \
-    --region $REGION \
+    --region ${AWS_REGION} \
     --group-name "P4-PyTorch-SG-$(date +%s)" \
     --description "SG for P4 with VSCode" \
-    --vpc-id $VPC_ID --query 'GroupId' --output text)
+    --vpc-id ${VPC_ID} --query 'GroupId' --output text)
 
 aws ec2 authorize-security-group-ingress \
-    --region $REGION \
-    --group-id $SG_ID \
-    --protocol tcp --port 22 --cidr $MY_IP
+    --region ${AWS_REGION} --group-id ${SG_ID} \
+    --protocol tcp --port 22 --cidr ${MY_IP}
+
+aws ec2 authorize-security-group-ingress \
+    --region ${AWS_REGION} --group-id ${SG_ID} \
+    --protocol tcp --port 80 --cidr ${MY_IP}
 
 # 4. User Data 작성 (VSCode CLI 설치)
 cat <<EOF > userdata.sh
@@ -76,20 +60,19 @@ EOF
 # 5. 인스턴스 실행 (P4.24xlarge)
 echo "인스턴스를 생성 중입니다..."
 INSTANCE_ID=$(aws ec2 run-instances \
-    --region $REGION \
-    --image-id $AMI_ID \
+    --region ${AWS_REGION} \
+    --image-id ${AMI_ID} \
     --count 1 \
     --instance-type p4.24xlarge \
-    --key-name $KEY_NAME \
-    --security-group-ids $SG_ID \
-    --subnet-id $SUBNET_ID \
+    --key-name ${KEY_NAME} \
+    --security-group-ids ${SG_ID} \
+    --subnet-id ${SUBNET_ID} \
     --user-data file://userdata.sh \
     --query 'Instances[0].InstanceId' --output text)
 
 echo "------------------------------------------------"
 echo "인스턴스 ID: $INSTANCE_ID"
 echo "성공적으로 요청되었습니다. AWS 콘솔에서 상태를 확인하세요."
-
 ```
 
 ```
