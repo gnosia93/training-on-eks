@@ -20,7 +20,7 @@ export MASTER_ADDR=localhost
 export MASTER_PORT=29500   
 
 echo "current working directory: $(pwd)"        
-pip install -r requirements.txt 
+# pip install -r requirements.txt 
 huggingface-cli login --token "${HF_TOKEN}"
 echo "=== Launching Distributed Training ==="
 torchrun \
