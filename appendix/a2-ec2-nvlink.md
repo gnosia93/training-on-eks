@@ -1,4 +1,4 @@
-## EC2 NVLK/NCCL 테스트 ##
+## EC2 NVLINK / NCCL 테스트 ##
 
 ### 인스턴스 생성 ###
 ```
