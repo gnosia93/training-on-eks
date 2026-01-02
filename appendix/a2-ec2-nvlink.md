@@ -161,7 +161,12 @@ pip install -r requirements.txt
 export CUDA_HOME=/opt/pytorch/cuda
 export LIBRARY_PATH=$LIBRARY_PATH:${CUDA_HOME}/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CUDA_HOME}/lib
+cd /opt/pytorch/cuda/lib
+# libcurand.so.10을 가리키는 libcurand.so 링크 생성
+ln -s libcurand.so.10 libcurand.so
 
+
+cd ~/training-on-eks/samples/deepspeed
 export HF_TOKEN=<your token>
 torchrun --nproc_per_node=1 llama-3-8b.py
 #sh train-ec2.sh
