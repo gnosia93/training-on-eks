@@ -190,8 +190,8 @@ sh train-ec2.sh
 [결과]
 ```
 [학습 종료 보고서]
-최종 소요 시간: 0:15:40
-전체 초 단위: 940.30s
+최종 소요 시간: 0:16:15
+전체 초 단위: 975.28s
 ```
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/ec2-train.png)
