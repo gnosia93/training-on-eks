@@ -29,5 +29,5 @@ torchrun \
   --rdzv_id=llama-3-8b-job \
   --rdzv_backend=c10d \
   --rdzv_endpoint=${MASTER_ADDR}:${MASTER_PORT} \
-  --rdzv_conf=timeout=1200 \
+  --rdzv_conf=timeout=60 \
   llama-3-8b.py 
