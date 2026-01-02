@@ -86,6 +86,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --subnet-id ${SUBNET_ID} \
     --user-data file://userdata.sh \
     --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":300,"VolumeType":"gp3"}}]' \
+    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=P4-PyTorch-DevServer},{Key=Project,Value=ML-Project-2026}]" \
     --query 'Instances[0].InstanceId' --output text)
 
 echo "------------------------------------------------"
