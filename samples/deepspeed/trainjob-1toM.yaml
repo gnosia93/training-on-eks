@@ -54,6 +54,10 @@ spec:
         value: ""                             # 빈 값을 할당하여 기존 설정을 덮어씁니다.
       - name: NCCL_P2P_LEVEL
         value: "NVL"                          # P2P 경로를 NVLink로 강제
+      - name: NCCL_DEBUG
+        value: "INFO"
+      - name: NCCL_DEBUG_SUBSYS
+        value: "GRAPH,INIT"
     command:
       - /bin/bash
       - -c
