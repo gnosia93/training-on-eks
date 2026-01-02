@@ -100,9 +100,37 @@ aws ec2 describe-instances \
     --output text
 ```
 
-### vs code 로그인 ###
+### 터미널 로그인 ###
 ```
 source /opt/pytorch/bin/activate
 nvidia-smi 
 python -c "import torch; print(f'PyTorch Version: {torch.__version__}'); print(f'GPU Available: {torch.cuda.is_available()}')"
 ```
+
+### 토폴로지 확인 ###
+```
+nvidia-smi topo -m
+```
+[결과]
+```
+	GPU0	GPU1	GPU2	GPU3	GPU4	GPU5	GPU6	GPU7	CPU Affinity	NUMA Affinity	GPU NUMA ID
+GPU0	 X 	NV12	NV12	NV12	NV12	NV12	NV12	NV12	0-23,48-71	0		N/A
+GPU1	NV12	 X 	NV12	NV12	NV12	NV12	NV12	NV12	0-23,48-71	0		N/A
+GPU2	NV12	NV12	 X 	NV12	NV12	NV12	NV12	NV12	0-23,48-71	0		N/A
+GPU3	NV12	NV12	NV12	 X 	NV12	NV12	NV12	NV12	0-23,48-71	0		N/A
+GPU4	NV12	NV12	NV12	NV12	 X 	NV12	NV12	NV12	24-47,72-95	1		N/A
+GPU5	NV12	NV12	NV12	NV12	NV12	 X 	NV12	NV12	24-47,72-95	1		N/A
+GPU6	NV12	NV12	NV12	NV12	NV12	NV12	 X 	NV12	24-47,72-95	1		N/A
+GPU7	NV12	NV12	NV12	NV12	NV12	NV12	NV12	 X 	24-47,72-95	1		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+```
+
