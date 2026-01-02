@@ -14,11 +14,11 @@ VPC_ID=$(aws ec2 describe-vpcs --region ${AWS_REGION} \
     --query 'Vpcs[0].VpcId' --output text)
 
 SUBNET_ID=$(aws ec2 describe-subnets --region ${AWS_REGION} \
-    --filters "Name=vpc-id,Values=$VPC_ID" \
+    --filters "Name=vpc-id,Values=$VPC_ID" "Name=availability-zone,Values=$AZ" \
     --query 'Subnets[0].SubnetId' --output text)
 
 echo "현재 접속 IP : ${MY_IP}"
-echo "AWS REGION / VPC / 서브냇 : ${AWS_REGION} / ${VPC_ID} / ${SUBNET_ID}"
+echo "AWS REGION / VPC / AZ / 서브넷 : ${AWS_REGION} / ${VPC_ID} / ${AZ} / ${SUBNET_ID}"
 echo "------------------------------------------------"
 
 # 최신 Deep Learning AMI ID 조회 (PyTorch 지원 OSS Nvidia Driver 버전)
