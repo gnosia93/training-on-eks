@@ -147,6 +147,7 @@ git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
 pip install -r requirements.txt
 
+export HF_TOKEN=<your token>
 torchrun --nproc_per_node=1 llama-3-8b.py
 #sh train-ec2.sh
 ```
