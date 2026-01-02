@@ -90,12 +90,11 @@ aws eks create-nodegroup \
 ```
 
 ### 참고 - 카펜터 Capacity Block ###
-카펜터는 ODCR 과 Capacity Block 설정을 지원하지만 (아래 메뉴얼 참고), Placement Group 은 명시적으로 지원하지 않는다. 
+카펜터는 ODCR 과 Capacity Block 설정을 지원하지만 (아래 메뉴얼 참고), Placement Group 은 현재 지원하지 않는다. 
 * https://karpenter.sh/docs/tasks/odcrs/
 * https://karpenter.sh/docs/concepts/nodeclasses/
 * https://karpenter.sh/docs/concepts/nodepools/
   
-
 ## 레퍼런스 ##
 
 * https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html
