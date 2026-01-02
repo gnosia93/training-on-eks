@@ -134,3 +134,7 @@ Legend:
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
 
+```
+git clone https://github.com/gnosia93/training-on-eks.git
+```
+
