@@ -136,6 +136,9 @@ Legend:
 
 ### 훈련시작 ###
 ```
+sudo mkdir -p /data
+sudo chown ec2-user:ec2-user /data
+
 git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
 sh train-ec2.sh
