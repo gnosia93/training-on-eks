@@ -139,6 +139,7 @@ Legend:
 
 ### 훈련시작 ###
 ```
+# 파이썬 가상 워크스페이스
 source /opt/pytorch/bin/activate
 
 sudo mkdir -p /data
@@ -146,29 +147,31 @@ sudo chown ec2-user:ec2-user /data
 sudo dnf update -y
 sudo dnf install python3-pip -y
 
+# AMI 크기가 15기가라서, 300GB의 공간을 할당했지만 아래 명령어로 그 크기를 늘려줘야한다.. 
 df -m
 sudo growpart /dev/nvme0n1 1
 sudo xfs_growfs -d /
 df -m
 
+# Add CUDA libraries to the linker path
+# Ensure DeepSpeed knows where CUDA is installed
+# libcurand.so.10을 가리키는 libcurand.so 링크 생성
+export CUDA_HOME=/opt/pytorch/cuda
+export LIBRARY_PATH=$LIBRARY_PATH:${CUDA_HOME}/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CUDA_HOME}/lib
+cd /opt/pytorch/cuda/lib
+ln -s libcurand.so.10 libcurand.so
 
 git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
 pip install -r requirements.txt
 
-# Add CUDA libraries to the linker path
-# Ensure DeepSpeed knows where CUDA is installed
-export CUDA_HOME=/opt/pytorch/cuda
-export LIBRARY_PATH=$LIBRARY_PATH:${CUDA_HOME}/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CUDA_HOME}/lib
-cd /opt/pytorch/cuda/lib
-# libcurand.so.10을 가리키는 libcurand.so 링크 생성
-ln -s libcurand.so.10 libcurand.so
-
-
-cd ~/training-on-eks/samples/deepspeed
+# 처음에는 프로세스 하나로 돌려준다. 이렇게 하는 이유는 2개 이상을 프로세스로 기동하는 경우 Adam 옵티마이저 관련 Lock 발생해서 Hang 이 걸린다.
+# 첫 실행시 Adam 옵티마이저를 컴파일 하는 듯 하다..
 export HF_TOKEN=<your token>
 torchrun --nproc_per_node=1 llama-3-8b.py
-#sh train-ec2.sh
+
+# 컴파일 또는 실행이 완료되면 분산 훈련을 시작한다. 
+sh train-ec2.sh
 ```
 
