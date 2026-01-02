@@ -53,6 +53,9 @@ aws ec2 authorize-security-group-ingress \
 # 4. User Data 작성 (VSCode CLI 설치)
 cat <<EOF > userdata.sh
 #!/bin/bash
+sudo growpart /dev/nvme0n1 1
+sudo xfs_growfs -d /
+
 dnf update -y
 dnf install -y nginx
 
