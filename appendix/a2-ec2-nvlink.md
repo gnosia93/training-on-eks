@@ -138,6 +138,9 @@ Legend:
 ```
 sudo mkdir -p /data
 sudo chown ec2-user:ec2-user /data
+sudo dnf update -y
+sudo dnf install python3-pip -y
+DS_BUILD_CPU_ADAM=1 pip install deepspeed --no-cache-dir --no-build-isolation
 
 git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
