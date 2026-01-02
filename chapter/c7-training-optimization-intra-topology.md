@@ -59,6 +59,9 @@ Legend:
   PIX  = Connection traversing at most a single PCIe bridge
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
+#### 토폴로지별 대역폭 ####
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/topology-througput.png)
+
 
 ### 컨테이너 필수 옵션 ###
 
