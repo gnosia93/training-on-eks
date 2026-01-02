@@ -143,6 +143,8 @@ sudo dnf install python3-pip -y
 
 git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
-sh train-ec2.sh
+
+torchrun --nproc_per_node=1 llama-3-8b.py
+#sh train-ec2.sh
 ```
 
