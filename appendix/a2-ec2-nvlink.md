@@ -183,4 +183,4 @@ torchrun --nproc_per_node=1 llama-3-8b.py
 # 컴파일 또는 실행이 완료되면 분산 훈련을 시작한다. 
 sh train-ec2.sh
 ```
-
+![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/ec2-train.png)
