@@ -21,9 +21,9 @@ echo "------------------------------------------------"
 
 # 최신 Deep Learning AMI ID 조회 (PyTorch 지원 OSS Nvidia Driver 버전)
 AMI_ID=$(aws ec2 describe-images \
-    --region ${AWS_REGION} --owners amazon \
-    --filters "Name=name,Values=deep-learning-oss-nvidia-driver-*-ubuntu-22.04-*" \
-              "Name=state,Values=available" \
+    --region ${AWS_REGION} \
+    --owners amazon \
+    --filters "Name=name,Values=deep-learning-oss-nvidia-driver-*-ubuntu-22.04-*" "Name=state,Values=available" \
     --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
     --output text)
 
