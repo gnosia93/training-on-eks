@@ -2,18 +2,17 @@
 
 ```
 #!/bin/bash
-
-read -p "Region ID를 입력하세요 (예: us-east-1): " REGION
+export AWS_REGION="ap-northeast-2"
 
 VPC_ID=$(aws ec2 describe-vpcs \
-    --region $REGION \
+    --region ${AWS_REGION} \
     --filters "Name=isDefault,Values=true" \
     --query 'Vpcs[0].VpcId' \
     --output text)
 echo "조회된 기본 VPC: $VPC_ID"
 
 SUBNET_ID=$(aws ec2 describe-subnets \
-    --region $REGION \
+    --region ${AWS_REGION} \
     --filters "Name=vpc-id,Values=$VPC_ID" \
     --query 'Subnets[0].SubnetId' \
     --output text)
@@ -23,7 +22,6 @@ echo "조회된 기본 서브넷: $SUBNET_ID"
 # 수동 입력 대신 현재 실행 중인 PC의 공인 IP를 자동으로 가져옵니다.
 MY_IP=$(curl -s https://checkip.amazonaws.com)/32
 echo "현재 접속 IP 자동 감지: $MY_IP"
-
 echo "------------------------------------------------"
 
 
