@@ -124,8 +124,8 @@ addons:
 managedNodeGroups:                           # 관리형 노드 그룹
   - name: ng-arm
     instanceType: c7g.2xlarge
-    minSize: 1
-    maxSize: 3
+    minSize: 2
+    maxSize: 2
     desiredCapacity: 2
     amiFamily: AmazonLinux2023
     privateNetworking: true                  # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
@@ -135,8 +135,8 @@ managedNodeGroups:                           # 관리형 노드 그룹
 
   - name: ng-x86
     instanceType: c6i.2xlarge
-    minSize: 1
-    maxSize: 3
+    minSize: 2
+    maxSize: 2
     desiredCapacity: 2
     amiFamily: AmazonLinux2023
     privateNetworking: true           		 # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
@@ -236,54 +236,6 @@ aws iam put-role-policy \
     --role-name eksctl-training-on-eks-iamservice-role \
     --policy-name EKS_OIDC_Support_Policy \
     --policy-document "$POLICY_JSON"
-```
-
-
-### CA 설치 ###
-노드 그룹 마다 기본 1대씩만 프로비저닝 한 상태래서 cluster auto scaler 를 설치하여 스케일링 한다. 
-```
-cat <<EOF > ca-policy.json
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "autoscaling:DescribeAutoScalingGroups",
-                "autoscaling:DescribeAutoScalingInstances",
-                "autoscaling:DescribeLaunchConfigurations",
-                "autoscaling:DescribeScalingActivities",
-                "autoscaling:DescribeTags",
-                "autoscaling:SetDesiredCapacity",
-                "autoscaling:TerminateInstanceInAutoScalingGroup",
-                "ec2:DescribeInstanceTypes",
-                "ec2:DescribeLaunchTemplateVersions"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-EOF
-
-aws iam create-policy \
-    --policy-name AmazonEKSClusterAutoscalerPolicy \
-    --policy-document file://ca-policy.json
-
-eksctl create iamserviceaccount \
-  --cluster=${CLUSTER_NAME} \
-  --namespace=kube-system \
-  --name=cluster-autoscaler \
-  --attach-policy-arn=arn:aws:iam::aws:policy/AmazonEKSClusterAutoscalerPolicy \
-  --override-existing-serviceaccounts \
-  --approve
-
-helm repo add autoscaler https://kubernetes.github.io/autoscaler
-helm install cluster-autoscaler autoscaler/cluster-autoscaler \
-  --namespace kube-system \
-  --set autoDiscovery.clusterName=${CLUSTER_NAME} \
-  --set awsRegion=ap-northeast-2 \
-  --set rbac.serviceAccount.create=false \
-  --set rbac.serviceAccount.name=cluster-autoscaler
 ```
 
 
