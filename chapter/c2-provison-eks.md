@@ -239,8 +239,8 @@ aws iam put-role-policy \
 ```
 
 
-## CA 설치 ##
-CPU 노드 그룹의 경우 Cluster Auto Scaler 를 이용하여 스케일링 한다. 
+### CA 설치 ###
+노드 그룹 마다 기본 1대씩만 프로비저닝 한 상태래서 cluster auto scaler 를 설치하여 스케일링 한다. 
 ```
 eksctl create iamserviceaccount \
   --cluster=${CLUSTER_NAME} \
