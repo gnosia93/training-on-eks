@@ -31,7 +31,7 @@
    - [장애노드 식별 및 자동 복구](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-auto-recovery.md)
    - [훈련 자동 복구/재실행](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-trainjob.md) 
 
-* [C9. 커스텀 도커 이미지 빌드](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-custom-container.md)
+* [C9. 커스텀 컨테이너 이미지 빌드](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-custom-container.md)
   
 * [C10. DeepSpeed 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed.md)
 
