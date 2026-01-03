@@ -130,8 +130,7 @@ Legend:
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
 
-## 분산 훈련 ##
-### 사전준비 ###
+### 사전 준비 ###
 ```
 # 파이썬 가상 워크스페이스
 source /opt/pytorch/bin/activate
