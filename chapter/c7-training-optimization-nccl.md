@@ -1,26 +1,5 @@
 NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지하고 최적의 통신 경로 및 알고리즘을 선택하므로 사용자가 직접 튜닝할 필요는 없다. 그러나 특정 작업 부하나 하드웨어 구성에서 성능 병목 현상이 발생할 경우, 환경 변수 설정, 하드웨어 최적화, 소프트웨어 최신 버전 유지 등의 기법을 통해 성능을 추가로 튜닝할 수 있다.
 
-## NCCL EFA 플러그인 로딩 확인 ##
-NCCL 최적화를 수행하기 전에 EFA를 통한 분산 학습이 이뤄지고 있는지 확인이 필요하다. RANK 0 로그를 열어 nccl 이 efa 플러그인 성공적으로 로딩했는지 확인한다. 아래 [RANK 0 로그 예시] 에서 확인할 항목들은 아래와 같다. 이 항목들을 로그에서 관찰할 수 있다면 nccl 이 efa 를 이용하여 분산 학습을 하고 있다는 것을 의미한다.  
-
-[efa 플러그인 관련 항목]
-```
-# 1. EFA 플러그인 로드 - AWS OFI(Open Fabric Interface) NCCL 플러그인(libnccl-net.so, aws-ofi-nccl)
-NCCL INFO NET/Plugin: Successfully loaded external plugin libnccl-net.so
-NCCL INFO NET/OFI Initializing aws-ofi-nccl 1.16.2
-
-# 2. EFA 프로바이더 선택
-NCCL INFO NET/OFI Setting provider_filter to efa
-NCCL INFO NET/OFI Selected provider is efa, fabric is efa (found 1 nics)
-
-# 3. GPU 및 NCCL 버전 확인 - CUDA 13.0
-NCCL INFO cudaDriverVersion 13000
-NCCL INFO NCCL version 2.27.3+cuda12.9
-
-# 4. 프로세스 및 GPU 매핑 - 16 랭크 구성
-llama-3-8b-node-0-0:194:724 [3] ... cudaDev 3 nvmlDev 3 busId 3e000 commId ... rank 3 nranks 16
-```
-
 ## NCCL 최적화 ##
 
 ### 1. NCCL 성능 디버깅 (로깅) ###
