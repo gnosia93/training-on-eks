@@ -79,6 +79,8 @@ aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonSSMManaged
 ```
 
 ### EKS 노드그룹 ###
+
+* CLI
 ```
 aws eks create-nodegroup \
     --cluster-name training-on-eks \
@@ -87,6 +89,28 @@ aws eks create-nodegroup \
     --scaling-config minSize=2,maxSize=2,desiredSize=2 \
     --subnets "subnet-0e7be3e3155f668ed" "subnet-00b7e6cc786475a22" \
     --node-role "arn:aws:iam::499514681453:role/trainig-on-eks-AmazonEKSNodeRole"
+```
+* eksctl
+```
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: my-efa-cluster
+  region: ap-northeast-2
+
+managedNodeGroups:
+  - name: efa-nodes
+    instanceType: g5.12xlarge 
+    desiredCapacity: 2
+    # 배치 그룹 설정
+    placement:
+      groupName: "deepspeed-placement-group"         
+    # EFA를 위한 네트워크 설정 (필요시)
+    efaEnabled: true
+    # EFA는 단일 AZ 내 배치가 필수적이므로 서브넷을 하나만 지정 권장
+    subnets:
+      - subnet-xxxxxxxxxxxxxxxxx 
 ```
 
 ### 참고 - 카펜터 Capacity Block ###
