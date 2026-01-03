@@ -132,7 +132,6 @@ managedNodeGroups:                           # 관리형 노드 그룹
     iam:
       withAddonPolicies:
         ebs: true                     		 # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
-        autoScaler: true   					 # Cluster Autoscaler 권한
 
   - name: ng-x86
     instanceType: c6i.2xlarge
@@ -144,7 +143,6 @@ managedNodeGroups:                           # 관리형 노드 그룹
     iam:
       withAddonPolicies:
         ebs: true                     		 # EBS CSI 드라이버가 작동하기 위한 IAM 권한 부여
-        autoScaler: true   					 # Cluster Autoscaler 권한
 
 iam:
   withOIDC: true 
