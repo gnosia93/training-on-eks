@@ -38,5 +38,5 @@
 ## Appendix ##
 
 * [A1. 트러블 슈팅](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
-* [A2. EC2 NVLINK 테스트](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-ec2-nvlink.md)
+* [A2. EC2 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-ec2-nvlink.md)
 * [A3. 토폴리지별 훈련성능](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a3.training-perf-topology.md)
