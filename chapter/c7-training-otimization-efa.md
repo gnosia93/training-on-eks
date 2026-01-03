@@ -1,6 +1,6 @@
 ## EFA ##
 
-### efa 디바이스 플러그인 배포 ### 
+### 1. EFA 디바이스 플러그인 배포 ### 
 노드의 Taint 설정으로 인해서 데몬 파드가 랜딩하지 못하는 경우 있는 관계로 아래와 같이 모든 테인트를 무력화 시키는 오퍼레이터를 추가해 준다. (- operator: Exists)
 실제 해당 노드에서는 nvidia.com/gpu 및 vpc.amazonaws.com/efa 테인트가 존재한다. 
 ```
@@ -19,7 +19,7 @@ NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE  
 aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
 ```
 
-### EFA 지원 GPU 인스턴스 ###
+### 2. EFA 지원 GPU 인스턴스 ###
 ```
 aws ec2 describe-instance-types \
     --filters Name=network-info.efa-supported,Values=true \
@@ -58,9 +58,7 @@ aws ec2 describe-instance-types \
 ```
 
 
-### 2. EFA 설정하기 ###
-
-#### 2-1. EKS 노드 시큐리티 그룹 수정 #### 
+### 3. EKS 노드 시큐리티 그룹 수정 ### 
 
 EFA는 일반적인 TCP/UDP 스택을 우회하여 하드웨어 수준에서 통신하기 때문에 훨씬 엄격하고 명확한 규칙을 요구하는데, 아웃바운드 '셀프' 명시와 모든 프로토콜(All Traffic) 허용이 필수적 이다.
 ```
@@ -82,7 +80,7 @@ aws ec2 authorize-security-group-egress \
 An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecurityGroupEgress operation: the specified rule "peer: sg-0856697271a3b5fad, ALL, ALLOW" already exists
 ```
 
-#### 2-2. 카펜터 노드풀 생성 ####
+### 4. 카펜터 노드풀 생성 ###
 
 분산 학습 성능을 극대화하려면 EFA 지원 노드들을 물리적으로 가까운 곳에 배치하는 'Cluster' 전략의 Placement Group 이 필요하다. 
 EC2 생성시 ENI 설정에서 InterfaceType=efa를 설정해야 하나 카펜터의 경우 EFA 전용 옵션 필드는 제공하지 않는다.
@@ -210,9 +208,7 @@ gpu       gpu         0       True    4d22h
 gpu-efa   gpu-efa     0       True    22m
 ```
 
-
-
-### 3. EFA 테스트 ### 
+## EFA 테스트 ## 
 nodeSelector 를 이용하여 Karpenter가 관리하는 gpu-efa 노드풀을 사용하여 파드가 스케줄링되도록 한다 (특정 노드풀을 쓰도록 강제하는 방식)
 ```
 cat <<EOF > efa-test-pod.yaml
@@ -285,6 +281,3 @@ provider: efa
 * https://github.com/aws/deep-learning-containers/blob/master/available_images.md
 * https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/node-efa.html
 
-## todo ##
-* placement 그룹 설정.
-* placement 가 지원되지 않으면 nodepool 을 모든 AZ 로 수정..
