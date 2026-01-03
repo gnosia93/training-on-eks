@@ -103,14 +103,7 @@ aws ec2 describe-instances \
     --output text
 ```
 
-### 터미널 로그인 ###
-```
-source /opt/pytorch/bin/activate
-nvidia-smi 
-python -c "import torch; print(f'PyTorch Version: {torch.__version__}'); print(f'GPU Available: {torch.cuda.is_available()}')"
-```
-
-### 토폴로지 확인 ###
+### GPU 토폴로지 확인 ###
 ```
 nvidia-smi topo -m
 ```
@@ -137,7 +130,7 @@ Legend:
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
 
-## 분산훈련 ##
+## 분산 훈련 ##
 ### 사전준비 ###
 ```
 # 파이썬 가상 워크스페이스
