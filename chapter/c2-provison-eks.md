@@ -238,6 +238,27 @@ aws iam put-role-policy \
     --policy-document "$POLICY_JSON"
 ```
 
+
+## CA 설치 ##
+CPU 노드 그룹의 경우 Cluster Auto Scaler 를 이용하여 스케일링 한다. 
+```
+eksctl create iamserviceaccount \
+  --cluster=${CLUSTER_NAME} \
+  --namespace=kube-system \
+  --name=cluster-autoscaler \
+  --attach-policy-arn=arn:aws:iam::aws:policy/AmazonEKSClusterAutoscalerPolicy \
+  --override-existing-serviceaccounts \
+  --approve
+
+helm install cluster-autoscaler autoscaler/cluster-autoscaler \
+  --namespace kube-system \
+  --set autoDiscovery.clusterName=${CLUSTER_NAME} \
+  --set awsRegion=ap-northeast-2 \
+  --set rbac.serviceAccount.create=false \
+  --set rbac.serviceAccount.name=cluster-autoscaler
+```
+
+
 ## nginx 실행해 보기 ##
 [nginx.yaml]
 ```
