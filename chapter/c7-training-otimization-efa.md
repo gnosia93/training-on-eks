@@ -60,7 +60,21 @@ aws ec2 describe-instance-types \
 
 ### 3. EKS 노드 시큐리티 그룹 확인 ### 
 
-EFA는 일반적인 TCP/UDP 스택을 우회하여 하드웨어 수준에서 통신하기 때문에 훨씬 엄격하고 명확한 규칙을 요구하는데, 아웃바운드 '셀프' 명시와 모든 프로토콜(All Traffic) 허용이 필수적 이다.
+AWS Elastic Fabric Adapter(EFA)는 OS 커널을 우회(OS bypass)하는 방식을 사용하므로, 보안 그룹(Security Group) 설정 시 다음과 같은 엄격한 규칙이 필수적이다. 
+표준 TCP/UDP 스택이 아닌 전용 프로토콜(Scalable Reliable Datagram, SRD)을 사용하여 네트워크 카드 수준에서 직접 통신하므로 특정 포트나 프로토콜만 허용하면 이 저수준 통신이 차단된다.
+EFA를 사용하는 인스턴스들은 클러스터 형태로 서로 통신하므로 보안 그룹이 자기 자신을 소스/대상으로 허용해야만 노드 간 제한 없는 고성능 데이터 전송이 가능하다.
+
+* 인바운드(Inbound):
+  * 유형: 모든 트래픽 (All Traffic)
+  * 프로토콜: 전체 (All)
+  * 소스(Source): 자기 자신(현재 보안 그룹 ID)
+    
+* 아웃바운드(Outbound):
+  * 유형: 모든 트래픽 (All Traffic)
+  * 프로토콜: 전체 (All)
+  * 대상(Destination): 자기 자신(현재 보안 그룹 ID)
+
+
 ```
 # EFA 노드들이 사용할 보안 그룹 ID
 NODE_SG_ID=$(aws ec2 describe-security-groups \
@@ -75,10 +89,7 @@ aws ec2 authorize-security-group-egress \
     --group-id $NODE_SG_ID --protocol all \
     --source-group ${NODE_SG_ID}
 ```
-아래와 같은 오류가 발생하는 경우, EFA를 위한 아웃 바운드 규칙이 이미 eks 클러스터의 노드 시큐리티 그룹에 설정되어져 있다는 의미로, 다음단계로 진행하면 된다. 
-```
-An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecurityGroupEgress operation: the specified rule "peer: sg-0856697271a3b5fad, ALL, ALLOW" already exists
-```
+
 
 ### 4. 카펜터 노드풀 생성 ###
 
