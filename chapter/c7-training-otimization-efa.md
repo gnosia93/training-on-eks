@@ -1,25 +1,6 @@
 ## EFA ##
 
-### 1. EFA 디바이스 플러그인 배포 ### 
-노드의 Taint 설정으로 인해서 데몬 파드가 랜딩하지 못하는 경우 있는 관계로 아래와 같이 모든 테인트를 무력화 시키는 오퍼레이터를 추가해 준다. (- operator: Exists)
-실제 해당 노드에서는 nvidia.com/gpu 및 vpc.amazonaws.com/efa 테인트가 존재한다. 
-```
-helm repo add eks https://aws.github.io/eks-charts
-helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
-
-kubectl patch ds aws-efa-k8s-device-plugin -n kube-system --type='json' -p='[
-  {"op": "add", "path": "/spec/template/spec/tolerations/-", "value": {"operator": "Exists"}}
-]'
-
-kubectl get ds aws-efa-k8s-device-plugin -n kube-system
-```
-[결과]
-``` 
-NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
-```
-
-### 2. EFA 지원 GPU 인스턴스 ###
+### 1. EFA 지원 GPU 인스턴스 ###
 ```
 aws ec2 describe-instance-types \
     --filters Name=network-info.efa-supported,Values=true \
@@ -57,6 +38,25 @@ aws ec2 describe-instance-types \
 * 100Gbp의 EFA 4개
 ```
 
+### 2. EFA 디바이스 플러그인 배포 ### 
+
+EFA 용 디바이스 플러그인을 설치한다. 노드의 Taint 설정으로 인해서 데몬 파드가 랜딩하지 못하는 경우 있는 관계로, 아래와 같이 모든 테인트를 무력화 시키는 오퍼레이터를 추가해 준다. (- operator: Exists)
+실제 해당 노드에서는 nvidia.com/gpu 및 vpc.amazonaws.com/efa 등과 같은 테인트가 존재할 수 있다. 
+```
+helm repo add eks https://aws.github.io/eks-charts
+helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
+
+kubectl patch ds aws-efa-k8s-device-plugin -n kube-system --type='json' -p='[
+  {"op": "add", "path": "/spec/template/spec/tolerations/-", "value": {"operator": "Exists"}}
+]'
+
+kubectl get ds aws-efa-k8s-device-plugin -n kube-system
+```
+[결과]
+``` 
+NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
+```
 
 ### 3. EKS 노드 시큐리티 그룹 확인 ### 
 
@@ -74,7 +74,6 @@ EFA를 사용하는 인스턴스들은 클러스터 형태로 서로 통신하�
   * 프로토콜: 전체 (All)
   * 대상(Destination): 자기 자신(현재 보안 그룹 ID)
 
-
 ```
 # EFA 노드들이 사용할 보안 그룹 ID
 NODE_SG_ID=$(aws ec2 describe-security-groups \
@@ -84,13 +83,11 @@ NODE_SG_ID=$(aws ec2 describe-security-groups \
 echo $NODE_SG_ID
 
 # 인 바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
-aws ec2 authorize-security-group-ingress \
-    --group-id ${NODE_SG_ID} --protocol all \
+aws ec2 authorize-security-group-ingress --group-id ${NODE_SG_ID} --protocol all \
     --source-group ${NODE_SG_ID}
 
 # 아웃 바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
-aws ec2 authorize-security-group-egress \
-    --group-id ${NODE_SG_ID} --protocol all \
+aws ec2 authorize-security-group-egress --group-id ${NODE_SG_ID} --protocol all \
     --source-group ${NODE_SG_ID}
 ```
 [결과]
@@ -99,136 +96,8 @@ An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecuri
 ```
 클러스터 생성시 자동으로 만들어지게 되어 있기 때문에, 이와 같이 에러가 발생하는 것이 정상이다. 
 
-### 4. 카펜터 노드풀 생성 ###
-
-분산 학습 성능을 극대화하려면 EFA 지원 노드들을 물리적으로 가까운 곳에 배치하는 'Cluster' 전략의 Placement Group 이 필요하다. 
-EC2 생성시 ENI 설정에서 InterfaceType=efa를 설정해야 하나 카펜터의 경우 EFA 전용 옵션 필드는 제공하지 않는다.
-별도의 체크박스 옵션은 없으며, 지원 인스턴스 타입 선택 + 배치 그룹 지정 + (필요시) EFA 전용 AMI 사용의 조합으로 EFA 사용 환경을 완성한다.
-
-먼저 placement 그룹과 인스턴스 프로파일을 아래와 같이 생성한다. 
-```
-export VPC_AZ=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].ZoneName" --output text)
-echo "placement-group az: ${VPC_AZ}"
-aws ec2 create-placement-group --group-name "training-on-eks" --strategy cluster
-
-aws iam create-instance-profile --instance-profile-name EFAInstanceProfile
-aws iam add-role-to-instance-profile \
-    --instance-profile-name EFAInstanceProfile \
-    --role-name eksctl-KarpenterNodeRole-training-on-eks
-```
-
-efa 노드풀을 생성한다.
-```
-cat <<EOF > efa-nodepool.yaml
-apiVersion: karpenter.k8s.aws/v1
-kind: EC2NodeClass
-metadata:
-  name: gpu-efa
-spec:
-  # role: "eksctl-KarpenterNodeRole-training-on-eks"       # 인스턴스 프로파일을 설정하는 경우 주식처리한다. 
-  # --- 배치 그룹 설정 부분 ---
-  instanceProfile: "EFAInstanceProfile"
-  amiSelectorTerms:
-    # Required; when coupled with a pod that requests NVIDIA GPUs or AWS Neuron
-    # devices, Karpenter will select the correct AL2023 accelerated AMI variant
-    # see https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/
-    - alias: al2023@latest
-  subnetSelectorTerms:
-    - tags:
-        karpenter.sh/discovery: "training-on-eks"
-  securityGroupSelectorTerms:
-    - tags:
-        karpenter.sh/discovery: "training-on-eks"
-  blockDeviceMappings:
-    - deviceName: /dev/xvda
-      ebs:
-        volumeSize: 300Gi
-        volumeType: gp3
-  userData: |
-    #!/bin/bash
-    # 런타임 ulimit 설정은 세션이 종료되면 사라지므로 설정 파일에 직접 기록.
-    cat <<EOF > /etc/security/limits.d/99-efa.conf
-    * soft memlock unlimited
-    * hard memlock unlimited
-    * soft stack unlimited
-    * hard stack unlimited
-    EOF
-    # 즉시 적용을 위해 현재 세션에도 적용
-    ulimit -l unlimited
-    ulimit -s unlimited
----
-apiVersion: karpenter.sh/v1
-kind: NodePool
-metadata:
-  name: gpu-efa
-spec:
-  template:
-    metadata:
-      labels:
-        nodeType: "nvidia-efa" 
-    spec:
-      nodeClassRef:
-        group: karpenter.k8s.aws
-        kind: EC2NodeClass
-        name: gpu-efa
-      requirements:
-        - key: "karpenter.k8s.aws/instance-category"
-          operator: In
-          values: ["p", "g"]                        # p 와 g 타입
-        - key: "karpenter.k8s.aws/instance-size"
-          operator: In
-          values: ["8xlarge", "12xlarge", "16xlarge", "24xlarge", "32xlarge", "48xlarge", "metal"]
-        - key: "karpenter.k8s.aws/instance-generation"
-          operator: Gt
-          values: ["3"]                             # 4세대 이상(g4, g5, g6 등)만 사용 
-        - key: "karpenter.sh/capacity-type"
-          operator: In
-          values: ["on-demand", "spot"]                     
-        # 중요: 클러스터 배치 그룹은 단일 AZ 내에서만 작동하므로 하나만 지정
-        - key: "topology.kubernetes.io/zone"
-          operator: In
-          values: ["${VPC_AZ}"]                       # ${VPC_AZ} 환경변수 값으로 대체    
-      taints:                                       # efa-workload 테인트 생성
-        - key: "nvidia.com/gpu"            # nvidia-device-plugin 데몬은 nvidia.com/gpu=present:NoSchedule 테인트를 Tolerate 한다. 
-          value: "present"                 # value 값으로 present 와 다른값을 설정하면 nvidia-device-plugin 이 동작하지 않는다 (GPU를 찾을 수 없다)   
-          effect: NoSchedule               # nvidia-device-plugin 이 GPU 를 찾으면 Nvidia GPU 관련 각종 테인트와 레이블 등을 노드에 할당한다.  
-#        - key: "vpc.amazonaws.com/efa"    # 이 테인트를 설정하면 nvidia-device-plugin 이 노드에 안착하지 못한다.  
-#          value: "true"
-#          effect: NoSchedule
-      expireAfter: 720h    
-  limits:
-    cpu: 1000
-  disruption:
-    consolidationPolicy: WhenEmptyOrUnderutilized
-    consolidateAfter: 30m
-EOF
-
-kubectl apply -f efa-nodepool.yaml
-```
-* 노드 클래스를 확인한다. 
-```
-kubectl get ec2nodeclass
-```
-[결과] gpu-efa 노드 클래스의 READY 필드값이 True 이어야 한다. 
-```
-NAME      READY   AGE
-cpu       True    5d1h
-gpu       True    4d22h
-gpu-efa   True    21m
-```
-* 노드풀을 확인한다. 
-```
-kubectl get nodepool
-```
-[결과] gpu-efa 노드풀의 READY 필드값이 True 이어야 한다. 
-```
-NAME      NODECLASS   NODES   READY   AGE
-gpu       gpu         0       True    4d22h
-gpu-efa   gpu-efa     0       True    22m
-```
 
 ## EFA 테스트 ## 
-nodeSelector 를 이용하여 Karpenter가 관리하는 gpu-efa 노드풀을 사용하여 파드가 스케줄링되도록 한다 (특정 노드풀을 쓰도록 강제하는 방식)
 ```
 cat <<EOF > efa-test-pod.yaml
 apiVersion: v1
@@ -239,7 +108,7 @@ metadata:
     app: efa-test
 spec:
   nodeSelector:
-    karpenter.sh/nodepool: gpu-efa                      # 앞에서 생성한 EFA 노드풀에 배치되도록 설정
+    karpenter.sh/nodepool: gpu                # 앞에서 생성한 EFA 노드풀에 배치되도록 설정
   tolerations:                                             
     - key: "nvidia.com/gpu"
       operator: "Exists"                      # 노드의 테인트는 nvidia.com/gpu=present:NoSchedule 이나, Exists 연산자로 nvidia.com/gpu 키만 체크  
@@ -260,10 +129,7 @@ spec:
           add: ["IPC_LOCK"]
 EOF
 ```
-EFA는 하드웨어가 시스템 메모리에 직접 접근하여 데이터를 읽고 쓰는 RDMA(Remote Direct Memory Access) 기술을 사용한다. 통신에 사용되는 메모리 주소가 스왑 처리되어 디스크로 이동해버리면 하드웨어가 메모리를 찾지 못해 시스템 장애나 통신 에러가 발생합니다. IPC_LOCK은 해당 메모리를 RAM에 "고정"시켜 이 문제를 방지한다. 학습 데이터가 메모리에서 스왑 영역으로 넘어가면 다시 읽어올 때 엄청난 속도 저하(Latency)가 발생함으로 실시간으로 수 기가바이트의 파라미터를 교환해야 하는 FSDP 학습에서 메모리 고정은 일관된 고성능을 유지하기 위한 필수 조건이다. 
-* 메모리 제한: IPC_LOCK 권한을 주더라도 시스템의 ulimit (memlock) 제한이 낮으면 학습 중 오류가 발생할 수 있다. Karpenter의 EC2NodeClass에서 사용자 데이터(UserData)를 통해 sudo ulimit -s unlimited 및 ulimit -l unlimited 설정을 추가하는 것이 안전하다. 
-    * sudo ulimit -s unlimited 명령어는 프로세스가 사용하는 스택 크기(Stack Size)의 제한을 해제
-    * ulimit -l unlimited는 프로세스가 물리적 메모리에 고정(Lock)할 수 있는 메모리의 크기 제한을 해제
+EFA는 하드웨어가 시스템 메모리에 직접 접근하여 데이터를 읽고 쓰는 RDMA(Remote Direct Memory Access) 기술을 사용한다. 통신에 사용되는 메모리 주소가 스왑 처리되어 디스크로 이동해버리면 하드웨어가 메모리를 찾지 못해 시스템 장애나 통신 에러가 발생한다. IPC_LOCK은 해당 메모리를 RAM에 "고정"시켜 이 문제를 방지한다. 학습 데이터가 메모리에서 스왑 영역으로 넘어가면 다시 읽어올 때 엄청난 속도 저하(Latency)가 발생함으로 실시간으로 수 기가바이트의 파라미터를 교환해야 하는 FSDP 학습에서 메모리 고정은 일관된 고성능을 유지하기 위한 필수 조건이다. 
 
 ```
 kubectl apply -f efa-test-pod.yaml
@@ -291,8 +157,9 @@ provider: efa
     type: FI_EP_DGRAM
     protocol: FI_PROTO_EFA
 ```
-* 성공 시: provider: efa, fabric: efa와 같은 정보가 상세하게 출력됩니다.
-* 실패 시: fi_info 결과에 아무것도 나오지 않거나 에러가 발생합니다. (이 경우 보안 그룹의 아웃바운드 셀프 참조나 배치 그룹 설정을 다시 점검해야 합니다.)
+* 성공 시: provider: efa, fabric: efa와 같은 정보가 상세하게 출력된다.
+* 실패 시: fi_info 결과에 아무것도 나오지 않거나 에러가 발생한다. 이 경우 보안 그룹의 인/아웃 바운드 셀프 참조 존재여부를 확인한다. 
+
   
 ## 레퍼런스 ##
 
