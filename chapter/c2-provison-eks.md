@@ -242,6 +242,33 @@ aws iam put-role-policy \
 ### CA 설치 ###
 노드 그룹 마다 기본 1대씩만 프로비저닝 한 상태래서 cluster auto scaler 를 설치하여 스케일링 한다. 
 ```
+cat <<EOF > ca-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:DescribeAutoScalingInstances",
+                "autoscaling:DescribeLaunchConfigurations",
+                "autoscaling:DescribeScalingActivities",
+                "autoscaling:DescribeTags",
+                "autoscaling:SetDesiredCapacity",
+                "autoscaling:TerminateInstanceInAutoScalingGroup",
+                "ec2:DescribeInstanceTypes",
+                "ec2:DescribeLaunchTemplateVersions"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
+aws iam create-policy \
+    --policy-name AmazonEKSClusterAutoscalerPolicy \
+    --policy-document file://ca-policy.json
+
 eksctl create iamserviceaccount \
   --cluster=${CLUSTER_NAME} \
   --namespace=kube-system \
