@@ -214,6 +214,7 @@ _DATA
   }
 }
 
+/*
 resource "aws_instance" "x86_box" {
   ami                         = data.aws_ami.al2023_x86_64.id
   instance_type               = var.x86_type
@@ -262,5 +263,5 @@ _DATA
     Name = "code-server-x86"
   }
 }
-
+*/
 
