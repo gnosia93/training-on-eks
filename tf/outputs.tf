@@ -7,6 +7,7 @@ output "com_graviton_vscode" {
     description = "브라우저에서 VS Code 서버에 접속할 수 있는 URL (PW: 'password' by default)"
 }
 
+/*
 output "com_x86_dns" {
   value       = aws_instance.x86_box.public_dns
   description = "SSH 및 VS Code Server 접속을 위한 EC2 인스턴스의 공인 IP 주소"
@@ -15,6 +16,7 @@ output "com_x86_vscode" {
     value = "http://${aws_instance.x86_box.public_dns}:8080"
     description = "브라우저에서 VS Code 서버에 접속할 수 있는 URL (PW: 'password' by default)"
 }
+*/
 
 output "public_subnet" {
     description = "퍼블릭 서브넷 ID 목록"
