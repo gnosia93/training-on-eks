@@ -83,13 +83,21 @@ NODE_SG_ID=$(aws ec2 describe-security-groups \
     --output text)
 echo $NODE_SG_ID
 
-# 아웃바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
-# cf) 인바운드의 경우 클러스터를 생성하는 시점에 자동으로 설정되어져 있다. 
+# 인 바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
+aws ec2 authorize-security-group-ingress \
+    --group-id ${NODE_SG_ID} --protocol all \
+    --source-group ${NODE_SG_ID}
+
+# 아웃 바운드: 자기 자신(Self)을 목적지로 하는 모든 트래픽 허용
 aws ec2 authorize-security-group-egress \
-    --group-id $NODE_SG_ID --protocol all \
+    --group-id ${NODE_SG_ID} --protocol all \
     --source-group ${NODE_SG_ID}
 ```
-
+[결과]
+```
+An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecurityGroupIngress operation: the specified rule "peer: sg-0b2f992c6b3d46431, ALL, ALLOW" already exists
+```
+클러스터 생성시 자동으로 만들어지게 되어 있기 때문에, 이와 같이 에러가 발생하는 것이 정상이다. 
 
 ### 4. 카펜터 노드풀 생성 ###
 
