@@ -1,6 +1,6 @@
 ## EFA ##
 
-#### 2-3. 디바이스 플러그인 배포 #### 
+### efa 디바이스 플러그인 배포 ### 
 노드의 Taint 설정으로 인해서 데몬 파드가 랜딩하지 못하는 경우 있는 관계로 아래와 같이 모든 테인트를 무력화 시키는 오퍼레이터를 추가해 준다. (- operator: Exists)
 실제 해당 노드에서는 nvidia.com/gpu 및 vpc.amazonaws.com/efa 테인트가 존재한다. 
 ```
@@ -19,7 +19,7 @@ NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE  
 aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
 ```
 
-### 1. EFA 지원 GPU 인스턴스 ###
+### EFA 지원 GPU 인스턴스 ###
 ```
 aws ec2 describe-instance-types \
     --filters Name=network-info.efa-supported,Values=true \
