@@ -124,9 +124,9 @@ addons:
 managedNodeGroups:                           # 관리형 노드 그룹
   - name: ng-arm
     instanceType: c7g.2xlarge
-    minSize: 2
-    maxSize: 2
-    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    desiredCapacity: 1
     amiFamily: AmazonLinux2023
     privateNetworking: true                  # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다.
     iam:
@@ -135,9 +135,9 @@ managedNodeGroups:                           # 관리형 노드 그룹
  
   - name: ng-x86
     instanceType: c6i.2xlarge
-    minSize: 2
-    maxSize: 2
-    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    desiredCapacity: 1
     amiFamily: AmazonLinux2023
     privateNetworking: true           		 # 이 노드 그룹이 PRIVATE 서브넷만 사용하도록 지정합니다. 
     iam:
