@@ -19,14 +19,12 @@ p5en.48xlarge   g6.16xlarge     g6.12xlarge     g4dn.16xlarge
 
 인스턴스별 EFA 상세정보는 아래와 같이 조회할 수 있다.
 ```
-aws ec2 describe-instance-types \
+$ aws ec2 describe-instance-types \
     --instance-types p4d.24xlarge \
     --query "InstanceTypes[*].{InstanceType:InstanceType, \
         EfaSupported:NetworkInfo.EfaSupported, \
         MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, \
         NetworkPerformance:NetworkInfo.NetworkPerformance}" --output table
-```
-```
 --------------------------------------------------------------------------------
 |                             DescribeInstanceTypes                            |
 +--------------+---------------+------------------------+----------------------+
@@ -34,9 +32,10 @@ aws ec2 describe-instance-types \
 +--------------+---------------+------------------------+----------------------+
 |  True        |  p4d.24xlarge |  60                    |  4x 100 Gigabit      |
 +--------------+---------------+------------------------+----------------------+
+```
 * 최대 60개의 ENI 사용가능
 * 100Gbp의 EFA 4개
-```
+
 
 ### 2. EFA 디바이스 플러그인 배포 ### 
 
