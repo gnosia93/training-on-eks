@@ -1,5 +1,24 @@
 ## EFA ##
 
+#### 2-3. 디바이스 플러그인 배포 #### 
+노드의 Taint 설정으로 인해서 데몬 파드가 랜딩하지 못하는 경우 있는 관계로 아래와 같이 모든 테인트를 무력화 시키는 오퍼레이터를 추가해 준다. (- operator: Exists)
+실제 해당 노드에서는 nvidia.com/gpu 및 vpc.amazonaws.com/efa 테인트가 존재한다. 
+```
+helm repo add eks https://aws.github.io/eks-charts
+helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
+
+kubectl patch ds aws-efa-k8s-device-plugin -n kube-system --type='json' -p='[
+  {"op": "add", "path": "/spec/template/spec/tolerations/-", "value": {"operator": "Exists"}}
+]'
+
+kubectl get ds aws-efa-k8s-device-plugin -n kube-system
+```
+[결과]
+``` 
+NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
+```
+
 ### 1. EFA 지원 GPU 인스턴스 ###
 ```
 aws ec2 describe-instance-types \
@@ -191,24 +210,7 @@ gpu       gpu         0       True    4d22h
 gpu-efa   gpu-efa     0       True    22m
 ```
 
-#### 2-3. 디바이스 플러그인 배포 #### 
-노드의 Taint 설정으로 인해서 데몬 파드가 랜딩하지 못하는 경우 있는 관계로 아래와 같이 모든 테인트를 무력화 시키는 오퍼레이터를 추가해 준다. (- operator: Exists)
-실제 해당 노드에서는 nvidia.com/gpu 및 vpc.amazonaws.com/efa 테인트가 존재한다. 
-```
-helm repo add eks https://aws.github.io/eks-charts
-helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
 
-kubectl patch ds aws-efa-k8s-device-plugin -n kube-system --type='json' -p='[
-  {"op": "add", "path": "/spec/template/spec/tolerations/-", "value": {"operator": "Exists"}}
-]'
-
-kubectl get ds aws-efa-k8s-device-plugin -n kube-system
-```
-[결과]
-``` 
-NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
-```
 
 ### 3. EFA 테스트 ### 
 nodeSelector 를 이용하여 Karpenter가 관리하는 gpu-efa 노드풀을 사용하여 파드가 스케줄링되도록 한다 (특정 노드풀을 쓰도록 강제하는 방식)
