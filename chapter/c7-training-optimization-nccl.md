@@ -6,7 +6,7 @@ NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지
 * NCCL_DEBUG=INFO: 모든 통신 로그를 출력.
 * NCCL_DEBUG_SUBSYS=GRAPH,INIT,ENV: 토폴로지 구성과 환경 변수 인식 과정을 더 자세히 들여다볼 때 사용.
 
-### 2. 주요 환경 변수 튜닝 (Performance Tuning) ###
+### [2. 주요 환경 변수](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html) ###
 
 훈련 속도(Throughput)를 높이기 위해 다음 변수들을 조정해 보며 최적값을 찾아야 한다.
 * NCCL_BUFFSIZE: 통신 버퍼 크기입니다. 기본값은 2MB(2097152)이나, 대규모 모델 훈련 시 4194304 (4MB) 또는 8388608 (8MB)로 늘리면 성능이 향상될 수 있다.
@@ -28,7 +28,7 @@ NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지
 * [NCCL Inspector](https://developer.nvidia.com/ko-kr/blog/enhancing-communication-observability-of-ai-workloads-with-nccl-inspector/) 사용: NCCL 2.23부터 도입된 NCCL Inspector 플러그인을 통해 AI 워크로드의 통신 성능에 대한 상세한 가시성을 확보할 수 있다.
 
 ## 레퍼런스 ##
-* https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html
+
 * https://developer.nvidia.com/blog/understanding-nccl-tuning-to-accelerate-gpu-to-gpu-communication/
 * [Optimizing cuDNN and NCCL Performance on NVIDIA GPUs Using NVIDIA's Deep Learning SDK](https://massedcompute.com/faq-answers/?question=Can%20you%20provide%20examples%20of%20how%20to%20optimize%20cuDNN%20and%20NCCL%20performance%20on%20NVIDIA%20GPUs%20using%20NVIDIA%27s%20Deep%20Learning%20SDK?)
 * https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/index.html
