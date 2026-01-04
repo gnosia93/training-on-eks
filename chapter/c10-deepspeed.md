@@ -8,7 +8,7 @@
 * [requirements.txt](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/requirements.txt)
 * [TrainJob YAML](https://github.com/gnosia93/training-on-eks/blob/main/samples/deepspeed/trainjob.yaml)  
 
-### 훈련 인스턴스 - g6e.8xlarge / EFA ###
+### 1. 훈련 인스턴스 - g6e.8xlarge / EFA ###
 ```
 $ aws ec2 describe-instance-types \
     --instance-types g6e.12xlarge \
@@ -26,7 +26,7 @@ $ aws ec2 describe-instance-types \
 +--------------+---------------+-------------------+------------------------+----------------------+
 ```
 
-### 카펜터 노드풀 및 디바이스 플러그인 설치 ###
+### 2. 카펜터 노드풀 및 디바이스 플러그인 설치 ###
 
 #### gpu 노드풀 생성 및 nvidia 디바이스 플러그인 설치 ####
 ```
@@ -46,7 +46,7 @@ aws-efa-k8s-device-plugin   0         0         0       0            0          
 efa 플러그인 데몬셋이 존재하는지 확인한다. 만약 해당 데몬셋이 보이지 않는다면 [efa 사용하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md) 를 참고하여 설치한다. 
 
 
-### 큐브플로우 Trainer 설치 ###
+### 3. 큐브플로우 Trainer 설치 ###
 ```
 sudo dnf install git -y
 
@@ -85,13 +85,13 @@ spec:
   * 잡 삭제 - kubectl delete trainjob llama-3-8b        
   * 잡 상세 - kubectl describe trainjob llama-3-8b
     
-### 갱 스케줄링 ###
+### 4. 갱 스케줄링 ###
 이 예제에서는 갱 스케줄링 기능을 활성화 하지 않는다. 즉 카펜터에서 GPU 노드를 프러비저닝 하는 즉시 파드가 스케줄링 된다.  
 
-### 체크 포인팅 ###
+### 5. 체크 포인팅 ###
 이 예제에서는 편의상 체크포인트 데이터를 저장하지 않는다. 체크포인트를 저장하기 위해서는 S3, EFS, 러스터와 같은 병렬 분산 파일 시스템이 필요하다.  
 
-### 훈련 시작 ###
+## 훈련 시작 ##
 envsubst 는 파리미터로 나열된 환경변수만 치환해 준다. 
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
@@ -154,7 +154,7 @@ ip-10-0-7-56   True     c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2d  <n
 ```
 
 
-### 훈련 모니터링 ###
+## 훈련 모니터링 ##
 
 #### Job Pod 관찰 ###
 k9s 로 TrainJob 의 파드들이 실행되고 있는지 확인한다. 
