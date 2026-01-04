@@ -10,7 +10,7 @@ NPD와 관련 플러그인을 조합하면 다음과 같은 장애를 감지할 
 * 통신 오류: NVLink 연결 문제 또는 XID Critical Error (NVIDIA 기준)
 * 기타 시스템 오류: GPU 온도 이상 또는 메모리 오류(ECC Error) 등 
 
-#### 2. 작동 방식 ####
+#### 2. 작동 방식 ####
 NPD는 직접 GPU를 감시하기보다 커스텀 플러그인(Custom Plugin)이나 로그 모니터(Log Monitor)를 활용합니다. 
 * 플러그인 실행: GPU 상태를 확인하는 스크립트(예: nvidia-smi 기반 체크 또는 전용 모니터링 도구)를 주기적으로 실행합니다.
 * 상태 보고: 플러그인이 장애를 감지하면 NPD가 이를 Kubernetes API 서버에 Node Condition이나 Event 형태로 보고합니다.
