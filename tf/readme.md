@@ -8,7 +8,7 @@ brew install hashicorp/tap/terraform
 ```
 
 ### VPC 생성 ###
-테라폼으로 VPC 를 생성한다.  
+테라폼으로 VPC 및 접속용 vs-code EC2 인스턴스를 생성한다.   
 ```
 git pull https://github.com/gnosia93/training-on-eks.git
 cd training-on-eks/tf
@@ -21,4 +21,8 @@ terraform apply -auto-approve
 terraform output
 ```
 
-
+### VPC 삭제 ###
+생성된 VPC 와 관련 리소스를 모두 삭제한다.
+```
+terraform destroy --auto-approve
+```
