@@ -46,7 +46,7 @@ variable "allowed_ip_cidrs" {
   # 0.0.0.0/0 은 모든 IP를 허용합니다. 보안을 위해 본인의 IP CIDR로 변경하세요.
   default     = [
   #    "0.0.0,0/0",                                     # 모든 IP
-    "${chomp(data.http.my_ip.response_body)}/32"        # CR, LF 제거.
+    "${chomp(data.http.my_ip.response_body)}/32"        # chomp() 는 테라폼 내장함수로 CR, LF 제거.
   ]
 }
 
