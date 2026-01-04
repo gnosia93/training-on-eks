@@ -2,6 +2,30 @@
 NPD(또는 EKS Node Monitoring Agent)를 반드시 설치하여 GPU 장애를 탐지하고, 카펜터가 고장 난 하드웨어를 즉시 폐기하고 건강한 물리 서버로 교체하는 자동 복구를 수행할 수 있도록 해야 한다. 
 사실 [NPD(Node Problem Detector)](https://github.com/kubernetes/node-problem-detector) 같은 모니터링 에이전트가 없으면, 카펜터는 "GPU가 물리적으로 고장 났다"는 사실을 스스로 알수가 없다.
 
+Node Problem Detector (NPD)가 담당하는 영역을 한마디로 정의하면 "인프라의 건강 상태를 Kubernetes가 이해할 수 있는 언어로 번역해주는 통역사"입니다.
+
+### NPD 가 식별하는 장애 유형 ###
+
+
+#### 1. 하드웨어 및 시스템 장애 (System Log Monitor) ####
+커널 로그(dmesg, journald)를 실시간으로 감시하여 하드웨어 차원의 심각한 결함을 찾아냅니다.
+* CPU/Memory: CPU 스택 정지(Stuck), 메모리 ECC 에러(데이터 손상), Read-only 파일시스템 전환.
+* 디스크: 디스크 응답 없음, 파일 시스템 손상.
+* GPU: NVIDIA XID 에러(하드웨어 크리티컬 오류), NVLink 통신 실패 [1].
+
+#### 2. 커스텀 장애 식별 (Custom Plugin Monitor) ####
+사용자가 정의한 스크립트를 주기적으로 실행하여 특정 리소스의 상태를 체크합니다. GPU 장애 감지가 이 영역에 해당합니다.
+* GPU 상태: nvidia-smi 응답 여부, 드라이버 좀비 프로세스 확인.
+* 네트워크: 특정 게이트웨이 핑(Ping) 테스트, DNS 확인 실패.
+* 런타임: Docker/Containerd 데몬 응답 지연 [2].
+
+
+#### 3. 일시적 이벤트 보고 (Temporary Events) ####
+노드 상태(Condition)를 영구적으로 바꾸지는 않지만, 장애가 발생했던 기록을 이벤트로 남깁니다.
+* OOM Kill: 특정 프로세스가 메모리 부족으로 강제 종료된 기록.
+* 프로세스 중단: 주요 시스템 서비스의 일시적인 재시작 기록.
+
+
 ### 1. 식별 가능한 주요 GPU 문제 ###
 NPD와 관련 플러그인을 조합하면 다음과 같은 장애를 감지할 수 있다. 
 * 하드웨어 결함: GPU 하드웨어 자체의 오류 또는 고장
