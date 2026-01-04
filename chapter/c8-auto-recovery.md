@@ -31,6 +31,25 @@ helm repo update
 helm install npd deliveryhero/node-problem-detector
 ```
 
+### 5. nvidia-validator 설치 ###
+```
+# 1. NVIDIA Helm 저장소 추가
+helm repo add nvidia helm.ngc.nvidia.com
+helm repo update
+
+# 2. Validator만 활성화하여 설치
+helm install nvidia-validator nvidia/gpu-operator \
+  -n gpu-operator --create-namespace \
+  --set driver.enabled=false \
+  --set toolkit.enabled=false \
+  --set devicePlugin.enabled=false \
+  --set dcgmExporter.enabled=false \
+  --set gfd.enabled=false \
+  --set operator.enabled=false \
+  --set validator.enabled=true
+```
+
+
 
 ----
 ## AWS NMA ##
