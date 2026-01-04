@@ -202,3 +202,4 @@ aws iam list-roles --query 'Roles[?contains(RoleName, `KarpenterNodeRole`)].Role
 
 * [Amazon EKS optimized Amazon Linux 2023 accelerated AMIs now available](https://aws.amazon.com/ko/blogs/containers/amazon-eks-optimized-amazon-linux-2023-accelerated-amis-now-available/)
 * https://catalog.workshops.aws/karpenter/en-US
+* https://sirzzang.github.io/dev/Dev-Kubernetes-GPU-Setting/#google_vignette
