@@ -23,7 +23,16 @@ NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는�
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/npd.png)
 
-### 4. NPD 설치 ###
+### 4. 자동 복구 작동 원리 (NPD + Karpenter) ###
+* 장애 감지: NPD가 GPU 장애를 발견하고 노드 Condition에 GPUProblem=True를 기록합니다.
+* 노드 오염(Tainting): NPD의 설정이나 별도의 컨트롤러(예: Node Problem Detector의 NodeProblemHosts)가 해당 상태를 기반으로 노드에 NoSchedule 또는 NoExecute Taint(왜곡)를 추가합니다.
+* 카펜터의 개입: 카펜터는 노드가 더 이상 정상적으로 파드를 수용할 수 없거나(Tainted), 정의된 건강 기준에서 벗어났다고 판단하면 해당 노드를 불건전(Unhealthy) 노드로 간주합니다.
+* 자동 교체: 카펜터는 장애 노드를 비우고(Drain) 제거한 뒤, 즉시 새로운 정상 GPU 노드를 프로비저닝(Provisioning)하여 교체합니다.
+
+
+## 설치 ##
+
+### NPD 설치 ###
 ```
 helm repo add deliveryhero https://charts.deliveryhero.io/
 helm repo update
@@ -31,7 +40,7 @@ helm repo update
 helm install npd deliveryhero/node-problem-detector
 ```
 
-### 5. nvidia-validator 설치 ###
+### nvidia-validator 설치 ###
 ```
 # 1. NVIDIA Helm 저장소 추가
 helm repo add nvidia helm.ngc.nvidia.com
