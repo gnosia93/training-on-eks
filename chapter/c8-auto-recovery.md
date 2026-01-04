@@ -2,6 +2,7 @@
 
 2026년 대규모 분산 학습 인프라에서 p5.48xlarge나 g6e.48xlarge와 같은 멀티 GPU 인스턴스를 운영할 때, 단 하나의 GPU 하드웨어 결함만으로도 전체 작업이 중단되는 리스크를 방지하기 위해 Node Problem Detector(NPD) 도입은 필수적이다. 카펜터(Karpenter)는 인스턴스의 프로비저닝 상태는 파악하지만 GPU 내부의 물리적 장애를 스스로 인지할 수 없는데, 이때 NPD가 커널 로그(dmesg)와 시스템 로그(journald)를 실시간 모니터링하여 NVIDIA XID 에러나 NVLink 통신 장애와 같은 하드웨어 인터럽트 신호를 쿠버네티스가 이해할 수 있는 'Node Condition'으로 변환해 주는 인터페이스 역할을 수행하기 때문이다. NPD는 시스템 로그를 분석하는 것이 고유 기능이므로 별도의 복잡한 플러그인이나 바이너리 설치 없이 NVIDIA GPU 전용 로그 패턴이 정의된 ConfigMap 설정만 연결해주면 즉시 하드웨어 결함을 식별할 수 있다. 결과적으로 NPD가 장애 신호를 감지하여 노드 상태를 업데이트하면, 카펜터가 해당 노드를 불건전(Unhealthy) 상태로 판단해 즉시 폐기하고 신규 물리 서버로 교체하는 자가 치유(Self-healing) 아키텍처를 완성함으로써 대규모 연산 작업의 가용성을 극대화한다.
 
+
 ### 1. NPD 가 식별하는 장애 유형 ###
 
 #### 하드웨어 및 시스템 장애 (System Log Monitor) ####
@@ -77,6 +78,9 @@ extraConfig:
 별도로 JSON 파일을 만들 필요 없이, Helm 설치 시 log_monitors 경로만 지정해주면 NPD가 내장된 NVIDIA 패턴을 읽어 온다.
 
 ```
+helm repo add deliveryhero https://charts.deliveryhero.io/
+helm repo update
+
 helm upgrade --install npd deliveryhero/node-problem-detector \
   -f gpu-log-monitor-values.yaml \
   --namespace kube-system
@@ -108,24 +112,7 @@ NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는�
 
 
 
-
-## 설치 ##
-
-### NPD 설치 ###
-```
-helm repo add deliveryhero https://charts.deliveryhero.io/
-helm repo update
-
-helm install npd deliveryhero/node-problem-detector
-```
-* gpu 장애 detect 활성화.
-```
-helm install npd deliveryhero/node-problem-detector \
-  --set settings.log_monitors={/config/kernel-monitor.json,/config/nvidia-toolkit-monitor.json}
-```
-
-
-### nvidia-validator 설치 ###
+### 참고 - nvidia-validator 설치 ###
 ```
 # 1. NVIDIA Helm 저장소 추가
 helm repo add nvidia helm.ngc.nvidia.com
@@ -142,8 +129,6 @@ helm install nvidia-validator nvidia/gpu-operator \
   --set operator.enabled=false \
   --set validator.enabled=true
 ```
-
-
 
 ----
 ## AWS NMA ##
