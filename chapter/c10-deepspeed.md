@@ -28,7 +28,7 @@ $ aws ec2 describe-instance-types \
 
 ### 카펜터 노드풀 및 디바이스 플러그인 설치 ###
 
-* gpu 노드풀 생성 및 nvidia 디바이스 플러그인 설치
+#### gpu 노드풀 생성 및 nvidia 디바이스 플러그인 설치 ####
 ```
 ```
 
