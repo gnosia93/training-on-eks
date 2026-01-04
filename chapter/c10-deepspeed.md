@@ -30,12 +30,11 @@ $ aws ec2 describe-instance-types \
 
 #### gpu 노드풀 생성 및 nvidia 디바이스 플러그인 설치 ####
 ```
+$ kubectl get nodepool
+NAME   NODECLASS   NODES   READY   AGE
+gpu    gpu         0       True    7d15h
 ```
-
-
-* "kubectl get nodepool" 명령어로 gpu 노드풀이 존재하는 지 확인한다.
-
-* 없으면 [C3. GPU 노드 준비하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)를 참고하여 생성한다. 
+gpu 노드풀이 존재하는 지 확인한다. 없으면 [C3. GPU 노드 준비하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)를 참고하여 생성한다. 
 
 * efa 디바이스 플러그인 설치
 [](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md) 를 참고하여 설치한다. 
