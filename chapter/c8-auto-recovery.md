@@ -27,14 +27,63 @@
 * 카펜터의 개입: 카펜터는 노드가 더 이상 정상적으로 파드를 수용할 수 없거나(Tainted), 정의된 건강 기준에서 벗어났다고 판단하면 해당 노드를 불건전(Unhealthy) 노드로 간주합니다.
 * 자동 교체: 카펜터는 장애 노드를 비우고(Drain) 제거한 뒤, 즉시 새로운 정상 GPU 노드를 프로비저닝(Provisioning)하여 교체합니다.
 
+### 3. NPD 설치하기 ###
+
+[gpu-log-monitor-values.yaml]
+```
+# gpu-log-monitor-values.yaml
+settings:
+  log_monitors:
+    # 커널 로그에서 XID 등 GPU 에러를 감시하는 기본 설정 파일 경로 (기본적으로 해당 경로에 제공됨) 
+    - /config/kernel-monitor.json
+    # NVIDIA 툴킷 및 드라이버 로그를 상세 감시하는 설정
+    - /config/nvidia-toolkit-monitor.json
+
+# 만약 기본 설정에 없는 특수 패턴을 추가하고 싶다면 아래와 같이 정의합니다.
+extraConfig:
+  nvidia-toolkit-monitor.json: |
+    {
+        "plugin": "journald",
+        "pluginConfig": {
+            "source": "kernel"
+        },
+        "logPath": "/var/log/journal",
+        "lookback": "5m",
+        "bufferSize": 10,
+        "source": "gpu-monitor",
+        "conditions": [
+            {
+                "type": "GPUProblem",
+                "reason": "GPUHealthy",
+                "message": "GPU is operating normally"
+            }
+        ],
+        "rules": [
+            {
+                "type": "permanent",
+                "condition": "GPUProblem",
+                "reason": "GPUHardwareError",
+                "pattern": "NVRM: Xid.*"
+            },
+            {
+                "type": "permanent",
+                "condition": "GPUProblem",
+                "reason": "NVLinkError",
+                "pattern": ".*NVLink Error.*"
+            }
+        ]
+    }
+```
+별도로 JSON 파일을 만들 필요 없이, Helm 설치 시 log_monitors 경로만 지정해주면 NPD가 내장된 NVIDIA 패턴을 읽어 온다.
+
+```
+helm upgrade --install npd deliveryhero/node-problem-detector \
+  -f gpu-log-monitor-values.yaml \
+  --namespace kube-system
+```
 
 
-
-
-
-
-
-
+---
 
 ### 1. 식별 가능한 주요 GPU 문제 ###
 NPD와 관련 플러그인을 조합하면 다음과 같은 장애를 감지할 수 있다. 
