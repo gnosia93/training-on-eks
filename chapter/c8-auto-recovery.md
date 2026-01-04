@@ -1,7 +1,6 @@
 분산 훈련에 사용되는 g6e.48xlarge, p5.48xlarge 와 같은 멀티 GPU 인스턴스는 대규모 학습 도중 GPU 하나만 고장 나도 전체 작업이 멈추게 된다.
 NPD(또는 EKS Node Monitoring Agent)를 반드시 설치하여 GPU 장애를 탐지하고, 카펜터가 고장 난 하드웨어를 즉시 폐기하고 건강한 물리 서버로 교체하는 자동 복구를 수행할 수 있도록 해야 한다. 
-사실 NPD(Node Problem Detector) 같은 모니터링 에이전트가 없으면, 카펜터는 "GPU가 물리적으로 고장 났다"는 사실을 스스로 알수가 없다.
-* https://github.com/kubernetes/node-problem-detector
+사실 [NPD(Node Problem Detector)](https://github.com/kubernetes/node-problem-detector) 같은 모니터링 에이전트가 없으면, 카펜터는 "GPU가 물리적으로 고장 났다"는 사실을 스스로 알수가 없다.
 
 #### 1. 식별 가능한 주요 GPU 문제 ####
 NPD와 관련 플러그인을 조합하면 다음과 같은 장애를 감지할 수 있다. 
