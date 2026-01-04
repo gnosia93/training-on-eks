@@ -5,7 +5,7 @@
 
 ### 1. NPD 가 식별하는 장애 유형 ###
 
-#### 하드웨어 및 시스템 장애 (System Log Monitor) ####
+#### 1-1. 하드웨어 및 시스템 장애 (System Log Monitor) ####
 커널 로그(dmesg, journald)를 실시간으로 감시하여 하드웨어 차원의 심각한 결함을 찾아냅니다.
 * CPU/Memory: CPU 스택 정지(Stuck), 메모리 ECC 에러(데이터 손상), Read-only 파일시스템 전환.
 * 디스크: 디스크 응답 없음, 파일 시스템 손상.
@@ -15,13 +15,13 @@
   * 통신 오류: NVLink 연결 및 통신 오류 또는 XID Critical Error (NVIDIA 기준) 
   * 기타 시스템 오류: GPU 온도 이상 또는 메모리 오류(ECC Error) 등 
 
-#### 커스텀 장애 식별 (Custom Plugin Monitor) ####
+#### 1-2. 커스텀 장애 식별 (Custom Plugin Monitor) ####
 사용자가 정의한 스크립트를 주기적으로 실행하여 특정 리소스의 상태를 체크합니다. GPU 장애 감지가 이 영역에 해당합니다.
 * GPU 상태: nvidia-smi 응답 여부, 드라이버 좀비 프로세스 확인.
 * 네트워크: 특정 게이트웨이 핑(Ping) 테스트, DNS 확인 실패.
 * 런타임: Docker/Containerd 데몬 응답 지연 [2].
 
-#### 일시적 이벤트 보고 (Temporary Events) ####
+#### 1-3. 일시적 이벤트 보고 (Temporary Events) ####
 노드 상태(Condition)를 영구적으로 바꾸지는 않지만, 장애가 발생했던 기록을 이벤트로 남깁니다.
 * OOM Kill: 특정 프로세스가 메모리 부족으로 강제 종료된 기록.
 * 프로세스 중단: 주요 시스템 서비스의 일시적인 재시작 기록.
@@ -31,6 +31,18 @@
 * 노드 오염(Tainting): NPD의 설정이나 별도의 컨트롤러(예: Node Problem Detector의 NodeProblemHosts)가 해당 상태를 기반으로 노드에 NoSchedule 또는 NoExecute Taint(왜곡)를 추가합니다.
 * 카펜터의 개입: 카펜터는 노드가 더 이상 정상적으로 파드를 수용할 수 없거나(Tainted), 정의된 건강 기준에서 벗어났다고 판단하면 해당 노드를 불건전(Unhealthy) 노드로 간주합니다.
 * 자동 교체: 카펜터는 장애 노드를 비우고(Drain) 제거한 뒤, 즉시 새로운 정상 GPU 노드를 프로비저닝(Provisioning)하여 교체합니다.
+
+#### 카펜터의 한계 ####
+카펜터는 주로 쿠버네티스 API 서버의 정보를 보고 판단한다. 카펜터의 시야는 노드가 Ready 상태인지, CPU/Memory 자원이 여유가 있는지, 인스턴스가 활성화(Running) 상태인지만 확인하게 된다. 
+GPU가 물리적으로 고장 나거나 드라이버가 깨져도(Xid 에러 등), 리눅스 커널이나 CPU, 네트워크는 멀쩡한 경우가 많다. 따라서 쿠버네티스 입장에서는 노드가 여전히 Ready 상태로 보이게 된다.
+NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는데, 장애가 너무 심각해서 노드 자체가 완전히 멈추거나(Kernel Panic), AWS 상태 검사(Status Check)가 실패하여 노드가 NotReady 상태가 될 때 뿐이다. 하지만 대부분의 GPU 에러는 노드 자체는 살려두고 GPU만 먹통으로 만들기 때문에, NPD 없이 카펜터만으로는 대응이 불가능하게 된다.
+
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/npd.png)
+
+
+
+
+
 
 ### 3. NPD 설치하기 ###
 
@@ -89,13 +101,6 @@ helm upgrade --install npd deliveryhero/node-problem-detector \
   -f gpu-log-monitor-values.yaml \
   --namespace kube-system
 ```
-
-### 4. 카펜터가 "모르는" 이유 ###
-카펜터는 주로 쿠버네티스 API 서버의 정보를 보고 판단한다. 카펜터의 시야는 노드가 Ready 상태인지, CPU/Memory 자원이 여유가 있는지, 인스턴스가 활성화(Running) 상태인지만 확인하게 된다. 
-GPU가 물리적으로 고장 나거나 드라이버가 깨져도(Xid 에러 등), 리눅스 커널이나 CPU, 네트워크는 멀쩡한 경우가 많다. 따라서 쿠버네티스 입장에서는 노드가 여전히 Ready 상태로 보이게 된다.
-NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는데, 장애가 너무 심각해서 노드 자체가 완전히 멈추거나(Kernel Panic), AWS 상태 검사(Status Check)가 실패하여 노드가 NotReady 상태가 될 때 뿐이다. 하지만 대부분의 GPU 에러는 노드 자체는 살려두고 GPU만 먹통으로 만들기 때문에, NPD 없이 카펜터만으로는 대응이 불가능하게 된다.
-
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/npd.png)
 
 
 ### 참고 - nvidia-validator 설치 ###
