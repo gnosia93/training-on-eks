@@ -36,27 +36,17 @@ gpu    gpu         0       True    7d15h
 ```
 gpu 노드풀이 존재하는 지 확인한다. 없으면 [C3. GPU 노드 준비하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)를 참고하여 생성한다. 
 
-* efa 디바이스 플러그인 설치
-[](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md) 를 참고하여 설치한다. 
 
-
+#### efa 디바이스 플러그인 설치 ####
 ```
-helm repo add eks https://aws.github.io/eks-charts
-helm install aws-efa-k8s-device-plugin eks/aws-efa-k8s-device-plugin --namespace kube-system
-
-# operator:exists toleration 부여 
-kubectl patch ds aws-efa-k8s-device-plugin -n kube-system --type='json' -p='[
-  {"op": "add", "path": "/spec/template/spec/tolerations/-", "value": {"operator": "Exists"}}
-]'
-# 플러그인 설치 확인
-kubectl get ds aws-efa-k8s-device-plugin -n kube-system
-```
-[결과]
-```
+$ kubectl get ds aws-efa-k8s-device-plugin -n kube-system
 NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-aws-efa-k8s-device-plugin   0         0         0       0            0           <none>          27s
+aws-efa-k8s-device-plugin   0         0         0       0            0           <none>          6d13h
 ```
-efa 플러그인 설치 시점에는 efa 인터페이스를 지원하는 노드가 없는 관계로 데몬수가 0 으로 표시된다. 
+efa 플러그인 설치 시점에는 efa 인터페이스를 지원하는 노드가 없는 관계로 데몬수가 0 으로 표시된다. 만약 해당 데몬셋이 보이지 않는다면 [](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md) 를 참고하여 설치한다. 
+
+
+
 
 ### 큐브플로우 Trainer 설치 ###
 ```
