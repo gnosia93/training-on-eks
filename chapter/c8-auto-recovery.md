@@ -63,6 +63,12 @@ helm repo update
 
 helm install npd deliveryhero/node-problem-detector
 ```
+* gpu 장애 detect 활성화.
+```
+helm install npd deliveryhero/node-problem-detector \
+  --set settings.log_monitors={/config/kernel-monitor.json,/config/nvidia-toolkit-monitor.json}
+```
+
 
 ### nvidia-validator 설치 ###
 ```
