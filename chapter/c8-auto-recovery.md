@@ -1,28 +1,20 @@
-NPD(Node Problem Detector) 같은 모니터링 에이전트가 없으면, 카펜터(Karpenter)는 "GPU가 물리적으로 고장 났다"는 사실을 스스로 알아낼 방법이 없습니다.
-그 이유와 결과를 2025년 기준 시스템 동작 원리로 설명해 드립니다.
+분산 훈련에 사용되는 g6e.48xlarge, p5.48xlarge 와 같은 멀티 GPU 인스턴스는 대규모 학습 도중 GPU 하나만 고장 나도 전체 작업이 멈추게 된다.
+NPD(또는 EKS Node Monitoring Agent)를 반드시 설치하여 GPU 장애를 탐지하고, 카펜터가 고장 난 하드웨어를 즉시 폐기하고 건강한 물리 서버로 교체하는 자동 복구를 수행할 수 있도록 해야 한다. 
+사실 NPD(Node Problem Detector) 같은 모니터링 에이전트가 없으면, 카펜터는 "GPU가 물리적으로 고장 났다"는 사실을 스스로 알수가 없다.
 * https://github.com/kubernetes/node-problem-detector
   
 #### 1. 카펜터가 "모르는" 이유 ####
-카펜터는 주로 쿠버네티스 API 서버의 정보를 보고 판단합니다.
-카펜터의 시야: 노드가 Ready 상태인지, CPU/Memory 자원이 여유가 있는지, 인스턴스가 활성화(Running) 상태인지만 확인합니다.
-GPU 장애의 특성: GPU가 물리적으로 고장 나거나 드라이버가 깨져도(Xid 에러 등), 리눅스 커널이나 CPU, 네트워크는 멀쩡한 경우가 많습니다. 따라서 쿠버네티스 입장에서는 노드가 여전히 Ready 상태로 보입니다.
+카펜터는 주로 쿠버네티스 API 서버의 정보를 보고 판단한다. 카펜터의 시야는 노드가 Ready 상태인지, CPU/Memory 자원이 여유가 있는지, 인스턴스가 활성화(Running) 상태인지만 확인하게 된다. 
+GPU가 물리적으로 고장 나거나 드라이버가 깨져도(Xid 에러 등), 리눅스 커널이나 CPU, 네트워크는 멀쩡한 경우가 많다. 따라서 쿠버네티스 입장에서는 노드가 여전히 Ready 상태로 보이게 된다.
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/npd.png)
 
-#### 3. 카펜터가 알 수 있는 유일한 '간접적' 상황 ####
-NPD가 없어도 카펜터가 노드를 교체하는 경우가 딱 하나 있습니다.
-장애가 너무 심각해서 노드 자체가 완전히 멈추거나(Kernel Panic), AWS 상태 검사(Status Check)가 실패하여 노드가 NotReady 상태가 될 때입니다.
-하지만 대부분의 GPU 에러는 노드 자체는 살려두고 GPU만 먹통으로 만들기 때문에, NPD 없이 카펜터만으로는 대응이 불가능합니다.
-
-#### 4. 2025년 기준 권장 사항 ####
-사용 중이신 g6e.48xlarge는 매우 고가의 리소스이며, FSDP 같은 대규모 학습 중에 GPU 하나만 고장 나도 전체 작업이 멈춥니다.
-NPD(또는 EKS Node Monitoring Agent)를 반드시 설치하여 "내부 고발자" 역할을 하게 만드세요.
-그래야만 카펜터가 고장 난 하드웨어를 즉시 폐기하고 건강한 물리 서버로 갈아 끼우는 자동 복구를 수행할 수 있습니다. AWS EKS GPU 문제 해결 가이드 및 Karpenter Disruption 문서에서 관련 내용을 확인하실 수 있습니다.
+#### 2. 카펜터가 알 수 있는 유일한 '간접적' 상황 ####
+NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는데, 장애가 너무 심각해서 노드 자체가 완전히 멈추거나(Kernel Panic), AWS 상태 검사(Status Check)가 실패하여 노드가 NotReady 상태가 될 때 뿐이다. 하지만 대부분의 GPU 에러는 노드 자체는 살려두고 GPU만 먹통으로 만들기 때문에, NPD 없이 카펜터만으로는 대응이 불가능하게 된다.
 
 ----
-## 버그 ##
+## NMA ##
 * https://github.com/aws/containers-roadmap/issues/2555
-  
 현재 EKS 노드 모니터링 에이전트에서는 dcgm exporter 로 연결하지 못해서 노드의 AcceleratedHardwareReady 값이 False 로 변경되는 버그를 가지고 있어 GPU Auto Recovery 테스트는 불가능하다. 
 
 
