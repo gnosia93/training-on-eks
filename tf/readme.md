@@ -22,7 +22,7 @@ terraform output
 ```
 
 ### VPC 삭제 ###
-생성된 VPC 와 관련 리소스를 모두 삭제한다.
+워크샵과 관련된 리소스를 모두 삭제한다.
 ```
 terraform destroy --auto-approve
 ```
