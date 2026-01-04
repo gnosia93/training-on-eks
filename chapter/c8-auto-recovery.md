@@ -1,24 +1,20 @@
-분산 훈련에 사용되는 g6e.48xlarge, p5.48xlarge 와 같은 멀티 GPU 인스턴스는 대규모 학습 도중 GPU 하나만 고장 나도 전체 작업이 멈추게 된다.
-NPD(또는 EKS Node Monitoring Agent)를 반드시 설치하여 GPU 장애를 탐지하고, 카펜터가 고장 난 하드웨어를 즉시 폐기하고 건강한 물리 서버로 교체하는 자동 복구를 수행할 수 있도록 해야 한다. 
-사실 [NPD(Node Problem Detector)](https://github.com/kubernetes/node-problem-detector) 같은 모니터링 에이전트가 없으면, 카펜터는 "GPU가 물리적으로 고장 났다"는 사실을 스스로 알수가 없다.
+## [NPD(Node Problem Detector)](https://github.com/kubernetes/node-problem-detector) ##
 
-Node Problem Detector (NPD)가 담당하는 영역을 한마디로 정의하면 "인프라의 건강 상태를 Kubernetes가 이해할 수 있는 언어로 번역해주는 통역사"입니다.
+2026년 대규모 분산 학습 인프라에서 p5.48xlarge나 g6e.48xlarge와 같은 멀티 GPU 인스턴스를 운영할 때, 단 하나의 GPU 하드웨어 결함만으로도 전체 작업이 중단되는 리스크를 방지하기 위해 Node Problem Detector(NPD) 도입은 필수적이다. 카펜터(Karpenter)는 인스턴스의 프로비저닝 상태는 파악하지만 GPU 내부의 물리적 장애를 스스로 인지할 수 없는데, 이때 NPD가 커널 로그(dmesg)와 시스템 로그(journald)를 실시간 모니터링하여 NVIDIA XID 에러나 NVLink 통신 장애와 같은 하드웨어 인터럽트 신호를 쿠버네티스가 이해할 수 있는 'Node Condition'으로 변환해 주는 인터페이스 역할을 수행하기 때문이다. NPD는 시스템 로그를 분석하는 것이 고유 기능이므로 별도의 복잡한 플러그인이나 바이너리 설치 없이 NVIDIA GPU 전용 로그 패턴이 정의된 ConfigMap 설정만 연결해주면 즉시 하드웨어 결함을 식별할 수 있다. 결과적으로 NPD가 장애 신호를 감지하여 노드 상태를 업데이트하면, 카펜터가 해당 노드를 불건전(Unhealthy) 상태로 판단해 즉시 폐기하고 신규 물리 서버로 교체하는 자가 치유(Self-healing) 아키텍처를 완성함으로써 대규모 연산 작업의 가용성을 극대화한다.
 
 ### NPD 가 식별하는 장애 유형 ###
-
 
 #### 1. 하드웨어 및 시스템 장애 (System Log Monitor) ####
 커널 로그(dmesg, journald)를 실시간으로 감시하여 하드웨어 차원의 심각한 결함을 찾아냅니다.
 * CPU/Memory: CPU 스택 정지(Stuck), 메모리 ECC 에러(데이터 손상), Read-only 파일시스템 전환.
 * 디스크: 디스크 응답 없음, 파일 시스템 손상.
-* GPU: NVIDIA XID 에러(하드웨어 크리티컬 오류), NVLink 통신 실패 [1].
+* GPU: NVIDIA XID 에러(하드웨어 크리티컬 오류), NVLink 통신 실패 
 
 #### 2. 커스텀 장애 식별 (Custom Plugin Monitor) ####
 사용자가 정의한 스크립트를 주기적으로 실행하여 특정 리소스의 상태를 체크합니다. GPU 장애 감지가 이 영역에 해당합니다.
 * GPU 상태: nvidia-smi 응답 여부, 드라이버 좀비 프로세스 확인.
 * 네트워크: 특정 게이트웨이 핑(Ping) 테스트, DNS 확인 실패.
 * 런타임: Docker/Containerd 데몬 응답 지연 [2].
-
 
 #### 3. 일시적 이벤트 보고 (Temporary Events) ####
 노드 상태(Condition)를 영구적으로 바꾸지는 않지만, 장애가 발생했던 기록을 이벤트로 남깁니다.
