@@ -9,7 +9,11 @@
 커널 로그(dmesg, journald)를 실시간으로 감시하여 하드웨어 차원의 심각한 결함을 찾아냅니다.
 * CPU/Memory: CPU 스택 정지(Stuck), 메모리 ECC 에러(데이터 손상), Read-only 파일시스템 전환.
 * 디스크: 디스크 응답 없음, 파일 시스템 손상.
-* GPU: NVIDIA XID 에러(하드웨어 크리티컬 오류), NVLink 통신 실패 
+* GPU
+  * 하드웨어 결함: GPU 하드웨어 자체의 오류 또는 고장
+  * 드라이버 문제: GPU 드라이버 응답 없음(Hang) 또는 드라이버 로드 실패
+  * 통신 오류: NVLink 연결 및 통신 오류 또는 XID Critical Error (NVIDIA 기준) 
+  * 기타 시스템 오류: GPU 온도 이상 또는 메모리 오류(ECC Error) 등 
 
 #### 커스텀 장애 식별 (Custom Plugin Monitor) ####
 사용자가 정의한 스크립트를 주기적으로 실행하여 특정 리소스의 상태를 체크합니다. GPU 장애 감지가 이 영역에 해당합니다.
@@ -86,30 +90,12 @@ helm upgrade --install npd deliveryhero/node-problem-detector \
   --namespace kube-system
 ```
 
-
----
-
-### 1. 식별 가능한 주요 GPU 문제 ###
-NPD와 관련 플러그인을 조합하면 다음과 같은 장애를 감지할 수 있다. 
-* 하드웨어 결함: GPU 하드웨어 자체의 오류 또는 고장
-* 드라이버 문제: GPU 드라이버 응답 없음(Hang) 또는 드라이버 로드 실패
-* 통신 오류: NVLink 연결 문제 또는 XID Critical Error (NVIDIA 기준)
-* 기타 시스템 오류: GPU 온도 이상 또는 메모리 오류(ECC Error) 등 
-
-### 2. 작동 방식 ###
-NPD는 직접 GPU를 감시하기보다 커스텀 플러그인(Custom Plugin)이나 로그 모니터(Log Monitor)를 활용합니다. 
-* 플러그인 실행: GPU 상태를 확인하는 스크립트(예: nvidia-smi 기반 체크 또는 전용 모니터링 도구)를 주기적으로 실행합니다.
-* 상태 보고: 플러그인이 장애를 감지하면 NPD가 이를 Kubernetes API 서버에 Node Condition이나 Event 형태로 보고합니다.
-* 자동 복구: 보고된 상태에 따라 Draino와 같은 도구가 해당 노드에 추가 파드가 생성되지 않도록 격리(Cordon)하거나 비우기(Drain)를 수행할 수 있습니다. 
-결론적으로, 사용 중인 환경(온프레미스 또는 특정 클라우드)에 맞는 GPU 전용 NPD 플러그인을 설정하면 GPU 장애를 효과적으로 식별하고 관리할 수 있습니다
-  
-### 3. 카펜터가 "모르는" 이유 ###
+### 4. 카펜터가 "모르는" 이유 ###
 카펜터는 주로 쿠버네티스 API 서버의 정보를 보고 판단한다. 카펜터의 시야는 노드가 Ready 상태인지, CPU/Memory 자원이 여유가 있는지, 인스턴스가 활성화(Running) 상태인지만 확인하게 된다. 
 GPU가 물리적으로 고장 나거나 드라이버가 깨져도(Xid 에러 등), 리눅스 커널이나 CPU, 네트워크는 멀쩡한 경우가 많다. 따라서 쿠버네티스 입장에서는 노드가 여전히 Ready 상태로 보이게 된다.
 NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는데, 장애가 너무 심각해서 노드 자체가 완전히 멈추거나(Kernel Panic), AWS 상태 검사(Status Check)가 실패하여 노드가 NotReady 상태가 될 때 뿐이다. 하지만 대부분의 GPU 에러는 노드 자체는 살려두고 GPU만 먹통으로 만들기 때문에, NPD 없이 카펜터만으로는 대응이 불가능하게 된다.
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/npd.png)
-
 
 
 ### 참고 - nvidia-validator 설치 ###
