@@ -145,7 +145,7 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         torch_dtype=torch.bfloat16,
-        device_map=None,              # 분산 학습 시 필수: None
+        device_map=None,                                  # 분산 학습 시 필수: None -> deepspeed 가 모델을 조각내도록 함.
         attn_implementation="sdpa",
     )      
     
