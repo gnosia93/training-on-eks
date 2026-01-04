@@ -2,24 +2,38 @@
 
 2026년 대규모 분산 학습 인프라에서 p5.48xlarge나 g6e.48xlarge와 같은 멀티 GPU 인스턴스를 운영할 때, 단 하나의 GPU 하드웨어 결함만으로도 전체 작업이 중단되는 리스크를 방지하기 위해 Node Problem Detector(NPD) 도입은 필수적이다. 카펜터(Karpenter)는 인스턴스의 프로비저닝 상태는 파악하지만 GPU 내부의 물리적 장애를 스스로 인지할 수 없는데, 이때 NPD가 커널 로그(dmesg)와 시스템 로그(journald)를 실시간 모니터링하여 NVIDIA XID 에러나 NVLink 통신 장애와 같은 하드웨어 인터럽트 신호를 쿠버네티스가 이해할 수 있는 'Node Condition'으로 변환해 주는 인터페이스 역할을 수행하기 때문이다. NPD는 시스템 로그를 분석하는 것이 고유 기능이므로 별도의 복잡한 플러그인이나 바이너리 설치 없이 NVIDIA GPU 전용 로그 패턴이 정의된 ConfigMap 설정만 연결해주면 즉시 하드웨어 결함을 식별할 수 있다. 결과적으로 NPD가 장애 신호를 감지하여 노드 상태를 업데이트하면, 카펜터가 해당 노드를 불건전(Unhealthy) 상태로 판단해 즉시 폐기하고 신규 물리 서버로 교체하는 자가 치유(Self-healing) 아키텍처를 완성함으로써 대규모 연산 작업의 가용성을 극대화한다.
 
-### NPD 가 식별하는 장애 유형 ###
+### 1. NPD 가 식별하는 장애 유형 ###
 
-#### 1. 하드웨어 및 시스템 장애 (System Log Monitor) ####
+#### 하드웨어 및 시스템 장애 (System Log Monitor) ####
 커널 로그(dmesg, journald)를 실시간으로 감시하여 하드웨어 차원의 심각한 결함을 찾아냅니다.
 * CPU/Memory: CPU 스택 정지(Stuck), 메모리 ECC 에러(데이터 손상), Read-only 파일시스템 전환.
 * 디스크: 디스크 응답 없음, 파일 시스템 손상.
 * GPU: NVIDIA XID 에러(하드웨어 크리티컬 오류), NVLink 통신 실패 
 
-#### 2. 커스텀 장애 식별 (Custom Plugin Monitor) ####
+#### 커스텀 장애 식별 (Custom Plugin Monitor) ####
 사용자가 정의한 스크립트를 주기적으로 실행하여 특정 리소스의 상태를 체크합니다. GPU 장애 감지가 이 영역에 해당합니다.
 * GPU 상태: nvidia-smi 응답 여부, 드라이버 좀비 프로세스 확인.
 * 네트워크: 특정 게이트웨이 핑(Ping) 테스트, DNS 확인 실패.
 * 런타임: Docker/Containerd 데몬 응답 지연 [2].
 
-#### 3. 일시적 이벤트 보고 (Temporary Events) ####
+#### 일시적 이벤트 보고 (Temporary Events) ####
 노드 상태(Condition)를 영구적으로 바꾸지는 않지만, 장애가 발생했던 기록을 이벤트로 남깁니다.
 * OOM Kill: 특정 프로세스가 메모리 부족으로 강제 종료된 기록.
 * 프로세스 중단: 주요 시스템 서비스의 일시적인 재시작 기록.
+
+### 2. 자동 복구 작동 원리 (NPD + Karpenter) ###
+* 장애 감지: NPD가 GPU 장애를 발견하고 노드 Condition에 GPUProblem=True를 기록합니다.
+* 노드 오염(Tainting): NPD의 설정이나 별도의 컨트롤러(예: Node Problem Detector의 NodeProblemHosts)가 해당 상태를 기반으로 노드에 NoSchedule 또는 NoExecute Taint(왜곡)를 추가합니다.
+* 카펜터의 개입: 카펜터는 노드가 더 이상 정상적으로 파드를 수용할 수 없거나(Tainted), 정의된 건강 기준에서 벗어났다고 판단하면 해당 노드를 불건전(Unhealthy) 노드로 간주합니다.
+* 자동 교체: 카펜터는 장애 노드를 비우고(Drain) 제거한 뒤, 즉시 새로운 정상 GPU 노드를 프로비저닝(Provisioning)하여 교체합니다.
+
+
+
+
+
+
+
+
 
 
 ### 1. 식별 가능한 주요 GPU 문제 ###
@@ -43,11 +57,7 @@ NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는�
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/npd.png)
 
-### 4. 자동 복구 작동 원리 (NPD + Karpenter) ###
-* 장애 감지: NPD가 GPU 장애를 발견하고 노드 Condition에 GPUProblem=True를 기록합니다.
-* 노드 오염(Tainting): NPD의 설정이나 별도의 컨트롤러(예: Node Problem Detector의 NodeProblemHosts)가 해당 상태를 기반으로 노드에 NoSchedule 또는 NoExecute Taint(왜곡)를 추가합니다.
-* 카펜터의 개입: 카펜터는 노드가 더 이상 정상적으로 파드를 수용할 수 없거나(Tainted), 정의된 건강 기준에서 벗어났다고 판단하면 해당 노드를 불건전(Unhealthy) 노드로 간주합니다.
-* 자동 교체: 카펜터는 장애 노드를 비우고(Drain) 제거한 뒤, 즉시 새로운 정상 GPU 노드를 프로비저닝(Provisioning)하여 교체합니다.
+
 
 
 ## 설치 ##
