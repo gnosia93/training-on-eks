@@ -43,9 +43,7 @@ $ kubectl get ds aws-efa-k8s-device-plugin -n kube-system
 NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
 aws-efa-k8s-device-plugin   0         0         0       0            0           <none>          6d13h
 ```
-efa 플러그인 설치 시점에는 efa 인터페이스를 지원하는 노드가 없는 관계로 데몬수가 0 으로 표시된다. 만약 해당 데몬셋이 보이지 않는다면 [](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md) 를 참고하여 설치한다. 
-
-
+efa 플러그인 데몬셋이 존재하는지 확인한다. 만약 해당 데몬셋이 보이지 않는다면 [efa 사용하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md) 를 참고하여 설치한다. 
 
 
 ### 큐브플로우 Trainer 설치 ###
