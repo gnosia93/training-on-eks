@@ -64,6 +64,10 @@ ae286c7ef5ccc461a9565b5cb7863132-369961314.ap-northeast-2.elb.amazonaws.com
 
 
 ## NVIDIA DCGM(Data Center GPU Manager) 설치 ##
+
+DCGM 을 설치하기 전에 반드시 프로메테우스 스택부터 설치해야 한다. 아래 설정에서 serviceMonitor.enabled: true 설정을 켜면, Helm은 Kubernetes에 ServiceMonitor라는 리소스를 만들려고 시도하게 된다.
+ServiceMonitor는 Kubernetes의 기본 리소스(Pod, Service 등)가 아니라, Prometheus Operator가 정의한 커스텀 리소스(CRD)이다. 프로메테우스(Operator)가 깔려있지 않으면 오류가 발생한다. 
+
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/dcgm-exporter.png)
 
 DCGM 은 GPU가 탑재된 모든 노드에 데몬 형태로 설치된다. 노드가 신규로 생성되면 DCGM은 이를 감지하고 해당 노드에 파드를 스케줄링 한다. 
