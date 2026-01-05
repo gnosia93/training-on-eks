@@ -167,7 +167,7 @@ aws eks update-nodegroup-config --cluster-name <클러스터명> \
 
 #### 1. GPU 노드 할당 받기 ####
 ```
-cat <<EOF > nvidia-smi.yaml
+cat <<EOF | kubectl apply -f - 
 apiVersion: v1
 kind: Pod
 metadata:
