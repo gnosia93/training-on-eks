@@ -94,6 +94,43 @@ EOF
 ```
 
 ```
+kubectl create configmap npd-node-problem-detector-custom-config \
+  --namespace kube-system \
+  --from-literal=nvidia-toolkit-monitor.json='{
+    "plugin": "journald",
+    "pluginConfig": {
+        "source": "kernel"
+    },
+    "logPath": "/var/log/journal",
+    "lookback": "5m",
+    "bufferSize": 10,
+    "source": "gpu-monitor",
+    "conditions": [
+        {
+            "type": "GPUProblem",
+            "reason": "GPUHealthy",
+            "message": "GPU is operating normally"
+        }
+    ],
+    "rules": [
+        {
+            "type": "permanent",
+            "condition": "GPUProblem",
+            "reason": "GPUHardwareError",
+            "pattern": "NVRM: Xid.*"
+        },
+        {
+            "type": "permanent",
+            "condition": "GPUProblem",
+            "reason": "NVLinkError",
+            "pattern": ".*NVLink Error.*"
+        }
+    ]
+}' --dry-run=client -o yaml | kubectl apply -f -
+```
+
+
+```
 helm repo add deliveryhero https://charts.deliveryhero.io/
 helm repo update
 
