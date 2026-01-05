@@ -154,7 +154,7 @@ resource "aws_security_group" "instance_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = local.final_allowed_cidrs
+    cidr_blocks = local.allowed_ip_cidrs
   }
 
   # VS Code Server (Code Server) 접속 허용
@@ -162,7 +162,7 @@ resource "aws_security_group" "instance_sg" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = local.final_allowed_cidrs
+    cidr_blocks = local.allowed_ip_cidrs
   }
 
   # VS Code Server (Code Server) 접속 허용
@@ -170,7 +170,7 @@ resource "aws_security_group" "instance_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = local.final_allowed_cidrs
+    cidr_blocks = local.allowed_ip_cidrs
   }
 
   egress {
