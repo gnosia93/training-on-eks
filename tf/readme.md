@@ -26,3 +26,10 @@ terraform output
 ```
 terraform destroy --auto-approve
 ```
+
+### 생성되는 리소스 ###
+* VPC
+* Subnet (Public / Private)
+* Graviton EC2 For vs-code
+* Security Group
+* Fsx for Lustre  
