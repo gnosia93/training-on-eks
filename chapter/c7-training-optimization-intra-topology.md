@@ -56,7 +56,7 @@ Legend:
   PIX  = Connection traversing at most a single PCIe bridge
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
-아래는 p5.48xlarge 의 GPU 토폴로지를 나타낸다.
+아래는 p5.48xlarge 의 GPU 토폴로지를 나타낸다. 여기서 NV18 이란 두 GPU 사이에 연결된 NVLink의 레인 수를 의미하는 것으로 숫자가 높을수록 대역폭(데이터 전송 속도)이 더 넓다는 것을 의미 한다.
 ```
 # nvidia-smi topo -m
         GPU0    GPU1    GPU2    GPU3    GPU4    GPU5    GPU6    GPU7    CPU Affinity    NUMA Affinity   GPU NUMA ID
