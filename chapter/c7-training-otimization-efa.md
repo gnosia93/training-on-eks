@@ -24,14 +24,15 @@ $ aws ec2 describe-instance-types \
     --query "InstanceTypes[*].{InstanceType:InstanceType, \
         EfaSupported:NetworkInfo.EfaSupported, \
         MaxNetworkInterfaces:NetworkInfo.MaximumNetworkInterfaces, \
+        MaxEfaInterfaces: NetworkInfo.EfaInfo.MaximumEfaInterfaces, \
         NetworkPerformance:NetworkInfo.NetworkPerformance}" --output table
---------------------------------------------------------------------------------
-|                             DescribeInstanceTypes                            |
-+--------------+---------------+------------------------+----------------------+
-| EfaSupported | InstanceType  | MaxNetworkInterfaces   | NetworkPerformance   |
-+--------------+---------------+------------------------+----------------------+
-|  True        |  p4d.24xlarge |  60                    |  4x 100 Gigabit      |
-+--------------+---------------+------------------------+----------------------+
+----------------------------------------------------------------------------------------------------
+|                                       DescribeInstanceTypes                                      |
++--------------+---------------+-------------------+------------------------+----------------------+
+| EfaSupported | InstanceType  | MaxEfaInterfaces  | MaxNetworkInterfaces   | NetworkPerformance   |
++--------------+---------------+-------------------+------------------------+----------------------+
+|  True        |  p4d.24xlarge |  4                |  60                    |  4x 100 Gigabit      |
++--------------+---------------+-------------------+------------------------+----------------------+
 ```
 * 최대 60개의 ENI 사용가능
 * 100Gbp의 EFA 4개
