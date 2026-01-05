@@ -98,7 +98,9 @@ kubectl create configmap npd-node-problem-detector-custom-config \
         }
     ]
 }' --dry-run=client -o yaml | kubectl apply -f -
+```
 
+```
 kubectl -n kube-system get pods -l "app.kubernetes.io/name=node-problem-detector,app.kubernetes.io/instance=npd"
 ```
 
