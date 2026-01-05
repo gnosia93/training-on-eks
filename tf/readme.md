@@ -33,4 +33,5 @@ terraform destroy --auto-approve
 * Subnets (Public / Private)
 * Graviton EC2 for vs-code
 * Security Groups
-* Fsx for Lustre  
+* Fsx for Lustre
+* S3 bucket 
