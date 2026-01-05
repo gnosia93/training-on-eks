@@ -55,7 +55,7 @@ kubectl get ds aws-efa-k8s-device-plugin -n kube-system
 [결과]
 ``` 
 NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-aws-efa-k8s-device-plugin   1         1         1       1            1           <none>          109m
+aws-efa-k8s-device-plugin   0         0         0       0            0           <none>          13s
 ```
 
 ### 3. EKS 노드 시큐리티 그룹 확인 ### 
