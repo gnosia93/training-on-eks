@@ -57,22 +57,5 @@ resource "aws_security_group" "lustre_sg" {
   tags = { Name = "lustre-sg" }
 }
 
-# 마운트에 필요한 정보 출력
-output "fsx_id" {
-  value       = aws_fsx_lustre_file_system.lustre_file_system.id
-  description = "FSx 파일 시스템 ID입니다. (관리 및 문제 해결용)"
-}
-
-output "fsx_dns_name" {
-  value       = aws_fsx_lustre_file_system.lustre_file_system.dns_name
-  description = "마운트 명령어의 주소 부분에 사용됩니다."
-}
-
-output "mount_name" {
-  value       = aws_fsx_lustre_file_system.lustre_file_system.mount_name
-  description = "마운트 명령어의 경로 부분(마지막)에 사용됩니다."
-}
-
-
 
 
