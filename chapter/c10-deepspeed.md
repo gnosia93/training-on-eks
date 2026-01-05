@@ -108,6 +108,7 @@ export GPU_PER_NODE=4                          # g6e.12xlarge 타입은 GPU 가 
 export EFA_PER_NODE=1                          # 100Gbp 사용
 export HF_TOKEN="<your huggingface token>"     # Llama-3 모델은 HF 인증이 필요.
 
+git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/deepspeed
 kubectl get trainjob 
 kubectl delete trainjob llama-3-8b
