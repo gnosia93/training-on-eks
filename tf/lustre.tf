@@ -57,8 +57,6 @@ resource "aws_security_group" "lustre_sg" {
   tags = { Name = "lustre-sg" }
 }
 
-
-
 # 마운트에 필요한 정보 출력
 output "fsx_id" {
   value       = aws_fsx_lustre_file_system.lustre_file_system.id
@@ -78,89 +76,3 @@ output "mount_name" {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-locals {
-  # 생성되는 리소스의 속성에서 직접 추출
-  oidc_url = replace(aws_eks_cluster.training-on-eks.identity[0].oidc[0].issuer, "https://", "")
-}
-
-# IAM 역할 생성 (EKS OIDC와 연동)
-resource "aws_iam_role" "fsx_csi_role" {
-  name = "AmazonEKS_FSx_Lustre_CSI_Driver_Role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.oidc_url}"
-        }
-        Action = "sts:AssumeRoleWithWebIdentity"
-        Condition = {
-          StringEquals = {
-            "${local.oidc_url}:sub": "system:serviceaccount:fsx-csi-driver:fsx-csi-driver-controller-sa"
-          }
-        }
-      }
-    ]
-  })
-}
-
-# 관리형 정책(AmazonFSxLustreCSIDriverPolicy) 연결
-resource "aws_iam_role_policy_attachment" "fsx_csi_policy_attach" {
-  role       = aws_iam_role.fsx_csi_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonFSxLustreCSIDriverPolicy"
-}
-
-# S3 접근을 위한 커스텀 정책 생성
-resource "aws_iam_policy" "fsx_s3_integration_policy" {
-  name        = "FSxLustreS3IntegrationPolicy"
-  description = "Allows FSx for Lustre to sync with specific S3 bucket"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "s3:GetBucketLocation",
-          "s3:ListBucket",
-          "s3:GetBucketAcl",
-          "s3:GetObject",
-          "s3:GetObjectTagging",
-          "s3:PutObject",
-          "s3:DeleteObject"
-        ]
-        # 위에서 만든 버킷 경로와 일치시켜야 함
-        Resource = [
-          "arn:aws:s3:::training-on-eks-lustre-${data.aws_caller_identity.current.account_id}",
-          "arn:aws:s3:::training-on-eks-lustre-${data.aws_caller_identity.current.account_id}/*"
-        ]
-      }
-    ]
-  })
-}
-
-# 기존 역할(Role)에 이 정책을 연결
-resource "aws_iam_role_policy_attachment" "fsx_s3_attach" {
-  role       = aws_iam_role.fsx_csi_role.name # 이전에 만든 Role 이름
-  policy_arn = aws_iam_policy.fsx_s3_integration_policy.arn
-}
-*/
