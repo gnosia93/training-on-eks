@@ -1,3 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 현재 계정 정보 가져오기
 data "aws_caller_identity" "current" {}
 
@@ -22,6 +37,95 @@ resource "aws_fsx_lustre_file_system" "lustre_file_system" {
     Name = "trainng-on-eks"
   }
 }
+
+# 3. 보안 그룹 설정 (VPC 전체 대역 허용)
+resource "aws_security_group" "lustre_sg" {
+  name        = "lustre-vpc-wide-sg"
+  description = "Allow Lustre traffic from entire VPC"
+  vpc_id      = aws_vpc.hpc_vpc.id
+
+  # 988 포트: Lustre 파일 시스템 기본 포트
+  ingress {
+    from_port   = 988
+    to_port     = 988
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.hpc_vpc.cidr_block] # VPC 내부 모든 IP에서 접근 허용
+  }
+
+  # 1021-1023 포트: Lustre RPC/데이터 전송 포트
+  ingress {
+    from_port   = 1021
+    to_port     = 1023
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.hpc_vpc.cidr_block] # VPC 내부 모든 IP에서 접근 허용
+  }
+
+  # 모든 아웃바운드 허용
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "lustre-sg" }
+}
+
+# 4. 데이터 저장용 S3 버킷 생성
+resource "aws_s3_bucket" "lustre_data" {
+  bucket = "my-lustre-data-bucket-2026-unique" # 중복되지 않는 이름으로 변경하세요.
+}
+
+# 5. FSx for Lustre 파일 시스템 생성
+resource "aws_fsx_lustre_file_system" "example" {
+  storage_capacity            = 1200
+  subnet_ids                  = [aws_subnet.hpc_subnet.id]
+  security_group_ids          = [aws_security_group.lustre_sg.id]
+  deployment_type             = "PERSISTENT_2"
+  per_unit_storage_throughput = 125 
+
+  # S3 데이터 연동 (S3에 데이터가 있다면 자동으로 파일 목록을 가져옵니다)
+  import_path     = "s3://${aws_s3_bucket.lustre_data.bucket}"
+  export_path     = "s3://${aws_s3_bucket.lustre_data.bucket}/export"
+  
+  tags = {
+    Name = "MyLustreFS"
+  }
+}
+
+# 6. 마운트에 필요한 정보 출력
+output "fsx_dns_name" {
+  value = aws_fsx_lustre_file_system.example.dns_name
+  description = "FSx Lustre의 DNS 이름입니다. 마운트 시 사용하세요."
+}
+
+output "mount_name" {
+  value = aws_fsx_lustre_file_system.example.mount_name
+  description = "FSx Lustre의 마운트 이름입니다."
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # 보안 그룹 설정 (Lustre 전용 포트 988 오픈)
 resource "aws_security_group" "fsx_sg" {
