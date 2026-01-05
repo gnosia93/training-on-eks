@@ -16,7 +16,7 @@ terraform init
 terraform apply -auto-approve
 ```
 
-* 생성된 인프라 확인
+### VPC 확인 ###
 ```
 terraform output
 ```
@@ -28,8 +28,9 @@ terraform destroy --auto-approve
 ```
 
 ### 생성되는 리소스 ###
+
 * VPC
-* Subnet (Public / Private)
-* Graviton EC2 For vs-code
-* Security Group
+* Subnets (Public / Private)
+* Graviton EC2 for vs-code
+* Security Groups
 * Fsx for Lustre  
