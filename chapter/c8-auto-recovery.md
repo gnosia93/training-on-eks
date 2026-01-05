@@ -93,8 +93,7 @@ helm repo add deliveryhero https://charts.deliveryhero.io/
 helm repo update
 
 helm install npd deliveryhero/node-problem-detector \
-  -f npd-values.yaml \
-  --namespace kube-system
+  -f npd-values.yaml --namespace kube-system
 ```
 
 
