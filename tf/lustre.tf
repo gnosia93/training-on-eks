@@ -10,7 +10,7 @@ resource "aws_s3_bucket" "data_bucket" {
 resource "aws_fsx_lustre_file_system" "lustre_file_system" {
   storage_capacity            = 1200                                       # 용량 (단위: GiB, 최소 1200 또는 2400)
   subnet_ids                  = [aws_subnet.private[0].id]                 # Amazon FSx for Lustre 파일 시스템 자체는 단일 서브넷(Single Subnet)에서만 생성
-  security_group_ids          = [aws_security_group.fsx_sg.id]
+  security_group_ids          = [aws_security_group.lustre_sg.id]
   deployment_type             = "SCRATCH_2"                                # SCRATCH_1, SCRATCH_2, PERSISTENT_1, PERSISTENT_2 중 선택
   import_path                 = "s3://${aws_s3_bucket.data_bucket.bucket}"
   export_path                 = "s3://${aws_s3_bucket.data_bucket.bucket}/export"
