@@ -40,13 +40,17 @@ data "http" "my_ip" {
   url = "https://checkip.amazonaws.com"
 }
 
-variable "allowed_ip_cidrs" {
-  description = "List of CIDR blocks allowed to access SSH (22) and VS Code (8080)"
+variable "custom_allowed_ips" {
+  description = "허용할 IP 리스트"
   type        = list(string)
-  # 0.0.0.0/0 은 모든 IP를 허용합니다. 보안을 위해 본인의 IP CIDR로 변경하세요.
-  default     = [
-  #    "0.0.0,0/0",                                     # 모든 IP
-    "${chomp(data.http.my_ip.response_body)}/32"        # chomp() 는 테라폼 내장함수로 CR, LF 제거.
-  ]
+  default     = []            # 필요한 경우 "10.0.0.0/8" 등을 추가
+}
+
+locals {
+  # chomp로 개행 제거 후 /32 추가
+  current_ip = "${chomp(data.http.my_ip.response_body)}/32"
+
+  # 최종 리스트: 현재 내 IP + 변수로 받은 IP 리스트 합치기
+  allowed_ip_cidrs = concat([local.current_ip], var.custom_allowed_ips)
 }
 
