@@ -119,7 +119,7 @@ npd-node-problem-detector-z5qld   1/1     Running   3 (2m18s ago)   2m37s
 * https://github.com/aws/containers-roadmap/issues/2555
 현재 EKS 노드 모니터링 에이전트에서는 사용자가 직접 설치한 dcgm exporter 와 제대로 연결되지 못하는 버그가 있는 것으로 보인다. 이로 인해서 GPU 노드의 AcceleratedHardwareReady 값을 항상 False 로 변경되는 버그를 가지고 있는 것으로 보여진다.. << 좀더 디버깅이 필요함 >>  
 
-## 1. Node Monitoring Agent 설치 ##
+### 1. Node Monitoring Agent 설치 ###
 eks-node-monitoring-agent 애드온을 설치한다. 이 에이전트가 노드의 로그(/dev/kmsg)를 분석하여 장애를 감지하는 역할 한다.
 Node Monitoring Agent는 GPU 의 상태를 확인하기 위해 DCGM exporter(nv-hostengine)와 unix domain 소켓으로 연결하여 관련 정보를 수집한다.
 다른 애드온 들과는 달리 Pod identity 나 OIDC 와 연관된 Role 를 설정하지 않는다. 
@@ -144,9 +144,9 @@ kubectl logs -f -n kube-system -l app.kubernetes.io/name=eks-node-monitoring-age
 {"level":"info","ts":"2025-12-24T01:58:06Z","msg":"Skipping MAC address policy check - not needed for this OS","hostname":"ip-10-0-6-164.ap-northeast-2.compute.internal","monitor":"networking"}
 ```
 
-## 2. 노드 타입별 설정 ##
+### 2. 노드 타입별 설정 ###
 
-### 2-1. 매니지드 노드 ###
+#### 2-1. 매니지드 노드 ####
 관리형 노드 그룹에서는 오토 모드와 달리 사용자가 직접 기능을 활성화해야 한다.  
 NMA 에이전트가 노드의 커널, 네트워크, 스토리지, GPU 상태를 모니터링하다가 문제가 발견되면 Kubernetes NodeCondition을 업데이트한다.
 상태가 나빠진 노드를 발견하면 EKS 컨트롤 플래인이 해당 노드를 자동으로 격리(Cordon) 및 비우기(Drain)한 후, 새로운 인스턴스로 교체한다. 
@@ -159,7 +159,7 @@ aws eks update-nodegroup-config --cluster-name <클러스터명> \
   --node-repair-config enabled=true
 ```
 
-### 2-2. 카펜터 노드 ###
+#### 2-2. 카펜터 노드 ####
 카펜터의 경우 매니지드 노드 그룹과 달리 추가적인 설정이 존재하지 않는다. 카펜터는 기본적으로 NotReady 상태인 노드를 감지하여 교체하기 때문이다. 
 
 ## 장애 시뮬레이션 ##
