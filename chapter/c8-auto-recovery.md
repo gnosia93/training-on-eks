@@ -41,7 +41,7 @@ NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는�
 
 
 ### 3. NPD 설치하기 ###
-
+헬름으로 NPD 를 설치한다.
 ```
 cat <<EOF > npd-values.yaml
 image:
@@ -64,6 +64,7 @@ helm install npd deliveryhero/node-problem-detector \
   -f npd-values.yaml --namespace kube-system
 ```
 
+GPU 모니터링을 위해서 컨피그 맵을 아래와 같이 생성한다.
 ```
 kubectl create configmap npd-node-problem-detector-custom-config \
   --namespace kube-system \
@@ -100,27 +101,17 @@ kubectl create configmap npd-node-problem-detector-custom-config \
 }' --dry-run=client -o yaml | kubectl apply -f -
 ```
 
+생성된 npd 파드를 조회한다. 
 ```
 kubectl -n kube-system get pods -l "app.kubernetes.io/name=node-problem-detector,app.kubernetes.io/instance=npd"
 ```
-
-
-### 참고 - nvidia-validator 설치 ###
+[결과]
 ```
-# 1. NVIDIA Helm 저장소 추가
-helm repo add nvidia helm.ngc.nvidia.com
-helm repo update
-
-# 2. Validator만 활성화하여 설치
-helm install nvidia-validator nvidia/gpu-operator \
-  -n gpu-operator --create-namespace \
-  --set driver.enabled=false \
-  --set toolkit.enabled=false \
-  --set devicePlugin.enabled=false \
-  --set dcgmExporter.enabled=false \
-  --set gfd.enabled=false \
-  --set operator.enabled=false \
-  --set validator.enabled=true
+NAME                              READY   STATUS    RESTARTS        AGE
+npd-node-problem-detector-4vrx6   1/1     Running   3 (2m19s ago)   2m37s
+npd-node-problem-detector-f5w4p   1/1     Running   3 (2m21s ago)   2m37s
+npd-node-problem-detector-gbc5r   1/1     Running   3 (2m20s ago)   2m37s
+npd-node-problem-detector-z5qld   1/1     Running   3 (2m18s ago)   2m37s
 ```
 
 ----
