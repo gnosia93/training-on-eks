@@ -115,10 +115,9 @@ npd-node-problem-detector-z5qld   1/1     Running   3 (2m18s ago)   2m37s
 ```
 
 ----
-## AWS NMA ##
+## [Warning] AWS NMA ##
 * https://github.com/aws/containers-roadmap/issues/2555
-현재 EKS 노드 모니터링 에이전트에서는 dcgm exporter 로 연결하지 못해서 노드의 AcceleratedHardwareReady 값이 False 로 변경되는 버그를 가지고 있어 GPU Auto Recovery 테스트는 불가능하다. 
-
+현재 EKS 노드 모니터링 에이전트에서는 사용자가 직접 설치한 dcgm exporter 와 제대로 연결되지 못하는 버그가 있는 것으로 보인다. 이로 인해서 GPU 노드의 AcceleratedHardwareReady 값을 항상 False 로 변경되는 버그를 가지고 있다. 
 
 ## 1. Node Monitoring Agent 설치 ##
 eks-node-monitoring-agent 애드온을 설치한다. 이 에이전트가 노드의 로그(/dev/kmsg)를 분석하여 장애를 감지하는 역할 한다.
