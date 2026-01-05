@@ -74,8 +74,8 @@ metadata:
 spec:
   template:
     spec:
-      shareProcessNamespace: true 
-      hostIPC: true
+      shareProcessNamespace: true           # 추가 
+      hostIPC: true                         # 추가
 #      hostNetwork: true
       containers:
         - name: node
@@ -84,7 +84,6 @@ spec:
             privileged: true                 # 호스트 시스템의 모든 리소스(디바이스)와 커널 기능에 대한 완전한 접근 권한을 부여하는 설정
             capabilities:
               add: ["IPC_LOCK"]
-
 ```
 
 * trainjob 명령어
