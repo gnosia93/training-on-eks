@@ -56,6 +56,12 @@ settings:
     # NVIDIA 툴킷 및 드라이버 로그를 상세 감시하는 설정
     - /custom-config/nvidia-toolkit-monitor.json
 EOF
+
+helm repo add deliveryhero https://charts.deliveryhero.io/
+helm repo update
+
+helm install npd deliveryhero/node-problem-detector \
+  -f npd-values.yaml --namespace kube-system
 ```
 
 ```
@@ -92,15 +98,8 @@ kubectl create configmap npd-node-problem-detector-custom-config \
         }
     ]
 }' --dry-run=client -o yaml | kubectl apply -f -
-```
 
-
-```
-helm repo add deliveryhero https://charts.deliveryhero.io/
-helm repo update
-
-helm install npd deliveryhero/node-problem-detector \
-  -f npd-values.yaml --namespace kube-system
+kubectl -n kube-system get pods -l "app.kubernetes.io/name=node-problem-detector,app.kubernetes.io/instance=npd"
 ```
 
 
