@@ -57,7 +57,7 @@ settings:
     - /custom-config/nvidia-toolkit-monitor.json
 
 # 만약 기본 설정에 없는 특수 패턴을 추가하고 싶다면 아래와 같이 정의합니다.
-customConfig:
+configData:
   nvidia-toolkit-monitor.json: |
     {
         "plugin": "journald",
