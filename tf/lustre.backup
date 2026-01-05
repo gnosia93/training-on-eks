@@ -58,6 +58,18 @@ resource "aws_security_group" "lustre_sg" {
 
 
 
+# 마운트에 필요한 정보 출력
+output "fsx_dns_name" {
+  value = aws_fsx_lustre_file_system.example.dns_name
+  description = "FSx Lustre의 DNS 이름입니다. 마운트 시 사용하세요."
+}
+
+output "mount_name" {
+  value = aws_fsx_lustre_file_system.example.mount_name
+  description = "FSx Lustre의 마운트 이름입니다."
+}
+
+
 
 
 
