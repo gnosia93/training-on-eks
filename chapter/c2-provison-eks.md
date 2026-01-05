@@ -197,6 +197,14 @@ aws ec2 describe-security-groups \
 |  karpenter.sh/discovery                |  training-on-eks                            |
 +----------------------------------------+---------------------------------------------+
 ```
+* 가끔 karpenter.sh/discovery 태그가 누락되는 경우가 발생하는데 이 경우 아래 명령어를 실행하여 추가해 준다.    
+```
+aws ec2 create-tags \
+  --resources $(aws eks describe-cluster --name ${CLUSTER_NAME} --query \
+					"cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text) \
+  --tags Key=karpenter.sh/discovery,Value=training-on-eks
+```
+
 
 ### 추가 정책 설정 ###
 클러스터 생성이 완료되면 추가 설정이 필요하다. 카펜터 버전 1.8.1(EKS 1.3.4) 에는 아래와 같은 정책 설정이 누락되어 있어 패치가 필요하다. 
