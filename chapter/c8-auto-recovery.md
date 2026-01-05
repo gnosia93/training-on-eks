@@ -54,10 +54,10 @@ settings:
     # 커널 로그에서 XID 등 GPU 에러를 감시하는 기본 설정 파일 경로 (기본적으로 해당 경로에 제공됨) 
     - /config/kernel-monitor.json
     # NVIDIA 툴킷 및 드라이버 로그를 상세 감시하는 설정
-    - /config/nvidia-toolkit-monitor.json
+    - /custom-config/nvidia-toolkit-monitor.json
 
 # 만약 기본 설정에 없는 특수 패턴을 추가하고 싶다면 아래와 같이 정의합니다.
-extraConfig:
+customConfig:
   nvidia-toolkit-monitor.json: |
     {
         "plugin": "journald",
