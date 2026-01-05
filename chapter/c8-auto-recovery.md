@@ -46,9 +46,8 @@ NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는�
 
 ### 3. NPD 설치하기 ###
 
-[gpu-log-monitor-values.yaml]
 ```
-# gpu-log-monitor-values.yaml
+cat <<EOF > npd.yaml
 settings:
   log_monitors:
     # 커널 로그에서 XID 등 GPU 에러를 감시하는 기본 설정 파일 경로 (기본적으로 해당 경로에 제공됨) 
@@ -90,15 +89,15 @@ extraConfig:
             }
         ]
     }
+EOF
 ```
-별도로 JSON 파일을 만들 필요 없이, Helm 설치 시 log_monitors 경로만 지정해주면 NPD가 내장된 NVIDIA 패턴을 읽어 온다.
 
 ```
 helm repo add deliveryhero https://charts.deliveryhero.io/
 helm repo update
 
 helm upgrade --install npd deliveryhero/node-problem-detector \
-  -f gpu-log-monitor-values.yaml \
+  -f npd-values.yaml \
   --namespace kube-system
 ```
 
