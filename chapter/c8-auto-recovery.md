@@ -44,6 +44,11 @@ NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는�
 
 ```
 cat <<EOF > npd-values.yaml
+image:
+  repository: registry.k8s.io/node-problem-detector/node-problem-detector
+  tag: v1.35.1
+  pullPolicy: IfNotPresent
+
 settings:
   log_monitors:
     # 커널 로그에서 XID 등 GPU 에러를 감시하는 기본 설정 파일 경로 (기본적으로 해당 경로에 제공됨) 
