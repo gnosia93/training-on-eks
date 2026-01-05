@@ -40,14 +40,10 @@ NPD가 없어도 카펜터가 노드를 교체하는 경우가 한가지 있는�
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/npd.png)
 
 
-
-
-
-
 ### 3. NPD 설치하기 ###
 
 ```
-cat <<EOF > npd.yaml
+cat <<EOF > npd-values.yaml
 settings:
   log_monitors:
     # 커널 로그에서 XID 등 GPU 에러를 감시하는 기본 설정 파일 경로 (기본적으로 해당 경로에 제공됨) 
@@ -96,7 +92,7 @@ EOF
 helm repo add deliveryhero https://charts.deliveryhero.io/
 helm repo update
 
-helm upgrade --install npd deliveryhero/node-problem-detector \
+helm install npd deliveryhero/node-problem-detector \
   -f npd-values.yaml \
   --namespace kube-system
 ```
