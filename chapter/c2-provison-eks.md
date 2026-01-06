@@ -55,6 +55,9 @@ sudo dnf install golang -y
 # 설치 확인 (v1.11 이상 필요)
 go version
 go install github.com/awslabs/eks-node-viewer/cmd/eks-node-viewer@latest
+
+echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 
