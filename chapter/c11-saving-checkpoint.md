@@ -114,7 +114,7 @@ helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
 ```
 
 fsx 관련 컨트롤러와 Pod 를 조회한다. fsx-csi-controller 는 파일 시스템의 생성, 삭제, 볼륨 연결 등을 담당하는 컨트롤러이다. 
-fsx-csi-node 는 실제 워커 노드마다 하나씩 실행되는 DaemonSet 으로, EC2 노드 위에서 Lustre 파일 시스템을 실제로 마운트(Mount)하는 역할을 수행한다.
+fsx-csi-node 는 실제 워커 노드마다 하나씩 실행되는 데몬셋으로, EC2 노드 위에서 Lustre 파일 시스템을 실제로 마운트(Mount)하는 역할을 수행한다.
 ```
 kubectl get pods -n fsx-csi-driver
 ```
@@ -129,7 +129,7 @@ fsx-csi-node-st5fc                   3/3     Running   0          5m35s
 fsx-csi-node-wj7lj                   3/3     Running   0          5m35s
 ```
 
-* fsx-csi-node 로그 조회
+만약 러스터 관련 오류가 발생하는 경우 아래의 명령어로 fsx-csi-node 로그를 조회하면 그 원인을 쉽게 파악할 수 있다.
 ```
 kubectl logs -f -l app=fsx-csi-node -n fsx-csi-driver -c fsx-plugin
 ```
