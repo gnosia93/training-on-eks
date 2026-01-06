@@ -59,7 +59,9 @@ node_exporter의 ethtool 콜렉터는 Pod의 /sys/class/infiniband 경로에서 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/network-mon.png)  
 
 
-## 참고 - 수집여부 확인하기 ##
+## 참고 - efa 메트릭 수집여부 확인하기 ##
+
+[C7. 분산 훈련 최적화/EFA 사용하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md) 섹션에서 efa 를 설정한 경우 아래 명령어로 node-exporter 가 efa 데이터를 수집하고 있는지 확인할 수 있다.
 ```
 EFA_NODE=$(kubectl get pod efa-test-pod -o jsonpath='{.spec.nodeName}')
 POD_NAME=$(kubectl get pods -n monitoring \
@@ -72,8 +74,6 @@ echo ${POD_NAME} " / " ${EFA_NODE}
 kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics | grep node_infiniband
 kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics | grep "node_infiniband" | grep -E "bytes|packets"
 ```
-
-
 
 ## 레퍼런스 ##
 * https://gallery.ecr.aws/hpc-cloud/efa-node-exporter
