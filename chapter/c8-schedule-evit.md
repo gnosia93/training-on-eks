@@ -62,6 +62,8 @@ kubectl exec -it llama-3-8b-node-0-3-f86kr -- env | grep NVIDIA_VISIBLE_DEVICES
 nvidia-smi -L 
 ```
 
+* 런타임 재시작: 설정을 변경한 후에는 nvidia-device-plugin 파드를 재시작해야 변경 사항이 반영되어 nvidia-smi 결과와 쿠버네티스 할당 가능 자원 수가 일치하게 됩니다
+
 
 
 
