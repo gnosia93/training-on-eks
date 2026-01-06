@@ -20,7 +20,7 @@
    * [연산 속도가 느린 GPU / 네트워크 카드 / 노드 식별](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-detect-perf-drop.md)
   
      
-* [C6. FSDP로 LLM 훈련하기(싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)    
+* [C6. FSDP로 LLM 훈련하기 (싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)    
 
 * C7. 분산 훈련 최적화
    - [EFA 사용하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md)
@@ -38,7 +38,7 @@
   
 * [C10. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-saving-checkpoint.md)
 
-* [C11. DeepSpeed 분산 훈련(멀티 GPU 노드)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c11-deepspeed.md)
+* [C11. DeepSpeed 분산 훈련 (멀티 GPU 노드)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c11-deepspeed.md)
 
 ### _Appendix_ ###
 
