@@ -19,7 +19,10 @@ export FSX_S3Policy="FSxLustreS3Policy"
 
 * 러스터 파일 시스템 조회
 ```
-terraform output          
+aws fsx describe-file-systems \
+    --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].\
+    {ID:FileSystemId, MountName:LustreConfiguration.MountName, DNS:DNSName, Status:Lifecycle}" \
+    --output table
 ```
 [결과]
 ```
