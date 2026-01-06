@@ -98,7 +98,7 @@ S3_POLICY_ARN=$(aws iam create-policy --policy-name ${FSX_S3Policy} --policy-doc
 aws iam attach-role-policy --role-name ${FSX_ROLE} --policy-arn $S3_POLICY_ARN
 ```
 
-### 3. Amazon FSx CSI 드라이버 설치 ### 
+### 3. Amazon FSx CSI (Container Storage Interface) 드라이버 설치 ### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
 ```
 helm repo add aws-fsx-csi-driver https://kubernetes-sigs.github.io/aws-fsx-csi-driver
