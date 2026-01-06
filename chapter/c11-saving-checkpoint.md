@@ -61,6 +61,8 @@ fs-0261bb15621d24e21  AVAILABLE  1200         Default    Variable    rycutbev   
 ### 2. IAM 역할(IRSA) 생성 ###
 이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 생성 및 annontation 처리를 한 번에 수행한다
 ```
+kubectl create namespace fsx-csi-driver
+
 eksctl create iamserviceaccount \
     --name fsx-csi-sa \
     --namespace fsx-csi-driver \
@@ -97,7 +99,6 @@ aws iam attach-role-policy --role-name ${FSX_ROLE} --policy-arn $S3_POLICY_ARN
 ### 3. Amazon FSx CSI 드라이버 설치 ### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
 ```
-kubectl create namespace fsx-csi-driver
 helm repo add aws-fsx-csi-driver https://kubernetes-sigs.github.io/aws-fsx-csi-driver
 helm repo update
 
