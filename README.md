@@ -46,3 +46,6 @@
 * [A2. EC2 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-ec2-nvlink.md)
 * [A3. 토폴리지별 훈련성능](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a3.training-perf-topology.md)
 * [A4. CPU 분산훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a4.training-on-cpu.md)
+
+### _Revision History_ ###
+* 2026-01-07 First Released
