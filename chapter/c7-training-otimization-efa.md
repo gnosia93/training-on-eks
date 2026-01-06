@@ -3,6 +3,13 @@
 일반적인 TCP 통신은 컨테이너 네트워크 계층을 거치면서 성능 저하가 발생할 수 있지만, 컨테이너 환경에서는 EFA는 EC2와 동일한 OS Bypass 방식으로 동작 한다. 
 EFA Device Plugin이 호스트의 하드웨어 장치(/dev/infiniband/uverbsX)를 컨테이너 내부로 직접 넣어주면, NCCL(libfabric)이 컨테이너의 네트워크 스택을 아예 무시하고 EFA 전용 네트워크 카드에 직접 데이터를 보내게 된다. 따라서 컨테이너에서 호스트 네트워크를 사용할 수 있는 hostNetwork 설정값이 false 라도 EFA만 제대로 인식된다면 네이티브 EC2와 동일한 성능을 낼 수 있다. 컨테이너 환경에서의 EFA 역시 중간에 거치는 소프트웨어 계층이 없기 때문에 지연 시간(Latency)이나 처리량(Throughput)에서 손실이 발생할 구조적 원인이 없다.
 
+#### VPC CNI 우회 ####
+분산 학습의 성능을 결정짓는 NCCL/EFA 통신 단계에서
+* 통로: NCCL 라이브러리가 컨테이너 내부에 노출된 /dev/infiniband/uverbsX 장치에 직접 데이터를 쓴다.
+* 흐름: 애플리케이션 RAM/GPU 메모리 → EFA 하드웨어(NIC) → 네트워크
+* 결과: VPC CNI의 네트워크 네임스페이스나 커널 오버헤드가 전혀 발생하지 않는다. (VPC CNI는 아무런 관여를 하지 않음)
+
+
 ### 1. EFA 지원 GPU 인스턴스 ###
 ```
 aws ec2 describe-instance-types \
