@@ -133,10 +133,17 @@ fsx-csi-node-wj7lj                   3/3     Running   0          5m35s
 ## EKS 연결하기 ##
 ### 1. PV/PVC 배포 ###
 ```
-FSx_DNS=$(aws fsx describe-file-systems --file-system-ids ${FSx_ID} --query "FileSystems[0].{DNSName:DNSName}" --output text)
-FSx_MOUNT=$(aws fsx describe-file-systems --file-system-ids ${FSx_ID} --query "FileSystems[0].{MountName:LustreConfiguration.MountName}" --output text)
-echo ${FSx_ID} ${FSx_DNS} ${FSx_MOUNT}
+FSx_ID=$(aws fsx describe-file-systems \
+    --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].FileSystemId" --output text)
+FSx_DNS=$(aws fsx describe-file-systems \
+    --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].DNSName" --output text)
+FSx_MOUNTNAME=$(aws fsx describe-file-systems \
+    --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].LustreConfiguration.MountName" --output text)
 
+echo ${FSx_ID} ${FSx_DNS} ${FSx_MOUNTNAME}
+```
+
+```
 cat << EOF > fsx-pvc.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
