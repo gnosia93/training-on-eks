@@ -55,7 +55,7 @@ aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" -
 [결과]
 ```
 ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  Type
-fs-0159be19ce80d8e03  AVAILABLE  1200         Default    Variable    knwe5bev   SCRATCH_2
+fs-0261bb15621d24e21  AVAILABLE  1200         Default    Variable    rycutbev   SCRATCH_2
 ```
 
 ### 2. IAM 역할(IRSA) 생성 ###
