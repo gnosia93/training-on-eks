@@ -1,4 +1,4 @@
-<< 아키텍처 다이어그램 >> 넣기
+![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-vpc.png)
 
 ### [테라폼 설치](https://developer.hashicorp.com/terraform/install) ###
 mac 의 경우 아래의 명령어로 설치할 수 있다. 
