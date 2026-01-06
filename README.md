@@ -35,6 +35,8 @@
   
 * [C10. DeepSpeed 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed.md)
 
+* [C11. 체크포인트 저장하기]()
+
 ## Appendix ##
 
 * [A1. 트러블 슈팅](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
