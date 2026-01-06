@@ -40,7 +40,7 @@
 
 * [C11. DeepSpeed 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c11-deepspeed.md)
 
-## Appendix ##
+### _Appendix_ ###
 
 * [A1. 트러블 슈팅](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
 * [A2. EC2 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-ec2-nvlink.md)
