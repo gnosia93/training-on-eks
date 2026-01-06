@@ -107,7 +107,7 @@ helm upgrade -i nvidia-device-plugin nvdp/nvidia-device-plugin \
 ```
 
 #### 3. 노드 레이블링 ####
-스케줄링 배제해야 하는 GPU 를 가진 노드에 아래와 같이 nvidia.com/device-plugin.config 을 키로 설정하고 values.yaml 에서 설정한 map 키를 값으로 설정한다. 
+플러그인이 values.yaml의 map 중 어떤 설정을 읽을지 노드에 지시한다. 이때 키는 nvidia.com/device-plugin.config 이고 밸류는 values.yaml 에서 설정한 map 키를 값으로 설정한다.
 ```
 # 형식: kubectl label node <노드명> nvidia.com<설정명>
 
@@ -115,6 +115,7 @@ kubectl label node node1 nvidia.com/device-plugin.config=node1-gpu-skip
 kubectl label node node3 nvidia.com/device-plugin.config=node3-gpu-skip
 ```
 
+아래 결과가 설정명과 일치해야 한다.
 ```
 kubectl get node node1 -o jsonpath='{.metadata.labels["nvidia.com/device-plugin.config"]}'
 ```
