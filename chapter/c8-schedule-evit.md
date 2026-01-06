@@ -114,8 +114,6 @@ helm upgrade -i nvidia-device-plugin nvdp/nvidia-device-plugin \
 kubectl label node node1 nvidia.com/device-plugin.config=node1-gpu-skip
 kubectl label node node3 nvidia.com/device-plugin.config=node3-gpu-skip
 ```
-* 위의 명령어가 안 먹히면 = 빼고 실행..
-
 
 ```
 kubectl get node node1 -o jsonpath='{.metadata.labels["nvidia.com/device-plugin.config"]}'
