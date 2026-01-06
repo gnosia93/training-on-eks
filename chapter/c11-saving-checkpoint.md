@@ -16,6 +16,8 @@ export FSX_S3Policy="FSxLustreS3Policy"
 
 ### 1. lustre 파일시스템 생성 ###
 테라폼 에서 이미 러스터 클러스터를 생성하였다. 
+
+* 리스터 파일 시스템 조회
 ```
 terraform output          
 ```
@@ -24,6 +26,7 @@ terraform output
 
 ```
 
+* 러스터 파일 시스템 성능조회
 ```
 aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" --output json | jq -r '
   ["ID", "Status", "Storage_GiB", "Unit_MB/s", "Total_MB/s", "MountName", "Type"],
@@ -45,8 +48,6 @@ aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" -
 ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  Type
 fs-0159be19ce80d8e03  AVAILABLE  1200         Default    Variable    knwe5bev   SCRATCH_2
 ```
-
-
 
 ### 2. IAM 역할(IRSA) 생성 ###
 이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 생성 및 annontation 처리를 한 번에 수행한다
@@ -99,10 +100,6 @@ helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
     --set controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/FSxLustreRole
 ```
 
-
-
-
-
 ## EKS 연결하기 ##
 ### 1. PV/PVC 배포 ###
 ```
@@ -116,11 +113,11 @@ kind: StorageClass
 metadata:
   name: fsx-sc
 provisioner: fsx.csi.aws.com
-reclaimPolicy: Retain                     # PVC 삭제 시 FSx는 유지 (안전)
+reclaimPolicy: Delete                     # PVC 삭제 시 FSx는 유지하고자 하는 경우 Retain 으로 설정
 volumeBindingMode: Immediate
 ---
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolume                    # 이미 생성한 러스터 클러스터를 연결하기 위한 정적 프로비저닝. vs. 동적 프로비저닝의 경우 PV 대신 SC 에 러스터 정보 선언
 metadata:
   name: fsx-pv
 spec:
@@ -129,7 +126,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete   # PVC 삭제 시 FSx는 유지하고자 하는 경우 Retain 으로 설정
   storageClassName: fsx-sc
   csi:
     driver: fsx.csi.aws.com
