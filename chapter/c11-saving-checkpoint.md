@@ -133,11 +133,11 @@ fsx-csi-node-wj7lj                   3/3     Running   0          5m35s
 ## EKS 연결하기 ##
 ### 1. PV/PVC 배포 ###
 ```
-FSx_ID=$(aws fsx describe-file-systems \
+export FSx_ID=$(aws fsx describe-file-systems \
     --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].FileSystemId" --output text)
-FSx_DNS=$(aws fsx describe-file-systems \
+export FSx_DNS=$(aws fsx describe-file-systems \
     --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].DNSName" --output text)
-FSx_MOUNTNAME=$(aws fsx describe-file-systems \
+export FSx_MOUNTNAME=$(aws fsx describe-file-systems \
     --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].LustreConfiguration.MountName" --output text)
 
 echo ${FSx_ID} ${FSx_DNS} ${FSx_MOUNTNAME}
