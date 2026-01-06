@@ -218,7 +218,7 @@ EOF
 S3 에 파일을 업로드 하고 Pod 에서 조회되는지 확인한다.  
 ```
 echo "Hello FSx Lustre" > test-file.txt
-aws s3 cp test-file.txt s3://${BUCKET_NAME}/
+aws s3 cp test-file.txt s3://${S3_BUCKET}/
 kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 ```
 
