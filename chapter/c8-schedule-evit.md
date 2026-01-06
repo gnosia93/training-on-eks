@@ -79,8 +79,8 @@ data:
       migStrategy: none
 
   # (2) 특정 노드용 설정: 고장난 2번 GPU를 제외하고 0, 1, 3번만 명시
-  # 이 이름(exclude-gpu-2)이 나중에 노드 레이블의 '값'이 됩니다.
-  exclude-gpu-2: |-
+  # 이 이름(broken-gpu-skip)이 나중에 노드 레이블의 '값'이 됩니다.
+  broken-gpu-skip: |-
     version: v1
     flags:
       migStrategy: none
