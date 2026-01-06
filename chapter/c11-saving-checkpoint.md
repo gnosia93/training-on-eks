@@ -1,7 +1,5 @@
-분산 훈련 환경에서 Lustre를 스토리지로 사용할 때, 체크포인트 저장의 핵심은 대역폭(Throughput) 최적화와 데이터 일관성이다.
-수천 개의 GPU 노드가 동시에 쓰기 작업을 수행할 때 성능 병목을 줄이기 위해서는 병렬 및 비동기 저장 (Parallel & Asynchronous Checkpointing) 기법을 활용하여 
-체크포인트를 저장하는 동안 GPU 연산이 중단되지 않도록 하는 것이다.  
-또한 PyTorch Distributed Checkpoint (DCP)를 활용하여 각 Rank(프로세스)가 자신의 가중치만 별도의 파일로 저장하게 함으로써 FSx와 같은 병렬 파일 시스템 아키텍처를 최대한 활용하여 쓰기 속도를 극대화하는 것이다. 
+대규모 분산 훈련에서 체크포인트 저장시 중요한 핵심 포인트는 네트워크 대역폭(Throughput) 및 I/O 성능을 최적화하고 데이터 일관성을 보장하는 것이다. 수천 개의 GPU 노드가 동시에 쓰기 작업을 수행할 때 성능 병목을 줄이기 위해서는 병렬 및 비동기 저장 (Parallel & Asynchronous Checkpointing) 기법 활용이 중요하며, 이를 통해 체크포인트를 저장하는 동안 GPU 연산이 중단되지 않도록 하는 것이다.  
+또한 PyTorch Distributed Checkpoint (DCP)를 활용하여 각 Rank(프로세스)가 자신의 가중치만 별도의 파일로 저장하게 함으로써 FSx와 같은 병렬 파일 시스템 아키텍처를 최대한 활용하여 쓰기 속도를 극대화할 필요가 있다. 
 
 ## 러스터(Lustre) ##
 러스터(Lustre) 파일 시스템은 높은 처리량, 낮은 지연 시간, 뛰어난 확장성을 제공하는 병렬 분산 파일 시스템으로, 대규모 데이터셋을 처리해야 하는 AI 시스템에 필수적이다.
@@ -15,10 +13,14 @@ export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.r
 ```
 
 ### 1. lustre 파일시스템 생성 ###
-* 테라폼 에서 이미 러스터 클러스터를 생성하였다. 
-        
+테라폼 에서 이미 러스터 클러스터를 생성하였다. 
+```
+terraform output          
+```
+[결과]
+```
 
-
+```
 
 ### 2. IAM 역할(IRSA) 생성 ###
 이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 생성 및 annontation 처리를 한 번에 수행한다
