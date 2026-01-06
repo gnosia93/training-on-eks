@@ -12,13 +12,13 @@ prometheus-prometheus-node-exporter-5hgt4   1/1     Running   0          2d14h
 prometheus-prometheus-node-exporter-wf4w6   1/1     Running   0          2d14h
 ```
 
-#### 프로메테우스 스택 기본 설정 ####
+#### (참고) 프로메테우스 스택 기본 설정 ####
 헬름은 차트가 제공하는 기본 설정값을 조회하는 기능을 제공해 준다. 여기서는 프로메테우스 스택이 제공하는 프로메테우스, 그라파나, alertManager 등의 모든 모듈들의 기본 설정값을 values.yaml 파일에 저정하고 있다.    
 ```
 helm show values prometheus/kube-prometheus-stack > values.yaml
 ```
 
-#### 프로메테우스 변경 내용 조회 ####
+#### (참고) 프로메테우스 변경 내용 조회 ####
 프로메테우스 모듈에 대해서 사용자가 수정한 설정값만을 보여준다. 
 ```
 helm get values prometheus -n monitoring > my-prometheus-values.yaml
