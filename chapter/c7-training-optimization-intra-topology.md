@@ -81,7 +81,7 @@ Legend:
 ```
 
 
-#### 인터커넥트 타입별 대역폭 ####
+### 인터커넥트 타입별 대역폭 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/topology-througput.png)
 
 * 대역폭(Throughput) 비교: NODE 승
