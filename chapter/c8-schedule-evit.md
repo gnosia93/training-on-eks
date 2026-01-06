@@ -63,7 +63,7 @@ nvidia-smi -L
 ```
 
 #### 2. ConfigMap 생성 #### 
-
+helm 차트를 이용하여 장애 GPU 를 배제할 수 있도록 ConfigMap 을 생성한다. 
 ```
 # values.yaml
 config:
