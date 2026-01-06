@@ -35,7 +35,7 @@
   
 * [C10. DeepSpeed 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed.md)
 
-* [C11. 체크포인트 저장하기]()
+* [C11. 체크포인트 저장하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c11-saving-checkpoint.md)
 
 ## Appendix ##
 
