@@ -71,8 +71,10 @@ eksctl create iamserviceaccount \
     --attach-policy-arn arn:aws:iam::aws:policy/AmazonFSxFullAccess \
     --approve \
     --override-existing-serviceaccounts
+```
 
-# FSxLustreRole 에 S3 접근권한 부여
+FSxLustreRole 에 S3 접근 권한을 부여한다. 
+```
 cat <<EOF > s3-policy.json
 {
     "Version": "2012-10-17",
@@ -109,6 +111,24 @@ helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
     --set controller.serviceAccount.name=fsx-csi-sa \
     --set controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/FSxLustreRole
 ```
+
+fsx 관련 컨트롤러와 Pod 를 조회한다. fsx-csi-controller 는 파일 시스템의 생성, 삭제, 볼륨 연결 등을 담당하는 컨트롤러이다. 
+fsx-csi-node 는 실제 워커 노드마다 하나씩 실행되는 DaemonSet 으로, EC2 노드 위에서 Lustre 파일 시스템을 실제로 마운트(Mount)하는 역할을 수행한다.
+```
+kubectl get pods -n fsx-csi-driver
+```
+[결과]
+```
+NAME                                 READY   STATUS    RESTARTS   AGE
+fsx-csi-controller-9fb564f88-44n89   4/4     Running   0          5m35s
+fsx-csi-controller-9fb564f88-tvk5q   4/4     Running   0          5m35s
+fsx-csi-node-6r59f                   3/3     Running   0          5m35s
+fsx-csi-node-s79mz                   3/3     Running   0          5m35s
+fsx-csi-node-st5fc                   3/3     Running   0          5m35s
+fsx-csi-node-wj7lj                   3/3     Running   0          5m35s
+```
+
+
 
 ## EKS 연결하기 ##
 ### 1. PV/PVC 배포 ###
