@@ -228,6 +228,7 @@ kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 ```
 
 ## Parallel & Asynchronous Checkpointin 예제 코드 ##
+아래는 에포크 단위로 체크 포인트를 저장하는 샘플이다. 
 ```
 ...
 num_epochs = 10
@@ -247,6 +248,9 @@ for epoch in range(num_epochs):
 
 ...
 ```
+
+#### 체크포인트 전략 ####
+대규모 모델의 경우 1 에포크가 며칠씩 걸릴 수도 있기 때문에, 체크 포인트는 Step 단위로 저장하는 것이 일반적이다. 이렇게 해야 학습 도중 노드가 다운 되더라도 훈련 손실을 최소화할 수 있다. 체크포인트 인터벌은 모델의 크기와 학습 시간에 맞춰 step 단위를 쓸지 epoch 단위를 쓸지 결정하면 된다.
 
 
 
