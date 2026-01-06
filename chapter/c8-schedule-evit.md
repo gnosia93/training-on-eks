@@ -64,52 +64,63 @@ nvidia-smi -L
 
 #### 2. ConfigMap 생성 #### 
 
-[nvidia-device-plugin-configs.yaml]
 ```
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nvidia-device-plugin-configs
-  namespace: kube-system
-data:
-  # (1) 기본 설정: 레이블이 없는 일반 노드들이 사용하는 설정
-  default: |-
-    version: v1
+# values.yaml
+config:
+  name: "nvidia-device-plugin-configs"
+  default: "default"
+  map:
+    # (1) 기본 설정
+    default: |-
+      version: v1
+      flags:
+        migStrategy: none
+    
+    # (2) node1 전용: 2번 GPU 제외 (0, 1, 3번만 기재)
+    node1-gpu-skip: |-
+      version: v1
+      devices:
+        all: false
+        uuids:
+          - "GPU-1111-0000-XXXX"
+          - "GPU-1111-1111-XXXX"
+          - "GPU-1111-3333-XXXX"
 
-  # (2) 특정 노드용 설정: 고장난 2번 GPU를 제외하고 0, 1, 3번만 명시
-  # 이 이름(broken-gpu-skip)이 나중에 노드 레이블의 '값'이 됩니다.
-  node1-gpu-skip: |-
-    version: v1
-    devices:
-      all: false
-      uuids:
-        - "GPU-1111-0000-XXXX" # 0번 GPU UUID
-        - "GPU-1111-1111-XXXX" # 1번 GPU UUID
-        - "GPU-1111-3333-XXXX" # 3번 GPU UUID
-        # 배제하고 싶은 2번 GPU의 UUID는 여기에 적지 않습니다.
-  node3-gpu-skip: |-
-    version: v1
-    devices:
-      all: false
-      uuids:
-        - "GPU-3333-0000-XXXX" # 0번 GPU UUID
-        - "GPU-3333-1111-XXXX" # 1번 GPU UUID
-        # 배제하고 싶은 2-3번 GPU의 UUID는 여기에 적지 얺눈더 
-```
-
-```
-kubectl apply -f nvidia-device-plugin-configs.yaml
+    # (3) node3 전용: 0, 1번 GPU만 사용
+    node3-gpu-skip: |-
+      version: v1
+      devices:
+        all: false
+        uuids:
+          - "GPU-3333-0000-XXXX"
+          - "GPU-3333-1111-XXXX"
 ```
 
-#### 3. 노드별 차등 적용 (고급) ####
+```
+# 레포지토리 추가 (이미 되어 있다면 생략)
+helm repo add nvdp nvidia.github.io
+helm repo update
+
+# 설치 또는 업데이트
+helm upgrade -i nvidia-device-plugin nvdp/nvidia-device-plugin \
+  --namespace kube-system -f values.yaml
+```
+
+#### 3. 노드별 차등 적용 ####
 스케줄링 배제해야 하는 GPU 를 가진 노드에 아래와 같이 nvida.com 레이블을 설정한다. 
 ```
 # 형식: kubectl label node <노드명> nvidia.com<설정명>
 
-kubectl label node node1 nvidia.com=node1-gpu-skip
-kubectl label node node3 nvidia.com=node3-gpu-skip
+kubectl label node node1 nvidia.com/device-plugin.config=node1-gpu-skip
+kubectl label node node3 nvidia.com/device-plugin.config=node3-gpu-skip
 ```
 * 위의 명령어가 안 먹히면 = 빼고 실행..
+
+
+```
+kubectl get node node1 -o jsonpath='{.metadata.labels["nvidia.com/device-plugin.config"]}'
+```
+
 
 #### 4. 디바이스 플러그인 재시작 ####
 설정을 변경한 후에는 nvidia-device-plugin 파드를 재시작해야 변경 사항이 반영된다.
