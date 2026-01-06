@@ -12,6 +12,7 @@ export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
 export FSX_ROLE="FSxLustreRole"
 export FSX_S3Policy="FSxLustreS3Policy"
+exoirt S3_BUCKET="training-on-eks-lustre-${ACCOUNT_ID}"
 ```
 
 ### 1. lustre 파일시스템 조회 ###
