@@ -23,7 +23,9 @@ terraform output
 ```
 [결과]
 ```
-
+fsx_dns_name = "fs-0261bb15621d24e21.fsx.ap-northeast-1.amazonaws.com"
+fsx_id = "fs-0261bb15621d24e21"
+mount_name = "rycutbev"
 ```
 
 * 러스터 파일 시스템 성능조회
