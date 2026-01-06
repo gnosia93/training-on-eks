@@ -57,6 +57,13 @@ aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" -
 ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  Type
 fs-0261bb15621d24e21  AVAILABLE  1200         Default    Variable    rycutbev   SCRATCH_2
 ```
+워크샵에서 생성된 러스터 파일 시스템은 SCRATCH_2 로 EFA 를 지원하지 않는 타입이다. 실제 환경에서는 배포 유형 (Deployment Type)을 반드시 PERSISTENT_2를 선택해야 한다.
+다음은 러스터에서 EFA 인터페이스를 활성화 시키는 설정이다.
+    * deployment_type: 반드시 PERSISTENT_2
+    * storage_capacity: 최소 1.2 TiB(1200 GiB) 이상이어야 하며, 1.2의 배수 단위로 설정
+    * throughput_capacity: 최소 125 MB/s/TiB 이상 설정이 권장.
+
+
 
 ### 2. IAM 역할(IRSA) 생성 ###
 fsx 용 서비스 어카운트를 생성한다.  
