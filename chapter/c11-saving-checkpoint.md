@@ -227,6 +227,65 @@ aws s3 cp test-file.txt s3://${S3_BUCKET}/
 kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 ```
 
+## 파이토치 비동기 / 병렬 체크포인팅 샘플 ##
+```
+import os
+import torch
+import torch.distributed as dist
+import torch.distributed.checkpoint as dcp
+from torch.distributed.checkpoint.async_checkpointer import AsyncCheckpointer
+
+# 1. 분산 환경 및 모델 설정 (EFA 통신 최적화)
+dist.init_process_group("nccl")
+local_rank = int(os.environ.get("LOCAL_RANK", 0))
+torch.cuda.set_device(local_rank)
+
+model = MyLargeModel().to(local_rank)
+optimizer = torch.optim.AdamW(model.parameters())
+
+# 2. AsyncCheckpointer 초기화 (비동기 처리 담당)
+# 내부적으로 DCP의 병렬 저장 기능을 백그라운드 스레드에서 실행합니다.
+async_checkpointer = AsyncCheckpointer()
+
+# 저장 경로 설정
+CHECKPOINT_DIR = "/data/fsx/checkpoints/my_experiment"
+
+def train_loop():
+    for step in range(1000):
+        # 학습 연산 수행
+        train_step(model, optimizer)
+
+        # 3. 체크포인트 저장 시점
+        if step % 100 == 0:
+            # 저장할 데이터 딕셔너리 구성
+            state_dict = {
+                "model": model.state_dict(),
+                "optimizer": optimizer.state_dict(),
+                "step": torch.tensor(step)
+            }
+            
+            # [Parallel] FileSystemWriter: 모든 노드가 /data/fsx에 병렬로 파일 쓰기 실행
+            # [Async] async_checkpointer: GPU 데이터를 즉시 복사 후 연산 재개
+            checkpoint_id = os.path.join(CHECKPOINT_DIR, f"step_{step}")
+            
+            async_checkpointer.save(
+                checkpoint_id=checkpoint_id,
+                storage_writer=dcp.FileSystemWriter(checkpoint_id),
+                state_dict=state_dict,
+            )
+            
+            if dist.get_rank() == 0:
+                print(f"Step {step}: Async DCP checkpoint started at {checkpoint_id}")
+
+        # (선택) 이전 저장이 메모리 복제(Staging) 단계까지 끝났는지 확인
+        # GPU 메모리를 안전하게 관리하기 위해 호출할 수 있습니다.
+        async_checkpointer.maybe_wait_for_staging()
+
+dist.destroy_process_group()
+```
+
+
+
 ## 리소스 삭제 ##
 ```
 export CLUSTER_NAME="training-on-eks"
