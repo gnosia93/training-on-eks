@@ -62,31 +62,47 @@ kubectl exec -it llama-3-8b-node-0-3-f86kr -- env | grep NVIDIA_VISIBLE_DEVICES
 nvidia-smi -L 
 ```
 
-#### 2. ConfigMap 작성 및 적용 #### 
+#### 2. ConfigMap 생성 #### 
+
+[nvidia-device-plugin-configs.yaml]
 ```
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nvidia-device-plugin-config
+  name: nvidia-device-plugin-configs
   namespace: kube-system
 data:
-  config.yaml: |
+  # (1) 기본 설정: 레이블이 없는 일반 노드들이 사용하는 설정
+  default: |-
     version: v1
     flags:
-      # 특정 GPU 인덱스나 UUID를 기반으로 할당 전략 수립
-      deviceIDStrategy: uuid  # 또는 'index'
-    # 특정 상황에서는 아래와 같이 리소스를 분할하거나 제한하는 설정을 추가함
+      migStrategy: none
+
+  # (2) 특정 노드용 설정: 고장난 2번 GPU를 제외하고 0, 1, 3번만 명시
+  # 이 이름(exclude-gpu-2)이 나중에 노드 레이블의 '값'이 됩니다.
+  exclude-gpu-2: |-
+    version: v1
+    flags:
+      migStrategy: none
+    devices:
+      all: false
+      uuids:
+        - "GPU-0000-1111-XXXX" # 0번 GPU UUID
+        - "GPU-2222-3333-XXXX" # 1번 GPU UUID
+        - "GPU-4444-5555-XXXX" # 3번 GPU UUID
+        # 배제하고 싶은 2번 GPU의 UUID는 여기에 적지 않습니다.
 ```
 
 ```
-helm upgrade -i nvidia-device-plugin nvdp/nvidia-device-plugin \
-  --set config.name=nvidia-device-plugin-config
+kubectl apply -f nvidia-device-plugin-configs.yaml
 ```
 
 #### 3. 노드별 차등 적용 (고급) ####
-만약 특정 노드에서만 GPU를 제외하고 싶다면, 노드 레이블을 활용할 수 있습니다. 
-노드에 레이블 부여: kubectl label node <node-name> nvidia.com
-ConfigMap에 여러 설정을 정의한 후, 레이블에 따라 다른 설정을 불러오도록 구성합니다. 
+스케줄링 배제해야 하는 GPU 를 가진 노드에 아래와 같이 nvida.com 레이블을 설정한다. 
+```
+kubectl label node <node 이름> nvidia.com
+```
+
 
 #### 4. 디바이스 플러그인 재시작 ####
 설정을 변경한 후에는 nvidia-device-plugin 파드를 재시작해야 변경 사항이 반영된다.
