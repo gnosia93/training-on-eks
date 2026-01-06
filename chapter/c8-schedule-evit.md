@@ -49,20 +49,19 @@ System UUID 값을 노드의 레이블로 등록해두면, 특정 노드를 타�
 
 
 ## GPU 배제 ##
-GPU UUID 를 알기위해서는 다음과 같이 두가지 방법이 가능하다.   
-* GPU ID(UUID)를 보려면 노드에서 nvidia-smi -L 명령어를 실행해야 한다.
-* kubectl exec -it <파드이름> -- env | grep NVIDIA_VISIBLE_DEVICES
 
+#### 1. GPU UUID 확인 ####
+인덱스(0, 1, 2...)는 하드웨어 변경 시 바뀔 수 있으므로, 확실한 배제를 위해서는 nvidia-smi 를 이용하여 UUID 를 확인해야 한다. GPU UUID 를 알기위해서는 다음과 같이 두가지 방법이 가능하다.   
+
+* NVIDIA_VISIBLE_DEVICES 환경변수 이용
 ```
 kubectl exec -it llama-3-8b-node-0-3-f86kr -- env | grep NVIDIA_VISIBLE_DEVICES
 ```
-[결과]
+* nvidia-smi 이용
 ```
-NVIDIA_VISIBLE_DEVICES=GPU-ed120cef-ac44-2b15-ef0c-b708dc75f92f
+nvidia-smi -L 
 ```
 
-* 노드당 1개의 GPU 를 가진 노드라면 노드라벨로 관리 가능
-* 멀티 GPU 인 경우는 ?? 
 
 
 
