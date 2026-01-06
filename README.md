@@ -1,6 +1,6 @@
 # training-on-eks
 
-![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-all.png)
+![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-all-1.png)
 
 * [C1. VPC 생성하기](https://github.com/gnosia93/training-on-eks/tree/main/tf)
 
