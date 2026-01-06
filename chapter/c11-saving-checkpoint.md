@@ -157,7 +157,7 @@ kubectl apply -f fsx-pvc.yaml
 
 ### 2. Pod 마운트 테스트 ###
 ```
-cat <<EOF > pod-fsx.yaml
+cat <<EOF | kubectl apply -f - 
 apiVersion: v1
 kind: Pod
 metadata:
@@ -175,8 +175,6 @@ spec:
       persistentVolumeClaim:
         claimName: fsx-pvc # 위에서 생성한 PVC 이름
 EOF
-
-kubectl apply -f pod-fsx.yaml
 ```
 
 S3 에 파일을 업로드 하고 Pod 에서 조회되는지 확인한다.  
@@ -191,8 +189,6 @@ kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 export CLUSTER_NAME="training-on-eks"
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
-
-echo "=== EKS FSx for Lustre 리소스 삭제 시작 ==="
 
 # 1. eksctl iamserviceaccount 삭제 (IAM Role과 연관성 제거)
 echo "1. eksctl iamserviceaccount 삭제 중..."
@@ -233,85 +229,6 @@ if aws iam get-role --role-name "${FSX_ROLE}" 2>/dev/null; then
 else
     echo "${FSX_ROLE} 이 이미 삭제되었습니다."
 fi
-
-# 4. FSx for Lustre 파일 시스템 삭제
-echo "4. FSx for Lustre 파일 시스템 삭제 중..."
-FSX_IDS=$(aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE'].FileSystemId" --output text)
-for fs_id in $FSX_IDS; do
-    aws fsx delete-file-system --file-system-id "${fs_id}"
-    echo "삭제 요청됨: ${fs_id} (완전 삭제까지 시간이 소요될 수 있습니다)"
-
-    # 삭제 완료 확인 루프
-    while true; do
-        # 해당 ID의 파일 시스템 상태 확인
-        STATUS=$(aws fsx describe-file-systems --file-system-ids "${fs_id}" --query "FileSystems[0].Lifecycle" --output text 2>/dev/null)
-        
-        # 상태가 없거나(이미 삭제됨) 에러가 발생하면 루프 종료
-        if [ -z "$STATUS" ] || [ "$STATUS" == "None" ]; then
-            echo "성공: ${fs_id} 삭제 완료."
-            break
-        fi
-        echo "현재 상태: ${STATUS}... (30초 후 다시 확인)"
-        sleep 30
-    done
-done
-
-# 5. S3 버킷 삭제 (내부 객체 모두 삭제 후 버킷 제거)
-echo "5. S3 버킷(${BUCKET_NAME}) 비우기 및 삭제 중..."
-if aws s3 ls "s3://${BUCKET_NAME}" 2>/dev/null; then
-    aws s3 rm "s3://${BUCKET_NAME}" --recursive
-    aws s3 rb "s3://${BUCKET_NAME}" --force
-    echo "버킷 삭제 완료."
-fi
-
-# 6. 시큐리티 그룹 삭제
-echo "6. 보안 그룹(fsx-lustre-sg) 삭제 중..."
-SG_ID=$(aws ec2 describe-security-groups \
-    --filters "Name=group-name,Values=${FSX_SG}" \
-    --query "SecurityGroups[0].GroupId" \
-    --output text)
-
-if [ -n "$SG_ID" ] && [ "$SG_ID" != "None" ]; then
-    echo "보안 그룹 발견: $SG_ID. 규칙 삭제 및 그룹 삭제를 시작합니다..."
-
-    # 1. 인바운드 규칙(Ingress) 삭제
-    # [주의] describe-security-groups는 리스트를 반환하므로 명확히 객체를 지정해야 함
-    INGRESS_RULES=$(aws ec2 describe-security-groups --group-ids "$SG_ID" --query "SecurityGroups[0].IpPermissions" --output json)
-    
-    if [ "$INGRESS_RULES" != "[]" ] && [ "$INGRESS_RULES" != "null" ]; then
-        echo "인바운드 규칙 제거 중..."
-        aws ec2 revoke-security-group-ingress --group-id "$SG_ID" --ip-permissions "$INGRESS_RULES"
-    fi
-
-    # 2. 아웃바운드 규칙(Egress) 삭제
-    # [주의] 모든 보안 그룹은 기본적으로 모든 허용 아웃바운드 규칙을 가짐
-    EGRESS_RULES=$(aws ec2 describe-security-groups --group-ids "$SG_ID" --query "SecurityGroups[0].IpPermissionsEgress" --output json)
-    
-    if [ "$EGRESS_RULES" != "[]" ] && [ "$EGRESS_RULES" != "null" ]; then
-        echo "아웃바운드 규칙 제거 중..."
-        aws ec2 revoke-security-group-egress --group-id "$SG_ID" --ip-permissions "$EGRESS_RULES"
-    fi
-
-    # 3. 보안 그룹 최종 삭제
-    # 다른 리소스(ENI 등)에서 사용 중이면 삭제가 실패할 수 있으므로 잠시 대기 후 실행
-    echo "보안 그룹 최종 삭제 중..."
-    sleep 2
-    if aws ec2 delete-security-group --group-id "$SG_ID"; then
-        echo "성공: 보안 그룹이 성공적으로 삭제되었습니다."
-    else
-        echo "오류: 보안 그룹이 다른 리소스에 의해 사용 중일 수 있습니다."
-    fi
-else
-    echo "삭제할 보안 그룹(fsx-lustre-sg)이 존재하지 않습니다."
-fi
-
-echo "CSI driver 삭제 ..."
-helm uninstall fsx-csi-driver -n fsx-csi
-echo "k8s PV/PVC 삭제 ..."
-kubectl delete pvc fsx-pvc
-kubectl delete pv fsx-pv
-
-echo "=== 모든 리소스 삭제 요청 완료 ==="
 ```
 
 ## 레퍼런스 ##
