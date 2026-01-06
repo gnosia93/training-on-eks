@@ -40,6 +40,7 @@ $ aws ec2 describe-instance-types \
 
 ### 2. EFA 디바이스 플러그인 배포 ### 
 
+EFA의 핵심 기술인 OS Bypass(커널을 거치지 않고 하드웨어에 직접 접근)가 EKS에서도 Device Plugin을 통한 Pass-through 방식으로 동일하게 구현되어 있다.
 EFA 용 디바이스 플러그인을 설치한다. 노드의 Taint 설정으로 인해서 데몬 파드가 랜딩하지 못하는 경우 있는 관계로, 아래와 같이 모든 테인트를 무력화 시키는 오퍼레이터를 추가해 준다. (- operator: Exists)
 실제 해당 노드에서는 nvidia.com/gpu 및 vpc.amazonaws.com/efa 등과 같은 테인트가 존재할 수 있다. 
 ```
