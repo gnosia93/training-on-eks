@@ -1,6 +1,6 @@
 # training-on-eks
 
-<< insert architectur diagram >>
+![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-all.png)
 
 * [C1. VPC 생성하기](https://github.com/gnosia93/training-on-eks/tree/main/tf)
 
