@@ -62,7 +62,47 @@ kubectl exec -it llama-3-8b-node-0-3-f86kr -- env | grep NVIDIA_VISIBLE_DEVICES
 nvidia-smi -L 
 ```
 
-* 런타임 재시작: 설정을 변경한 후에는 nvidia-device-plugin 파드를 재시작해야 변경 사항이 반영되어 nvidia-smi 결과와 쿠버네티스 할당 가능 자원 수가 일치하게 됩니다
+#### 2. ConfigMap 작성 및 적용 #### 
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nvidia-device-plugin-config
+  namespace: kube-system
+data:
+  config.yaml: |
+    version: v1
+    flags:
+      # 특정 GPU 인덱스나 UUID를 기반으로 할당 전략 수립
+      deviceIDStrategy: uuid  # 또는 'index'
+    # 특정 상황에서는 아래와 같이 리소스를 분할하거나 제한하는 설정을 추가함
+```
+
+```
+helm upgrade -i nvidia-device-plugin nvdp/nvidia-device-plugin \
+  --set config.name=nvidia-device-plugin-config
+```
+
+#### 3. 노드별 차등 적용 (고급) ####
+만약 특정 노드에서만 GPU를 제외하고 싶다면, 노드 레이블을 활용할 수 있습니다. 
+노드에 레이블 부여: kubectl label node <node-name> nvidia.com
+ConfigMap에 여러 설정을 정의한 후, 레이블에 따라 다른 설정을 불러오도록 구성합니다. 
+
+#### 4. 플러그인 재시작 ####
+설정을 변경한 후에는 nvidia-device-plugin 파드를 재시작해야 변경 사항이 반영된다.
+
+* 전체 재시작
+```
+kubectl rollout restart daemonset -n kube-system nvidia-device-plugin-daemonset
+```
+* 특정 노드의 Pod만 재시작
+```
+# 1. 대상 파드 이름 확인
+kubectl get pods -n kube-system -l component=nvidia-device-plugin -o wide
+
+# 2. 특정 파드 삭제 (삭제 즉시 자동 재생성됨)
+kubectl delete pod <파드_이름> -n kube-system
+```
 
 
 
