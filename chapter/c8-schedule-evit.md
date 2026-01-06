@@ -88,7 +88,7 @@ helm upgrade -i nvidia-device-plugin nvdp/nvidia-device-plugin \
 노드에 레이블 부여: kubectl label node <node-name> nvidia.com
 ConfigMap에 여러 설정을 정의한 후, 레이블에 따라 다른 설정을 불러오도록 구성합니다. 
 
-#### 4. 플러그인 재시작 ####
+#### 4. 디바이스 플러그인 재시작 ####
 설정을 변경한 후에는 nvidia-device-plugin 파드를 재시작해야 변경 사항이 반영된다.
 
 * 전체 재시작
