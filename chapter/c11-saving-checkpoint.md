@@ -170,7 +170,7 @@ spec:
     volumeHandle: ${FSx_ID}
     volumeAttributes:
       dnsname: ${FSx_DNS}
-      mountname: ${FSx_MOUNT}
+      mountname: ${FSx_MOUNTNAME}
   mountOptions:
     - flock        # 파일 잠금 기능 활성화 (학습 시 필요)
     - lazystatfs   # 성능 최적화
