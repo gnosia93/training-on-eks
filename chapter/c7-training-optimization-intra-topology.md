@@ -121,7 +121,16 @@ Legend:
       privileged: true
   shareProcessNamespace: true
 ```
-  
+* shareProcessNamespace: true의 역할
+한 Pod 내에 여러 컨테이너가 있을 때 프로세스 ID(PID)를 공유하게 해줍니다.
+분산 학습에서는 주로 디버깅이나 사이드카 컨테이너가 주 학습 컨테이너의 상태를 모니터링할 때 유용합니다.
+
+* 왜 hostNetwork: true를 쓰지 않나요?
+물론 hostNetwork: true를 설정하면 네트워크 격리가 아예 없어지므로 가장 단순하고 빠를 수 있습니다. 하지만 EKS(Kubernetes) 환경에서는 다음과 같은 이유로 지양합니다.
+  * 포트 충돌: 한 노드에 같은 포트를 쓰는 Pod를 두 개 이상 띄울 수 없습니다.
+  * 보안: 컨테이너가 호스트의 모든 네트워크 서비스에 접근 가능해져 보안상 위험합니다.
+  * 관리: 쿠버네티스의 장점인 네트워크 정책(Network Policy) 등을 사용할 수 없게 됩니다.
+
 * resource limit:  
   nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
 
