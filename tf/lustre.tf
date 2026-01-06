@@ -1,9 +1,17 @@
 # 현재 계정 정보 가져오기
 data "aws_caller_identity" "current" {}
 
+# 현재 시간을 가져오기 위한 리소스
+resource "time_static" "current" {}
+
+# 시간 포맷 설정 (예: 20260107114705)
+locals {
+  timestamp = formatdate("YYMMDDhhmm", time_static.current.rfc3339)
+}
+
 # S3 버킷 생성 (계정 ID 포함)
 resource "aws_s3_bucket" "data_bucket" {
-  bucket = "training-on-eks-lustre-${data.aws_caller_identity.current.account_id}"
+  bucket = "training-on-eks-lustre-${data.aws_caller_identity.current.account_id}-${local.timestamp}"
 }
 
 # FSx for Lustre 생성
