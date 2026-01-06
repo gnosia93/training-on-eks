@@ -222,6 +222,12 @@ aws s3 cp test-file.txt s3://${S3_BUCKET}/
 kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 ```
 
+* fsx-node 로그 조회
+```
+kubectl logs -f -l app=fsx-csi-node -n fsx-csi-driver -c fsx-plugin
+```
+
+
 ## 리소스 삭제 ##
 ```
 export CLUSTER_NAME="training-on-eks"
