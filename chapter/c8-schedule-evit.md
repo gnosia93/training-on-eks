@@ -106,8 +106,8 @@ helm upgrade -i nvidia-device-plugin nvdp/nvidia-device-plugin \
   --namespace kube-system -f values.yaml
 ```
 
-#### 3. 노드별 차등 적용 ####
-스케줄링 배제해야 하는 GPU 를 가진 노드에 아래와 같이 nvida.com 레이블을 설정한다. 
+#### 3. 노드 레이블링 ####
+스케줄링 배제해야 하는 GPU 를 가진 노드에 아래와 같이 nvidia.com/device-plugin.config 을 키로 설정하고 values.yaml 에서 설정한 map 키를 값으로 설정한다. 
 ```
 # 형식: kubectl label node <노드명> nvidia.com<설정명>
 
