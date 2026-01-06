@@ -129,6 +129,11 @@ fsx-csi-node-st5fc                   3/3     Running   0          5m35s
 fsx-csi-node-wj7lj                   3/3     Running   0          5m35s
 ```
 
+* fsx-csi-node 로그 조회
+```
+kubectl logs -f -l app=fsx-csi-node -n fsx-csi-driver -c fsx-plugin
+```
+
 
 
 ## EKS 연결하기 ##
@@ -221,12 +226,6 @@ echo "Hello FSx Lustre" > test-file.txt
 aws s3 cp test-file.txt s3://${S3_BUCKET}/
 kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 ```
-
-* fsx-node 로그 조회
-```
-kubectl logs -f -l app=fsx-csi-node -n fsx-csi-driver -c fsx-plugin
-```
-
 
 ## 리소스 삭제 ##
 ```
