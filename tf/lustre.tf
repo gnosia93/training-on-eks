@@ -11,7 +11,7 @@ locals {
 
 # S3 버킷 생성 (계정 ID 포함)
 resource "aws_s3_bucket" "data_bucket" {
-  bucket = "training-on-eks-lustre-${data.aws_caller_identity.current.account_id}-${local.timestamp}"
+  bucket = "training-on-eks-lustre-${data.aws_caller_identity.current.account_id}"
 }
 
 # FSx for Lustre 생성
