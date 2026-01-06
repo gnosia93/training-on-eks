@@ -11,7 +11,6 @@ NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지
 훈련 속도(Throughput)를 높이기 위해 다음 변수들을 조정해 보며 최적값을 찾아야 한다.
 * NCCL_BUFFSIZE: 통신 버퍼 크기입니다. 기본값은 2MB(2097152)이나, 대규모 모델 훈련 시 4194304 (4MB) 또는 8388608 (8MB)로 늘리면 성능이 향상될 수 있다.
 * NCCL_P2P_LEVEL: GPU 간 P2P(Point-to-Point) 통신 방식을 제어한다. 
-* NCCL_IB_DISABLE=1: AWS EFA 사용 시 InfiniBand(IB) 관련 에러가 발생한다면 이를 비활성화하여 EFA만 타도록 유도한다.
 * NCCL_P2P_DISABLE=1: GPU 간 P2P(Peer-to-Peer) 통신을 비활성화 하는 것으로 NVLink 사용이 차단된다.
 * NCCL_ALGO: 집합 통신(collective communication) 알고리즘을 지정한다.
   * RING: 일반적으로 작은 메시지 크기에 효율적.
