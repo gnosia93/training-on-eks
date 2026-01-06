@@ -106,9 +106,10 @@ kubectl apply -f nvidia-device-plugin-configs.yaml
 ```
 # 형식: kubectl label node <노드명> nvidia.com<설정명>
 
-kubectl label node node1 nvidia.comnode1-gpu-skip
-kubectl label node node3 nvidia.comnode3-gpu-skip
+kubectl label node node1 nvidia.com=node1-gpu-skip
+kubectl label node node3 nvidia.com=node3-gpu-skip
 ```
+* 위의 명령어가 안 먹히면 = 빼고 실행..
 
 #### 4. 디바이스 플러그인 재시작 ####
 설정을 변경한 후에는 nvidia-device-plugin 파드를 재시작해야 변경 사항이 반영된다.
