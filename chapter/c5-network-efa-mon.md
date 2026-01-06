@@ -42,22 +42,7 @@ helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
 ```
 node_exporter의 ethtool 콜렉터는 Pod의 /sys/class/infiniband 경로에서 EFA 메트릭을 수집하여 node_net_ethtool 형태의 메트릭으로 변환한다.
 
-### 2. 수집여부 확인하기 ###
-```
-EFA_NODE=$(kubectl get pod efa-test-pod -o jsonpath='{.spec.nodeName}')
-POD_NAME=$(kubectl get pods -n monitoring \
-    -l "app.kubernetes.io/name=prometheus-node-exporter" \
-    --field-selector spec.nodeName=${EFA_NODE} \
-    -o jsonpath='{.items[0].metadata.name}')
-
-echo ${POD_NAME} " / " ${EFA_NODE}
-
-kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics | grep node_infiniband
-kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics | grep "node_infiniband" | grep -E "bytes|packets"
-```
-
-
-### 3. 수집되는 주요 EFA 메트릭 ###
+### 2. 수집되는 주요 EFA 메트릭 ###
 
 정상적으로 설정되면 Prometheus에서 다음과 같은 쿼리로 EFA 지표를 확인할 수 있다.
 * 전송된 바이트 수: node_net_ethtool{device="rdma0", stat="rdma_read_bytes"}
@@ -72,6 +57,22 @@ kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics |
 
 * Grafana 대시보드에서 우측의 [New 버튼] -> [Import 서브메뉴] 을 선택한 다음 대시보드 Node/Network(ID: 22273)를 임포트 한다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/network-mon.png)  
+
+
+## 참고 - 수집여부 확인하기 ##
+```
+EFA_NODE=$(kubectl get pod efa-test-pod -o jsonpath='{.spec.nodeName}')
+POD_NAME=$(kubectl get pods -n monitoring \
+    -l "app.kubernetes.io/name=prometheus-node-exporter" \
+    --field-selector spec.nodeName=${EFA_NODE} \
+    -o jsonpath='{.items[0].metadata.name}')
+
+echo ${POD_NAME} " / " ${EFA_NODE}
+
+kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics | grep node_infiniband
+kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics | grep "node_infiniband" | grep -E "bytes|packets"
+```
+
 
 
 ## 레퍼런스 ##
