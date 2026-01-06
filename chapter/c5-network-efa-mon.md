@@ -31,8 +31,8 @@ cat <<EOF > efa-tuning.yaml
 prometheus-node-exporter:
   extraArgs:
     - --collector.ethtool
-    - --collector.ethtool.device-include=^rdma.*
-EOF
+    - --collector.ethtool.device-include=.*
+    - --collector.infiniband
 
 helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
     -f efa-tuning.yaml \
