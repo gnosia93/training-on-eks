@@ -227,7 +227,7 @@ aws s3 cp test-file.txt s3://${S3_BUCKET}/
 kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 ```
 
-## Parallel & Asynchronous Checkpointin 예제 코드 ##
+## Parallel & Asynchronous Checkpointing 예제 코드 ##
 아래는 에포크 단위로 체크 포인트를 저장하는 샘플이다. 
 ```
 ...
