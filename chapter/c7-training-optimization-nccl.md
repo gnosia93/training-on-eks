@@ -21,7 +21,7 @@ NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지
 * NCCL_SOCKET_NTHREADS: 네트워크 작업을 처리하는 CPU 스레드 수를 조정하여 처리량을 개선할 수 있다.
 * NCCL_NET_GDR_LEVEL: GPU Direct RDMA를 지원하는 경우, 이를 활성화하여 CPU 오버헤드를 줄이고 지연 시간을 단축
 
-### 3. 프로파일링 ###
+### 3. 성능 프로파일링 ###
 * nccl-tests 실행: NVIDIA에서 제공하는 nccl-tests 벤치마크 도구를 사용하여 다양한 구성에서의 NCCL 성능(대역폭 및 지연 시간)을 확인할 수 있다.
 * 프로파일링 도구 활용: NVIDIA Nsight Systems, Nsight Compute와 같은 프로파일링 도구를 사용하여 통신 패턴, GPU 활용률, 병목 현상 등을 분석할 수 있다.
 * [NCCL Inspector](https://developer.nvidia.com/ko-kr/blog/enhancing-communication-observability-of-ai-workloads-with-nccl-inspector/) 사용: NCCL 2.23부터 도입된 NCCL Inspector 플러그인을 통해 AI 워크로드의 통신 성능에 대한 상세한 가시성을 확보할 수 있다.
