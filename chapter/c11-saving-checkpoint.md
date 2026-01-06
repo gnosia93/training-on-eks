@@ -231,6 +231,9 @@ kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 아래는 에포크 단위로 체크 포인트를 저장하는 샘플이다. 
 ```
 ...
+
+CHECKPOINT_BASE_DIR = "/data/fsx"
+
 num_epochs = 10
 for epoch in range(num_epochs):
     for step, batch in enumerate(train_loader):
@@ -238,7 +241,7 @@ for epoch in range(num_epochs):
         train_step(model, batch)
         
     # [에포크가 끝나는 시점] 여기서 체크포인트 저장
-    checkpoint_id = os.path.join(CHECKPOINT_DIR, f"epoch_{epoch}")
+    checkpoint_id = os.path.join(CHECKPOINT_BASE_DIR, f"epoch_{epoch}")
     async_checkpointer.save(
         checkpoint_id=checkpoint_id,
         storage_writer=dcp.FileSystemWriter(checkpoint_id),
