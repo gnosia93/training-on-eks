@@ -14,7 +14,7 @@ export FSX_ROLE="FSxLustreRole"
 export FSX_S3Policy="FSxLustreS3Policy"
 ```
 
-### 1. lustre 파일시스템 생성 ###
+### 1. lustre 파일시스템 조회 ###
 테라폼 에서 이미 러스터 클러스터를 생성하였다. 
 
 * 러스터 파일 시스템 조회
