@@ -10,6 +10,8 @@ export CLUSTER_NAME="training-on-eks"
 export AWS_REGION=$(aws ec2 describe-availability-zones --query "AvailabilityZones[0].RegionName" --output text)
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
+export FSX_ROLE="FSxLustreRole"
+export FSX_S3Policy="FSxLustreS3Policy"
 ```
 
 ### 1. lustre 파일시스템 생성 ###
@@ -22,12 +24,36 @@ terraform output
 
 ```
 
+```
+aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" --output json | jq -r '
+  ["ID", "Status", "Storage_GiB", "Unit_MB/s", "Total_MB/s", "MountName", "Type"],
+  (.[] | 
+    (.LustreConfiguration.PerUnitStorageThroughput // 0 | tonumber) as $unit |
+    [
+      .FileSystemId, 
+      .Lifecycle, 
+      .StorageCapacity, 
+      (if $unit == 0 then "Default" else $unit end), 
+      (if $unit == 0 then "Variable" else (($unit * .StorageCapacity / 1024) | floor) end), 
+      .LustreConfiguration.MountName, 
+      .LustreConfiguration.DeploymentType
+    ]
+  ) | @tsv' | column -t -s $'\t'
+```
+[결과]
+```
+ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  Type
+fs-0159be19ce80d8e03  AVAILABLE  1200         Default    Variable    knwe5bev   SCRATCH_2
+```
+
+
+
 ### 2. IAM 역할(IRSA) 생성 ###
 이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 생성 및 annontation 처리를 한 번에 수행한다
 ```
 eksctl create iamserviceaccount \
     --name fsx-csi-sa \
-    --namespace fsx-csi \
+    --namespace fsx-csi-driver \
     --cluster ${CLUSTER_NAME} \
     --role-name "${FSX_ROLE}" \
     --attach-policy-arn arn:aws:iam::aws:policy/AmazonFSxFullAccess \
@@ -58,88 +84,24 @@ S3_POLICY_ARN=$(aws iam create-policy --policy-name ${FSX_S3Policy} --policy-doc
 aws iam attach-role-policy --role-name ${FSX_ROLE} --policy-arn $S3_POLICY_ARN
 ```
 
-### 3. lustre 파일시스템 조회 ###
-```
-aws fsx describe-file-systems \
-    --file-system-ids ${FSx_ID} \
-    --query "FileSystems[0].{FileSystemId:FileSystemId, DNSName:DNSName, MountName:LustreConfiguration.MountName}" \
-    --output table
-```
-[결과]
-```
-------------------------------------------------------------------------------------------------
-|                                      DescribeFileSystems                                     |
-+--------------------------------------------------------+------------------------+------------+
-|                         DNSName                        |     FileSystemId       | MountName  |
-+--------------------------------------------------------+------------------------+------------+
-|  fs-04e6429ada0540632.fsx.ap-northeast-2.amazonaws.com |  fs-04e6429ada0540632  |  klje3bev  |
-+--------------------------------------------------------+------------------------+------------+
-```
-
-### 4. Amazon FSx CSI 드라이버 설치 ### 
+### 3. Amazon FSx CSI 드라이버 설치 ### 
 Helm을 사용하여 EKS 클러스터에 FSx for Lustre CSI 드라이버를 배포한다. 
 ```
-kubectl create namespace fsx-csi
+kubectl create namespace fsx-csi-driver
 helm repo add aws-fsx-csi-driver https://kubernetes-sigs.github.io/aws-fsx-csi-driver
 helm repo update
 
 helm install fsx-csi-driver aws-fsx-csi-driver/aws-fsx-csi-driver \
-    --namespace fsx-csi \
+    --namespace fsx-csi-driver \
     --set image.repository=602401143452.dkr.ecr.${AWS_REGION}.amazonaws.com/eks/aws-fsx-csi-driver \
     --set controller.serviceAccount.create=false \
     --set controller.serviceAccount.name=fsx-csi-sa \
     --set controller.serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::${ACCOUNT_ID}:role/FSxLustreRole
 ```
 
-### 5. 생성 상태 확인 ###
-```
-echo "FSx 파일 시스템 [$FSx_ID] 상태를 확인합니다..."
-while true; do
-    STATUS=$(aws fsx describe-file-systems \
-        --file-system-ids "$FSx_ID" \
-        --query "FileSystems[0].Lifecycle" \
-        --output text 2>/dev/null)
-    # 결과가 없는 경우 종료
-    if [ -z "$STATUS" ] || [ "$STATUS" == "None" ]; then
-        echo "오류: 해당 ID를 찾을 수 없습니다."
-        break
-    fi
 
-    echo "[$(date +%H:%M:%S)] 현재 상태: $STATUS"
-    if [ "$STATUS" == "AVAILABLE" ]; then
-        echo "축하합니다! 파일 시스템이 준비되었습니다."
-        break
-    elif [ "$STATUS" == "FAILED" ]; then
-        echo "오류: 파일 시스템 생성에 실패했습니다."
-        break
-    fi
 
-    sleep 5
-done
-```
 
-### 6. 러스터 성능 조회 ####
-```
-aws fsx describe-file-systems --query "FileSystems[?FileSystemType=='LUSTRE']" --output json | jq -r '
-  ["ID", "Status", "Storage_GiB", "Unit_MB/s", "Total_MB/s", "MountName", "Type"],
-  (.[] | 
-    (.LustreConfiguration.PerUnitStorageThroughput // 0 | tonumber) as $unit |
-    [
-      .FileSystemId, 
-      .Lifecycle, 
-      .StorageCapacity, 
-      (if $unit == 0 then "Default" else $unit end), 
-      (if $unit == 0 then "Variable" else (($unit * .StorageCapacity / 1024) | floor) end), 
-      .LustreConfiguration.MountName, 
-      .LustreConfiguration.DeploymentType
-    ]
-  ) | @tsv' | column -t -s $'\t'
-```
-[결과]
-```
-ID                    Status     Storage_GiB  Unit_MB/s  Total_MB/s  MountName  Type
-fs-0159be19ce80d8e03  AVAILABLE  1200         Default    Variable    knwe5bev   SCRATCH_2
-```
 
 ## EKS 연결하기 ##
 ### 1. PV/PVC 배포 ###
