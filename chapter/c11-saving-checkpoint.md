@@ -21,7 +21,7 @@ export FSX_S3Policy="FSxLustreS3Policy"
 ```
 aws fsx describe-file-systems \
     --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].\
-    {ID:FileSystemId, MountName:LustreConfiguration.MountName, DNS:DNSName, Status:Lifecycle}" \
+             {ID:FileSystemId, MountName:LustreConfiguration.MountName, DNS:DNSName, Status:Lifecycle}" \
     --output table
 ```
 [결과]
