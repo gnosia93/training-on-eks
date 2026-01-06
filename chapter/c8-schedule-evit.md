@@ -80,7 +80,7 @@ data:
 
   # (2) 특정 노드용 설정: 고장난 2번 GPU를 제외하고 0, 1, 3번만 명시
   # 이 이름(broken-gpu-skip)이 나중에 노드 레이블의 '값'이 됩니다.
-  broken-gpu-skip: |-
+  node1-gpu-skip: |-
     version: v1
     flags:
       migStrategy: none
@@ -91,6 +91,16 @@ data:
         - "GPU-2222-3333-XXXX" # 1번 GPU UUID
         - "GPU-4444-5555-XXXX" # 3번 GPU UUID
         # 배제하고 싶은 2번 GPU의 UUID는 여기에 적지 않습니다.
+  node3-gpu-skip: |-
+    version: v1
+    flags:
+      migStrategy: none
+    devices:
+      all: false
+      uuids:
+        - "GPU-0000-1111-XXXX" # 0번 GPU UUID
+        - "GPU-2222-3333-XXXX" # 1번 GPU UUID
+        # 배제하고 싶은 2-7번 GPU의 UUID는 여기에 적지 얺눈더 
 ```
 
 ```
@@ -100,9 +110,9 @@ kubectl apply -f nvidia-device-plugin-configs.yaml
 #### 3. 노드별 차등 적용 (고급) ####
 스케줄링 배제해야 하는 GPU 를 가진 노드에 아래와 같이 nvida.com 레이블을 설정한다. 
 ```
-kubectl label node <node 이름> nvidia.com
+kubectl label node node1 nvidia.com=node1-gpu-skip
+kubectl label node node3 nvidia.com=node3-gpu-skip
 ```
-
 
 #### 4. 디바이스 플러그인 재시작 ####
 설정을 변경한 후에는 nvidia-device-plugin 파드를 재시작해야 변경 사항이 반영된다.
@@ -113,10 +123,7 @@ kubectl rollout restart daemonset -n kube-system nvidia-device-plugin-daemonset
 ```
 * 특정 노드의 Pod만 재시작
 ```
-# 1. 대상 파드 이름 확인
 kubectl get pods -n kube-system -l component=nvidia-device-plugin -o wide
-
-# 2. 특정 파드 삭제 (삭제 즉시 자동 재생성됨)
 kubectl delete pod <파드_이름> -n kube-system
 ```
 
