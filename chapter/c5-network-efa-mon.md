@@ -33,7 +33,9 @@ prometheus-node-exporter:
     - --collector.ethtool
     - --collector.ethtool.device-include=.*
     - --collector.infiniband
-
+EOF
+```
+```
 helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
     -f efa-tuning.yaml \
     --reuse-values             # 기존 설정에 추가
