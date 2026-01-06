@@ -151,7 +151,7 @@ kind: StorageClass
 metadata:
   name: fsx-sc
 provisioner: fsx.csi.aws.com
-reclaimPolicy: Delete                     # PVC 삭제 시 FSx는 유지하고자 하는 경우 Retain 으로 설정
+reclaimPolicy: Retain                     # PVC 삭제되어도 유지 (Retain 으로 설정)
 volumeBindingMode: Immediate
 ---
 apiVersion: v1
@@ -164,7 +164,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Delete   # PVC 삭제 시 FSx는 유지하고자 하는 경우 Retain 으로 설정
+  persistentVolumeReclaimPolicy: Retain   # PVC 삭제되어도 유지 (Retain 으로 설정)
   storageClassName: fsx-sc
   csi:
     driver: fsx.csi.aws.com
