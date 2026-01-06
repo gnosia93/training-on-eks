@@ -26,14 +26,17 @@ $ aws ec2 describe-instance-types \
 +--------------+---------------+-------------------+------------------------+----------------------+
 ```
 
-### 2. 카펜터 노드풀 및 디바이스 플러그인 설치 ###
+### 2. 카펜터 노드풀 및 디바이스 플러그인 확인 / 설치 ###
 
-#### gpu 노드풀 / Nvidia 디바이스 플러그인 확인 및 설치 ####
+#### gpu 노드풀 확인 ####
 ```
 $ kubectl get nodepool
 NAME   NODECLASS   NODES   READY   AGE
 gpu    gpu         0       True    7d15h
+```
+#### Nvidia 디바이스 플러그인 확인 ####
 
+```
 $ kubectl get daemonset -n nvidia
 NAME                                              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                 AGE
 nvdp-node-feature-discovery-worker                4         4         4       4            4           <none>                        7d15h
@@ -44,7 +47,7 @@ nvdp-nvidia-device-plugin-mps-control-daemon      0         0         0       0 
 gpu 노드풀과 nvidia 디바이스 플러스인이 설치되어 있는지 확인한다. 만약 없으면 [GPU 노드 준비하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c3-gpu-node.md)를 참고하여 생성한다. 
 
 
-#### efa 디바이스 플러그인 확인 및 설치 ####
+#### efa 디바이스 플러그인 확인 / 설치 ####
 ```
 $ kubectl get ds aws-efa-k8s-device-plugin -n kube-system
 NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
@@ -159,7 +162,6 @@ ip-10-0-5-61   True     c6i.2xlarge   amd64  <none>  <none>  ap-northeast-2b  <n
 ip-10-0-7-12   True     c6i.2xlarge   amd64  <none>  <none>  ap-northeast-2d  <none>
 ip-10-0-7-56   True     c7g.2xlarge   arm64  <none>  <none>  ap-northeast-2d  <none>
 ```
-
 
 ## 훈련 모니터링 ##
 
