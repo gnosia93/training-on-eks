@@ -17,7 +17,7 @@ export S3_BUCKET="training-on-eks-lustre-${ACCOUNT_ID}"
 
 ### 1. lustre 파일시스템 조회 ###
 
-테라폼 에서 이미 생성한 러스터 파일 시스템을 조회한다.  
+테라폼으로 이미 생성한 러스터 파일 시스템을 조회한다.  
 ```
 aws fsx describe-file-systems \
     --query "FileSystems[?Tags[?Key=='Name' && Value=='trainng-on-eks']].\
