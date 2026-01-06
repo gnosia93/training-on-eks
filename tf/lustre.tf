@@ -40,7 +40,7 @@ resource "aws_security_group" "lustre_sg" {
 
   # 1021-1023 포트: Lustre RPC/데이터 전송 포트
   ingress {
-    from_port   = 1021
+    from_port   = 1018
     to_port     = 1023
     protocol    = "tcp"
     cidr_blocks = [aws_vpc.main.cidr_block] # VPC 내부 모든 IP에서 접근 허용
