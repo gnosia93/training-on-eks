@@ -44,7 +44,7 @@ VPC 를 생성한다.
 terraform apply -auto-approve
 ```
 
-### 생성된 인프라 확인 ###
+### VPC 인프라 확인 ###
 ```
 terraform output
 ```
