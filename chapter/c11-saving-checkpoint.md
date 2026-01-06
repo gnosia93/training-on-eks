@@ -59,7 +59,7 @@ fs-0261bb15621d24e21  AVAILABLE  1200         Default    Variable    rycutbev   
 ```
 
 ### 2. IAM 역할(IRSA) 생성 ###
-이 명령은 IAM Role 생성, 정책 연결, 서비스 어카운트 생성 및 annontation 처리를 한 번에 수행한다
+fsx 용 서비스 어카운트를 생성한다.  
 ```
 kubectl create namespace fsx-csi-driver
 
