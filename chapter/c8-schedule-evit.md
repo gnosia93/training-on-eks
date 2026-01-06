@@ -110,8 +110,8 @@ kubectl apply -f nvidia-device-plugin-configs.yaml
 #### 3. 노드별 차등 적용 (고급) ####
 스케줄링 배제해야 하는 GPU 를 가진 노드에 아래와 같이 nvida.com 레이블을 설정한다. 
 ```
-kubectl label node node1 nvidia.com=node1-gpu-skip
-kubectl label node node3 nvidia.com=node3-gpu-skip
+kubectl label node node1 nvidia.comnode1-gpu-skip
+kubectl label node node3 nvidia.comnode3-gpu-skip
 ```
 
 #### 4. 디바이스 플러그인 재시작 ####
@@ -127,6 +127,10 @@ kubectl get pods -n kube-system -l component=nvidia-device-plugin -o wide
 kubectl delete pod <파드_이름> -n kube-system
 ```
 
+#### 5. GPU capacity 확인 ####
+```
+kubectl describe node node1 | grep -A 5 Capacity
+```
 
 
 
