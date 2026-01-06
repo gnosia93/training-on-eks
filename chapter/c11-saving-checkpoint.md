@@ -227,7 +227,7 @@ aws s3 cp test-file.txt s3://${S3_BUCKET}/
 kubectl exec -it pod-fsx -- bash -c "cd /data/fsx && ls -l"
 ```
 
-## 파이토치 비동기 / 병렬 체크포인팅 샘플 ##
+## Parallel & Asynchronous Checkpointin 예제 코드 ##
 ```
 import os
 import torch
