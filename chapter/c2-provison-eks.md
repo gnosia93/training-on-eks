@@ -260,9 +260,8 @@ aws iam put-role-policy \
 
 
 ## nginx 실행해 보기 ##
-[nginx.yaml]
 ```
-cat <<EOF > nginx.yaml
+cat <<EOF | kubectl apply -f -
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -308,10 +307,6 @@ spec:
       targetPort: 80
 EOF
 ```
-```
-kubectl apply -f nginx.yaml
-```
-
 
 ## 클러스터 삭제 ##
 #### 1. 카펜터 인스턴스 프로파일 삭제 #### 
