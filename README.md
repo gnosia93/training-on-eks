@@ -2,7 +2,7 @@
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-all.png)
 
-_EKS 및 Kubeflow(PytorchJob, Trainer) 를 활용하여 대규모 모델을 분산 훈련하고 모니터링 하는데 필요한 기술에 대해서 다룬다._ 
+_EKS 및 Kubeflow(PytorchJob, Trainer) 를 활용하여 대규모 모델을 분산 훈련하고 모니터링 하는데 필요한 기술에 대해서 다룬다. GPU 인스턴스는 Karpenter Nodepool 을 이용하여 프러비저닝 한다._ 
 
 ### _Topics_ ###
 
