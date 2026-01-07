@@ -191,7 +191,7 @@ alloy-wp2hk   2/2     Running   0          13s
 
 ## alloy 테스트 하기 ##
 
-### Pod 로그 수집 여부 확인 ###
+### alloy 파드 로그 확인 ###
 pod 로그가 제대로 수집되어 있는지 확인한다. 
 ```
 kubectl logs -n alloy -l app.kubernetes.io/name=alloy | grep -iE "error|failed|401|403|Unauthorized"
@@ -208,7 +208,7 @@ ts=2026-01-07T06:08:39.693635952Z level=info msg="failed to register collector w
 로그 출력 결과를 보니 Loki 전송과 관련된 에러(401, failed to send batch 등)는 전혀 보이지 않는다.
 출력된 failed to register collector... 메시지는 Grafana Cloud의 원격 관리 기능을 쓰지 않을 때 나타나는 정보성 로그이다.
 
-### /var/log/pods 경로 마운트 여부 확인 ##
+### 호스트 컨테이너 파일 경로 마운트 확인 ##
 Alloy 파드 중 하나에 들어가서 실제 로그 파일 리스트가 출력되는지 확인한다.
 ```
 kubectl get pods -n alloy
@@ -245,7 +245,7 @@ loki_loki-query-scheduler-78d8746f46-pt5sv_2b7cbe39-9537-4f3a-b9a0-49dd4bfc6e76
 monitoring_prometheus-prometheus-node-exporter-thrkj_6a46cef4-8a7c-4191-b9ca-202b739427a9
 ```
 
-### Loki 전송 여부 확인 ###
+### Loki 전송 오류 확인 ###
 grep 결과가 아무것도 나오지 않는다는 것은 Alloy가 Loki로 로그를 보내는 과정에서 아무런 에러나 경고가 발생하지 않았다 것이다
 ```
 kubectl logs -n alloy -l app.kubernetes.io/name=alloy | grep -iE "error|failed|warn"
