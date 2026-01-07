@@ -43,18 +43,20 @@ helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
 
 ServiceMonitor 설정를 설정한다.
 ```
-cat <<EOF | kubectl apply -f - 
+cat <<EOF | kubectl apply -f -
 apiVersion: monitoring.coreos.com
 kind: ServiceMonitor
 metadata:
   name: efa-exporter-monitor
   namespace: monitoring
+  labels:
+    release: prometheus
 spec:
   selector:
     matchLabels:
       app: efa-prometheus-exporter
   endpoints:
-  - port: metrics # Exporter가 사용하는 포트 (기본 9810)
+  - port: metrics
     interval: 15s
 EOF
 ```
