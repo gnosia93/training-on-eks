@@ -676,11 +676,8 @@ $ helm show values grafana/alloy | grep -iE "volume|mount"
 * 왼쪽 메뉴에서 Explore (나침반 모양 아이콘)를 클릭합니다.
 * 상단 드롭다운에서 방금 추가한 Loki 데이터 소스를 선택합니다.
 * Label browser 버튼을 누르거나 쿼리창에 다음을 입력합니다.
-* logql
-{cluster="training-on-eks"}.
-
-*Run query를 클릭하여 아래쪽에 실시간 로그가 올라오는지 확인합니다.
-
+* Run query를 클릭하여 아래쪽에 실시간 로그가 올라오는지 확인합니다.
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/loki-log.png)
 
 ## 레퍼런스 ##
 
