@@ -25,7 +25,7 @@ helm get values prometheus -n monitoring > my-prometheus-values.yaml
 ```
 
 #### efa 모니니터링 설정 ####
-efa 네트워크 인터페이스를 모니터링 하기위해서 collector.ethtool를 추가해야 한다. --reuse-values 옵션을 이용하여 기존 설정에 추가하도록 한다. 이 옵션을 사용하지 않으면 기존에 설정했던 내용은 default 값으로 변경된다.         
+이 설정은 node-exporter가 호스트의 EFA 장치를 스캔하도록 허용한다.       
 ```
 cat <<EOF > efa-tuning.yaml
 prometheus-node-exporter:
@@ -33,8 +33,17 @@ prometheus-node-exporter:
     - --collector.ethtool
     - --collector.ethtool.device-include=.*
     - --collector.infiniband
+EOF
+```
+```
+helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
+    -f efa-tuning.yaml \
+    --reuse-values             # 기존 설정에 추가
+```
 
-# ServiceMonitor 설정 (Prometheus Operator 사용 시)
+ServiceMonitor 설정를 설정한다.
+```
+cat <<EOF | kubectl apply -f - 
 apiVersion: monitoring.coreos.com
 kind: ServiceMonitor
 metadata:
@@ -47,17 +56,13 @@ spec:
   endpoints:
   - port: metrics # Exporter가 사용하는 포트 (기본 9810)
     interval: 15s
-
 EOF
 ```
-```
-helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
-    -f efa-tuning.yaml \
-    --reuse-values             # 기존 설정에 추가
-```
-node_exporter의 ethtool 콜렉터는 Pod의 /sys/class/infiniband 경로에서 EFA 메트릭을 수집하여 node_net_ethtool 형태의 메트릭으로 변환한다.
 
 ### 2. 수집되는 주요 EFA 메트릭 ###
+
+* 이제 Prometheus 웹 UI에서 node_infiniband_... 또는 efa_... 메트릭이 조회되는지 확인하시면 됩니다! EFA 모니터링 메트릭 목록에서 상세 항목을 확인할 수 있습니다
+
 
 정상적으로 설정되면 Prometheus에서 다음과 같은 쿼리로 EFA 지표를 확인할 수 있다.
 * 전송된 바이트 수: node_net_ethtool{device="rdma0", stat="rdma_read_bytes"}
