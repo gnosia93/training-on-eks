@@ -497,7 +497,7 @@ alloy:
       loki.write "grafana_loki" {
         endpoint {
            // URL 수정: 중복 슬래시 제거
-           url = "loki-gateway.loki.svc.cluster.local"
+           url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
         }
       } 
 
