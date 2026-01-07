@@ -8,7 +8,6 @@ helm repo update
 helm install prometheus prometheus/kube-prometheus-stack \
     --create-namespace \
     --namespace monitoring \
-    -f efa-tuning.yaml
 ```
 생성된 파드들을 조회한다. 
 ```
