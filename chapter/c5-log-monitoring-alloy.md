@@ -189,6 +189,9 @@ alloy-rldlj   2/2     Running   0          13s
 alloy-wp2hk   2/2     Running   0          13s
 ```
 
+## alloy 테스트 하기 ##
+
+### Pod 로그 수집 여부 확인 ###
 pod 로그가 제대로 수집되어 있는지 확인한다. 
 ```
 kubectl logs -n alloy -l app.kubernetes.io/name=alloy | grep -iE "error|failed|401|403|Unauthorized"
@@ -205,6 +208,7 @@ ts=2026-01-07T06:08:39.693635952Z level=info msg="failed to register collector w
 로그 출력 결과를 보니 Loki 전송과 관련된 에러(401, failed to send batch 등)는 전혀 보이지 않는다.
 출력된 failed to register collector... 메시지는 Grafana Cloud의 원격 관리 기능을 쓰지 않을 때 나타나는 정보성 로그이다.
 
+### /var/log/pods 경로 마운트 여부 확인 ##
 Alloy 파드 중 하나에 들어가서 실제 로그 파일 리스트가 출력되는지 확인한다.
 ```
 kubectl get pods -n alloy
@@ -260,7 +264,6 @@ curl -u "loki:loki" -G -s "loki-gateway.loki.svc.cluster.local/loki/api/v1/query
 ```
 {"status":"success","data":{"resultType":"streams","result":[{"stream":{"app":"loki","cluster":"training-on-eks","container":"nginx","container_runtime":"containerd","detected_level":"unknown","filename":"/var/log/pods/loki_loki-gateway-6f6d8c796f-2x8fq_b3920be4-b23e-47a8-8a79-b60256c796c3/nginx/0.log","job":"loki/nginx/","namespace":"loki","pod":"loki-gateway-6f6d8c796f-2x8fq","service_name":"loki"},"values":[["1767768281534797089","2026-01-07T06:44:41.328244533Z stderr F 10.0.11.76 - loki [07/Jan/2026:06:44:41 +0000]  204 \"POST /loki/api/v1/push HTTP/1.1\" 0 \"-\" \"Alloy/v1.12.1 (linux; helm)\" \"-\""],["1767768280280872142","2026-01-07T06:44:40.128261401Z stderr F 10.0.11.76 - loki [07/Jan/2026:06:44:40 +0000]  204 \"POST /loki/api/v1/push HTTP/1.1\" 0 \"-\" \"Alloy/v1.12.1 (linux; helm)\" \"-\""],["1767768279028018791","2026-01-07T06:44:38.827390941Z stderr F 10.0.11.76 - loki [07/Jan/2026:06:44:38 +0000]  204 \"POST /loki/api/v1/push HTTP/1.1\" 0 \"-\" \"Alloy/v1.12.1 (linux; helm)\" \"-\""],["1767768277773925126","2026-01-07T06:44:37.529893945Z stderr F 10.0.11.76 - loki [07/Jan/2026:06:44:37 +0000]  204 \"POST /loki/api/v1/push HTTP/1.1\" 0 \"-\" \"Alloy/v1.12.1 (linux; helm)\" \"-\""]]},
 ```
-
 
 
 ## (참고) helm 차트에서 지원되는 value 값 보기 ##
