@@ -54,12 +54,19 @@ System UUID 값을 노드의 레이블로 등록해두면, 특정 노드를 타�
 인덱스(0, 1, 2...)는 하드웨어 변경 시 바뀔 수 있으므로, 확실한 배제를 위해서는 UUID 를 확인해야 한다.   
 
 * NVIDIA_VISIBLE_DEVICES 환경변수 이용
+```bash
+kubectl exec -it gpu-pod -- env | grep NVIDIA_VISIBLE_DEVICES
 ```
-kubectl exec -it llama-3-8b-node-0-3-f86kr -- env | grep NVIDIA_VISIBLE_DEVICES
+[결과]
 ```
+NVIDIA_VISIBLE_DEVICES=GPU-4ab07feb-d935-6529-9642-66abb88da218
+```
+
 * nvidia-smi 이용
-```
-nvidia-smi -L 
+```bash
+kubectl exec -it gpu-pod -- /bin/bash
+root@gpu-pod:/# nvidia-smi -L
+GPU 0: Tesla T4 (UUID: GPU-4ab07feb-d935-6529-9642-66abb88da218)```
 ```
 
 #### 2. ConfigMap 생성 #### 
