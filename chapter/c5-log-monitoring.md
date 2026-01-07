@@ -215,7 +215,7 @@ gateway:
    type: LoadBalancer
    loadBalancerSourceRanges:
       - ${MY_OFFICE_IP}                       # 내 아이피 로만 접근 가능
- basicAuth: 
+ basicAuth:                                   # gateway 접근시 4. Loki 인증 설정에서 작성한 id/password 로 기본 인증(Basic Auth) 인증해야 한다. 
      enabled: true
      existingSecret: loki-basic-auth
 
