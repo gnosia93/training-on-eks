@@ -512,11 +512,14 @@ alloy:
         }
       } 
 
-# 필수: 노드의 로그 파일(/var/log/pods)에 접근하기 위한 설정
+  # 필수: 노드의 로그 파일(/var/log/pods)에 접근하기 위한 설정
   controller:
     type: daemonset
- 
-# 핵심: 호스트의 로그 경로를 컨테이너 내부로 연결
+
+  securityContext:
+    privileged: true # 권한 문제 해결을 위해 필수일 수 있습니다.
+
+  # 핵심: 호스트의 로그 경로를 컨테이너 내부로 연결
   extraVolumeMounts:
     - name: varlog
       mountPath: /var/log
