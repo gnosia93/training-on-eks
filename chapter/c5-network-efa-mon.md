@@ -69,6 +69,8 @@ spec:
       containers:
       - name: exporter
         image: public.ecr.aws/hpc-cloud/efa-node-exporter:latest
+        args:
+          - "--web.listen-address=:9810" #
         securityContext:
           privileged: true
         ports:
