@@ -43,12 +43,13 @@
 
 * [C11. DeepSpeed 분산 훈련 (멀티 GPU 노드)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c11-deepspeed.md)
 
+* [C12. CPU 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a4.training-on-cpu.md)
+
 ### _Appendix_ ###
 
 * [A1. 트러블 슈팅](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
 * [A2. EC2 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-ec2-nvlink.md)
 * [A3. 토폴리지별 훈련성능](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a3.training-perf-topology.md)
-* [A4. CPU 분산훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a4.training-on-cpu.md)
 * [A5. al2023-debug 파드](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a5.debug-container.md)
 
 ## ToDO ##
