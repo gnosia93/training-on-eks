@@ -98,7 +98,7 @@ EOF
 
 * https://grafana.com/grafana/dashboards/20579-efa-metrics-dev/
 
-
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-efa.png)
 
 
 ## 레퍼런스 ##
