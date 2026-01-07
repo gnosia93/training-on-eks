@@ -1,4 +1,4 @@
-_Terraform 으로 VPC 를 빌드하는데 대략 25 ~ 30분 정도의 시간이 소요된다._
+___테라폼으로 VPC를 빌드하는데 대략 25 ~ 30분 정도의 시간이 소요된다.___
 
 ### VPC 아키텍처 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-vpc.png)
