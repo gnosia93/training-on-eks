@@ -1,8 +1,3 @@
-* << 1. cloud watch agent 설치 --> efa 모니터링 >>
-* << 2. 그라파나 대시보는 9100포트만 바라보도록 설정 --->  9810 포트를 보도록 설정 변경 시도 필요 >>
-    * 프로메테우스에 efa 데이터가 쌓이는지 확인 필요..
-
-
 ### 1. EFA Node Exporter 설정 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/aws-gallary-efa-node-exporter.png)
 
@@ -128,41 +123,12 @@ spec:
 EOF
 ```
 
-### 3. 수집되는 주요 EFA 메트릭 ###
-
-* 이제 Prometheus 웹 UI에서 node_infiniband_... 또는 efa_... 메트릭이 조회되는지 확인하시면 됩니다! EFA 모니터링 메트릭 목록에서 상세 항목을 확인할 수 있습니다
-
-
-정상적으로 설정되면 Prometheus에서 다음과 같은 쿼리로 EFA 지표를 확인할 수 있다.
-* 전송된 바이트 수: node_net_ethtool{device="rdma0", stat="rdma_read_bytes"}
-* 수신된 바이트 수: node_net_ethtool{device="rdma0", stat="rdma_write_bytes"}
-* EFA 에러 카운트: node_net_ethtool{device="rdma0", stat="lif_error_errors"}
-
-
 ### 3. Grafana 대시보드 연결 ###
 
-* Grafana 대시보드에서 우측의 [New 버튼] -> [Import 서브메뉴] 을 선택한 다음 대시보드 Node Exporter Full(ID: 1860)를 임포트 한다. 
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/node-exporter-full.png)
-
-* Grafana 대시보드에서 우측의 [New 버튼] -> [Import 서브메뉴] 을 선택한 다음 대시보드 Node/Network(ID: 22273)를 임포트 한다. 
-![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/network-mon.png)  
+* https://grafana.com/grafana/dashboards/20579-efa-metrics-dev/
 
 
-## 참고 - efa 메트릭 수집여부 확인하기 ##
 
-[C7. 분산 훈련 최적화/EFA 사용하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-efa.md) 섹션에서 efa 를 설정한 경우 아래 명령어로 node-exporter 가 efa 데이터를 수집하고 있는지 확인할 수 있다.
-```
-EFA_NODE=$(kubectl get pod efa-test-pod -o jsonpath='{.spec.nodeName}')
-POD_NAME=$(kubectl get pods -n monitoring \
-    -l "app.kubernetes.io/name=prometheus-node-exporter" \
-    --field-selector spec.nodeName=${EFA_NODE} \
-    -o jsonpath='{.items[0].metadata.name}')
-
-echo ${POD_NAME} " / " ${EFA_NODE}
-
-kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics | grep node_infiniband
-kubectl exec -it ${POD_NAME} -n monitoring -- wget -qO- localhost:9100/metrics | grep "node_infiniband" | grep -E "bytes|packets"
-```
 
 ## 레퍼런스 ##
 * https://gallery.ecr.aws/hpc-cloud/efa-node-exporter
