@@ -1,4 +1,11 @@
+### 타겟 인프라 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-vpc.png)
+* VPC
+* Subnets (Public / Private)
+* Graviton EC2 for Code-Server
+* Security Groups
+* FSx for Lustre
+* S3 bucket 
 
 ### [테라폼 설치](https://developer.hashicorp.com/terraform/install) ###
 mac 의 경우 아래의 명령어로 설치할 수 있다. 
@@ -55,11 +62,4 @@ terraform output
 terraform destroy --auto-approve
 ```
 
-### 생성되는 리소스 ###
 
-* VPC
-* Subnets (Public / Private)
-* Graviton EC2 for vs-code
-* Security Groups
-* Fsx for Lustre
-* S3 bucket 
