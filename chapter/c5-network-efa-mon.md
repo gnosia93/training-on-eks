@@ -1,3 +1,5 @@
+* << 1. cloud watch agent 설치 --> efa 모니터링 >>
+* << 2. 그라파나 대시보는 9100포트만 바라보도록 설정 --->  9810 포트를 보도록 설정 변경 시도 필요 >>
 
 ### 1. EFA Node Exporter 설정 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/aws-gallary-efa-node-exporter.png)
