@@ -592,10 +592,30 @@ alloy-wp2hk   2/2     Running   0          5m21s
 ```
 kubectl exec -it alloy-d6wwh -n alloy -- ls -R /var/log/pods
 ```
-
-
+[결과]
 ```
-helm show values grafana/alloy | grep -iE "volume|mount"
+/var/log/pods:
+alloy_alloy-88qdc_e27968d6-961d-43c6-932c-123faaa30a8d
+default_nginx-55bbbf955c-rpn2n_4bf70d88-384d-45c5-b4c5-a52b97f8ceec
+karpenter_karpenter-86595b65d4-mfskc_0006adcf-1655-4373-be91-e3483b6ba2c9
+kube-system_aws-node-vxqn6_d101e04f-3d06-4c2d-8352-ac852aee7d0d
+kube-system_coredns-7ccc7b7d9b-gcs9x_c9c47561-5c5d-46d0-a004-119ac5f22522
+kube-system_ebs-csi-node-zx46k_10765e4a-b32c-4e4d-9971-0eedf1f0bac8
+kube-system_eks-pod-identity-agent-gs4jx_07e057d2-a5e1-4afa-ad3c-485c277110d4
+kube-system_kube-proxy-wl2fk_da2be218-b756-49c5-bc41-8720c7b7325c
+loki_loki-distributor-d55f8bf48-fth7m_3e2f5540-2ded-41f0-975a-1915101503d7
+loki_loki-index-gateway-0_06a0ff1b-dc67-4b47-82a2-f7896f631e15
+loki_loki-ingester-1_f50ec90c-2a00-4218-b83d-548a40acf973
+loki_loki-querier-54c66b55c8-kjrbb_277a2951-3205-471e-a34d-c23b5756df11
+loki_loki-query-frontend-64f4887b9d-dpfqm_ac5ae267-ab25-4304-bc36-194f4543f0b0
+loki_loki-query-scheduler-78d8746f46-pt5sv_2b7cbe39-9537-4f3a-b9a0-49dd4bfc6e76
+monitoring_prometheus-prometheus-node-exporter-thrkj_6a46cef4-8a7c-4191-b9ca-202b739427a9
+```
+
+### helm 차트에서 지원되는 value 값 보기 ###
+```
+$ helm show values grafana/alloy | grep -iE "volume|mount"
+
   mounts:
     # -- Mount /var/log from the host into the container for log collection.
     # -- Mount /var/lib/docker/containers from the host into the container for log
