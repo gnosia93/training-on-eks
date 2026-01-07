@@ -558,7 +558,7 @@ alloy-wp2hk   2/2     Running   0          13s
 
 pod 로그가 제대로 수집되어 있는지 확인한다. 
 ```
-kubectl logs -n alloy -l app.kubernetes.io/name=alloy | grep -iE "error|failed|401|403|Unauthorized"d"
+kubectl logs -n alloy -l app.kubernetes.io/name=alloy | grep -iE "error|failed|401|403|Unauthorized"
 ```
 
 [결과]
