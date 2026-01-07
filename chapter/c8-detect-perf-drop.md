@@ -27,6 +27,54 @@ nvidia-smi -q -d SUPPORTED_CLOCKS,THROTTLE
 * CNI 모니터링: Cilium이나 Calico 같은 CNI는 자체적인 대시보드나 로그를 통해 패킷 드롭 및 재전송(Retransmission) 발생 여부를 제공한다.
 * 노드 레벨 지표: node_network_transmit_errs_total (전송 에러), node_network_receive_drop_total (수신 드롭) 지표가 급증하는 노드의 NIC를 점검해야 한다. 
 
+#### iperf3 사용 방법 ####
+쿠버네티스 환경에서 파드 간 네트워크 성능(대역폭 및 지연 시간)을 측정하기 위해 iperf3를 사용하는 것이 가장 표준적이고 직관적입니다
+```
+cat <<EOF  | kubectl apply -f - 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: iperf3-server
+  labels:
+    app: iperf3-server
+spec:
+  nodeName: node-1  # 서버를 배치할 노드 지정
+  containers:
+  - name: iperf3
+    image: networkstatic/iperf3
+    args: ['-s']
+    ports:
+    - containerPort: 5201
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: iperf3-client
+spec:
+  nodeName: node-2  # 클라이언트를 배치할 다른 노드 지정
+  containers:
+  - name: iperf3
+    image: networkstatic/iperf3
+    command: ['/bin/sh', '-c', 'sleep infinity']
+EOF
+```
+
+```
+SERVER_IP=$(kubectl get pod iperf3-server -o jsonpath='{.status.podIP}')
+echo $SERVER_IP
+
+# 측정 실행 (TCP 대역폭):
+kubectl exec -it iperf3-client -- iperf3 -c ${SERVER_IP} -P 8 -t 30
+
+# 지연 시간(Latency) 측정
+kubectl exec -it iperf3-client -- ping ${SERVER_IP}
+```
+
+#### 대규모 클러스터용 도구 ####
+* Netperf-Operator: 파드 간 netperf/iperf 측정을 자동화하고 결과 보고서를 생성해주는 쿠버네티스 오퍼레이터.
+* Goldpinger: 클러스터의 모든 노드 간 지연 시간을 시각화된 그래프로 보여주는 대시보드 도구.
+
+
 ### 3. 노드(Node) 및 하드웨어 병목 식별 ###
 노드 전체의 성능 저하는 CPU/메모리 부족뿐만 아니라 디스크 I/O 병목에 의해서도 발생한다. 
 
