@@ -33,6 +33,21 @@ prometheus-node-exporter:
     - --collector.ethtool
     - --collector.ethtool.device-include=.*
     - --collector.infiniband
+
+# ServiceMonitor 설정 (Prometheus Operator 사용 시)
+apiVersion: monitoring.coreos.com
+kind: ServiceMonitor
+metadata:
+  name: efa-exporter-monitor
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: efa-prometheus-exporter
+  endpoints:
+  - port: metrics # Exporter가 사용하는 포트 (기본 9810)
+    interval: 15s
+
 EOF
 ```
 ```
