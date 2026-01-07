@@ -1,7 +1,8 @@
 
-### 1. Node Exporter 설정 (EFA 지표 수집) ###
+### 1. EFA Node Exporter 설정 ###
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/aws-gallary-efa-node-exporter.png)
 
-Node Exporter 는 헬름으로 프로메테우스 스택을 설치하면 자동으로 설치가 된다. 기본적으로 CPU, 메모리 등을 수집하지만 EFA 지표를 가져오기 위해서는 ethtool 콜렉터가 활성화되어야 한다.
+Node Exporter 는 헬름으로 프로메테우스 스택을 설치하면 자동으로 설치가 된다. 기본적으로 CPU, 메모리 등을 수집하지만 EFA 지표는 수집하지 않는다. EFA 의 지표를 수집하기 위해서는 별도의 efa 전용 node exporter 를 추가로 설치해 줘야한다. 
 ```
 kubectl get pods -n monitoring -l "app.kubernetes.io/name=prometheus-node-exporter"
 ```
@@ -24,7 +25,7 @@ helm show values prometheus/kube-prometheus-stack > values.yaml
 helm get values prometheus -n monitoring > my-prometheus-values.yaml
 ```
 
-#### efa 모니니터링 설정 ####
+#### efa 모니니터링 설정 ( 이 부분은 필요 없을 수도 ) ####
 이 설정은 node-exporter가 호스트의 EFA 장치를 스캔하도록 허용한다.       
 ```
 cat <<EOF > efa-tuning.yaml
@@ -41,17 +42,7 @@ helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
     --reuse-values             # 기존 설정에 추가
 ```
 
-### efa 전용 exporter 별도 설치 ###
-
-/*************************************/
-
-efa 전용 exporter 는 공식적인 컨테이너 이미지가 없는 것으로 보여진다.
-
-cloudwatch agent 를 통해서 efa 매트릭을 수집해야 할 듯..
-
-/*************************************/
-
-
+### 1. efa 전용 exporter 설치 ###
 ```
 cat <<EOF | kubectl apply -f - 
 apiVersion: apps/v1
@@ -109,7 +100,7 @@ EOF
 kubectl get pods -n kube-system -l app=efa-prometheus-exporter
 ```
 
-ServiceMonitor 설정를 설정한다.
+### 2. ServiceMonitor 설정 ###
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: monitoring.coreos.com
@@ -129,7 +120,7 @@ spec:
 EOF
 ```
 
-### 2. 수집되는 주요 EFA 메트릭 ###
+### 3. 수집되는 주요 EFA 메트릭 ###
 
 * 이제 Prometheus 웹 UI에서 node_infiniband_... 또는 efa_... 메트릭이 조회되는지 확인하시면 됩니다! EFA 모니터링 메트릭 목록에서 상세 항목을 확인할 수 있습니다
 
