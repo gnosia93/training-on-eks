@@ -2,7 +2,7 @@
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-all.png)
 
-_EKS 및 Kubeflow Training Operator를 활용하여 대규모 모델을 분산 훈련하고 모니터링 하는데 필요한 기술에 대해서 다룬다. GPU 인스턴스는 Karpenter Nodepool 을 이용하여 프러비저닝 하고, 모니터링은 Prometheus / Grafana 스택을 활용한다. 본 워크샵을 원활하게 진행하기 위해서는 컨테이너와 EKS에 대한 기본적인 지식이 필요하고, 이 기술들에 대한 세부적인 내용은 다루지 않는다. 현재 버전에서 분산 훈련은 Pytorch DDP, FSDP 그리고 DeepSpeed 프레임워크를 사용하고 있으며, 향후 TP/PP 를 지원하는 Nvidia Megatron 에 대한 내용도 담길 예정이다._  
+_본 워크샵은 EKS 및 Kubeflow Training Operator를 활용하여 대규모 모델의 분산 훈련과 모니터링 핵심 기술을 다룹니다. GPU 인스턴스는 Karpenter NodePool을 통해 동적으로 프로비저닝하며, 모니터링은 Prometheus/Grafana 스택을 활용합니다. 워크샵의 원활한 진행을 위해 컨테이너와 EKS에 대한 기초 지식이 요구됩니다. 분산 훈련 전략으로는 PyTorch DDP/FSDP 및 DeepSpeed 프레임워크를 사용하고 있으며, TP/PP를 지원하는 NVIDIA Megatron-LM의 고급 병렬화 기법는 포함되어 있지 않습니다 (향후 업데이트 예정)._  
 
 ### _Topics_ ###
 
