@@ -588,6 +588,23 @@ alloy-wp2hk   2/2     Running   0          5m21s
 kubectl exec -it alloy-d6wwh -n alloy -- ls -R /var/log/pods
 ```
 
+
+```
+helm show values grafana/alloy | grep -iE "volume|mount"
+  mounts:
+    # -- Mount /var/log from the host into the container for log collection.
+    # -- Mount /var/lib/docker/containers from the host into the container for log
+    # -- Extra volume mounts to add into the Grafana Alloy container. Does not
+  # Whether the Alloy pod should automatically mount the service account token.
+  automountServiceAccountToken: true
+  volumes:
+    # -- Extra volumes to add to the Grafana Alloy pod.
+  # -- volumeClaimTemplates to add when controller.type is 'statefulset'.
+  volumeClaimTemplates: []
+```
+
+
+
 ### [Grafana Dashboard 설정]() ###
 
 #### 1. 데이터 소스 설정 단계 ####
