@@ -41,10 +41,59 @@ helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
     --reuse-values             # 기존 설정에 추가
 ```
 
-### efa 전용 export 별도 설치 ###
+### efa 전용 exporter 별도 설치 ###
 
 ```
-kubectl apply -f raw.githubusercontent.com
+cat <<EOF | kubectl apply -f - 
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: efa-prometheus-exporter
+  namespace: monitoring
+  labels:
+    app: efa-prometheus-exporter
+spec:
+  selector:
+    matchLabels:
+      app: efa-prometheus-exporter
+  template:
+    metadata:
+      labels:
+        app: efa-prometheus-exporter
+    spec:
+      hostNetwork: true
+      containers:
+      - name: exporter
+        image: public.ecr.aws/aws-efa-prometheus-exporter/aws-efa-prometheus-exporter:latest
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 9810
+          name: metrics
+        volumeMounts:
+        - name: sys
+          mountPath: /sys
+          readOnly: true
+      volumes:
+      - name: sys
+        hostPath:
+          path: /sys
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: efa-prometheus-exporter
+  namespace: monitoring
+  labels:
+    app: efa-prometheus-exporter
+spec:
+  ports:
+  - port: 9810
+    targetPort: 9810
+    name: metrics
+  selector:
+    app: efa-prometheus-exporter
+EOF
 ```
 
 ```
