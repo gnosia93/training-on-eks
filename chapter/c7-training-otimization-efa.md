@@ -110,7 +110,7 @@ An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecuri
 
 ## EFA 테스트 ## 
 ```
-cat <<EOF > efa-test-pod.yaml
+cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Pod
 metadata:
