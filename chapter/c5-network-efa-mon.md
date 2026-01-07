@@ -62,11 +62,13 @@ spec:
         app: efa-prometheus-exporter
     spec:
       hostNetwork: true
+      tolerations:
+      - operator: "Exists"               # 모든 테인트를 무력화
       containers:
       - name: exporter
         image: public.ecr.aws/hpc-cloud/efa-node-exporter:latest
         args:
-          - "--web.listen-address=:9810" #
+          - "--web.listen-address=:9810" # 9810 포트 리슨 
         securityContext:
           privileged: true
         ports:
