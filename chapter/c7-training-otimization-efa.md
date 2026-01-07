@@ -143,7 +143,6 @@ EOF
 EFA는 하드웨어가 시스템 메모리에 직접 접근하여 데이터를 읽고 쓰는 RDMA(Remote Direct Memory Access) 기술을 사용한다. 통신에 사용되는 메모리 주소가 스왑 처리되어 디스크로 이동해버리면 하드웨어가 메모리를 찾지 못해 시스템 장애나 통신 에러가 발생한다. IPC_LOCK은 해당 메모리를 RAM에 "고정"시켜 이 문제를 방지한다. 학습 데이터가 메모리에서 스왑 영역으로 넘어가면 다시 읽어올 때 엄청난 속도 저하(Latency)가 발생함으로 실시간으로 수 기가바이트의 파라미터를 교환해야 하는 FSDP 학습에서 메모리 고정은 일관된 고성능을 유지하기 위한 필수 조건이다. 
 
 ```
-kubectl apply -f efa-test-pod.yaml
 kubectl exec -it efa-test-pod -- /bin/bash
 fi_info -p efa
 ```
