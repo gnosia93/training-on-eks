@@ -111,12 +111,12 @@ kubectl create namespace loki
 ```
 sudo dnf install httpd-tools -y
 
-htpasswd -c .htpasswd loki
+htpasswd -c .htpasswd loki               # 패스워드는 loki 로 설정한다.
 kubectl create secret generic loki-basic-auth --from-file=.htpasswd -n loki
 
 #kubectl create secret generic canary-basic-auth \
 #  --from-literal=username=loki \
-#  --from-literal=password=loki-wow! \
+#  --from-literal=password=loki \
 #  -n loki
 ```
 
@@ -498,6 +498,17 @@ alloy:
         endpoint {
            // URL 수정: 중복 슬래시 제거
            url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
+
+           // 401 에러 해결을 위한 인증 설정
+           basic_auth {
+             username = "loki"  // 설정하신 사용자 이름
+             password = "loki"  // 설정하신 비밀번호
+           }
+
+           // 멀티테넌시를 사용하는 경우 헤더 추가
+           headers = {
+             "X-Scope-OrgId" = "foo",
+           }
         }
       } 
 
