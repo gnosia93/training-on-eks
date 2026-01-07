@@ -20,10 +20,14 @@ export OIDC=$(aws eks describe-cluster --name training-on-eks --query "cluster.i
 #### 1. S3 버킷생성 ####
 Loki를 배포하기 전에 두 개의 S3 버킷을 생성해야 한다. 첫 번째는 로그 데이터(Chunks)를 저장하기 위한 것이고, 두 번째는 알람 규칙(Alert Rules)을 저장하기 위한 것이다.
 Loki는 로그 정보를 인덱스와 실제 데이터(Chunks)로 나누어 저장하는데, 로컬 디스크(EBS) 대신 S3를 주 저장소로 사용함으로써 비용을 절감하고 공간을 무제한으로 사용할 수 있게 된다. 
+
+기존 버킷이 있는 경우 삭제한다.
 ```
 aws s3 rb s3://loki-aws-dev-chunks-${ACCOUNT_ID} --force 2>/dev/null || true
 aws s3 rb s3://loki-aws-dev-ruler-${ACCOUNT_ID} --force 2>/dev/null || true
-
+```
+버킷을 생성한다.
+```
 CHUNK_BUCKET=$(aws s3api create-bucket --bucket loki-aws-dev-chunks-${ACCOUNT_ID} --region ${AWS_REGION} \
   --create-bucket-configuration LocationConstraint=${AWS_REGION} --query "Location" --output text)
 RULER_BUCKET=$(aws s3api create-bucket --bucket loki-aws-dev-ruler-${ACCOUNT_ID} --region ${AWS_REGION} \
