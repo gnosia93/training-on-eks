@@ -4,10 +4,25 @@
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
 helm repo update
+```
+```
+cat <<EOF > efa-tuning.yaml
+prometheus-node-exporter:
+  service:
+    port: 9101
+    targetPort: 9101
+  extraArgs:
+    - --web.listen-address=:9101
+    - --collector.ethtool
+    - --collector.ethtool.device-include=.*
+    - --collector.infiniband
+EOF
+```
 
 helm install prometheus prometheus/kube-prometheus-stack \
     --create-namespace \
-    --namespace monitoring 
+    --namespace monitoring \
+    -f efa-tuning.yaml
 ```
 생성된 파드들을 조회한다. 
 ```
