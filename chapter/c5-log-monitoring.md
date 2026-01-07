@@ -372,9 +372,7 @@ loki-ruler-0                            1/1     Running   0          54s
 
 
 ### [Log Sender (Grafana Alloy) 설치](https://grafana.com/docs/alloy/latest/collect/logs-in-kubernetes/) ###
-Alloy는 fluentBit 와 같은 로그 수집기로 "데이터를 어디서 읽어서 어디로 보낼지"에 대한 파이프라인 설정을 해야 한다. 노드의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며,  
-Loki를 타켓으로 설정하고 쿠버네티스 Pod를 탐색하도록 구성해야 한다. 
-
+Alloy는 fluentBit 와 같은 로그 수집기로 "데이터를 어디서 읽어서 어디로 보낼지"에 대한 파이프라인을 설정 해야 한다. 노드의 로그에 접근하기 위해 DaemonSet 모드로 실행해야 하며, Loki를 타켓으로 설정하고 쿠버네티스 Pod를 탐색하도록 구성해야 한다. 
 ```
 cat <<'EOF' > alloy-values.yaml
 alloy:
