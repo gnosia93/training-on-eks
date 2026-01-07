@@ -43,6 +43,12 @@ helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
 
 ### efa 전용 exporter 별도 설치 ###
 
+/*************************************/
+efa 전용 exporter 는 공식적인 컨테이너 이미지가 없는 것으로 보여진다.
+cloudwatch agent 를 통해서 efa 매트릭을 수집해야 할 듯..
+/*************************************/
+
+
 ```
 cat <<EOF | kubectl apply -f - 
 apiVersion: apps/v1
