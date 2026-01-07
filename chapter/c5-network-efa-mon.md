@@ -73,7 +73,7 @@ spec:
       hostNetwork: true
       containers:
       - name: exporter
-        image: public.ecr.aws/aws-efa-prometheus-exporter/aws-efa-prometheus-exporter:v0.1.0
+        image: public.ecr.aws/hpc-cloud/efa-node-exporter:latest
         securityContext:
           privileged: true
         ports:
