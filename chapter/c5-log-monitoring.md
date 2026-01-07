@@ -513,18 +513,29 @@ alloy:
       } 
 
 # 필수: 노드의 로그 파일(/var/log/pods)에 접근하기 위한 설정
-controller:
-  type: daemonset
-  volumes:
-    extra:
-      - name: varlog
-        hostPath:
-          path: /var/log
+  controller:
+    type: daemonset
+ 
+# 핵심: 호스트의 로그 경로를 컨테이너 내부로 연결
+  extraVolumeMounts:
+    - name: varlog
+      mountPath: /var/log
+      readOnly: true
+    - name: varlibdockercontainers
+      mountPath: /var/lib/docker/containers
+      readOnly: true
 
-extraVolumeMounts:
-  - name: varlog
-    mountPath: /var/log
-    readOnly: true
+  extraVolumes:
+    - name: varlog
+      hostPath:
+        path: /var/log
+    - name: varlibdockercontainers
+      hostPath:
+        path: /var/lib/docker/containers
+
+# RBAC 설정 (파드 목록을 조회하기 위해 필요)
+rbac:
+  create: true
 EOF
 ```
 Alloy 설정은 discovery → source → process → write로 이어지는 파이프라인 흐름(receiver 및 output 참조)이다.
