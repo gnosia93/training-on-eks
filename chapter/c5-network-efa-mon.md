@@ -101,9 +101,8 @@ EOF
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-efa.png)
 
-## Amazon CloudWatch Container Insights ##
-
-Amazon CloudWatch Container Insights는 EFA 디바이스 플러그인과 통합되어 EFA 관련 지표를 자동으로 수집한다. 
+## Amazon CloudWatch 컨테이너 인사이트 ##
+efa 성능 데이터를 모니터링 할 수 있는 또다른 방법은 Amazon CloudWatch 컨테이너 인사이트로, EFA 디바이스 플러그인과 통합되어 EFA 관련 지표를 자동으로 수집한다. 
 수집되는 주요 지표는 retrans_bytes, retrans_pkts, retrans_timeout_events 등과 같은 특정 재전송 관련 지표를 제외한 대부분의 EFA 드라이버 지표를 지원한다.
 
 #### 설정 방법 #### 
