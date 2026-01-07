@@ -41,6 +41,16 @@ helm upgrade prometheus prometheus/kube-prometheus-stack -n monitoring \
     --reuse-values             # 기존 설정에 추가
 ```
 
+### efa 전용 export 별도 설치 ###
+
+```
+kubectl apply -f raw.githubusercontent.com
+```
+
+```
+kubectl get pods -n kube-system -l app=efa-prometheus-exporter
+```
+
 ServiceMonitor 설정를 설정한다.
 ```
 cat <<EOF | kubectl apply -f -
