@@ -1,4 +1,4 @@
-### 생성 리소스 (목표 인프라 아키텍처)###
+### 목표 인프라 아키텍처 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-vpc.png)
 * VPC
 * Subnets (Public / Private)
