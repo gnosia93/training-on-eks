@@ -2,7 +2,7 @@
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-all.png)
 
-_EKS 및 Kubeflow Training Operator를 활용하여 대규모 모델을 분산 훈련하고 모니터링 하는데 필요한 기술에 대해서 다룬다. GPU 인스턴스는 Karpenter Nodepool 을 이용하여 프러비저닝 하고, 모니터링 스택은 Prometheus / Grafana 스택을 활용한다. 본 워크샵을 원활하게 진행하기 위해서는 컨테이너와 EKS에 대한 기본적인 지식이 필요하고, 이 기술들에 대해서 세부적인 내용에 대해서는 다루지 않는다._  
+_EKS 및 Kubeflow Training Operator를 활용하여 대규모 모델을 분산 훈련하고 모니터링 하는데 필요한 기술에 대해서 다룬다. GPU 인스턴스는 Karpenter Nodepool 을 이용하여 프러비저닝 하고, 모니터링은 Prometheus / Grafana 스택을 활용한다. 본 워크샵을 원활하게 진행하기 위해서는 컨테이너와 EKS에 대한 기본적인 지식이 필요하고, 이 기술들에 대해서 세부적인 내용에 대해서는 다루지 않는다._  
 
 ### _Topics_ ###
 
