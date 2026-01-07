@@ -518,6 +518,11 @@ alloy:
 
   securityContext:
     privileged: true # 권한 문제 해결을 위해 필수일 수 있습니다.
+  mounts:
+    varlog: true               # /var/log 마운트 활성화
+    dockercontainers: true     # /var/lib/docker/containers 마운트 활성화
+    # 만약 위 옵션이 직접적인 경로를 안 열어준다면 아래 extra를 사용
+    extra: []
 
   # 핵심: 호스트의 로그 경로를 컨테이너 내부로 연결
   extraVolumeMounts:
@@ -528,7 +533,7 @@ alloy:
       mountPath: /var/lib/docker/containers
       readOnly: true
 
-  extraVolumes:
+  volumes:
     - name: varlog
       hostPath:
         path: /var/log
