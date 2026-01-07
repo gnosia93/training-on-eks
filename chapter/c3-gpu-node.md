@@ -103,7 +103,6 @@ kubectl apply -f nodepool-gpu.yaml
 ```
 
 ## nvidia-smi 파드 스케줄링 ##
-
 ```
 cat <<EOF | kubectl apply -f - 
 apiVersion: v1
@@ -127,6 +126,7 @@ EOF
 
 파드를 생성하고 nvidia-smi 가 동작하는 확인한다.  
 ```
+kubectl get pods
 kubectl logs gpu-pod
 ```
 [출력]
