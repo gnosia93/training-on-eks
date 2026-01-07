@@ -635,7 +635,7 @@ curl -u "loki:loki" -G -s "loki-gateway.loki.svc.cluster.local/loki/api/v1/query
 
 
 
-### helm 차트에서 지원되는 value 값 보기 ###
+### (참고) helm 차트에서 지원되는 value 값 보기 ###
 ```
 $ helm show values grafana/alloy | grep -iE "volume|mount"
 
