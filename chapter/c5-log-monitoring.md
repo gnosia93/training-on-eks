@@ -538,16 +538,37 @@ rbac:
   create: true
 EOF
 ```
-Alloy 설정은 discovery → source → process → write로 이어지는 파이프라인 흐름(receiver 및 output 참조)이다.
-
+alloy 설정은 discovery → source → process → write로 이어지는 파이프라인 흐름(receiver 및 output 참조)이다.  
+alloy 를 설치하고 pod 를 조회한다.
 ```
 helm install alloy grafana/alloy --namespace alloy --create-namespace -f alloy-values.yaml
+kubectl get pods -n alloy
+```
+[결과]
+```
+NAME          READY   STATUS    RESTARTS   AGE
+alloy-d6wwh   2/2     Running   0          13s
+alloy-l6djd   1/2     Running   0          13s
+alloy-rldlj   2/2     Running   0          13s
+alloy-wp2hk   2/2     Running   0          13s
 ```
 
-Pod 의 로그가 제대로 수집되어 있는지 확인한다. 
+pod 로그가 제대로 수집되어 있는지 확인한다. 
 ```
-kubectl logs -f -n alloy -l app.kubernetes.io/name=alloy
+kubectl logs -n alloy -l app.kubernetes.io/name=alloy | grep -iE "error|failed|401|403|Unauthorized"d"
 ```
+
+[결과]
+```
+ts=2026-01-07T06:08:39.678943257Z level=info msg="failed to register collector with remote server" service=remotecfg id=bc50fae7-dc7a-4463-a49c-e14ef6999a55 name="" err="noop client"
+ts=2026-01-07T06:08:39.627810764Z level=info msg="failed to register collector with remote server" service=remotecfg id=edb8a72a-22a6-491b-8cea-539cea380329 name="" err="noop client"
+ts=2026-01-07T06:08:39.678890389Z level=info msg="failed to register collector with remote server" service=remotecfg id=6b730f9f-e41f-4271-b5e5-852d9547d8d8 name="" err="noop client"
+ts=2026-01-07T06:08:39.69334033Z level=info msg="finished node evaluation" controller_path=/ controller_id="" trace_id=911e2b3cb0296dbd1e88dd0fc0092eff node_id=cluster duration=4.674µs
+ts=2026-01-07T06:08:39.693635952Z level=info msg="failed to register collector with remote server" service=remotecfg id=5d7dbf41-4167-4d96-bd45-579ac78bbfe5 name="" err="noop client"
+```
+로그 출력 결과를 보니 Loki 전송과 관련된 에러(401, failed to send batch 등)는 전혀 보이지 않는다.
+출력된 failed to register collector... 메시지는 Grafana Cloud의 원격 관리 기능을 쓰지 않을 때 나타나는 정보성 로그이다.
+
 
 ### [Grafana Dashboard 설정]() ###
 
