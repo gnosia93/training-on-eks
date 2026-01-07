@@ -1,6 +1,6 @@
 # training-on-eks
 
-![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/workshop-archi.png)
+![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/terraform-all.png)
 
 
 ### _Topics_ ###
