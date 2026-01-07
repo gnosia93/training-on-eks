@@ -82,3 +82,12 @@ kubectl exec -it iperf3-client -- ping ${SERVER_IP}
 * CPU Throttling: container_cpu_cfs_throttled_seconds_total 지표를 통해 노드 리소스가 충분함에도 특정 컨테이너가 제한을 받는지 확인한다.
 * Disk I/O Wait: 노드의 iowait 수치가 높다면 디스크 성능 저하가 전체 시스템 연산 속도를 늦추고 있는 것이다.
 * Kube-state-metrics: 노드의 상태(Ready/NotReady) 외에도 DiskPressure, PIDPressure 등의 이벤트를 실시간으로 감시하여 하드웨어 한계 도달 여부를 확인한다.
+
+#### 대시보드 (Grafana) ####
+* Node Exporter Full (ID: 1860): iowait, Disk I/O 등 하드웨어 전반을 모니터링하기에 최적이다.
+* Kubernetes / Compute Resources / Pod (ID: 15760): 특정 파드의 CPU Throttling을 시각적으로 보여준다. 
+
+#### Kube-state-metrics를 통한 노드 압박(Pressure) 감시 ####
+```
+kubectl get nodes -o custom-columns=NAME:.metadata.name,DISK_PRESSURE:.status.conditions[?(@.type=="DiskPressure")].status,MEMORY_PRESSURE:.status.conditions[?(@.type=="MemoryPressure")].status,PID_PRESSURE:.status.conditions[?(@.type=="PIDPressure")].status
+```
