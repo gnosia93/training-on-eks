@@ -613,6 +613,28 @@ loki_loki-query-scheduler-78d8746f46-pt5sv_2b7cbe39-9537-4f3a-b9a0-49dd4bfc6e76
 monitoring_prometheus-prometheus-node-exporter-thrkj_6a46cef4-8a7c-4191-b9ca-202b739427a9
 ```
 
+### Loki 전송 여부 확인 ###
+grep 결과가 아무것도 나오지 않는다는 것은 Alloy가 Loki로 로그를 보내는 과정에서 아무런 에러나 경고가 발생하지 않았다 것이다
+```
+kubectl logs -n alloy -l app.kubernetes.io/name=alloy | grep -iE "error|failed|warn"
+```
+
+### Loki 저장 로그 확인 ###
+디버깅용 컨테이너를 하나 띄워서 아래 결과를 확인한다. 
+```
+# Loki에서 최근 5분간의 로그 샘플 조회 (인증 정보 포함)
+curl -u "loki:loki" -G -s "loki-gateway.loki.svc.cluster.local/loki/api/v1/query_range" \
+  --data-urlencode 'query={cluster="training-on-eks"}' \
+  --data-urlencode 'limit=10' \
+  -H "X-Scope-OrgId: foo"
+```
+[결과]
+```
+{"status":"success","data":{"resultType":"streams","result":[{"stream":{"app":"loki","cluster":"training-on-eks","container":"nginx","container_runtime":"containerd","detected_level":"unknown","filename":"/var/log/pods/loki_loki-gateway-6f6d8c796f-2x8fq_b3920be4-b23e-47a8-8a79-b60256c796c3/nginx/0.log","job":"loki/nginx/","namespace":"loki","pod":"loki-gateway-6f6d8c796f-2x8fq","service_name":"loki"},"values":[["1767768281534797089","2026-01-07T06:44:41.328244533Z stderr F 10.0.11.76 - loki [07/Jan/2026:06:44:41 +0000]  204 \"POST /loki/api/v1/push HTTP/1.1\" 0 \"-\" \"Alloy/v1.12.1 (linux; helm)\" \"-\""],["1767768280280872142","2026-01-07T06:44:40.128261401Z stderr F 10.0.11.76 - loki [07/Jan/2026:06:44:40 +0000]  204 \"POST /loki/api/v1/push HTTP/1.1\" 0 \"-\" \"Alloy/v1.12.1 (linux; helm)\" \"-\""],["1767768279028018791","2026-01-07T06:44:38.827390941Z stderr F 10.0.11.76 - loki [07/Jan/2026:06:44:38 +0000]  204 \"POST /loki/api/v1/push HTTP/1.1\" 0 \"-\" \"Alloy/v1.12.1 (linux; helm)\" \"-\""],["1767768277773925126","2026-01-07T06:44:37.529893945Z stderr F 10.0.11.76 - loki [07/Jan/2026:06:44:37 +0000]  204 \"POST /loki/api/v1/push HTTP/1.1\" 0 \"-\" \"Alloy/v1.12.1 (linux; helm)\" \"-\""]]},
+```
+
+
+
 ### helm 차트에서 지원되는 value 값 보기 ###
 ```
 $ helm show values grafana/alloy | grep -iE "volume|mount"
