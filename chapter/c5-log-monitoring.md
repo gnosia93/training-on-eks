@@ -589,6 +589,7 @@ alloy-l6djd   2/2     Running   0          5m21s
 alloy-rldlj   2/2     Running   0          5m21s
 alloy-wp2hk   2/2     Running   0          5m21s
 ```
+alloy 파드에서 호스트의 /var/log/pods 경로를 읽어오는지 확인한다.  
 ```
 kubectl exec -it alloy-d6wwh -n alloy -- ls -R /var/log/pods
 ```
