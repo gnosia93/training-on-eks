@@ -108,8 +108,33 @@ Amazon CloudWatch Container Insights는 EFA 디바이스 플러그인과 통합�
 
 #### 설정 방법 #### 
 ```
-aws iam attach-role-policy --role-name <노드-역할-이름> --policy-arn arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
-aws eks create-addon --cluster-name <클러스터-이름> --addon-name amazon-cloudwatch-observability
+kubectl get configmap aws-auth -n kube-system -o yaml
+```
+[결과]
+```
+apiVersion: v1
+data:
+  mapRoles: |
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::123456789012:role/eksctl-training-on-eks-nodegroup-n-NodeInstanceRole-HXVJm7TpDIdL
+      username: system:node:{{EC2PrivateDNSName}}
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::123456789012:role/eksctl-training-on-eks-nodegroup-n-NodeInstanceRole-MBD9yrfHGprv
+      username: system:node:{{EC2PrivateDNSName}}
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::123456789012:role/eksctl-KarpenterNodeRole-training-on-eks
+      username: system:node:{{EC2PrivateDNSName}}
+```
+3 개의 노도 Role 이 존재하는 것을 확인할 수 있다. 각각 3가지 롤에 대해서 CloudWatchAgentServerPolicy 권한을 추가한다. 
+```
+aws iam attach-role-policy --role-name <노드 Role> --policy-arn arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+aws eks create-addon --cluster-name <클러스터명> --addon-name amazon-cloudwatch-observability
 kubectl get pods -n amazon-cloudwatch
 ```
 성공적으로 활성화되면 CloudWatch 콘솔의 인사이트(Insights) > Container Insights 메뉴에서 클러스터, 노드, Pod 단위의 리소스 사용량(CPU, 메모리 등)을 시각화된 대시보드로 확인 한다.
