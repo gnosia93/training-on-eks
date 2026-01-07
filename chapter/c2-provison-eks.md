@@ -308,6 +308,17 @@ spec:
 EOF
 ```
 
+nginx 서비스를 조회한 후, 웹브라우저로 접속해 본다. 
+```
+kubectl get svc nginx
+```
+[결과]
+```
+NAME         TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)        AGE
+nginx        LoadBalancer   172.20.151.112   a8bef1d582261479aa1eaffae26de2a0-2081456608.us-west-2.elb.amazonaws.com   80:30299/TCP   10s
+```
+
+
 ## 클러스터 삭제 ##
 #### 1. 카펜터 인스턴스 프로파일 삭제 #### 
 ```
