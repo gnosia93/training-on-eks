@@ -9,10 +9,10 @@ helm repo update
 cat <<EOF > efa-tuning.yaml
 prometheus-node-exporter:
   service:
-    port: 9111
-    targetPort: 9111
+    port: 9200
+    targetPort: 9200
   extraArgs:
-    - --web.listen-address=:9111
+    - --web.listen-address=:9200
     - --collector.ethtool
     - --collector.ethtool.device-include=.*
     - --collector.infiniband
