@@ -15,9 +15,9 @@
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/grafana-loki-alloy.png)
 
 #### 2. 로그 데이터 조회 방법 (Explore) ####
-* 설정이 끝났다면 실제로 로그가 나오는지 확인합니다.
-* 왼쪽 메뉴에서 Explore (나침반 모양 아이콘)를 클릭합니다.
-* 상단 드롭다운에서 방금 추가한 Loki 데이터 소스를 선택합니다.
-* Label browser 버튼을 누르거나 쿼리창에 다음을 입력합니다.
-* Run query를 클릭하여 아래쪽에 실시간 로그가 올라오는지 확인합니다.
+* 설정이 끝났다면 실제로 로그가 나오는지 확인한다.
+* 왼쪽 메뉴에서 Explore (나침반 모양 아이콘)를 클릭한다.
+* 상단 드롭다운에서 방금 추가한 Loki 데이터 소스를 선택한다.
+* Label browser 에서 보고자 하는 데이터를 설정한다. 
+* Run query를 클릭하여 아래쪽에 실시간 로그가 올라오는지 확인한다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/loki-log.png)
