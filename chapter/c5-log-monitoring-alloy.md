@@ -252,7 +252,7 @@ kubectl logs -n alloy -l app.kubernetes.io/name=alloy | grep -iE "error|failed|w
 ```
 
 ### Loki 저장 로그 확인 ###
-디버깅용 컨테이너를 하나 띄워서 아래 결과를 확인한다. 
+[디버깅용 컨테이너](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a5.debug-container.md)를 하나 띄워서 아래 결과를 확인한다. 
 ```
 # Loki에서 최근 5분간의 로그 샘플 조회 (인증 정보 포함)
 curl -u "loki:loki" -G -s "loki-gateway.loki.svc.cluster.local/loki/api/v1/query_range" \
