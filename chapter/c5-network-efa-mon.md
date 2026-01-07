@@ -107,7 +107,7 @@ kubectl get pods -n kube-system -l app=efa-prometheus-exporter
 ### 2. ServiceMonitor 설정 ###
 ```
 cat <<EOF | kubectl apply -f -
-apiVersion: monitoring.coreos.com
+apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: efa-exporter-monitor
