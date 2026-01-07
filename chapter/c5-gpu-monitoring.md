@@ -4,21 +4,7 @@
 ```
 helm repo add prometheus https://prometheus-community.github.io/helm-charts
 helm repo update
-```
-```
-cat <<EOF > efa-tuning.yaml
-prometheus-node-exporter:
-  service:
-    port: 9200
-    targetPort: 9200
-  extraArgs:
-    - --web.listen-address=:9200
-    - --collector.ethtool
-    - --collector.ethtool.device-include=.*
-    - --collector.infiniband
-EOF
-```
-```
+
 helm install prometheus prometheus/kube-prometheus-stack \
     --create-namespace \
     --namespace monitoring \
