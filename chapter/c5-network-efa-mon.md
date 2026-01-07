@@ -30,7 +30,11 @@ helm get values prometheus -n monitoring > my-prometheus-values.yaml
 ```
 cat <<EOF > efa-tuning.yaml
 prometheus-node-exporter:
+  service:
+    port: 9101
+    targetPort: 9101
   extraArgs:
+    - --web.listen-address=:9101
     - --collector.ethtool
     - --collector.ethtool.device-include=.*
     - --collector.infiniband
