@@ -170,6 +170,7 @@ provider: efa
 * 성공 시: provider: efa, fabric: efa와 같은 정보가 상세하게 출력된다.
 * 실패 시: fi_info 결과에 아무것도 나오지 않거나 에러가 발생한다. 이 경우 보안 그룹의 인/아웃 바운드 셀프 참조 존재여부를 확인한다. 
 
+### efa 디바이스 조회 ###
 ```
 ls -la /sys/class/infiniband/
 ```
@@ -181,7 +182,7 @@ drwxr-xr-x. 40 root root 0 Jan  7 09:10 ..
 lrwxrwxrwx.  1 root root 0 Jan  7 09:10 rdmap0s29 -> ../../devices/pci0000:00/0000:00:1d.0/infiniband/rdmap0s29
 ```
 
-### AWS System Manager 로 호스트 접근 ###
+### AWS 시스템 매니저로 호스트 접근 ###
 EC2 콘솔에서 EFA 인스턴스를 선택하고 시스템 매니저로 호스에 로그인 한후, efa hw counter 를 조회한다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/efa-hw-counter.png)
 
