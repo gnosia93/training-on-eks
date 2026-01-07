@@ -110,10 +110,12 @@ kind: Pod
 metadata:
   name: gpu-pod
 spec:
-  containers:
-    - name: cuda-container
-      image: nvidia/cuda:13.0.2-runtime-ubuntu22.04    # runtime 이미지 사용
-      command: ["nvidia-smi"]                          # 컨테이너 시작 시 실행할 프로그램
+  restartPolicy: Never                                # 재시작 정책을 Never로 설정 (실행 완료 후 다시 시작하지 않음)
+  containers:                                         # 기본값은 Always - 컨테이너가 성공적으로 종료(exit 0)되든, 에러로 종료(exit nonzero)되든 상관없이 항상 재시작
+    - name: cuda-container                            # nvidia-smi만 실행하고 끝나는 파드에 이 정책이 적용되면, 종료 후 다시 실행을 반복하다가 결국 CrashLoopBackOff 상태가 됨.
+      image: nvidia/cuda:13.0.2-runtime-ubuntu22.04    
+      command: ["/bin/sh", "-c"]
+      args: ["nvidia-smi && sleep 60"]                # nvidia-smi 실행 후 60초(1분) 동안 대기
       resources:
         limits:
           nvidia.com/gpu: 1
