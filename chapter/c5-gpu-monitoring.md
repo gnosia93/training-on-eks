@@ -6,8 +6,7 @@ helm repo add prometheus https://prometheus-community.github.io/helm-charts
 helm repo update
 
 helm install prometheus prometheus/kube-prometheus-stack \
-    --create-namespace \
-    --namespace monitoring \
+    --create-namespace --namespace monitoring 
 ```
 생성된 파드들을 조회한다. 
 ```
