@@ -64,7 +64,7 @@ spec:
       hostNetwork: true
       containers:
       - name: exporter
-        image: public.ecr.aws/aws-efa-prometheus-exporter/aws-efa-prometheus-exporter:latest
+        image: public.ecr.aws/aws-efa-prometheus-exporter/aws-efa-prometheus-exporter:v0.1.0
         securityContext:
           privileged: true
         ports:
