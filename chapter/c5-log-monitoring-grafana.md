@@ -1,4 +1,4 @@
-## [Grafana Dashboard 설정] ##
+## Loki Grafana Dashboard 설정 ##
 
 #### 1. 데이터 소스 설정 단계 ####
 * Grafana 접속: 웹 브라우저에서 Grafana UI에 로그인 한다.
