@@ -49,7 +49,7 @@ _본 워크샵은 EKS 및 Kubeflow Training Operator를 활용하여 대규모 �
 * [A2. EC2 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-ec2-nvlink.md)
 * [A3. 토폴리지별 훈련성능](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a3.training-perf-topology.md)
 * [A4. CPU 분산훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a4.training-on-cpu.md)
-* [A5. al2023-debug](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a5.debug-container.md)
+* [A5. al2023-debug 파드](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a5.debug-container.md)
 
 ### _Revision History_ ###
 * 2026-01-07 First Released — EKS 및 Kubeflow 기반 분산 훈련 가이드 작성
