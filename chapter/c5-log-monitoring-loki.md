@@ -204,13 +204,14 @@ ruler:
  maxUnavailable: 1
 
 # This exposes the Loki gateway so it can be written to and queried externaly
+# Loki 는 인증 체계가 없다. 여기서 gateway 는 nginx 로, Loki 앞단에서 인증을 관리해 준다.
 gateway:
  service:
-   type: LoadBalancer
+   type: LoadBalancer                         # AWS 의 public CLB 가 생성된다. 
    loadBalancerSourceRanges:
-      - ${MY_OFFICE_IP}                       # 내 아이피 로만 접근 가능
+      - ${MY_OFFICE_IP}                       # 내 아이피 에서만 접근 가능
  basicAuth:                                   # gateway 접근시 4. Loki 인증 설정에서 작성한 id/password 로 기본 인증(Basic Auth) 인증해야 한다. 
-     enabled: true
+     enabled: true                            # false 로 설정하면 인증을 하지 않게 된다.
      existingSecret: loki-basic-auth
 
 test:
