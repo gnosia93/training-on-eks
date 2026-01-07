@@ -59,7 +59,7 @@ go install github.com/awslabs/eks-node-viewer/cmd/eks-node-viewer@latest
 echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
 source ~/.bashrc
 ```
-
+go 컴파일 과정에서 다소 시간이 소요된다.
 
 ## EKS 클러스터 생성하기 ##
 
