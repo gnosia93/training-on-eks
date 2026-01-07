@@ -115,7 +115,7 @@ spec:
     - name: cuda-container                            # nvidia-smi만 실행하고 끝나는 파드에 이 정책이 적용되면, 종료 후 다시 실행을 반복하다가 결국 CrashLoopBackOff 상태가 됨.
       image: nvidia/cuda:13.0.2-runtime-ubuntu22.04    
       command: ["/bin/sh", "-c"]
-      args: ["nvidia-smi && sleep 60"]                # nvidia-smi 실행 후 60초(1분) 동안 대기
+      args: ["nvidia-smi && sleep 300"]                # nvidia-smi 실행 후 300초(5분) 동안 대기
       resources:
         limits:
           nvidia.com/gpu: 1
