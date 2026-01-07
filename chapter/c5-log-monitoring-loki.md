@@ -113,6 +113,8 @@ kubectl create secret generic loki-basic-auth --from-file=.htpasswd -n loki
 ```
 
 #### 5. Loki 헬름 차트 설정 ####
+MY_OFFICE_IP 를 본인 IP 로 수정한다.
+
 ```
 export MY_OFFICE_IP="122.36.213.114/32"
 
