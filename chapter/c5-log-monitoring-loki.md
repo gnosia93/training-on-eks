@@ -368,7 +368,7 @@ loki-ruler-0                            1/1     Running   0          54s
 ## 테스트 하기 ##
 
 ### loki-gateway 들여다 보기 ###
-al2023-debug 파드를 스케줄링하고 해당 파드안에 nslookup 을 설치한다.
+[al2023-debug 파드](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a5.debug-container.md)를 스케줄링하고 해당 파드안에 nslookup 을 설치한다.
 ```
 kubectl exec -it al2023-debug -- /bin/bash
 dnf install -y bind-utils
