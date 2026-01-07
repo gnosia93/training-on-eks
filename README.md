@@ -53,7 +53,6 @@ _본 워크샵은 EKS 및 Kubeflow Training Operator를 활용하여 대규모 �
 
 ## ToDO ##
 
-* EFA 네트워크 모니터링 수정 - 그라파나에 메트릭이 보이지 않음
 * llama 3-8B - 분산 로딩 재구현 (현재는 모든 gpu가 파라미터를 올리고 있는듯) 
 * Intel CPU 기반 훈련 구현
   
