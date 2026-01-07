@@ -18,7 +18,7 @@ prometheus-node-exporter:
     - --collector.infiniband
 EOF
 ```
-
+```
 helm install prometheus prometheus/kube-prometheus-stack \
     --create-namespace \
     --namespace monitoring \
