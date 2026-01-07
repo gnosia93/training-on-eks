@@ -569,6 +569,21 @@ ts=2026-01-07T06:08:39.693635952Z level=info msg="failed to register collector w
 로그 출력 결과를 보니 Loki 전송과 관련된 에러(401, failed to send batch 등)는 전혀 보이지 않는다.
 출력된 failed to register collector... 메시지는 Grafana Cloud의 원격 관리 기능을 쓰지 않을 때 나타나는 정보성 로그이다.
 
+Alloy 파드 중 하나에 들어가서 실제 로그 파일 리스트가 출력되는지 확인한다.
+```
+kubectl get pods -n alloy
+```
+[결과]
+```
+NAME          READY   STATUS    RESTARTS   AGE
+alloy-d6wwh   2/2     Running   0          5m21s
+alloy-l6djd   2/2     Running   0          5m21s
+alloy-rldlj   2/2     Running   0          5m21s
+alloy-wp2hk   2/2     Running   0          5m21s
+```
+```
+kubectl exec -it alloy-d6wwh -n alloy -- ls -R /var/log/pods
+```
 
 ### [Grafana Dashboard 설정]() ###
 
