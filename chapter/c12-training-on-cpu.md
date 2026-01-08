@@ -116,6 +116,17 @@ nodepool.karpenter.sh/cpu-amx   cpu-amx     0       True    6m13s
 nodepool.karpenter.sh/gpu       gpu         0       True    25h
 ```
 
+## 큐브플로우 Trainer 설치 ##
+이미 설치했다면 건너 띄도록 한다.
+```
+sudo dnf install git -y
+
+export VERSION=v2.1.0
+kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=${VERSION}"
+kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
+
+kubectl get clustertrainingruntimes
+```
 
 ## 훈련 하기 ##
 Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 약 60GB 정도의 메모리를 점유한다. Pod 생성시 c7i.8xlarge(32 vCPU, 64 GB Memory) 기준으로 할당하게 설정한다. 
