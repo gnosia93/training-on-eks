@@ -29,10 +29,11 @@ Instance: i7i.24xlarge       | vCPU:  96 | Cores: 48 | Memory:    768 GiB
 Instance: c7i.48xlarge       | vCPU: 192 | Cores: 96 | Memory:    384 GiB
 Instance: m7i.metal-48xl     | vCPU: 192 | Cores: 96 | Memory:    768 GiB
 ```
-이중 C / M / R7i.48xlarge 로 구성된 카펜터 노드풀을 생성 한다.  
+EFA 가 필요한 경우  C / M / R7i.48xlarge 로 구성된 카펜터 노드풀을 생성 한다.  
 
 ## 카펜터 노드풀 생성 ##
-
+Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 약 50GB 정도의 메모리를 점유한다.
+노드풀 생성시 c7i.8xlarge(32 vCPU, 64 GB Memory) 기준으로 하나의 Pod 로 할당하게 설정한다.   
 ```
 cat <<EOF | kubectl apply -f -  
 apiVersion: karpenter.sh/v1
@@ -57,7 +58,7 @@ spec:
           values: ["c7i", "m7i", "r7i"]
         - key: "karpenter.k8s.aws/instance-size"
           operator: In
-          values: ["48xlarge"]
+          values: ["8xlarge", "16xlarge", "24xlarge, 48xlarge"]
       nodeClassRef:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
@@ -118,6 +119,8 @@ nodepool.karpenter.sh/gpu       gpu         0       True    25h
 
 
 ## 훈련 하기 ##
+* 파드당 Memory 는 64GB, CPU 는 32 Core 로 설정.
+
 << 작성 필요 >>
 
 
