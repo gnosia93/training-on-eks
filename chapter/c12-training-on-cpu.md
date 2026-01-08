@@ -210,6 +210,15 @@ k9s
 
 
 ## 그라파나 대시보드 관찰 ##
+```
+kubectl get svc prometheus-grafana  -n monitoring
+```
+[결과]
+```
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP                                                              PORT(S)        AGE
+prometheus-grafana   LoadBalancer   172.20.193.46   a083e09003c374b72b446d26c36c67aa-199507387.us-west-2.elb.amazonaws.com   80:30426/TCP   26h
+```
+http://a083e09003c374b72b446d26c36c67aa-199507387.us-west-2.elb.amazonaws.com 그라파나 대시보드에 접속한다. 
 
 * 네트워크
 
