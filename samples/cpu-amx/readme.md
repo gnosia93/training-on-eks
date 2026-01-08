@@ -1,6 +1,6 @@
 ## 실행 ##
 ```
-torchrun --nproc_per_node=1 /home/ec2-user/train/train.py
+torchrun --nproc_per_node=1 samples/cpu-amx/cpu-llama3.py
 ```
 
 ## 코드분석 ##
