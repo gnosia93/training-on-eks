@@ -127,6 +127,16 @@ export LD_PRELOAD=/usr/lib64/libtcmalloc.so.4:$LD_PRELOAD
 -----
 
 
+
+
+
+
+
+
+
+
+
+
 ### GPU 대비 성능 격차 (TFLOPS 기준) ###
 * H100 (GPU) 1대: bf16 연산 기준 약 900~1,000 TFLOPS 이상의 성능을 냅니다.
 * r7i.metal (CPU) 1대: AMX 가속을 사용해도 bf16 기준 약 30~50 TFLOPS 수준입니다.
@@ -369,6 +379,10 @@ if __name__ == "__main__":
 * deepspeed.zero.Init()의 역할: 이 컨텍스트 매니저는 모델의 파라미터를 생성할 때 Meta Device 기술을 사용하여 실제 메모리를 할당하지 않고 '선언'만 합니다.
 * 분산 로딩 (Sharded Loading): from_pretrained가 호출되면 DeepSpeed가 로딩 과정을 가로챕니다. Rank 0이 디스크에서 가중치를 읽으면, 즉시 WORLD_SIZE(GPU 개수)로 나누어 각 GPU에 전달하고 자신은 그 조각만 남기고 나머지는 메모리에서 즉시 비웁니다.
 * 중복 로드 방지: low_cpu_mem_usage=True와 DeepSpeed의 결합으로 인해, 모든 GPU가 동시에 16GB 파일을 읽어 CPU RAM이 터지는 현상을 방지합니다. Hugging Face 공식 문서에서도 ZeRO-3 사용 시 이 방식을 가장 권장합니다.
+
+---
+* Intel은 IPEX 대신 PyTorch 2.5 이상의 공식 버전을 사용할 것을 권장하며, 최신 PyTorch에는 Intel CPU/GPU 최적화 기능이 통합되어 있습니다. 기존 코드에서 import intel_extension_for_pytorch 및 ipex.optimize 관련 부분을 제거하고 최신 PyTorch 기능을 활용하는 방법을 고려해 볼 수 있습니다. 
+---
 
 
 ## 레퍼런스 ##
