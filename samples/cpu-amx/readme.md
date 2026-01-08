@@ -14,8 +14,11 @@ export MASTER_ADDR=localhost
 export WORLD_SIZE=4
 export OMP_NUM_THREADS=12
 export MKL_NUM_THREADS=12
+
 GLOO_LOG_LEVEL=TRACE TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=4 train.py
 ```
+* TORCHINDUCTOR_CACHE_DIR : 환경 변수를 설정하여 Triton 캐시가 삭제되지 않게 유지
+* TORCHINDUCTOR_COMPILE_THREADS : 트리톤 워크 갯수 (랭크당)
 * OMP_NUM_THREADS (OpenMP): 파이토치(PyTorch) 내부의 행렬 연산이나 딥러닝 레이어 계산을 할 때 사용하는 '병렬 작업자(Thread)'의 수를 결정.
 * MKL_NUM_THREADS (Intel MKL): 인텔 CPU 전용 수학 연산 라이브러리(MKL)가 사용할 스레드 수. Intel AMX 가속을 활용할 때 이 라이브러리가 핵심적인 역할을 하므로, 이 값을 높여야 실제 연산 속도가 폭발적으로 증가함.
  
