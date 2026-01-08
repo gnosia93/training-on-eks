@@ -326,7 +326,7 @@ aws iam attach-role-policy \
 ```
 
 
-## 리소스 삭제 ##
+## lustre 삭제 ##
 ```
 export CLUSTER_NAME="training-on-eks"
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
