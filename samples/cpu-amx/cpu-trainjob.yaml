@@ -39,7 +39,7 @@ spec:
       - -c
       - |
         git clone https://github.com/gnosia93/training-on-eks /workspace/code
-        cd /workspace/code/samples/deepspeed
+        cd /workspace/code/samples/cpu-amx
         huggingface-cli login --token "${HF_TOKEN}"
         echo "=== Launching Distributed Training ==="
         pip install -r requirements.txt && \
