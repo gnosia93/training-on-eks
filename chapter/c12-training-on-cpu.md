@@ -93,7 +93,8 @@ spec:
         volumeType: gp3
   userData: |
     #!/bin/bash
-    # Intel AMX 성능 최적화를 위한 라이브러리 로드 및 설정
+    # Intel AMX 성능 최적화를 위한 라이브러리 로드 및 설정  
+    sudo yum install python3-devel -y
     echo "Intel AMX Optimization: Loading TCMalloc"
     dnf install -y google-perftools
     pip install intel-extension-for-pytorch
@@ -125,18 +126,6 @@ export LD_PRELOAD=/usr/lib64/libtcmalloc.so.4:$LD_PRELOAD
 # backend='ccl' 또는 'gloo' 사용 가능
 ```
 -----
-
-## 패키지 설치 ##
-```
-sudo yum install python3-devel -y
-```
-
-
-
-
-
-
-
 
 
 
