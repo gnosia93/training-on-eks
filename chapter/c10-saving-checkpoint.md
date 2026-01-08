@@ -261,6 +261,70 @@ for epoch in range(num_epochs):
 대규모 모델의 경우 1 에포크가 며칠씩 걸릴 수도 있기 때문에, 체크 포인트는 Step 단위로 저장하는 것이 일반적이다. 이렇게 해야 학습 도중 노드가 다운 되더라도 훈련 손실을 최소화할 수 있다. 체크포인트 인터벌은 모델의 크기와 학습 시간에 맞춰 step 단위를 쓸지 epoch 단위를 쓸지 결정하면 된다.
 
 
+## 자동 백업 & 삭제 보호 ##
+
+분산 훈련시 lustre 파일 시스템에는 체크포인트 데이터와 훈련 데이터를 저장하고 있으므로 자동 백업 가능과 삭제 보호 기능을 활성화 해야한다.  
+
+### 1. 자동 백업 ###
+
+#### FSx 자체 백업 기능 (Persistent 파일 시스템 대상) #### 
+S3 데이터 리포지토리와 연결되지 않은 영구(Persistent) 파일 시스템의 경우, Amazon FSx는 다음 두 가지 타입의 백업을 지원한다. 
+* 자동 일일 백업 (Automatic daily backups): 사용자가 설정한 백업 기간(1~90일, 기본 30일) 동안 매일 자동으로 백업이 수행된다.
+* 사용자 시작 백업 (User-initiated backups): 필요시 수동으로 특정 시점 백업을 생성할 수 있다. 
+이 두 가지 모두 블록 기반의 증분 백업으로 S3에 저장되어 비용 효율적이며 내구성이 뛰어나다. 
+```
+aws fsx describe-file-systems --file-system-ids <파일-시스템-ID> --query "FileSystems[0].LustreConfiguration"
+
+aws fsx update-file-system \
+  --file-system-id <파일-시스템-ID> \
+  --lustre-configuration "AutomaticBackupRetentionDays=<유지-일수>,DailyAutomaticBackupStartTime=<HH:MM>"
+```
+
+#### S3 데이터 리포지토리와의 자동 동기화 (Automatic Import/Export) #### 
+파일 시스템이 S3 버킷에 연결된 경우, "자동 내보내기(Automatic export)" 기능을 설정하여 파일 시스템의 변경 사항(파일 추가, 변경, 삭제)이 S3 버킷에 자동으로 업데이트되도록 할 수 있다. 이는 엄밀히 말해 전통적인 "백업"이라기보다는 지속적인 데이터 동기화 메커니즘이다 
+
+```
+# 파일 시스템의 /ns1/ 경로를 S3 버킷 s3://my-bucket/data/와 연결하는 예시
+aws fsx create-data-repository-association \
+  --file-system-id <파일-시스템-ID> \
+  --file-system-path /ns1/ \
+  --data-repository-path s3://<버킷-이름>/<폴더>/ \
+  --s3 '{"AutoImportPolicy": {"Events": ["NEW", "CHANGED"]}, "AutoExportPolicy": {"Events": ["NEW", "CHANGED"]}}'
+```
+
+### 2. 삭제 보호 ###
+
+RDS 나 EC2 와는 달리 lustre 의 경우 삭제 보호 기능이 제공되지 않는다. 
+삭제 보호 효과를 내는 유일한 대안은 특정 사용자나 스크립트가 실수로 삭제하지 못하도록 fsx:DeleteFileSystem 권한을 차단하는 것이다. 이렇게 하면 콘솔에서 삭제 버튼을 누르거나 CLI로 명령을 내려도 거부된다.
+
+[policy.json]
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PreventFSxDeletion",
+            "Effect": "Deny",
+            "Action": "fsx:DeleteFileSystem",
+            "Resource": "arn:aws:fsx:region:account-id:file-system/fs-xxxxxxxxxxxxxxxxx"
+        }
+    ]
+}
+```
+```
+aws iam create-policy \
+    --policy-name FSxDeleteProtectionPolicy \
+    --policy-document file://policy.json
+
+aws iam attach-user-policy \
+    --user-name <사용자-이름> \
+    --policy-arn arn:aws:iam::<계정-ID>:policy/FSxDeleteProtectionPolicy
+
+aws iam attach-role-policy \
+    --role-name <역할-이름> \
+    --policy-arn arn:aws:iam::<계정-ID>:policy/FSxDeleteProtectionPolicy
+```
+
 
 ## 리소스 삭제 ##
 ```
