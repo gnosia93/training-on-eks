@@ -1,9 +1,10 @@
 ## 실행 ##
-* 단일 프로세스 
+
+### 단일 프로세스 훈련 ### 
 ```
 torchrun --nproc_per_node=1 samples/cpu-amx/cpu-llama3.py
 ```
-* 멀티 분산 훈련
+### 멀티 프로세스 분산 훈련 ###
 ```
 GLOO_LOG_LEVEL=TRACE TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=4 train.py
 ```   
