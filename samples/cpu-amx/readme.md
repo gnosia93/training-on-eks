@@ -7,6 +7,139 @@ torchrun --nproc_per_node=1 samples/cpu-amx/cpu-llama3.py
 ```
 GLOO_LOG_LEVEL=TRACE TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=4 train.py
 ```   
+[결과]
+```
+W0108 08:13:23.689836 81085 torch/distributed/run.py:774] 
+W0108 08:13:23.689836 81085 torch/distributed/run.py:774] *****************************************
+W0108 08:13:23.689836 81085 torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0108 08:13:23.689836 81085 torch/distributed/run.py:774] *****************************************
+[Gloo] Rank 3 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank 1 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank 0 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank 2 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank 0 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank 1 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank [Gloo] Rank 3 is connected to 32 peer ranks.  is connected to Expected number of connected peer ranks is : 33 peer ranks. 
+Expected number of connected peer ranks is : 3
+[rank1]:[W108 08:13:30.227417871 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
+  Overriding a previously registered kernel for the same operator and the same dispatch key
+  operator: aten::_addmm_activation(Tensor self, Tensor mat1, Tensor mat2, *, Scalar beta=1, Scalar alpha=1, bool use_gelu=False) -> Tensor
+    registered at /pytorch/build/aten/src/ATen/RegisterSchema.cpp:6
+  dispatch key: AutocastCPU
+  previous kernel: registered at /pytorch/aten/src/ATen/autocast_mode.cpp:327
+       new kernel: registered at /opt/workspace/ipex-cpu-dev/csrc/cpu/autocast/autocast_mode.cpp:112 (function operator())
+[rank3]:[W108 08:13:30.230041522 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
+  Overriding a previously registered kernel for the same operator and the same dispatch key
+  operator: aten::_addmm_activation(Tensor self, Tensor mat1, Tensor mat2, *, Scalar beta=1, Scalar alpha=1, bool use_gelu=False) -> Tensor
+    registered at /pytorch/build/aten/src/ATen/RegisterSchema.cpp:6
+  dispatch key: AutocastCPU
+  previous kernel: registered at /pytorch/aten/src/ATen/autocast_mode.cpp:327
+       new kernel: registered at /opt/workspace/ipex-cpu-dev/csrc/cpu/autocast/autocast_mode.cpp:112 (function operator())
+My guessed rank = 1
+My guessed rank = 3
+[rank2]:[W108 08:13:30.435487868 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
+  Overriding a previously registered kernel for the same operator and the same dispatch key
+  operator: aten::_addmm_activation(Tensor self, Tensor mat1, Tensor mat2, *, Scalar beta=1, Scalar alpha=1, bool use_gelu=False) -> Tensor
+    registered at /pytorch/build/aten/src/ATen/RegisterSchema.cpp:6
+  dispatch key: AutocastCPU
+  previous kernel: registered at /pytorch/aten/src/ATen/autocast_mode.cpp:327
+       new kernel: registered at /opt/workspace/ipex-cpu-dev/csrc/cpu/autocast/autocast_mode.cpp:112 (function operator())
+My guessed rank = 2
+[rank0]:[W108 08:13:30.741381204 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
+  Overriding a previously registered kernel for the same operator and the same dispatch key
+  operator: aten::_addmm_activation(Tensor self, Tensor mat1, Tensor mat2, *, Scalar beta=1, Scalar alpha=1, bool use_gelu=False) -> Tensor
+    registered at /pytorch/build/aten/src/ATen/RegisterSchema.cpp:6
+  dispatch key: AutocastCPU
+  previous kernel: registered at /pytorch/aten/src/ATen/autocast_mode.cpp:327
+       new kernel: registered at /opt/workspace/ipex-cpu-dev/csrc/cpu/autocast/autocast_mode.cpp:112 (function operator())
+My guessed rank = 0
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+[2026-01-08 08:13:32,205] [WARNING] [real_accelerator.py:209:get_accelerator] Setting accelerator to CPU. If you have GPU or other accelerator, we were unable to detect it.
+[2026-01-08 08:13:32,216] [WARNING] [real_accelerator.py:209:get_accelerator] Setting accelerator to CPU. If you have GPU or other accelerator, we were unable to detect it.
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+[2026-01-08 08:13:32,322] [WARNING] [real_accelerator.py:209:get_accelerator] Setting accelerator to CPU. If you have GPU or other accelerator, we were unable to detect it.
+DeepSpeed deepspeed.ops.comm.deepspeed_shm_comm_op built successfully
+DeepSpeed deepspeed.ops.comm.deepspeed_shm_comm_op built successfully
+DeepSpeed deepspeed.ops.comm.deepspeed_shm_comm_op built successfully
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+[2026-01-08 08:13:32,917] [WARNING] [real_accelerator.py:209:get_accelerator] Setting accelerator to CPU. If you have GPU or other accelerator, we were unable to detect it.
+DeepSpeed deepspeed.ops.comm.deepspeed_shm_comm_op built successfully
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████| 4/4 [00:40<00:00, 10.01s/it]
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████| 4/4 [00:39<00:00,  9.87s/it]
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████| 4/4 [00:39<00:00,  9.88s/it]
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████| 4/4 [00:40<00:00, 10.03s/it]
+/home/ec2-user/train/train.py:79: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+/home/ec2-user/train/train.py:79: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+--- 학습 시작 ---
+The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'pad_token_id': 128001}.
+--- 학습 시작 ---
+The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'pad_token_id': 128001}.
+/home/ec2-user/train/train.py:79: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+/home/ec2-user/train/train.py:79: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+--- 학습 시작 ---
+The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'pad_token_id': 128001}.
+--- 학습 시작 ---
+The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'pad_token_id': 128001}.
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+2026-01-08 08:14:30,780 - accelerator.py - accelerate.accelerator - WARNING - Gradient accumulation steps mismatch: GradientAccumulationPlugin has 1, DeepSpeed config has 4. Using DeepSpeed's value.
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+[Gloo] Rank 0 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank 1 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank [Gloo] Rank 23 is connected to  is connected to 33 peer ranks.  peer ranks. Expected number of connected peer ranks is : Expected number of connected peer ranks is : 33
+
+[Gloo] Rank [Gloo] Rank 30 is connected to  is connected to 33 peer ranks.  peer ranks. Expected number of connected peer ranks is : [Gloo] Rank Expected number of connected peer ranks is : 331
+
+ is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+[Gloo] Rank 2 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+Stage 3 initialize beginning
+MA 4.81 GB         Max_MA 4.81 GB         CA 4.81 GB         Max_CA 5 GB 
+CPU Virtual Memory:  used = 26.09 GB, percent = 3.5%
+DeepSpeedZeRoOffload initialize [begin]
+MA 4.81 GB         Max_MA 4.81 GB         CA 4.81 GB         Max_CA 5 GB 
+CPU Virtual Memory:  used = 26.09 GB, percent = 3.5%
+Parameter Offload - Persistent parameters statistics: param_count = 65, numel = 266240
+DeepSpeedZeRoOffload initialize [end]
+MA 4.81 GB         Max_MA 4.81 GB         CA 4.81 GB         Max_CA 5 GB 
+CPU Virtual Memory:  used = 26.1 GB, percent = 3.5%
+Before creating fp16 partitions
+MA 4.81 GB         Max_MA 4.81 GB         CA 4.81 GB         Max_CA 5 GB 
+CPU Virtual Memory:  used = 26.1 GB, percent = 3.5%
+After creating fp16 partitions: 3
+MA 5.44 GB         Max_MA 5.44 GB         CA 5.44 GB         Max_CA 5 GB 
+CPU Virtual Memory:  used = 30.42 GB, percent = 4.1%
+Before creating fp32 partitions
+MA 5.44 GB         Max_MA 5.44 GB         CA 5.44 GB         Max_CA 5 GB 
+CPU Virtual Memory:  used = 32.06 GB, percent = 4.3%
+After creating fp32 partitions
+MA 12.92 GB         Max_MA 12.92 GB         CA 12.92 GB         Max_CA 13 GB 
+CPU Virtual Memory:  used = 58.58 GB, percent = 7.9%
+Before initializing optimizer states
+MA 12.92 GB         Max_MA 12.92 GB         CA 12.92 GB         Max_CA 13 GB 
+CPU Virtual Memory:  used = 59.83 GB, percent = 8.0%
+After initializing optimizer states
+MA 20.4 GB         Max_MA 20.4 GB         CA 20.4 GB         Max_CA 20 GB 
+CPU Virtual Memory:  used = 88.56 GB, percent = 11.9%
+After initializing ZeRO optimizer
+MA 24.47 GB         Max_MA 24.47 GB         CA 24.47 GB         Max_CA 24 GB 
+CPU Virtual Memory:  used = 104.54 GB, percent = 14.1%
+  0%|                                                                                                                 | 0/50 [00:00<?, ?it/s]
+```
+
 
 ## 코드분석 ##
 * AutoModelForCausalLM.from_pretrained 호출시 deepspeed 가 관여
