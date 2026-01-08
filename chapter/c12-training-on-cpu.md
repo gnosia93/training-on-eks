@@ -208,5 +208,14 @@ k9s
 ```
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/cpu-k9s.png)
 
+
+## 그라파나 대시보드 관찰 ##
+
+* 네트워크
+
+* Node exporter ...
+
+
+
 ## 레퍼런스 ##
 * https://tutorials.pytorch.kr/recipes/amx.html
