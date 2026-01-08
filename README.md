@@ -55,7 +55,6 @@
 ## ToDO ##
 
 * llama 3-8B - 분산 로딩 재구현 (현재는 모든 gpu가 파라미터를 올리고 있는듯) 
-* Intel CPU 기반 훈련 구현
   
 ### _Revision History_ ###
 * 2026-01-07 First Released — EKS 및 Kubeflow 기반 분산 훈련 가이드 작성
