@@ -32,7 +32,7 @@ Instance: m7i.metal-48xl     | vCPU: 192 | Cores: 96 | Memory:    768 GiB
 EFA 가 필요한 경우  C / M / R7i.48xlarge 로 구성된 카펜터 노드풀을 생성 한다.  
 
 ## 카펜터 노드풀 생성 ##
-Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 약 50GB 정도의 메모리를 점유한다.
+Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 약 60GB 정도의 메모리를 점유한다.
 노드풀 생성시 c7i.8xlarge(32 vCPU, 64 GB Memory) 기준으로 하나의 Pod 로 할당하게 설정한다.   
 ```
 cat <<EOF | kubectl apply -f -  
