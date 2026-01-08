@@ -117,7 +117,6 @@ nodepool.karpenter.sh/gpu       gpu         0       True    25h
 ```
 
 ## 큐브플로우 Trainer 설치 ##
-이미 설치했다면 건너 띄도록 한다.
 ```
 sudo dnf install git -y
 
