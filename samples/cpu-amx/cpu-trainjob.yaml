@@ -53,7 +53,7 @@ spec:
         echo "Master Port: ${PET_MASTER_PORT}" && \
         torchrun \
           --nproc_per_node=1 \
-          --rdzv_id=llama-3-8b-job \
+          --rdzv_id=cpu-llama-3-8b-job \
           --rdzv_backend=c10d \
           --rdzv_endpoint=${PET_MASTER_ADDR}:${PET_MASTER_PORT} \
           --rdzv_conf=timeout=1200 \
