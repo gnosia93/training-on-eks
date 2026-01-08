@@ -178,120 +178,6 @@ Hugging Face from_pretrained 함수에서 이 옵션이 있고 없고의 차이�
 ## 훈련코드 ##
 
 
-[cpu-ds.json]
-```
-{
-    "bf16": { "enabled": true },
-    "zero_optimization": {
-        "stage": 3,
-        "offload_optimizer": { "device": "cpu" },
-        "offload_param": { "device": "cpu" },
-        "overlap_comm": true,
-        "contiguous_gradients": true,
-        "stage3_max_live_parameters": 1e9,
-        "stage3_prefetch_bucket_size": 5e8,
-        "stage3_param_persistence_threshold": 1e6
-    },
-    "gradient_accumulation_steps": "auto",
-    "gradient_clipping": "auto",
-    "steps_per_print": 10,
-    "train_batch_size": "auto",
-    "train_micro_batch_size_per_gpu": "auto"
-}
-```
-
-[train.py]
-```
-import os
-import torch
-import intel_extension_for_pytorch as ipex
-from transformers import (
-    AutoModelForCausalLM, 
-    AutoTokenizer, 
-    TrainingArguments, 
-    Trainer, 
-    AutoConfig
-)
-from datasets import load_dataset
-
-def main():
-    # 1. 모델 설정
-    model_name = "meta-llama/Meta-Llama-3-8B"
-    # FSx 마운트 경로로 변경하세요.
-    output_dir = "/fsx/llama3-training-output" 
-
-    # 2. 토크나이저 로드
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    tokenizer.pad_token = tokenizer.eos_token
-    tokenizer.padding_side = "right"
-
-    # 3. 데이터셋 로드 및 전처리
-    dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")
-    
-    def tokenize_function(examples):
-        return tokenizer(examples["text"], truncation=True, max_length=512, padding="max_length")
-    
-    tokenized_datasets = dataset.map(
-        tokenize_function, 
-        batched=True, 
-        remove_columns=["text"],
-        num_proc=os.cpu_count() // 2  # 데이터 전처리 병렬화
-    )
-
-    # 4. 학습 인자 설정 (DeepSpeed + IPEX + CPU 분산)
-    training_args = TrainingArguments(
-        output_dir=output_dir,
-        overwrite_output_dir=True,
-        do_train=True,
-        
-        # CPU 및 최적화 설정
-        use_cpu=True,
-        no_cuda=True,
-        use_ipex=True,         # Intel Extension for PyTorch 활성화
-        bf16=True,             # 인텔 4/5세대 Xeon AMX 가속 활용
-        
-        # DeepSpeed ZeRO-3 설정 (파라미터 분산의 핵심)
-        deepspeed="cpu-ds.json",
-        
-        # 분산 학습 파라미터
-        per_device_train_batch_size=1,
-        gradient_accumulation_steps=4,
-        learning_rate=2e-5,
-        num_train_epochs=1,
-        logging_steps=1,
-        save_steps=100,
-        
-        # 통신 백엔드 (CPU 환경은 Gloo)
-        ddp_backend="gloo"
-    )
-
-    # 5. 모델 로드 (DeepSpeed가 모델을 쪼개서 로드하도록 처리)
-    # ZeRO-3를 사용할 때 모델을 바로 생성하지 않고 Trainer 내부에서 처리하게 함
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.bfloat16,
-        device_map=None # 분산 학습 시 필수
-    )
-
-    # 6. 트레이너 초기화 및 학습 시작
-    trainer = Trainer(
-        model=model,
-        args=training_args,
-        train_dataset=tokenized_datasets,
-        tokenizer=tokenizer,
-    )
-
-    print("--- 학습 시작 ---")
-    trainer.train()
-    
-    # 7. 최종 모델 저장
-    trainer.save_model(output_dir)
-
-if __name__ == "__main__":
-    main()
-
-```
-
 [런처]
 ```
 torchrun --nproc_per_node=1 /home/ec2-user/train/train.py
@@ -416,6 +302,24 @@ DeepSpeed deepspeed.ops.comm.deepspeed_shm_comm_op built successfully
 [rank0]:     raise KeyError(key) from None
 [rank0]: KeyError: 'LOCAL_RANK'
 ```
+
+## PyTorch Inductor ##
+```
+ec2-user   48920  0.0  0.0 7114092 364128 ?      Sl   07:03   0:00 /usr/bin/python3 /home/ec2-user/.local/lib/python3.9/site-packages/torch/_inductor/compile_worker/__main__.py --pickler=torch._inductor.compile_worker.subproc_pool.SubprocPickler --kind=fork --workers=32 --parent=48479 --read-fd=12 --write-fd=15 --torch-key=TmHW0OWOvK60ZPStAdgW7mmhY1tj9nMcqB+xYdVKN5k=
+ec2-user   48922  0.0  0.0 7114092 364128 ?      Sl   07:03   0:00 /usr/bin/python3 /home/ec2-user/.local/lib/python3.9/site-packages/torch/_inductor/compile_worker/__main__.py --pickler=torch._inductor.compile_worker.subproc_pool.SubprocPickler --kind=fork --workers=32 --parent=48479 --read-fd=12 --write-fd=15 --torch-key=TmHW0OWOvK60ZPStAdgW7mmhY1tj9nMcqB+xYdVKN5k=
+ec2-user   48924  0.0  0.0 7114092 364128 ?      Sl   07:03   0:00 /usr/bin/python3 /home/ec2-user/.local/lib/python3.9/site-packages/torch/_inductor/compile_worker/__main__.py --pickler=torch._inductor.compile_worker.subproc_pool.SubprocPickler --kind=fork --workers=32 --parent=48479 --read-fd=12 --write-fd=15 --torch-key=TmHW0OWOvK60ZPStAdgW7mmhY1tj9nMcqB+xYdVKN5k=
+...
+```
+위의 프로세스들은 PyTorch Inductor가 Intel CPU(Xeon/AMX)에 딱 맞춘 전용 연산 코드를 '즉석에서' 제조하고 있는 단계를 실행하고 있다는 것이다.
+더 구체적으로는 다음과 같은 작업을 수행합니다.
+#### 1. 그래프 융합 (Kernel Fusion) ####
+모델의 수많은 연산(덧셈, 곱셈, 활성화 함수 등)을 하나하나 따로 실행하면 데이터 이동 시간이 오래 걸리는데 이 워커(Worker)들은 수천 개의 작은 연산들을 하나의 커다란 덩어리(Kernel)로 묶는 설계를 한다.
+#### 2. 하드웨어 최적화 (Targeting Intel AMX) ####
+현재 사용 중인 서버의 CPU가 Intel AMX를 지원한다는 것을 감지하면, 일반적인 연산 방식이 아니라 AMX 전용 명령어(TMM 등)를 사용하도록 C++ 코드를 생성한다.
+컴파일 워커 들은 Llama 3 모델의 행렬 연산을 이 CPU에서 가장 빠르게 돌릴 수 있는 C++ 소스 코드를 짜라 라고 명령을 받고 병렬로 코드를 짜고 있는 것이다.
+
+#### 3. JIT (Just-In-Time) 빌드 ####
+워커들이 짠 C++ 코드를 실제로 실행 가능한 바이너리(기계어)로 만들기 위해 백그라운드에서 gcc나 g++ 같은 컴파일러를 돌린다. 프로세스 목록에 여러 개가 떠 있는 이유는 32개의 코어를 동시에 써서 이 빌드 시간을 최대한 단축하기 위해서이다
 
 
 
