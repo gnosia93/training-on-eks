@@ -128,11 +128,23 @@ kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifest
 kubectl get clustertrainingruntimes
 ```
 
-## 훈련 하기 ##
-Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 약 60GB 정도의 메모리를 점유한다. Pod 생성시 c7i.8xlarge(32 vCPU, 64 GB Memory) 기준으로 할당하게 설정한다. 
-* 파드당 Memory 는 64GB, CPU 는 32 Core 로 설정.
+## 훈련 시작 ##
 
-<< 작성 필요 >>
+Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 약 60GB 정도의 메모리를 점유한다. Pod 생성시 c7i.8xlarge(32 vCPU, 64 GB Memory) 기준으로 할당하게 설정한다. 
+envsubst 는 파리미터로 나열된 환경변수만 치환해 준다.
+
+```
+export NODE_NUM=4                              # 4대 
+export HF_TOKEN="<your huggingface token>"     # Llama-3 모델은 HF 인증이 필요.
+
+git clone https://github.com/gnosia93/training-on-eks.git
+cd ~/training-on-eks/samples/cpu-amx
+
+kubectl get trainjob 
+kubectl delete trainjob llama-3-8b
+envsubst '$NODE_NUM $HF_TOKEN' < amx-trainjob.yaml | kubectl apply -f - 
+```
+
 
 
 ## 레퍼런스 ##
