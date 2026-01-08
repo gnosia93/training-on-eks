@@ -52,7 +52,7 @@ spec:
           --rdzv_backend=c10d \
           --rdzv_endpoint=${PET_MASTER_ADDR}:${PET_MASTER_PORT} \
           --rdzv_conf=timeout=1200 \
-          llama-3-8b.py 
+          cpu-llama3.py
     resourcesPerNode:
       resourcesPerNode:
         limits:
