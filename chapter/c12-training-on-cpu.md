@@ -144,5 +144,66 @@ kubectl delete trainjob cpu-llama3
 envsubst '$NODEPOOL_NAME $NODE_NUM $HF_TOKEN' < cpu-trainjob.yaml | kubectl apply -f - 
 ```
 
+#### 훈련 Pod 리스트 조회 ####
+```
+kubectl get pods
+```
+[결과]
+```
+kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+al2023-debug                1/1     Running   0          31h
+cpu-llama3-node-0-0-s28t9   1/1     Running   0          15m
+cpu-llama3-node-0-1-g4q8v   1/1     Running   0          15m
+cpu-llama3-node-0-2-j2ff7   1/1     Running   0          15m
+cpu-llama3-node-0-3-9rf5n   1/1     Running   0          15m
+nginx-55bbbf955c-d559t      1/1     Running   0          33h
+nginx-55bbbf955c-rpn2n      1/1     Running   0          33h
+```
+
+#### rank 0 로그 조회 ####
+```
+kubectl logs -f cpu-llama3-node-0-0-s28t9
+```
+[결과]
+```
+Cloning into '/workspace/code'...
+⚠️  Warning: 'huggingface-cli login' is deprecated. Use 'hf auth login' instead.
+The token has not been saved to the git credentials helper. Pass `add_to_git_credential=True` in this function directly or `--add-to-git-credential` if using via `hf`CLI if you want to set the git credential as well.
+Token is valid (permission: read).
+The token `training-on-eks` has been saved to /root/.cache/huggingface/stored_tokens
+Your token has been saved to /root/.cache/huggingface/token
+Login successful.
+The current active token is: `training-on-eks`
+=== Launching Distributed Training ===
+Requirement already satisfied: torch>=2.4.0 in /usr/local/lib/python3.12/site-packages (from -r requirements.txt (line 2)) (2.8.0+cu129)
+Requirement already satisfied: torchvision in /usr/local/lib/python3.12/site-packages (from -r requirements.txt (line 3)) (0.23.0+cu129)
+Requirement already satisfied: torchaudio in /usr/local/lib/python3.12/site-packages (from -r requirements.txt (line 4)) (2.8.0+cu129)
+Collecting transformers>=4.40.0 (from -r requirements.txt (line 7))
+  Downloading transformers-4.57.3-py3-none-any.whl.metadata (43 kB)
+Collecting datasets>=2.19.0 (from -r requirements.txt (line 8))
+  Downloading datasets-4.4.2-py3-none-any.whl.metadata (19 kB)
+Requirement already satisfied: accelerate>=0.30.0 in /usr/local/lib/python3.12/site-packages (from -r requirements.txt (line 9)) (1.10.1)
+Collecting evaluate (from -r requirements.txt (line 10))
+  Downloading evaluate-0.4.6-py3-none-any.whl.metadata (9.5 kB)
+Collecting tokenizers>=0.19.0 (from -r requirements.txt (line 11))
+  Downloading tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+Collecting deepspeed>=0.14.0 (from -r requirements.txt (line 14))
+  Downloading deepspeed-0.18.4.tar.gz (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 2.1 MB/s  0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+```
+
+#### eks-node-viewer 실행 ####
+```
+eks-node-viewer
+```
+
+#### k9s 로 Pod 리스트 조회 ####
+```
+k9s
+```
+
 ## 레퍼런스 ##
 * https://tutorials.pytorch.kr/recipes/amx.html
