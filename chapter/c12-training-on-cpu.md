@@ -126,7 +126,10 @@ export LD_PRELOAD=/usr/lib64/libtcmalloc.so.4:$LD_PRELOAD
 ```
 -----
 
-
+## 패키지 설치 ##
+```
+sudo yum install python3-devel -y
+```
 
 
 
