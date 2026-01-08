@@ -67,7 +67,9 @@ def main():
         gradient_accumulation_steps=4
     )
 
-    # 모델 로드 (DeepSpeed가 모델을 쪼개서 로드하도록 처리)
+    # 모델 로딩시에 처음부터 파라미터 등을 분산해서 로딩 (DeepSpeed가 파라미터를 쪼개서 RANK 별로 로딩 하도록 처리)
+    # 이와 관련해서 잘못 설정하는 경우 모든 랭크가 전체 파라미터를 올리게 된다. (GPU 터짐)
+    # 각각 모든 파라미터를 올린 후에(Trainer 가 올림) 팁스피드가 관여해서 다시 모델을 쪼개게 된다. 
     with deepspeed.zero.Init(config_dict_or_path=ds_config_path):
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
