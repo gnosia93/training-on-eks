@@ -199,6 +199,7 @@ Collecting deepspeed>=0.14.0 (from -r requirements.txt (line 14))
 ```
 eks-node-viewer
 ```
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/cpu-node-viewer.png)
 
 #### k9s 로 Pod 리스트 조회 ####
 ```
