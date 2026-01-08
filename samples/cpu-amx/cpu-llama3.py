@@ -61,10 +61,10 @@ def main():
         max_steps=50,                                  # 딱 50번의 스텝만 하고 종료 / 이경우 에포크는 무시됨   
         logging_steps=1,
 
-        # 딥스피드와 중복된것은 제거 
-        # bf16=True,                                     # 인텔 4/5세대 Xeon AMX 가속 활용        
-        #per_device_train_batch_size=1,
-        #gradient_accumulation_steps=4,
+        # 딥스피드와 중복되지만 유지해야 에러가 나지 않는다. 
+        bf16=True,                                     # 인텔 4/5세대 Xeon AMX 가속 활용        
+        per_device_train_batch_size=1,
+        gradient_accumulation_steps=4
     )
 
     # 모델 로드 (DeepSpeed가 모델을 쪼개서 로드하도록 처리)
