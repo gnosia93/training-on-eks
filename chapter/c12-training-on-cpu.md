@@ -153,7 +153,6 @@ kubectl get pods
 ```
 [결과]
 ```
-kubectl get pods
 NAME                        READY   STATUS    RESTARTS   AGE
 al2023-debug                1/1     Running   0          31h
 cpu-llama3-node-0-0-s28t9   1/1     Running   0          15m
@@ -184,18 +183,7 @@ Requirement already satisfied: torchvision in /usr/local/lib/python3.12/site-pac
 Requirement already satisfied: torchaudio in /usr/local/lib/python3.12/site-packages (from -r requirements.txt (line 4)) (2.8.0+cu129)
 Collecting transformers>=4.40.0 (from -r requirements.txt (line 7))
   Downloading transformers-4.57.3-py3-none-any.whl.metadata (43 kB)
-Collecting datasets>=2.19.0 (from -r requirements.txt (line 8))
-  Downloading datasets-4.4.2-py3-none-any.whl.metadata (19 kB)
-Requirement already satisfied: accelerate>=0.30.0 in /usr/local/lib/python3.12/site-packages (from -r requirements.txt (line 9)) (1.10.1)
-Collecting evaluate (from -r requirements.txt (line 10))
-  Downloading evaluate-0.4.6-py3-none-any.whl.metadata (9.5 kB)
-Collecting tokenizers>=0.19.0 (from -r requirements.txt (line 11))
-  Downloading tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
-Collecting deepspeed>=0.14.0 (from -r requirements.txt (line 14))
-  Downloading deepspeed-0.18.4.tar.gz (1.6 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 2.1 MB/s  0:00:00
-  Installing build dependencies: started
-  Installing build dependencies: finished with status 'done'
+...
 ```
 
 #### eks-node-viewer 실행 ####
