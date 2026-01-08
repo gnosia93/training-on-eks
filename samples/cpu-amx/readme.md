@@ -3,7 +3,7 @@
 ```
 torchrun --nproc_per_node=1 samples/cpu-amx/cpu-llama3.py
 ```
-* 멀티 프로세스
+* 멀티 분산 훈련
 ```
 GLOO_LOG_LEVEL=TRACE TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=4 train.py
 ```   
@@ -150,6 +150,23 @@ CPU Virtual Memory:  used = 104.54 GB, percent = 14.1%
 * 현재 8B 모델을 4개의 랭크(--nproc_per_node=4)로 실행 중이므로, 각 랭크가 약 25GB 내외를 점유하며 총 104GB 정도의 메모리를 사용.
 * 전체 메모리(약 740GB로 추정) 대비 14% 수준으로 매우 안정적입니다.
 * After initializing ZeRO optimizer 메시지는 이제 분산 학습을 위한 모든 수학적 준비가 끝났다는 의미.
+
+#### Rank 간의 통신 ####
+로컬 서버(단일 머신)에서 실행하더라도 프로세스들끼리 네트워크 통신 규약(TCP/IP)을 사용하여 데이터를 주고 받는다. 
+PyTorch 분산 학습 모델(DDP)은 로컬(1대)이나 멀티 노드(여러 대)나 동일한 코드로 돌아가도록 설계되어 있다. 따라서 로컬에서도 자기 자신에게 데이터를 보내는 Loopback 인터페이스(127.0.0.1)를 통해 네트워크 패킷을 주고 받는다.
+gloo 백엔드는 기본적으로 TCP 소켓 통신을 기반으로 하는데 각 랭크(프로세스)는 특정 포트를 열고 대기하며, 다른 랭크들과 데이터를 교환한다.
+
+* 실제 데이터 이동 경로 (Loopback)
+프로세스 A → OS 네트워크 스택 → Loopback(lo0) 인터페이스 → OS 네트워크 스택 → 프로세스 B
+외부 랜카드를 거치지는 않지만, OS의 네트워크 계층을 통과하기 때문에 로컬 네트워크 통신이라고 부른다. 로그에서 [Gloo] Rank 1 is connected to 3 peer ranks라고 뜬 것이 바로 이 내부 연결이 성공했다는 뜻이다.
+
+* 성능 최적화: 공유 메모리(Shared Memory)
+NCCL(GPU)의 경우, 로컬 서버에서는 네트워크 대신 NVLink나 Shared Memory(shm)를 사용하여 속도를 극한으로 높임.
+Gloo(CPU)의 경우에도 로컬 프로세스 간 통신 시 커널을 거치지 않는 공유 메모리 방식을 혼용하여 네트워크 부하를 줄이려 시도하지만, 기본 베이스는 여전히 소켓 통신을 전제로 설계되었다. 
+
+
+
+
 
 ## 코드분석 ##
 * AutoModelForCausalLM.from_pretrained 호출시 deepspeed 가 관여
