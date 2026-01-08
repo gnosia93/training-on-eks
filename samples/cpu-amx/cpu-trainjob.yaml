@@ -54,7 +54,11 @@ spec:
           --rdzv_conf=timeout=1200 \
           llama-3-8b.py 
     resourcesPerNode:
-      limits:
-        nvidia.com/gpu: "${GPU_PER_NODE}"
-        vpc.amazonaws.com/efa: "${EFA_PER_NODE}"                      
+      resourcesPerNode:
+        requests:
+          cpu: "32"
+          memory: "64Gi"
+        limits:
+          cpu: "32"
+          memory: "64Gi"                 
  
