@@ -201,7 +201,7 @@ k9s
 
 ## 그라파나 대시보드 관찰 ##
 ```
-kubectl get svc prometheus-grafana  -n monitoring
+kubectl get svc prometheus-grafana -n monitoring
 ```
 [결과]
 ```
