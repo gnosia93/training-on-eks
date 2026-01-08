@@ -12,7 +12,12 @@ spec:
       spec:
         nodeSelector:
           karpenter.sh/nodepool: ${NODEPOOL_NAME}                     # 카펜터에서 정의한 노드풀의 이름을 지정.
-
+        
+        tolerations:
+          - key: "intel.com/amx"                                      # 톨러레이션 설정
+            operator: "Exists"
+            effect: "NoSchedule"
+            
         containers:
           - name: node                                                # -name: node 은 상당히 중요한 설정값 / ClusterTrainingRuntime 에 있는 컨테이너 이름이 node 이다.
             volumeMounts:                                             # 이 값을 잘못 설정하는 경우 TrainJob 이 시작되지 않는다. 
