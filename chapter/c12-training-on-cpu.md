@@ -129,7 +129,7 @@ kubectl get clustertrainingruntimes
 ```
 
 ## 훈련 시작 ## 
-* 훈련 리소소 - https://github.com/gnosia93/training-on-eks/tree/main/samples/cpu-amx
+* 훈련 리소스 - https://github.com/gnosia93/training-on-eks/tree/main/samples/cpu-amx
   
 발급 받은 허깅페이스 토근을 HF_TOKEN 환경변수에 설정한 후 아래 스크립트를 실행해 준다.  
 ```
