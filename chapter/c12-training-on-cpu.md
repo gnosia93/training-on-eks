@@ -294,13 +294,7 @@ if __name__ == "__main__":
 
 [런처]
 ```
-python -m intel_extension_for_pytorch.cpu.launch \
-    --distributed \
-    --nnodes=4 \
-    --node_rank=0 \
-    --master_addr="10.0.1.100" \
-    --nproc_per_node=1 \
-    train.py
+torchrun --nproc_per_node=1 /home/ec2-user/train/train.py
 ```
 
 주요 구성 포인트 요약
