@@ -1,3 +1,7 @@
+## 실행 ##
+```
+torchrun --nproc_per_node=1 /home/ec2-user/train/train.py
+```
 
 ## 코드분석 ##
 * AutoModelForCausalLM.from_pretrained 호출시 deepspeed 가 관여
