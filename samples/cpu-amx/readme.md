@@ -7,6 +7,7 @@ torchrun --nproc_per_node=1 samples/cpu-amx/cpu-llama3.py
 ### 멀티 프로세스 분산 훈련 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gloo-pytorch-top.png)
 ```
+export export ONEDNN_VERBOSE=1
 export TORCHINDUCTOR_CACHE_DIR="/home/ec2-user/.inductor_cache"
 export TORCHINDUCTOR_COMPILE_THREADS=8
 export MASTER_PORT=29500
