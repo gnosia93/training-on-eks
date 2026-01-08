@@ -54,8 +54,7 @@ spec:
           --rdzv_conf=timeout=1200 \
           cpu-llama3.py
     resourcesPerNode:
-      resourcesPerNode:
-        limits:
-          cpu: "32"
-          memory: "64Gi"                 
+      limits:
+        cpu: "32"
+        memory: "64Gi"                 
  
