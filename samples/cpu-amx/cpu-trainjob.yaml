@@ -1,7 +1,7 @@
 apiVersion: trainer.kubeflow.org/v1alpha1
 kind: TrainJob
 metadata:
-  name: cpu-llama-3
+  name: cpu-llama3
 spec:
   podTemplateOverrides:
     - targetJobs:
