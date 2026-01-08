@@ -80,8 +80,9 @@ metadata:
 spec:
   role: "eksctl-KarpenterNodeRole-training-on-eks"
   amiSelectorTerms:
-    - name: "Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.9 (Amazon Linux 2023)*"
-  amiFamily: AL2023 
+    # EKS GPU Optimized AMI: NVIDIA 드라이버와 CUDA 런타임만 포함된 가벼운 이미지 (Karpenter가 자동으로 선택 가능) 가 설치됨.
+    - alias: al2023@latest
+
   subnetSelectorTerms:
     - tags:
         karpenter.sh/discovery: "training-on-eks" 
