@@ -220,10 +220,7 @@ prometheus-grafana   LoadBalancer   172.20.193.46   a083e09003c374b72b446d26c36c
 ```
 http://a083e09003c374b72b446d26c36c67aa-199507387.us-west-2.elb.amazonaws.com 그라파나 대시보드에 접속한다. 
 
-* 네트워크
-
-* Node exporter ...
-
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/node-exporter-full.png)
 
 
 ## 레퍼런스 ##
