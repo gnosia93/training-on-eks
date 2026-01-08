@@ -55,3 +55,4 @@
   
 ### _Revision History_ ###
 * 2026-01-07 First Released — EKS 및 Kubeflow 기반 분산 훈련 가이드 작성
+* 2026-01-10 Intel AMX - Gloo 기반 CPU 분산 훈련 추가
