@@ -97,10 +97,8 @@ spec:
     #!/bin/bash
     # Intel AMX 성능 최적화를 위한 라이브러리 로드 및 설정  
     sudo yum install python3-devel -y
-    echo "Intel AMX Optimization: Loading TCMalloc"
     dnf install -y google-perftools
     pip install intel-extension-for-pytorch
-    pip install oneccl-bind-pt --extra-index-url pytorch-extension.intel.com
 EOF
 ```
 생성된 cpu-amx 노드 클래스와 노드 풀을 확인한다. 
