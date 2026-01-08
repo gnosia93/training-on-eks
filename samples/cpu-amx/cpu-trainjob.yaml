@@ -11,7 +11,7 @@ spec:
           karpenter.sh/do-not-disrupt: "true"                         # Karpenter의 노드 회수 방지
       spec:
         nodeSelector:
-          node.kubernetes.io/instance-type: ${INSTANCE_TYPE}              
+          karpenter.sh/nodepool: ${NODEPOOL_NAME}                     # 카펜터에서 정의한 노드풀의 이름을 지정.
 
         containers:
           - name: node                                                # -name: node 은 상당히 중요한 설정값 / ClusterTrainingRuntime 에 있는 컨테이너 이름이 node 이다.
