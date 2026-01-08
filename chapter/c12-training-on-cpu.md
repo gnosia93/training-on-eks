@@ -218,8 +218,8 @@ kubectl get svc prometheus-grafana  -n monitoring
 NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP                                                              PORT(S)        AGE
 prometheus-grafana   LoadBalancer   172.20.193.46   a083e09003c374b72b446d26c36c67aa-199507387.us-west-2.elb.amazonaws.com   80:30426/TCP   26h
 ```
-http://a083e09003c374b72b446d26c36c67aa-199507387.us-west-2.elb.amazonaws.com 그라파나 대시보드에 접속한다. 
 
+그라파나에 접속해서 여러가지 대시보드의 메트릭을 관찰한다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/node-exporter-full.png)
 
 
