@@ -13,7 +13,10 @@ from datasets import load_dataset
 def main():
 
     if not torch.distributed.is_initialized():
-        torch.distributed.init_process_group(backend="gloo") 
+        torch.distributed.init_process_group(backend="nccl" if torch.cuda.is_available() else "gloo")
+
+    world_size = int(os.environ.get("WORLD_SIZE", 1))
+    local_rank = int(os.environ.get("LOCAL_RANK", -1))
 
     model_name = "meta-llama/Meta-Llama-3-8B"
     output_dir = "./llama3-training-output" 
@@ -43,6 +46,8 @@ def main():
 
     # 4. 학습 인자 설정 (DeepSpeed + IPEX + CPU 분산)
     training_args = TrainingArguments(
+        local_rank=local_rank,                         # deepspeed 가 train batch size 를 제대로 인식하지 못해서 분산환경임을 알려주기 위해 추가
+
         output_dir=output_dir,
         overwrite_output_dir=True,
         do_train=True,
@@ -60,9 +65,6 @@ def main():
         save_steps=100,
         max_steps=50,                                  # 딱 50번의 스텝만 하고 종료 / 이경우 에포크는 무시됨   
         logging_steps=1,
-
-        # 통신 백엔드 (CPU 환경은 Gloo)
-        #ddp_backend="gloo"
     )
 
     # 5. 모델 로드 (DeepSpeed가 모델을 쪼개서 로드하도록 처리)
