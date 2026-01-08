@@ -1,7 +1,12 @@
 ## 실행 ##
+* 단일 프로세스 
 ```
 torchrun --nproc_per_node=1 samples/cpu-amx/cpu-llama3.py
 ```
+* 멀티 프로세스
+```
+GLOO_LOG_LEVEL=TRACE TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=4 train.py
+```   
 
 ## 코드분석 ##
 * AutoModelForCausalLM.from_pretrained 호출시 deepspeed 가 관여
