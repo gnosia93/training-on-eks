@@ -129,12 +129,13 @@ kubectl get clustertrainingruntimes
 ```
 
 ## 훈련 시작 ## 
-envsubst 는 파리미터로 나열된 환경변수만 치환해 준다.
-
+발급 받은 허깅페이스 토근을 HF_TOKEN 환경변수에 설정한 후 아래 스크립트를 실행해 준다.  
 ```
 export NODEPOOL_NAME=cpu-amx                   # 카펜터 노드풀 지정
 export NODE_NUM=4                              # 4대 
 export HF_TOKEN="<your huggingface token>"     # Llama-3 모델은 HF 인증이 필요.
+
+echo "HF_TOKEN is" ${HF_TOKEN}
 
 git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/cpu-amx
