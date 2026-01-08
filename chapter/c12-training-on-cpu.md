@@ -381,7 +381,47 @@ if __name__ == "__main__":
 
 * https://tutorials.pytorch.kr/recipes/amx.html
 
+---
 
+## 코드분석 ##
+* AutoModelForCausalLM.from_pretrained 호출시 deepspeed 가 관여
+  * [deepspeed.zero.Init(config_dict_or_path=deepspeed_config()), set_zero3_state()]
+
+```
+python3 train.py 
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+`torch_dtype` is deprecated! Use `dtype` instead!
+[rank0]:[W108 06:27:06.141870526 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
+  Overriding a previously registered kernel for the same operator and the same dispatch key
+  operator: aten::_addmm_activation(Tensor self, Tensor mat1, Tensor mat2, *, Scalar beta=1, Scalar alpha=1, bool use_gelu=False) -> Tensor
+    registered at /pytorch/build/aten/src/ATen/RegisterSchema.cpp:6
+  dispatch key: AutocastCPU
+  previous kernel: registered at /pytorch/aten/src/ATen/autocast_mode.cpp:327
+       new kernel: registered at /opt/workspace/ipex-cpu-dev/csrc/cpu/autocast/autocast_mode.cpp:112 (function operator())
+/home/ec2-user/.local/lib/python3.9/site-packages/torch/cuda/__init__.py:829: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+[2026-01-08 06:27:08,164] [WARNING] [real_accelerator.py:209:get_accelerator] Setting accelerator to CPU. If you have GPU or other accelerator, we were unable to detect it.
+DeepSpeed deepspeed.ops.comm.deepspeed_shm_comm_op built successfully
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/ec2-user/train/train.py", line 95, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/ec2-user/train/train.py", line 70, in main
+[rank0]:     model = AutoModelForCausalLM.from_pretrained(
+[rank0]:   File "/home/ec2-user/.local/lib/python3.9/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+[rank0]:     return model_class.from_pretrained(
+[rank0]:   File "/home/ec2-user/.local/lib/python3.9/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+[rank0]:     return func(*args, **kwargs)
+[rank0]:   File "/home/ec2-user/.local/lib/python3.9/site-packages/transformers/modeling_utils.py", line 4967, in from_pretrained
+[rank0]:     model_init_context = cls.get_init_context(is_quantized, _is_ds_init_called)
+[rank0]:   File "/home/ec2-user/.local/lib/python3.9/site-packages/transformers/modeling_utils.py", line 4374, in get_init_context
+[rank0]:     init_contexts.extend([deepspeed.zero.Init(config_dict_or_path=deepspeed_config()), set_zero3_state()])
+[rank0]:   File "/home/ec2-user/.local/lib/python3.9/site-packages/deepspeed/runtime/zero/partition_parameters.py", line 1053, in __init__
+[rank0]:     self.local_device = torch.device(get_accelerator().device_name(os.environ["LOCAL_RANK"]))
+[rank0]:   File "/usr/lib64/python3.9/os.py", line 679, in __getitem__
+[rank0]:     raise KeyError(key) from None
+[rank0]: KeyError: 'LOCAL_RANK'
+```
 
 
 
