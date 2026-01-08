@@ -32,7 +32,7 @@ Instance: m7i.metal-48xl     | vCPU: 192 | Cores: 96 | Memory:    768 GiB
 EFA 가 필요한 경우  C / M / R7i.48xlarge 로 구성된 카펜터 노드풀을 생성 한다.  
 
 ## 카펜터 노드풀 생성 ##
-  
+Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 약 60GB 정도의 버추얼 메모리를 사용한다. Pod 생성시 32 vCPU, 64 GiB Memory 기준으로 할당받기 위해 instance-size 아래와 같이 설정한다.  
 ```
 cat <<EOF | kubectl apply -f -  
 apiVersion: karpenter.sh/v1
@@ -128,9 +128,7 @@ kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifest
 kubectl get clustertrainingruntimes
 ```
 
-## 훈련 시작 ##
-
-Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 약 60GB 정도의 메모리를 점유한다. Pod 생성시 c7i.8xlarge(32 vCPU, 64 GB Memory) 기준으로 할당하게 설정한다. 
+## 훈련 시작 ## 
 envsubst 는 파리미터로 나열된 환경변수만 치환해 준다.
 
 ```
