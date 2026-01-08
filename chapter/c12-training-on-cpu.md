@@ -2,6 +2,8 @@
 Intel 제온 프로세서 기반의 7i 인스턴스에서 [IPEX(Intel Extension for PyTorch)](https://github.com/intel/intel-extension-for-pytorch)를 활용해 분산 훈련 성능을 극대화하려면, 인텔 4세대 및 5세대 제온 프로세서에 탑재된 [AMX(Advanced Matrix Extensions)](https://www.intel.com/content/www/us/en/products/docs/accelerator-engines/what-is-intel-amx.html) 가속 기술을 적극 활용해야 한다. AMX는 bf16 및 int8 데이터 타입의 행렬 연산을 비약적으로 가속하는 전용 엔진으로, IPEX 설정에서 dtype=torch.bfloat16을 활성화하면 GPU의 텐서 코어와 유사한 가속 성능을 CPU 환경에서도 구현할 수 있다. 특히 bf16은 모델 정밀도를 유지하면서도 연산 효율을 높여 분산 훈련 속도를 크게 향상시킨다.
 이러한 하드웨어 가속은 인텔의 독자적인 기술이므로, AWS Graviton(m7g)이나 AMD(m7a) 인스턴스에서는 사용이 불가능하다. 
 
+* Intel은 IPEX 대신 PyTorch 2.5 이상의 공식 버전을 사용할 것을 권장하며, 최신 PyTorch에는 Intel CPU/GPU 최적화 기능이 통합되어 있다. 이전 버전에서 필요한 import intel_extension_for_pytorch 및 ipex.optimize 관련 코드는 이제 불필요해 졌다. 
+
 ## efa 지원 인스턴스 조회 ##
 ```
  aws ec2 describe-instance-types \
@@ -117,24 +119,14 @@ nodepool.karpenter.sh/gpu       gpu         0       True    25h
 ```
 
 
-* 환경변수 
-```
-# Intel OpenMP 라이브러리 우선 로드 (성능 향상)
-export LD_PRELOAD=/usr/lib64/libtcmalloc.so.4:$LD_PRELOAD
-
-# oneCCL 백엔드 활성화 (훈련 스크립트 내에서 사용)
-# backend='ccl' 또는 'gloo' 사용 가능
-```
------
+## 훈련 하기 ##
+<< 작성 필요 >>
 
 
+## 레퍼런스 ##
+* https://tutorials.pytorch.kr/recipes/amx.html
 
-### GPU 대비 성능 격차 (TFLOPS 기준) ###
-* H100 (GPU) 1대: bf16 연산 기준 약 900~1,000 TFLOPS 이상의 성능을 냅니다.
-* r7i.metal (CPU) 1대: AMX 가속을 사용해도 bf16 기준 약 30~50 TFLOPS 수준입니다.
-* 결론: 단순 연산 수치상으로는 약 20~30배 정도 GPU가 빠릅니다. 100배까지 차이 나지 않는 이유는 인텔의 AMX 기술이 이전 세대 CPU보다 행렬 연산을 8배 이상 끌어올렸기 때문입니다.
-
-
+----
 ## 파라미터 분산 로딩 ##
 ```
 from deepspeed.runtime.zero import Init # 2026년 표준 라이브러리
@@ -175,13 +167,6 @@ Hugging Face from_pretrained 함수에서 이 옵션이 있고 없고의 차이�
 * 결과: 메모리 사용량이 모델 크기(16GB) 이상으로 튀지 않고 선형적으로 일정하게 유지됩니다
 
 
-## 훈련코드 ##
-
-
-[런처]
-```
-torchrun --nproc_per_node=1 /home/ec2-user/train/train.py
-```
 
 주요 구성 포인트 요약
 * DeepSpeed Stage 3: ds_config.json에서 설정한 대로 모델 파라미터를 4대의 서버에 4분의 1씩 나누어 올립니다.
@@ -252,16 +237,9 @@ if __name__ == "__main__":
 * 분산 로딩 (Sharded Loading): from_pretrained가 호출되면 DeepSpeed가 로딩 과정을 가로챕니다. Rank 0이 디스크에서 가중치를 읽으면, 즉시 WORLD_SIZE(GPU 개수)로 나누어 각 GPU에 전달하고 자신은 그 조각만 남기고 나머지는 메모리에서 즉시 비웁니다.
 * 중복 로드 방지: low_cpu_mem_usage=True와 DeepSpeed의 결합으로 인해, 모든 GPU가 동시에 16GB 파일을 읽어 CPU RAM이 터지는 현상을 방지합니다. Hugging Face 공식 문서에서도 ZeRO-3 사용 시 이 방식을 가장 권장합니다.
 
----
-* Intel은 IPEX 대신 PyTorch 2.5 이상의 공식 버전을 사용할 것을 권장하며, 최신 PyTorch에는 Intel CPU/GPU 최적화 기능이 통합되어 있습니다. 기존 코드에서 import intel_extension_for_pytorch 및 ipex.optimize 관련 부분을 제거하고 최신 PyTorch 기능을 활용하는 방법을 고려해 볼 수 있습니다. 
----
 
 
-## 레퍼런스 ##
 
-* https://tutorials.pytorch.kr/recipes/amx.html
-
----
 
 
 
