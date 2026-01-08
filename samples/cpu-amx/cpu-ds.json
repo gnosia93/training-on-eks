@@ -10,9 +10,8 @@
         "stage3_prefetch_bucket_size": 5e8,
         "stage3_param_persistence_threshold": 1e6
     },
-    "gradient_accumulation_steps": "auto",
     "gradient_clipping": "auto",
     "steps_per_print": 10,
-    "train_batch_size": "auto",
-    "train_micro_batch_size_per_gpu": "auto"
+    "train_micro_batch_size_per_gpu": "auto",
+    "gradient_accumulation_steps": "auto"
 }
