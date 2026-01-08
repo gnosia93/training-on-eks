@@ -204,6 +204,7 @@ eks-node-viewer
 ```
 k9s
 ```
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/cpu-k9s.png)
 
 ## 레퍼런스 ##
 * https://tutorials.pytorch.kr/recipes/amx.html
