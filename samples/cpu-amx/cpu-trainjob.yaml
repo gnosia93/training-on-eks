@@ -58,7 +58,7 @@ spec:
           --rdzv_endpoint=${PET_MASTER_ADDR}:${PET_MASTER_PORT} \
           --rdzv_conf=timeout=1200 \
           cpu-llama3.py
-    resourcesPerNode:
+    resourcesPerNode:                       # efa 는 요청하지 않는다.     
       limits:
         cpu: "32"
         memory: "64Gi"                 
