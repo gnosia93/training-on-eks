@@ -5,6 +5,7 @@
 torchrun --nproc_per_node=1 samples/cpu-amx/cpu-llama3.py
 ```
 ### 멀티 프로세스 분산 훈련 ###
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/gloo-pytorch.png)
 ```
 GLOO_LOG_LEVEL=TRACE TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=4 train.py
 ```   
