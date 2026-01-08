@@ -15,7 +15,7 @@ export WORLD_SIZE=4
 export OMP_NUM_THREADS=12
 export MKL_NUM_THREADS=12
 
-GLOO_LOG_LEVEL=TRACE TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=4 train.py
+GLOO_LOG_LEVEL=TRACE TORCH_DISTRIBUTED_DEBUG=DETAIL torchrun --nproc_per_node=4 samples/cpu-amx/cpu-llama3.py
 ```
 * TORCHINDUCTOR_CACHE_DIR : 환경 변수를 설정하여 Triton 캐시가 삭제되지 않게 유지
 * TORCHINDUCTOR_COMPILE_THREADS : 트리톤 워크 갯수 (랭크당)
