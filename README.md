@@ -43,7 +43,7 @@
 
 * [C11. DeepSpeed 분산 훈련 (멀티 GPU 노드)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c11-deepspeed.md)
 
-* [C12. CPU 분산 훈련 (AMX)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c12-training-on-cpu.md)
+* [C12. CPU 분산 훈련 (Intel AMX)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c12-training-on-cpu.md)
 
 ### _Appendix_ ###
 
