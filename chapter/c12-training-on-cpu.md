@@ -58,7 +58,7 @@ spec:
           values: ["c7i", "m7i", "r7i"]
         - key: "karpenter.k8s.aws/instance-size"
           operator: In
-          values: ["8xlarge", "16xlarge", "24xlarge, 48xlarge"]
+          values: ["8xlarge", "16xlarge", "24xlarge", "48xlarge"]
       nodeClassRef:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
