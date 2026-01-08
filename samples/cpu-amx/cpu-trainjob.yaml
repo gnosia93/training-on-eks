@@ -55,9 +55,6 @@ spec:
           llama-3-8b.py 
     resourcesPerNode:
       resourcesPerNode:
-        requests:
-          cpu: "32"
-          memory: "64Gi"
         limits:
           cpu: "32"
           memory: "64Gi"                 
