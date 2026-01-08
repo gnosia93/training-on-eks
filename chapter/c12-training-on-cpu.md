@@ -139,7 +139,7 @@ git clone https://github.com/gnosia93/training-on-eks.git
 cd ~/training-on-eks/samples/cpu-amx
 
 kubectl get trainjob 
-kubectl delete trainjob llama-3-8b
+kubectl delete trainjob cpu-llama3
 envsubst '$NODEPOOL_NAME $NODE_NUM $HF_TOKEN' < cpu-trainjob.yaml | kubectl apply -f - 
 ```
 
