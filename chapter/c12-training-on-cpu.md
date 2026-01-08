@@ -134,6 +134,7 @@ Llama 3-8B 모델을 World Size 4로 훈련 시켜보면, 각 프로세스당 �
 envsubst 는 파리미터로 나열된 환경변수만 치환해 준다.
 
 ```
+export NODEPOOL_NAME=cpu-amx                   # 카펜터 노드풀 지정
 export NODE_NUM=4                              # 4대 
 export HF_TOKEN="<your huggingface token>"     # Llama-3 모델은 HF 인증이 필요.
 
@@ -142,10 +143,8 @@ cd ~/training-on-eks/samples/cpu-amx
 
 kubectl get trainjob 
 kubectl delete trainjob llama-3-8b
-envsubst '$NODE_NUM $HF_TOKEN' < amx-trainjob.yaml | kubectl apply -f - 
+envsubst '$NODEPOOL_NAME $NODE_NUM $HF_TOKEN' < cpu-trainjob.yaml | kubectl apply -f - 
 ```
-
-
 
 ## 레퍼런스 ##
 * https://tutorials.pytorch.kr/recipes/amx.html
