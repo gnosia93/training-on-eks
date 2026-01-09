@@ -214,7 +214,7 @@ aws ec2 describe-security-groups \
 aws ec2 create-tags \
   --resources $(aws eks describe-cluster --name ${CLUSTER_NAME} --query \
 					"cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text) \
-  --tags Key=karpenter.sh/discovery,Value=training-on-eks
+  --tags Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}
 ```
 
 
