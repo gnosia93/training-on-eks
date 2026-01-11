@@ -26,6 +26,13 @@ NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지
 * 프로파일링 도구 활용: NVIDIA Nsight Systems, Nsight Compute와 같은 프로파일링 도구를 사용하여 통신 패턴, GPU 활용률, 병목 현상 등을 분석할 수 있다.
 * [NCCL Inspector](https://developer.nvidia.com/ko-kr/blog/enhancing-communication-observability-of-ai-workloads-with-nccl-inspector/) 사용: NCCL 2.23부터 도입된 NCCL Inspector 플러그인을 통해 AI 워크로드의 통신 성능에 대한 상세한 가시성을 확보할 수 있다.
 
+### 4. 토폴로지 덤프 및 수정 ###
+nccl 성능 측정 도구인 nccl-tests를 이용하는게 가장 간단하다 
+```
+NCCL_TOPO_DUMP=system.xml ./build/all_reduce_perf -b 8 -e 128M -f 2 -g 8
+```
+토폴로지가 예상과 다르게 인식되어 성능이 낮게 나올 경우, 추출된 XML을 수정하여 NCCL_TOPO_FILE 변수로 다시 적용함으로써 하드웨어 인식을 강제로 교정할 수 있다.
+
 ## 레퍼런스 ##
 
 * https://developer.nvidia.com/blog/understanding-nccl-tuning-to-accelerate-gpu-to-gpu-communication/
