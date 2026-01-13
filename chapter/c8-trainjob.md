@@ -169,6 +169,94 @@ spec:
 * 훈련 코드에 체크포인트 로드 로직이 있다면 끊긴 지점부터 학습 재개, 없다면 0 에폭부터 다시 시작.
 
 
+## 복원력 샘플 ##
+```
+cat <<EOF > t5-large-resilient.yaml
+apiVersion: trainer.kubeflow.org/v1alpha1
+kind: TrainJob
+metadata:
+  name: t5-large
+spec:
+  podTemplateOverrides:
+    - targetJobs: ["node"]
+      spec:
+        nodeSelector:
+          node.kubernetes.io/instance-type: g6e.48xlarge
+          topology.kubernetes.io/zone: ap-northeast-2a
+        containers:
+          - name: node
+            env:
+              # [타임아웃] 노드가 많을수록 랑데뷰 시간을 넉넉히 (30분)
+              - name: NCCL_ASYNC_ERROR_HANDLING
+                value: "1"
+              - name: NCCL_NETWORK_TIMEOUT
+                value: "1800"
+              # [EFA] AWS g6e 인스턴스 성능 최적화 (EFA 사용 시)
+              - name: FI_EFA_SET_DEFAULT_GDR
+                value: "1"
+            volumeMounts:
+              - mountPath: /dev/shm
+                name: dshm
+        volumes:
+          - name: dshm
+            emptyDir:
+              medium: Memory
+              sizeLimit: "64Gi"
+
+  runtimeRef:
+    name: torch-distributed
+
+  trainer:
+    numNodes: 10                               # 10개 노드로 확장
+    numProcPerNode: 8                          # g6e.48xlarge는 GPU가 8개임
+    image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
+    
+    command:
+      - /bin/bash
+      - -c
+      - |
+        git clone github.com /workspace/code
+        cd /workspace/code/samples/fsdp
+        pip install -r requirements.txt
+        
+        export MASTER_ADDR=\${PET_MASTER_ADDR}
+        export MASTER_PORT=\${PET_MASTER_PORT:-29500}
+        
+        # [복원력 핵심] torchrun에 max-restarts 추가
+        torchrun \
+          --nnodes=10 \
+          --nproc_per_node=8 \
+          --max-restarts=3 \
+          --rdzv_id=t5_elastic_job \
+          --rdzv_backend=c10d \
+          --rdzv_endpoint=\${MASTER_ADDR}:\${MASTER_PORT} \
+          t5-fsdp.py --model_id="google-t5/t5-large" --epochs=10
+    resourcesPerNode:
+      limits:
+        nvidia.com: "8"
+      requests:
+        nvidia.com: "8"
+EOF
+```
+* torchrun --max-restarts=3 : 10개 노드 중 한 곳에서 네트워크 순시 장애가 나면, 파드를 새로 띄우지 않고 그 자리에서 즉시 재시도합니다. 이게 없으면 노드 하나만 튀어도 전체 Job이 죽는다.
+* NCCL_NETWORK_TIMEOUT="1800": 10대나 되는 노드들이 서로 통신 준비를 마칠 때까지 기다려주는 시간으로, 기본값이 짧으면 "동기화 실패"로 오인하고 학습이 터집니다. 
+* NCCL_ASYNC_ERROR_HANDLING=1 : 분산 학습 중 발생하는 통신 에러를 실시간(비동기)으로 감지하고 프로세스에 알려주는 '경보 시스템' 으로 설정이다. 이 설정을 하지 않으면 한 노드에서 GPU 에러나 네트워크 장애가 발생해도 나머지 9개 노드는 그 사실을 모른 채 하염없이 기다린다. 설정을 켰을 때 (=1) 한 노드에서 통신 에러가 나면, NCCL이 즉시 "에러 발생!" 메시지를 모든 노드에게 비동기적으로 뿌리게 된다. 모든 노드가 즉시 에러를 인지하고 프로세스를 종료한다. 이때 설정한 torchrun --max-restarts가 작동하여, 모든 노드가 동시에 깔끔하게 재시작(Rendezvous)할 수 있다.
+
+### 각각의 역할 ###
+
+#### 1. training operator ####
+Training Operator는 쿠버네티스 클러스터 수준에서 인프라와 자원 관리를 담당하는데 사용자가 제출한 YAML 파일을 해석하여 실제 실행 환경을 구축하고 관리한다.
+
+
+#### 2. torchrun ####
+torchrun은 파드 내부에서 실행되는 애플리케이션 수준의 도구로, 실제 학습 프로세스의 실행과 동기화를 담당한다. PyTorch 코드가 분산 환경에서 원활하게 작동하도록 조율한다.
+
+### 노드 10개 중 하나가 일시적으로 문제를 일으켰을 때 ###
+* torchrun은 --max-restarts를 통해 빠르게 프로세스 재시도를 하여 대응합니다.
+* 만약 노드가 완전히 다운되면 Training Operator가 개입하여 새로운 파드를 생성합니다.
+* 새 파드가 뜨면 torchrun이 다시 랑데부를 통해 나머지 파드들과 학습을 재개합니다.
+이 두 도구의 설정을 모두 최적화해야 대규모 분산 학습의 복원력이 완성됩니다.
+
 ## 레퍼런스 ##
 
 * https://github.com/kubeflow/trainer
