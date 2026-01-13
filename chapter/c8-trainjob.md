@@ -191,7 +191,7 @@ spec:
                 value: "1"
               - name: NCCL_NETWORK_TIMEOUT
                 value: "1800"
-              # [EFA] AWS g6e 인스턴스 성능 최적화 (EFA 사용 시)
+              # [EFA] AWS g6e 인스턴스 성능 최적화 (EFA 사용 시) - 명시적으로 EFA GPUDirect RDMA 활성화
               - name: FI_EFA_SET_DEFAULT_GDR
                 value: "1"
             volumeMounts:
@@ -207,7 +207,7 @@ spec:
     name: torch-distributed
 
   trainer:
-    numNodes: 10                               # 10개 노드로 확장
+    numNodes: 10                               # 10개 노드(파드)로 확장
     numProcPerNode: 8                          # g6e.48xlarge는 GPU가 8개임
     image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
     
@@ -226,7 +226,7 @@ spec:
         torchrun \
           --nnodes=10 \
           --nproc_per_node=8 \
-          --max-restarts=3 \
+          --max-restarts=3 \                   # torchrun 재시작 횟수 설정 (파드 재시작 없이)  
           --rdzv_id=t5_elastic_job \
           --rdzv_backend=c10d \
           --rdzv_endpoint=\${MASTER_ADDR}:\${MASTER_PORT} \
