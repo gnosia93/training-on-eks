@@ -144,7 +144,7 @@ ip-10-0-6-164.ap-northeast-2.compute.internal   c6i.2xlarge    amd64      Amazon
 
 ## 복원력 설정 (재시도 횟수 설정) ##
 
-큐브플루우의 TrainingJob 오퍼레이터는 기본적으로 6회 까지의 잡 재시작 기능을 제공하고 있다. 이 값을 더 크게 늘리기 위해서는 ClusterTrainingRuntime 의 maxRestarts 필드값을 수정해 줘야한다.
+큐브플루우의 TrainingJob 오퍼레이터는 기본적으로 6회 까지의 잡 재시작 기능을 제공하고 있다. 이 값을 더 크게 늘리기 위해서는 ClusterTrainingRuntime 의 maxRestarts 필드값을 수정해 줘야한다. 대규모 학습에서는 10~20 정도로 넉넉하게 설정하여, 밤사이에 노드에 문제가 발생하더라도 시스템이 작업을 좀 더 많이 자동 재시도 하도록 하는 것이 좋다.  AWS Spot 인스턴스를 쓴다면 노드 회수가 빈번할 수 있고, GPU 노드가 10대면 1대일 때보다 하드웨어 장애(GPU 에러 등)가 발생할 확률이 더 높기 때문에 기본값 6 으로는 부족하다.
 ```
 kubectl edit clustertrainingruntime torch-distributed
 ```
