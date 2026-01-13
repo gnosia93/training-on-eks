@@ -169,7 +169,7 @@ spec:
 * 훈련 코드에 체크포인트 로드 로직이 있다면 끊긴 지점부터 학습 재개, 없다면 0 에폭부터 다시 시작.
 
 
-## 복원력 샘플 ##
+## 복원력 적용 샘플 ##
 ```
 cat <<EOF > t5-large-resilient.yaml
 apiVersion: trainer.kubeflow.org/v1alpha1
