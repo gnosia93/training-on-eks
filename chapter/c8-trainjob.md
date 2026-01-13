@@ -246,10 +246,11 @@ EOF
 
 #### 1. training operator ####
 Training Operator는 쿠버네티스 클러스터 수준에서 인프라와 자원 관리를 담당하는데 사용자가 제출한 YAML 파일을 해석하여 실제 실행 환경을 구축하고 관리한다.
-
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/resiliency-operator-role.png)
 
 #### 2. torchrun ####
 torchrun은 파드 내부에서 실행되는 애플리케이션 수준의 도구로, 실제 학습 프로세스의 실행과 동기화를 담당한다. PyTorch 코드가 분산 환경에서 원활하게 작동하도록 조율한다.
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/resiliency-torchrun-role.png)
 
 ### 노드 10개 중 하나가 일시적으로 문제를 일으켰을 때 ###
 * torchrun은 --max-restarts를 통해 빠르게 프로세스 재시도를 하여 대응합니다.
