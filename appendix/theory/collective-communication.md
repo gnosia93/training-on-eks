@@ -1,3 +1,12 @@
+### AllReduce ###
+AllReduce는 분산 컴퓨팅 환경에서 여러 프로세스(Rank)가 가진 데이터를 하나로 모아 연산(Sum, Max, Min 등)한 뒤, 그 최종 결과물을 다시 모든 프로세스에게 동일하게 배포하는 통신 패턴이다. 
+* Reduction: 각 노드가 가진 데이터의 i번째 요소들을 지정된 연산(예: 합계)으로 결합한다.
+* Broadcast: 결합된 결과 벡터를 모든 참여 노드에 뿌려준다. 
+결과적으로 모든 노드는 out[i] = rank_0[i] + rank_1[i] + ... + rank_k-1[i]와 같이 계산된 완전한 합계 데이터를 동일하게 보유하게 됩니다.
+
+### 주요 활용 사례 및 구현 ###
+* 딥러닝 학습: 분산 데이터 병렬 처리(DDP)에서 각 GPU가 계산한 Gradient(기울기)를 동기화하여 모델 가중치를 동일하게 업데이트할 때 필수적으로 사용됩니다.
+* 라이브러리: NVIDIA NCCL은 GPU 간 최적화된 AllReduce를 제공하며, PyTorch Distributed 및 MPI (Message Passing Interface) 표준에서도 핵심 API로 구현되어 있다.
 
 ### ReduceScatter ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/ReduceScatter.png)
