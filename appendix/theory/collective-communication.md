@@ -1,4 +1,5 @@
 ### AllReduce ###
+![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/AllReduce.png)
 AllReduce는 분산 컴퓨팅 환경에서 여러 프로세스(Rank)가 가진 데이터를 하나로 모아 연산(Sum, Max, Min 등)한 뒤, 그 최종 결과물을 다시 모든 프로세스에게 동일하게 배포하는 통신 패턴이다. 
 * Reduction: 각 노드가 가진 데이터의 i번째 요소들을 지정된 연산(예: 합계)으로 결합한다.
 * Broadcast: 결합된 결과 벡터를 모든 참여 노드에 뿌려준다. 
