@@ -8,6 +8,12 @@ AllReduce는 분산 컴퓨팅 환경에서 여러 프로세스(Rank)가 가진 �
 * 딥러닝 학습: 분산 데이터 병렬 처리(DDP)에서 각 GPU가 계산한 Gradient(기울기)를 동기화하여 모델 가중치를 동일하게 업데이트할 때 필수적으로 사용됩니다.
 * 라이브러리: NVIDIA NCCL은 GPU 간 최적화된 AllReduce를 제공하며, PyTorch Distributed 및 MPI (Message Passing Interface) 표준에서도 핵심 API로 구현되어 있다.
 
+### 알고리즘 ###
+* Ring-AllReduce: 데이터를 조각내어 옆에 있는 Rank에게 전달하는 방식을 반복합니다. 마치 릴레이 달리기처럼 데이터를 주고받으며 연산과 배포를 동시에 끝낸다. NVIDIA NCCL이 GPU 통신에서 이 방식을 활용한다.
+* Tree-based: 나무 뿌리처럼 데이터를 타고 올라가며 합치고, 다시 가지를 타고 내려보내는 방식입니다.
+
+
+
 ### ReduceScatter ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/ReduceScatter.png)
 
