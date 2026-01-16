@@ -130,4 +130,29 @@ H100의 성능을 극대화하기 위해 노드 내부는 NVLink, 노드 간은 
   * 이유: \(640/(8\times 4)=20\). 실제로는 성능 향상을 위해 ZeRO-1/2 (Distributed Optimizer)를 결합합니다.
 
 ### 2. 메모리 및 속도 계산 (수치 중심) ###
-① 활성화 메모리 (Activation Memory) SP 적용 전: 시퀀스 길이 4k 기준, 약 20GB 이상의 활성화 메모리 필요.SP 적용 후: 약 2.5GB~3GB로 감소 (TP8로 쪼개짐).이득: 남는 메모리에 배치 사이즈(Micro-batch size)를 4~8배 키울 수 있어 연산 효율(Throughput)이 약 30% 상승합니다. ② 예상 연산 속도 (TFLOPS) H100 FP8 Peak: 1,979 TFLOPS (Sparse 기준이나 실제 학습은 Dense 기준 약 900~1000 TFLOPS)실제 달성 목표 (MFU 45% 가정): GPU당 약 450 TFLOPS클러스터 전체 성능: \(640\times 450\text{\ TFLOPS}\approx \mathbf{288}\text{\ PetaFLOPS}\) ③ 토큰 처리량 (Tokens/sec) 70B 모델의 1회 Forward/Backward 연산량은 약 \(6\times 70\times 10^{9}=420\text{\ GFLOPS/token}\)입니다. 초당 토큰 처리량: \(288\text{\ PetaFLOPS}/420\text{\ GFLOPS}\approx \mathbf{685,000}\text{\ tokens/sec}\)하루 학습량: 약 590억 개(59B) 토큰 학습 가능. 3. 통신 오버헤드 체크 Intra-node (SP/TP): 900GB/s NVLink 덕분에 통신 시간이 전체 연산 시간의 3% 미만으로 억제됩니다.Inter-node (DP): NVIDIA Quantum-2 InfiniBand를 통해 노드당 400Gbps \(\times \) 8개를 사용하면, Gradient 변수 공유 시 발생하는 병목을 거의 완벽하게 가릴 수(Overlap) 있습니다. 4. 최종 요약 항목 예상 수치GPU당 실질 연산력~450 TFLOPS (H100 최적화 기준)일일 토큰 학습량약 59B Tokens (Llama 3 70B 기준)SP 적용 이득메모리 8배 절감 → 배치 사이즈 증대로 전체 속도 ~30% 향상권장 프레임워크Megatron-Core 또는 NVIDIA NeMo이 계산은 시퀀스 길이 4k를 기준으로 한 것입니다. 만약 32k 이상의 롱 컨텍스트(Long Context) 학습을 계획 중이신가요? 그 경우 SP의 비중을 더 높이거나 Context Parallel (CP) 도입을 추가로 고려해야 합니다. 구체적인 시퀀스 길이를 알려주시겠어요?
+#### ① 활성화 메모리 (Activation Memory) #### 
+* SP 적용 전: 시퀀스 길이 4k 기준, 약 20GB 이상의 활성화 메모리 필요.
+* SP 적용 후: 약 2.5GB~3GB로 감소 (TP8로 쪼개짐).
+* 이득: 남는 메모리에 배치 사이즈(Micro-batch size)를 4~8배 키울 수 있어 연산 효율(Throughput)이 약 30% 상승합니다.
+
+#### ② 예상 연산 속도 (TFLOPS) #### 
+* H100 FP8 Peak: 1,979 TFLOPS (Sparse 기준이나 실제 학습은 Dense 기준 약 900~1000 TFLOPS)
+* 실제 달성 목표 (MFU 45% 가정): GPU당 약 450 TFLOPS
+* 클러스터 전체 성능: \(640\times 450\text{\ TFLOPS}\approx \mathbf{288}\text{\ PetaFLOPS}\)
+
+#### ③ 토큰 처리량 (Tokens/sec) #### 
+70B 모델의 1회 Forward/Backward 연산량은 약 \(6\times 70\times 10^{9}=420\text{\ GFLOPS/token}\)입니다. 
+* 초당 토큰 처리량: \(288\text{\ PetaFLOPS}/420\text{\ GFLOPS}\approx \mathbf{685,000}\text{\ tokens/sec}\)
+* 하루 학습량: 약 590억 개(59B) 토큰 학습 가능.
+
+### 3. 통신 오버헤드 체크 ###
+* Intra-node (SP/TP): 900GB/s NVLink 덕분에 통신 시간이 전체 연산 시간의 3% 미만으로 억제됩니다.
+* Inter-node (DP): NVIDIA Quantum-2 InfiniBand를 통해 노드당 400Gbps \(\times \) 8개를 사용하면, Gradient 변수 공유 시 발생하는 병목을 거의 완벽하게 가릴 수(Overlap) 있습니다.
+
+### 4. 최종 요약 ##
+* 항목 예상 수치
+  * GPU당 실질 연산력~450 TFLOPS (H100 최적화 기준)
+  * 일일 토큰 학습량약 59B Tokens (Llama 3 70B 기준)
+  * SP 적용 이득메모리 8배 절감 → 배치 사이즈 증대로 전체 속도 ~30% 향상권장
+  * 프레임워크: Megatron-Core 또는 NVIDIA NeMo이 계산은 시퀀스 길이 4k를 기준으로 한 것입니다.
+ 
