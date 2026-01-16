@@ -1,5 +1,6 @@
 
 ### ReduceScatter ###
+![](https://github.com/gnosia93/training-on-eks/blob/main/appendix/images/ReduceScatter.png)
 ReduceScatter는 여러 디바이스(Rank)에 흩어져 있는 데이터를 하나로 Reduce(요약/합산)한 뒤, 그 결과를 다시 각 Rank에 Scatter(분할 배분)하는 집합 통신(Collective Communication) 작업이다.
 전체 데이터를 랭크 수만큼 파티션하고, 그 파티션(구역)마다 독립적인 Reduce 연산을 수행하여 Scatter(배분)한다. 각 랭크는 특정 구역의 첫 번째 주자가 되어 쉬프트(Shift)를 시작하고, 이들이 동시에 움직이면서 링 전체에 여러 개의 누적 연산이 동시다발적으로 진행된다
 #### 주요 특징 및 동작 방식 ####
