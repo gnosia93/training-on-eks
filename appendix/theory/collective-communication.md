@@ -38,6 +38,10 @@ ReduceScatter는 여러 디바이스(Rank)에 흩어져 있는 데이터를 하�
   * Rank 0이 [A1, A2]를 들고 있고, Rank 1이 [B1, B2]를 들고 있을 때
   * AllToAll을 하면 Rank 0은 [A1, B1]을, Rank 1은 [A2, B2]를 갖게 됩니다.
 
+### Scatter ###
+AllReduce는 모두가 주고받으며 합치지만, Scatter는 Root에서 다른 랭크로 일방향으로 퍼져 나간다. Scatter는 데이터를 나누기만(Distribution) 할 뿐, 더하기(Sum) 같은 연산을 하지 않는다. 연산 후 각 랭크는 전체의 1/k인 N개만큼의 데이터만 가지게 된다.
+
+
 
 ## 레퍼런스 ##
 
