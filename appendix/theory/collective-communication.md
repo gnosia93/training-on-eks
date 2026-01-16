@@ -13,7 +13,10 @@ ReduceScatter는 여러 디바이스(Rank)에 흩어져 있는 데이터를 하�
 * 분산 학습 (ZeRO/FSDP): DeepSpeed의 ZeRO나 PyTorch FSDP 기술에서 그래디언트(Gradient)를 동기화할 때 주로 사용됩니다. 각 GPU는 전체 그래디언트 합계 중 자신이 업데이트를 담당할 샤드(Shard)만 수신하여 메모리 부하를 최소화합니다.
 * 복합 연산: ReduceScatter를 수행한 후 AllGather를 연속해서 실행하면 논리적으로 AllReduce와 동일한 결과를 얻을 수 있습니다. 
 
-
+### AlltoAll ###
+* ReduceScatter 과 동일하나 합치는게 아니라 Raw 데이터 그대로 들고 있다.
+* AllToAll은 연산이 없어서 직관적이지만, 모든 GPU가 동시에 서로에게 데이터를 쏘기 때문에 네트워크 트래픽(Congestion)이 엄청나게 발생한다.
+* 풀 메시 형태의 통신이 발생한다. 
 
 ## 레퍼런스 ##
 
