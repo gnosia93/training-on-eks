@@ -64,7 +64,7 @@ terraform output
 terraform destroy --auto-approve
 ```
 
-### eks_creator_role 삭제 ###
+### TOE_EKS_EC2_Role 삭제 ###
 ```
 aws iam remove-role-from-instance-profile \
     --instance-profile-name EKS_Creator_Profile \
