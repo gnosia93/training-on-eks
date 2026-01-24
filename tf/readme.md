@@ -68,13 +68,13 @@ terraform destroy --auto-approve
 ```
 aws iam remove-role-from-instance-profile \
     --instance-profile-name EKS_Creator_Profile \
-    --role-name eks_creator_role
+    --role-name TOE_EKS_EC2_Role
 
 aws iam delete-instance-profile --instance-profile-name EKS_Creator_Profile
 
 aws iam detach-role-policy \
-    --role-name eks_creator_role \
+    --role-name TOE_EKS_EC2_Role \
     --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 
-aws iam delete-role --role-name eks_creator_role
+aws iam delete-role --role-name TOE_EKS_EC2_Role
 ```
