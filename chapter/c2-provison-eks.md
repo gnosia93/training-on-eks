@@ -347,10 +347,7 @@ INSTANCE_PROFILES=$(aws iam list-instance-profiles-for-role \
   --query 'InstanceProfiles[*].InstanceProfileName' \
   --output text)
 echo ${INSTANCE_PROFILES}
-
-for profile in ${INSTANCE_PROFILES}; do
-    echo "Processing Instance Profile: $PROFILE"
-
+for PROFILE in $(echo "${INSTANCE_PROFILES}" | cut -f1-); do
     # 1. 인스턴스 프로파일에서 역할 제거 (선행 필수)
     echo "  -> Removing role $ROLE_NAME from $PROFILE..."
     aws iam remove-role-from-instance-profile \
