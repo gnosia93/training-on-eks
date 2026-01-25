@@ -63,10 +63,22 @@ sudo dnf install git -y
 export VERSION=v2.1.0
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=${VERSION}"
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
-
-sleep 10
+```
+10 초 정도 지나후에 클러스터 트레이닝런타임 환경을 조회한다. 
+```
 kubectl get clustertrainingruntimes
 ```
+[결과]
+```
+NAME                     AGE
+deepspeed-distributed    9s
+mlx-distributed          9s
+torch-distributed        9s
+torchtune-llama3.2-1b    9s
+torchtune-llama3.2-3b    9s
+torchtune-qwen2.5-1.5b   9s
+```
+
 * efa 관련 설정을 추가하기 위해 torch-distributed 런타임을 수정한다. 
 ```
 $ kubectl edit clustertrainingruntime torch-distributed 
