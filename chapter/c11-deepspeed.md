@@ -92,7 +92,6 @@ spec:
     spec:
       shareProcessNamespace: true           # 추가 
       hostIPC: true                         # 추가
-#      hostNetwork: true
       containers:
         - name: node
           # EFA 및 분산 학습을 위한 보안 설정 추가
