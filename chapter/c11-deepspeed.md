@@ -101,6 +101,10 @@ spec:
             capabilities:
               add: ["IPC_LOCK"]
 ```
+아래 명령어로 제대로 수정되었느지 확인한다.
+```
+kubectl get clustertrainingruntime torch-distributed -o yaml
+```
 
 * trainjob 명령어
   * 잡 확인 - kubectl get trainjob                       
