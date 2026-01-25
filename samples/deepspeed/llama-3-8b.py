@@ -148,8 +148,8 @@ def main():
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
             torch_dtype=torch.bfloat16,
-            device_map=None,                                  # 분산 학습 시 필수: None -> deepspeed 가 모델을 조각내도록 함.
-            low_cpu_mem_usage=True,        # Meta tensor 에러 방지에 도움
+            device_map=None,                                # 분산 학습 시 필수: None -> deepspeed 가 모델을 조각내도록 함.
+            low_cpu_mem_usage=False,                        # Meta tensor 에러 방지에 도움
             attn_implementation="sdpa",
         )      
         
