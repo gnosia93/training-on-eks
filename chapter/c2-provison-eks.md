@@ -341,7 +341,7 @@ Address: 52.39.255.65
 Name:   ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com
 Address: 54.187.233.41
 ```
-curl 로 http 접속여부를 확인한다.
+curl 로 http 접속여부를 확인한다. 경우에 따라서는 DNS 리졸빙은 되나 http 로 접속시 타임아웃이 발생하는데, 조금 더 기다려 보면 아래와 같이 정상적으로 올라오는 것을 확인할 수 있다.
 ```
 curl http://ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com/
 ```
@@ -372,6 +372,10 @@ Commercial support is available at
 <p><em>Thank you for using nginx.</em></p>
 </body>
 </html>
+```
+nginx 서비스 삭제하기 
+```
+kubectl delete svc nginx
 ```
 
 ## 클러스터 삭제 ##
