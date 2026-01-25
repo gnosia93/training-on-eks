@@ -151,6 +151,11 @@ Pod 상태 상세정보 및 이벤트(Events)를 확인한다. 설정오류 및 
 ```
 kubectl describe pod llama-3-8b-node-0-1-zf275
 ```
+gpu 메모리 사용량 및 사용율을 관찰한다.
+```
+kubectl exec -it llama-3-8b-node-0-1-zf275 -- /bin/bash
+watch -n 2 nvidia-smi
+```
 모델 파라미터는 처음 부터 쪼개져서 각각의 GPU로 로딩되고 있다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/param-dist-loading.png)
 
