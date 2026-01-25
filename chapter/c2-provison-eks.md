@@ -71,6 +71,12 @@ export CLUSTER_NAME="training-on-eks"
 export K8S_VERSION="1.34"
 export KARPENTER_VERSION="1.8.1"
 export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values="${CLUSTER_NAME}" --query "Vpcs[].VpcId" --output text)
+
+echo ${AWS_REGION}
+echo ${AWS_ACCOUNT_ID}
+echo ${CLUSTER_NAME}
+echo ${KARPENTER_VERSION}
+echo ${VPC_ID}
 ```
 
 ### 2. 서브넷 식별 ###
