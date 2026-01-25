@@ -146,7 +146,7 @@ def main():
     ds_config_path = "llama-3-8b-stage3.json"
     with deepspeed.zero.Init(config_dict_or_path=ds_config_path):
         model = AutoModelForCausalLM.from_config(
-            model_name,
+#            model_name,
             config=config,
             torch_dtype=torch.bfloat16,
             device_map=None,                                # 분산 학습 시 필수: None -> deepspeed 가 모델을 조각내도록 함.
