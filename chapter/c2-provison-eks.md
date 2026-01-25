@@ -342,7 +342,7 @@ eksctl delete cluster -f cluster.yaml
 
 #### 3. eksctl-KarpenterNodeRole-training-on-eks 삭제 ####
 ```
-INST_PROFILE=$(aws iam list-instance-profiles-for-role \
+INSTANCE_PROFILES=$(aws iam list-instance-profiles-for-role \
   --role-name eksctl-KarpenterNodeRole-training-on-eks \
   --query 'InstanceProfiles[*].InstanceProfileName' \
   --output text)
