@@ -340,6 +340,43 @@ aws iam delete-role --role-name "$ROLE_NAME"
 eksctl delete cluster -f cluster.yaml
 ```
 
+#### 3. eksctl-KarpenterNodeRole-training-on-eks 삭제 ####
+```
+INST_PROFILE=$(aws iam list-instance-profiles-for-role \
+  --role-name eksctl-KarpenterNodeRole-training-on-eks \
+  --query 'InstanceProfiles[*].InstanceProfileName' \
+  --output text)
+
+for PROFILE in "${INSTANCE_PROFILES[@]}"; do
+    echo "Processing Instance Profile: $PROFILE"
+
+    # 1. 인스턴스 프로파일에서 역할 제거 (선행 필수)
+    echo "  -> Removing role $ROLE_NAME from $PROFILE..."
+    aws iam remove-role-from-instance-profile \
+        --instance-profile-name "$PROFILE" \
+        --role-name eksctl-KarpenterNodeRole-training-on-eks 2>/dev/null || echo "     (Role already removed or not found)"
+
+    # 2. 인스턴스 프로파일 삭제
+    echo "  -> Deleting instance profile $PROFILE..."
+    aws iam delete-instance-profile --instance-profile-name "$PROFILE"
+    
+    echo "Done."
+done
+
+
+aws iam remove-role-from-instance-profile \
+    --instance-profile-name EKS_Creator_Profile \
+    --role-name TOE_EKS_EC2_Role
+
+aws iam delete-instance-profile --instance-profile-name EKS_Creator_Profile
+
+aws iam detach-role-policy \
+    --role-name TOE_EKS_EC2_Role \
+    --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+
+aws iam delete-role --role-name TOE_EKS_EC2_Role
+```
+
 ## 레퍼런스 ##
 
 * [eksctl 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/eksctl/what-is-eksctl.html)
