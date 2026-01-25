@@ -152,6 +152,14 @@ def main():
             low_cpu_mem_usage=True,        # Meta tensor 에러 방지에 도움
             attn_implementation="sdpa",
         )      
+    # DeepSpeed 엔진 초기화
+    # 여기서 모델이 실제 8장의 GPU로 완벽히 분산됩니다.
+    model_engine, optimizer, _, _ = deepspeed.initialize(
+        model=model,
+        config=ds_config_path,
+        # model_parameters=model.parameters() # 필요 시 추가
+    )
+    
     
     # 4. 데이터셋 로드 및 전처리 (전처리 시 CPU 메모리 주의)
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
