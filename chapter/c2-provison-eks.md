@@ -139,7 +139,6 @@ done
 클러스터 생성 완료까지 약 20 ~ 30분 정도의 시간이 소요된다.
 ```
 cat > cluster.yaml <<EOF 
----
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
