@@ -151,6 +151,8 @@ Pod 상태 상세정보 및 이벤트(Events)를 확인한다. 설정오류 및 
 ```
 kubectl describe pod llama-3-8b-node-0-1-zf275
 ```
+모델 파라미터는 처음 부터 쪼개져서 각각의 GPU로 로딩되고 있다.
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/param-dist-loading.png)
 
 카펜터가 프로비저닝 한 노드 리스트를 조회한다. 만약 GPU 노드가 보이지 않는다면 카펜터 로그를 확인해 봐야 한다. 
 ```
