@@ -133,35 +133,25 @@ def main():
     start_time = time.time()
     model_name = "meta-llama/Meta-Llama-3-8B"
     config = AutoConfig.from_pretrained(model_name)
-
     
     # 2. 토크나이저는 CPU 작업이므로 먼저 진행해도 무관
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right" 
 
-    # 3. 모델 로딩: 반드시 프로세스 그룹 초기화 후에 실행
-    # 처음부터 4대의 GPU에 4GB씩 조각내어 생성합니다. (OOM 방지 핵심)
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.bfloat16,
-        device_map=None,                                  # 분산 학습 시 필수: None -> deepspeed 가 모델을 조각내도록 함.
-        attn_implementation="sdpa",
-    )      
+    # 3. 모델 분산 로딩
+    # 모델 로딩시에 처음부터 파라미터 등을 분산해서 로딩 (DeepSpeed가 파라미터를 쪼개서 RANK 별로 로딩 하도록 처리)
+    # 이와 관련해서 잘못 설정하는 경우 모든 랭크가 전체 파라미터를 올리게 된다. (GPU 터짐)
+    # 각각 모든 파라미터를 올린 후에(Trainer 가 올림) 팁스피드가 관여해서 다시 모델을 쪼개게 된다. 
+    ds_config_path = "llama-3-8b-stage3.json"
+    with deepspeed.zero.Init(config_dict_or_path=ds_config_path):
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.bfloat16,
+            device_map=None,                                  # 분산 학습 시 필수: None -> deepspeed 가 모델을 조각내도록 함.
+            attn_implementation="sdpa",
+        )      
     
-    # 아주 큰 모델을 초기화할 때 메모리 효율을 위해 'meta' 장치 사용
-    # ZeRO-3는 이 설정을 통해 모델을 로드하면서 즉시 GPU들에 분산시킨다.
-    # config = AutoConfig.from_pretrained(model_name)
-    # model = AutoModelForCausalLM.from_config(config) 
-    """
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.bfloat16,                  # training_args의 bf16과 일치
-        attn_implementation="sdpa"                   # sdpa(Scaled Dot Product Attention) 사용
-    #   attn_implementation="flash_attention_2"      # 지원되는 GPU라면 성능 향상 / flash-attn 미설치 
-    )                            
-    """
- 
     # 4. 데이터셋 로드 및 전처리 (전처리 시 CPU 메모리 주의)
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
     def tokenize_function(examples):
@@ -179,7 +169,7 @@ def main():
         num_train_epochs=1,
         bf16=True,                                     # A100/H100/B200 GPU 권장
         logging_steps=5,
-        deepspeed="llama-3-8b-stage3.json", 
+        deepspeed=ds_config_path, 
         save_strategy="no",                            # 테스트 중엔 저장 끔 / save_strategy="epoch",
   #      save_total_limit=2,     
         gradient_checkpointing=True,                   # 40GB 환경에선 필수로 True 권장 / activation 저장 안함.
