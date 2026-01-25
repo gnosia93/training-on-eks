@@ -346,8 +346,9 @@ INSTANCE_PROFILES=$(aws iam list-instance-profiles-for-role \
   --role-name eksctl-KarpenterNodeRole-training-on-eks \
   --query 'InstanceProfiles[*].InstanceProfileName' \
   --output text)
+echo ${INSTANCE_PROFILES}
 
-for PROFILE in "${INSTANCE_PROFILES[@]}"; do
+for profile in ${INSTANCE_PROFILES}; do
     echo "Processing Instance Profile: $PROFILE"
 
     # 1. 인스턴스 프로파일에서 역할 제거 (선행 필수)
@@ -358,23 +359,16 @@ for PROFILE in "${INSTANCE_PROFILES[@]}"; do
 
     # 2. 인스턴스 프로파일 삭제
     echo "  -> Deleting instance profile $PROFILE..."
-    aws iam delete-instance-profile --instance-profile-name "$PROFILE"
+    aws iam delete-instance-profile --instance-profile-name "$PROFILE" 2>/dev/null || echo "     (Role already removed or not found)"
     
     echo "Done."
 done
 
-
-aws iam remove-role-from-instance-profile \
-    --instance-profile-name EKS_Creator_Profile \
-    --role-name TOE_EKS_EC2_Role
-
-aws iam delete-instance-profile --instance-profile-name EKS_Creator_Profile
-
 aws iam detach-role-policy \
-    --role-name TOE_EKS_EC2_Role \
+    --role-name eksctl-KarpenterNodeRole-training-on-eks \
     --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 
-aws iam delete-role --role-name TOE_EKS_EC2_Role
+aws iam delete-role --role-name eksctl-KarpenterNodeRole-training-on-eks
 ```
 
 ## 레퍼런스 ##
