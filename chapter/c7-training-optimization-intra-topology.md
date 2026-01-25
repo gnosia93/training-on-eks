@@ -10,7 +10,9 @@ GPU 와 GPU 간의 데이터를 주고 받은 방식에는 아래와 같이 4가
      * 성능: SHM보다 훨씬 빠르며, nvidia-smi topo -m 결과에서 PIX 또는 PXB로 표시될 때 이 방식이 사용.
   * GPUDirect RDMA -  다른 노드 GPU 간의 통신 
 * SHM (Shared Memory)
-
+  * Host 와 Device 간의 메모리 카피 2회 이상 발생
+  * PCIe Bandwidth 병목 / CPU 병목 모두 발생
+    
 ### P2P 지원 여부 확인 ###
 아래는 g6e.12xlarge 의 GPU 토폴로지로 NODE는 CPU 통신을 의미한다.
 데이터 통신시 PIX / PXB (PCIe Switch)는 메인보드에 있는 별도의 PCIe 스위치 칩에서 데이터가 유턴하여 옆 GPU로 간다. 즉, CPU까지 올라가지 않는다.
