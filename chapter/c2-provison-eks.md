@@ -313,16 +313,66 @@ spec:
 EOF
 ```
 
-nginx 서비스를 조회한 후, 웹브라우저로 접속해 본다. 
+nginx 서비스를 조회해서 EXTERNAL-IP 가 설정된 것을 확인한다. 
 ```
 kubectl get svc nginx
 ```
 [결과]
 ```
-NAME         TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)        AGE
-nginx        LoadBalancer   172.20.151.112   a8bef1d582261479aa1eaffae26de2a0-2081456608.us-west-2.elb.amazonaws.com   80:30299/TCP   10s
+NAME    TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)        AGE
+nginx   LoadBalancer   172.20.150.112   ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com   80:30276/TCP   17m```
 ```
+DNS 를 확인한다.
+```
+nslookup ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com
+```
+[결과]
+```
+Server:         10.0.0.2
+Address:        10.0.0.2#53
 
+Non-authoritative answer:
+Name:   ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com
+Address: 35.167.139.248
+Name:   ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com
+Address: 54.213.30.228
+Name:   ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com
+Address: 52.39.255.65
+Name:   ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com
+Address: 54.187.233.41
+```
+curl 로 http 접속여부를 확인한다.
+```
+curl http://ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.com/
+```
+[결과]
+```
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
 
 ## 클러스터 삭제 ##
 #### 1. 카펜터 인스턴스 프로파일 삭제 #### 
