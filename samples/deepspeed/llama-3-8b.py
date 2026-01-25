@@ -145,8 +145,9 @@ def main():
     # 각각 모든 파라미터를 올린 후에(Trainer 가 올림) 팁스피드가 관여해서 다시 모델을 쪼개게 된다. 
     ds_config_path = "llama-3-8b-stage3.json"
     with deepspeed.zero.Init(config_dict_or_path=ds_config_path):
-        model = AutoModelForCausalLM.from_pretrained(
+        model = AutoModelForCausalLM.from_config(
             model_name,
+            config=config,
             torch_dtype=torch.bfloat16,
             device_map=None,                                # 분산 학습 시 필수: None -> deepspeed 가 모델을 조각내도록 함.
             low_cpu_mem_usage=False,                        # Meta tensor 에러 방지에 도움
