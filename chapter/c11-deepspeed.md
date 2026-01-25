@@ -64,6 +64,7 @@ export VERSION=v2.1.0
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=${VERSION}"
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
 
+sleep 10
 kubectl get clustertrainingruntimes
 ```
 * efa 관련 설정을 추가하기 위해 torch-distributed 런타임을 수정한다. 
