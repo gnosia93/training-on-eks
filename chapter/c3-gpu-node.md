@@ -97,9 +97,21 @@ spec:
         volumeType: gp3
 EOF
 ```
-
+ec2nodeclass 와 nodepol 을 생성한다.
 ```
 kubectl apply -f nodepool-gpu.yaml
+```
+ec2nodeclass 와 nodepol 의 READY 필드의 값이 True 임것을 확인한다.
+```
+kubectl get ec2nodeclass,nodepool
+```
+[결과]
+```
+NAME                                 READY   AGE
+ec2nodeclass.karpenter.k8s.aws/gpu   True    17s
+
+NAME                        NODECLASS   NODES   READY   AGE
+nodepool.karpenter.sh/gpu   gpu         0       True    17s
 ```
 
 ## nvidia-smi 파드 스케줄링 ##
