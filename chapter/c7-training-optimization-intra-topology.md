@@ -5,7 +5,9 @@ GPU 와 GPU 간의 데이터를 주고 받은 방식에는 아래와 같이 4가
 
 * GPU P2P 
   * NVLink / NVSwitch
-  * PCIe BUS
+  * PCIe P2P (Direct Access) - 데이터가 CPU(Host RAM)를 거치지 않고 PCIe 버스/스위치를 통해 바로 옆 GPU로 이동하는 방식
+     * 동작 방식: GPU A 메모리 → PCIe Switch → GPU B 메모리.
+     * 성능: SHM보다 훨씬 빠르며, nvidia-smi topo -m 결과에서 PIX 또는 PXB로 표시될 때 이 방식이 사용.
   * GPUDirect RDMA -  다른 노드 GPU 간의 통신 
 * SHM (Shared Memory)
 
