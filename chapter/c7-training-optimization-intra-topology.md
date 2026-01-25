@@ -11,7 +11,9 @@ GPU 와 GPU 간의 데이터를 주고 받은 방식에는 아래와 같이 4가
   * GPUDirect RDMA -  다른 노드 GPU 간의 통신 
 * SHM (Shared Memory)
   * Host 와 Device 간의 메모리 카피 2회 이상 발생
-  * PCIe Bandwidth 병목 / CPU 병목 모두 발생
+  * PCIe Bandwidth 병목 / CPU 병목 모두 발생 / PCIe 에 연결된 다른 디바이스에 의한 PCIe 레인(대역폭) 분할 및 감소 
+  * GPU 내부 메모리 대역폭은 보통 수 TB/s 단위지만, 이 데이터가 지나가는 PCIe 통로는 세대에 따라 최대로 잡아도 32GB/s(Gen4) ~ 64GB/s(Gen5) 수준.
+  * 이 좁은 길을 두 번이나 왔다 갔다 해야 하니 속도가 수십 배로 줄어드게 된다.
     
 ### P2P 지원 여부 확인 ###
 아래는 g6e.12xlarge 의 GPU 토폴로지로 NODE는 CPU 통신을 의미한다.
