@@ -109,6 +109,34 @@ for id in $SUBNET_IDS; do
 done
 ```
 
+```
+aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=SOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
+    --output table
+
+SUBNET_IDS=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=SOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone}" \
+    --output text)
+
+if [ -z "$SUBNET_IDS" ]; then
+    echo "에러: VPC ${VPC_ID} 에 서브넷이 존재하지 않습니다.."
+fi
+
+# YAML 형식에 맞게 동적 문자열 생성 (각 ID 뒤에 ": {}" 추가 및 앞쪽 Identation과 줄바꿈)
+SUBNET_YAML=""
+if [ -f SUBNET_IDS ]; then
+    rm SUBNET_IDS
+fi
+echo "$SUBNET_IDS" | while read -r az subnet_id;
+do
+    echo "      ${az}: { id: ${subnet_id} }" >> SUBNET_IDS
+done
+```
+
+
+
 ### 3. 클러스터 생성 ### 
 클러스터 생성 완료까지 약 20 ~ 30분 정도의 시간이 소요된다.
 ```
