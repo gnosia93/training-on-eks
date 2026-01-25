@@ -78,6 +78,7 @@ echo ${CLUSTER_NAME}
 echo ${KARPENTER_VERSION}
 echo ${VPC_ID}
 ```
+환경변수 값이 제대로 출력되는지 확인한다.  
 
 ### 2. 서브넷 식별 ###
 클러스터의 데이터 플레인(워커노드 들)은 아래의 프라이빗 서브넷에 위치하게 된다. 
