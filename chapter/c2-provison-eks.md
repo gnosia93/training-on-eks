@@ -341,6 +341,7 @@ eksctl delete cluster -f cluster.yaml
 ```
 
 #### 3. eksctl-KarpenterNodeRole-training-on-eks 삭제 ####
+eksctl-KarpenterNodeRole-training-on-eks 관련해서 가비지가 남아 있으면, 새로운 클러스터 생성시 Karpenter 단계에서 에러가 발생한다. 
 ```
 INSTANCE_PROFILES=$(aws iam list-instance-profiles-for-role \
   --role-name eksctl-KarpenterNodeRole-training-on-eks \
@@ -361,9 +362,9 @@ for PROFILE in $(echo "${INSTANCE_PROFILES}" | cut -f1-); do
     echo "Done."
 done
 
-aws iam detach-role-policy \
-    --role-name eksctl-KarpenterNodeRole-training-on-eks \
-    --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+#aws iam detach-role-policy \
+#    --role-name eksctl-KarpenterNodeRole-training-on-eks \
+#    --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 
 aws iam delete-role --role-name eksctl-KarpenterNodeRole-training-on-eks
 ```
