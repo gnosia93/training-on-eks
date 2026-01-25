@@ -194,6 +194,14 @@ eksctl create cluster -f cluster.yaml
 ```
 
 EKS 에서 클러스터 시큐리티 그룹은 컨트롤 플레인과 워커노드 사이의 통신을 가능하게 한다. 컨트롤 플레인은 10250 포트를 통해 노드의 큐블렛과 통신하고 워커노드는 443 포트를 이용하여 컨트롤 플레인의 API 서버에 접근을 시도한다. 아래 명령어는 클러스터 시큐리티 그룹에 "karpenter.sh/discovery=${CLUSTER_NAME}" 태크가 존재하는지 확인하는 스크립트이다. 카펜터가 노드를 생성할때, 이와 동일한 태크를 가진 시큐리티 그룹을 찾아 신규 노드에 할당하게 된다. 시큐리티 그룹 검색에 실패하게 되는 경우, EC2 인스턴스는 생성되지만 EKS 클러스터에 조인하지 못한다.  
+
+```
+aws ec2 create-tags \
+  --resources $(aws eks describe-cluster --name ${CLUSTER_NAME} --query \
+					"cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text) \
+  --tags Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}
+```
+
 ```
 aws ec2 describe-security-groups \
   --group-ids $(aws eks describe-cluster --name ${CLUSTER_NAME} --query \
@@ -214,14 +222,6 @@ aws ec2 describe-security-groups \
 |  karpenter.sh/discovery                |  training-on-eks                            |
 +----------------------------------------+---------------------------------------------+
 ```
-* 가끔 karpenter.sh/discovery 태그가 누락되는 경우가 발생하는데 이 경우 아래 명령어를 실행하여 추가해 준다.    
-```
-aws ec2 create-tags \
-  --resources $(aws eks describe-cluster --name ${CLUSTER_NAME} --query \
-					"cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text) \
-  --tags Key=karpenter.sh/discovery,Value=${CLUSTER_NAME}
-```
-
 
 ### 추가 정책 설정 ###
 클러스터 생성이 완료되면 추가 설정이 필요하다. 카펜터 버전 1.8.1(EKS 1.3.4) 에는 아래와 같은 정책 설정이 누락되어 있어 패치가 필요하다. 
