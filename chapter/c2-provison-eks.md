@@ -111,12 +111,12 @@ done
 
 ```
 aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=SOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
     --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone, Name:Tags[?Key=='Name']|[0].Value}" \
     --output table
 
 SUBNET_IDS=$(aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=SOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
+    --filters "Name=tag:Name,Values=TOE-priv-subnet-*" "Name=vpc-id,Values=${VPC_ID}" \
     --query "Subnets[*].{ID:SubnetId, AZ:AvailabilityZone}" \
     --output text)
 
@@ -134,8 +134,6 @@ do
     echo "      ${az}: { id: ${subnet_id} }" >> SUBNET_IDS
 done
 ```
-
-
 
 ### 3. 클러스터 생성 ### 
 클러스터 생성 완료까지 약 20 ~ 30분 정도의 시간이 소요된다.
