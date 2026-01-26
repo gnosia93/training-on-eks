@@ -1,0 +1,945 @@
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO P2P Chunksize set to 524288
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 09/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 08 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO Ring 20 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 10/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 09 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 11/24 : 0 1 2 3
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO Ring 21 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 10 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 12/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 11 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO Ring 22 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 13/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 12 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 14/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 13 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO Ring 23 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 15/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 14 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO Trees [0] 3/-1/-1->2->1 [1] 3/-1/-1->2->1 [2] 3/-1/-1->2->1 [3] 3/-1/-1->2->1 [4] 3/-1/-1->2->1 [5] 3/-1/-1->2->1 [6] 3/-1/-1->2->1 [7] 3/-1/-1->2->1 [8] 3/-1/-1->2->1 [9] 3/-1/-1->2->1 [10] 3/-1/-1->2->1 [11] 3/-1/-1->2->1 [12] 3/-1/-1->2->1 [13] 3/-1/-1->2->1 [14] 3/-1/-1->2->1 [15] 3/-1/-1->2->1 [16] 3/-1/-1->2->1 [17] 3/-1/-1->2->1 [18] 3/-1/-1->2->1 [19] 3/-1/-1->2->1 [20] 3/-1/-1->2->1 [21] 3/-1/-1->2->1 [22] 3/-1/-1->2->1 [23] 3/-1/-1->2->1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 16/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 15 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 17/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 16 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO NCCL_BUFFSIZE set by environment to 8388608.
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 18/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 17 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO P2P Chunksize set to 524288
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 19/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 18 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 20/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 19 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 21/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 20 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 22/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 21 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Channel 23/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 22 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 00 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Ring 23 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 01 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Trees [0] 2/-1/-1->1->0 [1] 2/-1/-1->1->0 [2] 2/-1/-1->1->0 [3] 2/-1/-1->1->0 [4] 2/-1/-1->1->0 [5] 2/-1/-1->1->0 [6] 2/-1/-1->1->0 [7] 2/-1/-1->1->0 [8] 2/-1/-1->1->0 [9] 2/-1/-1->1->0 [10] 2/-1/-1->1->0 [11] 2/-1/-1->1->0 [12] 2/-1/-1->1->0 [13] 2/-1/-1->1->0 [14] 2/-1/-1->1->0 [15] 2/-1/-1->1->0 [16] 2/-1/-1->1->0 [17] 2/-1/-1->1->0 [18] 2/-1/-1->1->0 [19] 2/-1/-1->1->0 [20] 2/-1/-1->1->0 [21] 2/-1/-1->1->0 [22] 2/-1/-1->1->0 [23] 2/-1/-1->1->0
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 02 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO NCCL_BUFFSIZE set by environment to 8388608.
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 03 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO P2P Chunksize set to 524288
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 04 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 05 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 06 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 07 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 08 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 09 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 10 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 11 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 12 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 13 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 14 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 15 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 16 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 17 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 18 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 19 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 20 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 21 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 22 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Ring 23 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1 [2] 1/-1/-1->0->-1 [3] 1/-1/-1->0->-1 [4] 1/-1/-1->0->-1 [5] 1/-1/-1->0->-1 [6] 1/-1/-1->0->-1 [7] 1/-1/-1->0->-1 [8] 1/-1/-1->0->-1 [9] 1/-1/-1->0->-1 [10] 1/-1/-1->0->-1 [11] 1/-1/-1->0->-1 [12] 1/-1/-1->0->-1 [13] 1/-1/-1->0->-1 [14] 1/-1/-1->0->-1 [15] 1/-1/-1->0->-1 [16] 1/-1/-1->0->-1 [17] 1/-1/-1->0->-1 [18] 1/-1/-1->0->-1 [19] 1/-1/-1->0->-1 [20] 1/-1/-1->0->-1 [21] 1/-1/-1->0->-1 [22] 1/-1/-1->0->-1 [23] 1/-1/-1->0->-1
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO NCCL_BUFFSIZE set by environment to 8388608.
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO P2P Chunksize set to 524288
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+llama-3-8b-node-0-0:215:665 [3] NCCL INFO [Proxy Service] Device 3 CPU core 12
+llama-3-8b-node-0-0:215:666 [3] NCCL INFO [Proxy Service UDS] Device 3 CPU core 14
+llama-3-8b-node-0-0:213:667 [1] NCCL INFO [Proxy Service] Device 1 CPU core 63
+llama-3-8b-node-0-0:213:668 [1] NCCL INFO [Proxy Service UDS] Device 1 CPU core 16
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0
+llama-3-8b-node-0-0:212:670 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 2
+llama-3-8b-node-0-0:212:669 [0] NCCL INFO [Proxy Service] Device 0 CPU core 65
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+llama-3-8b-node-0-0:214:672 [2] NCCL INFO [Proxy Service UDS] Device 2 CPU core 20
+llama-3-8b-node-0-0:214:671 [2] NCCL INFO [Proxy Service] Device 2 CPU core 18
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 32 p2p channels per peer
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 32 p2p channels per peer
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 32 p2p channels per peer
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Enabled NCCL Func/Proto/Algo Matrix:
+     Function |       LL     LL128    Simple   |          Tree           Ring  CollNetDirect   CollNetChain           NVLS       NVLSTree            PAT  
+    Broadcast |        0         0         1   |             1              1              1              1              1              1              1  
+       Reduce |        0         0         1   |             1              1              1              1              1              1              1  
+    AllGather |        0         0         1   |             1              1              1              1              1              1              1  
+ReduceScatter |        0         0         1   |             1              1              1              1              1              1              1  
+    AllReduce |        0         0         1   |             1              1              1              1              1              1              1  
+
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 32 p2p channels per peer
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO CC Off, workFifoBytes 1048576
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO TUNER/Plugin: Plugin name set by env to libnccl-net.so
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO TUNER/Plugin: Using tuner plugin nccl_ofi_tuner
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : p4d.24xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO ncclCommInitRankConfig comm 0x55892ca76510 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId 201d0 commId 0xe670d9975722b93b - Init COMPLETE
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO TUNER/Plugin: Plugin name set by env to libnccl-net.so
+llama-3-8b-node-0-0:215:661 [3] NCCL INFO Init timings - ncclCommInitRankConfig: rank 3 nranks 4 total 0.25 (kernels 0.15, alloc 0.04, bootstrap 0.00, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.02, rest 0.01)
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO TUNER/Plugin: Plugin name set by env to libnccl-net.so
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO TUNER/Plugin: Using tuner plugin nccl_ofi_tuner
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO TUNER/Plugin: Using tuner plugin nccl_ofi_tuner
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : p4d.24xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO TUNER/Plugin: Plugin name set by env to libnccl-net.so
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO ncclCommInitRankConfig comm 0x556f09f32eb0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 101c0 commId 0xe670d9975722b93b - Init COMPLETE
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : p4d.24xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO ncclCommInitRankConfig comm 0x556ae42d7cf0 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 101d0 commId 0xe670d9975722b93b - Init COMPLETE
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+llama-3-8b-node-0-0:212:574 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 4 total 1.28 (kernels 0.23, alloc 0.09, bootstrap 0.90, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.02, rest 0.01)
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO TUNER/Plugin: Using tuner plugin nccl_ofi_tuner
+llama-3-8b-node-0-0:213:592 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 4 total 1.27 (kernels 0.22, alloc 0.09, bootstrap 0.90, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.02, rest 0.01)
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : p4d.24xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO ncclCommInitRankConfig comm 0x564517325980 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 201c0 commId 0xe670d9975722b93b - Init COMPLETE
+llama-3-8b-node-0-0:214:658 [2] NCCL INFO Init timings - ncclCommInitRankConfig: rank 2 nranks 4 total 0.61 (kernels 0.15, alloc 0.11, bootstrap 0.29, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.02, rest 0.01)
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 00/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 01/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 00/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 02/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 00/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 01/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 03/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 01/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 04/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 02/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 02/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 05/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 03/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 03/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 06/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 04/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 04/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 07/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 05/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 05/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 06/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 08/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 06/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 03/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 09/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 07/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 07/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 10/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 08/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 04/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 08/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 11/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 09/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 09/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 05/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 10/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 10/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 12/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 06/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 11/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 11/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 13/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 12/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 07/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 12/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 14/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 13/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 08/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 13/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 15/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 14/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 09/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 14/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 16/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 15/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 17/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 15/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 10/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 16/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 16/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 18/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 11/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 17/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 18/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 12/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 19/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 17/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 19/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 13/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 20/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 18/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 20/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 21/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 14/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 19/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 21/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 15/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 22/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 20/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 22/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Channel 23/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 16/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 21/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 17/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Channel 23/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 22/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 18/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Channel 23/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 19/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 20/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 21/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 22/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Channel 23/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:674 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+llama-3-8b-node-0-0:213:675 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+llama-3-8b-node-0-0:212:676 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+llama-3-8b-node-0-0:215:673 [3] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+Generating test split: 100%|██████████| 4358/4358 [00:00<00:00, 505245.64 examples/s]
+Generating train split: 100%|██████████| 36718/36718 [00:00<00:00, 994680.97 examples/s]
+Generating validation split: 100%|██████████| 3760/3760 [00:00<00:00, 843391.79 examples/s]
+Map: 100%|██████████| 36718/36718 [00:02<00:00, 17155.57 examples/s]
+PyTorch: setting up devices
+Map: 100%|██████████| 36718/36718 [00:02<00:00, 16529.25 examples/s]
+PyTorch: setting up devices
+Map:  98%|█████████▊| 36000/36718 [00:02<00:00, 15531.58 examples/s]max_steps is given, it will override any value given in num_train_epochs
+Using auto half precision backend
+훈련 소요시간 기록 시작: 1769422622.69s
+Map: 100%|██████████| 36718/36718 [00:02<00:00, 16263.00 examples/s]
+PyTorch: setting up devices
+Map: 100%|██████████| 36718/36718 [00:02<00:00, 16172.02 examples/s]
+PyTorch: setting up devices
+Gradient accumulation steps mismatch: GradientAccumulationPlugin has 1, DeepSpeed config has 4. Using DeepSpeed's value.
+Detected ZeRO Offload and non-DeepSpeed optimizers: This combination should work as long as the custom optimizer has both CPU and GPU implementation (except LAMB)
+[rank0]:W0126 10:17:06.386000 212 site-packages/torch/utils/cpp_extension.py:2425] TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
+[rank0]:W0126 10:17:06.386000 212 site-packages/torch/utils/cpp_extension.py:2425] If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'] to specific architectures.
+Adam Optimizer #0 is created with AVX512 arithmetic capability.
+Config: alpha=0.000020, betas=(0.900000, 0.999000), weight_decay=0.010000, adam_w=1
+/usr/local/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/usr/local/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/usr/local/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+Stage 3 initialize beginning
+MA 0.0 GB         Max_MA 0.98 GB         CA 0.0 GB         Max_CA 1 GB 
+CPU Virtual Memory:  used = 58.69 GB, percent = 5.2%
+DeepSpeedZeRoOffload initialize [begin]
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 58.69 GB, percent = 5.2%
+Parameter Offload - Persistent parameters statistics: param_count = 65, numel = 266240
+DeepSpeedZeRoOffload initialize [end]
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 58.71 GB, percent = 5.2%
+Before creating fp16 partitions
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 58.7 GB, percent = 5.2%
+/usr/local/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+After creating fp16 partitions: 19
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 75.63 GB, percent = 6.7%
+Before creating fp32 partitions
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 77.12 GB, percent = 6.9%
+After creating fp32 partitions
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 106.7 GB, percent = 9.5%
+Before initializing optimizer states
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 106.84 GB, percent = 9.5%
+After initializing optimizer states
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 145.23 GB, percent = 12.9%
+After initializing ZeRO optimizer
+MA 0.09 GB         Max_MA 2.05 GB         CA 2.05 GB         Max_CA 2 GB 
+CPU Virtual Memory:  used = 161.51 GB, percent = 14.4%
+***** Running training *****
+  Num examples = 36,718
+  Num Epochs = 1
+  Instantaneous batch size per device = 1
+  Total train batch size (w. parallel, distributed & accumulation) = 16
+  Gradient Accumulation steps = 4
+  Total optimization steps = 50
+  Number of trainable parameters = 8,030,261,248
+  0%|          | 0/50 [00:00<?, ?it/s]`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+llama-3-8b-node-0-0:212:1350 [0] NCCL INFO Comm config Blocking set to 1
+llama-3-8b-node-0-0:215:1360 [3] NCCL INFO Comm config Blocking set to 1
+llama-3-8b-node-0-0:213:1351 [1] NCCL INFO Comm config Blocking set to 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Assigned NET plugin Libfabric to comm
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Using network Libfabric
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO DMA-BUF is available on GPU device 0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Assigned NET plugin Libfabric to comm
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Using network Libfabric
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO DMA-BUF is available on GPU device 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO ncclCommInitRankConfig comm 0x7f596406afe0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 101c0 commId 0xce37a0af67ef3246 - Init START
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Assigned NET plugin Libfabric to comm
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Using network Libfabric
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO DMA-BUF is available on GPU device 1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO ncclCommInitRankConfig comm 0x7f8e9006a050 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId 201d0 commId 0xce37a0af67ef3246 - Init START
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO ncclCommInitRankConfig comm 0x7f1c6c06a6e0 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 101d0 commId 0xce37a0af67ef3246 - Init START
+llama-3-8b-node-0-0:214:1355 [2] NCCL INFO Comm config Blocking set to 1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Assigned NET plugin Libfabric to comm
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Using network Libfabric
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO DMA-BUF is available on GPU device 2
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO ncclCommInitRankConfig comm 0x7fcc98652710 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 201c0 commId 0xce37a0af67ef3246 - Init START
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO NCCL_TOPO_FILE set by environment to 
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO NCCL_TOPO_FILE set by environment to 
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO NCCL_TOPO_FILE set by environment to 
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO NCCL_TOPO_FILE set by environment to 
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Could not open XML topology file  : No such file or directory
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Could not open XML topology file  : No such file or directory
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Could not open XML topology file  : No such file or directory
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Could not open XML topology file  : No such file or directory
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1c.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1d.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1d.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1c.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1c.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1d.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1c.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1d.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO TOPO/NET : Importing network plugins to topology
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Retrieving state for Libfabric
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO ncclTopoPopulateNics : Filled rdmap16s27 in topo with pciPath=/sys/devices/pci0000:10/0000:10:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO ncclTopoPopulateNics : Filled rdmap32s27 in topo with pciPath=/sys/devices/pci0000:20/0000:20:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO TOPO/NET : Importing network plugins to topology
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Retrieving state for Libfabric
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:90/0000:90:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:90/0000:90:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO ncclTopoPopulateNics : Filled rdmap144s27 in topo with pciPath=/sys/devices/pci0000:90/0000:90:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO ncclTopoPopulateNics : Filled rdmap16s27 in topo with pciPath=/sys/devices/pci0000:10/0000:10:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO TOPO/NET : Importing network plugins to topology
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO TOPO/NET : Importing network plugins to topology
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Retrieving state for Libfabric
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Retrieving state for Libfabric
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:a0/0000:a0:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Topology detection : could not read /sys/devices/pci0000:a0/0000:a0:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO ncclTopoPopulateNics : Filled rdmap160s27 in topo with pciPath=/sys/devices/pci0000:a0/0000:a0:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO ncclTopoPopulateNics : Filled rdmap32s27 in topo with pciPath=/sys/devices/pci0000:20/0000:20:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO ncclTopoPopulateNics : Filled rdmap16s27 in topo with pciPath=/sys/devices/pci0000:10/0000:10:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:10/0000:10:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:90/0000:90:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO ncclTopoPopulateNics : Filled rdmap16s27 in topo with pciPath=/sys/devices/pci0000:10/0000:10:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:90/0000:90:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO ncclTopoPopulateNics : Filled rdmap144s27 in topo with pciPath=/sys/devices/pci0000:90/0000:90:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:20/0000:20:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO ncclTopoPopulateNics : Filled rdmap32s27 in topo with pciPath=/sys/devices/pci0000:20/0000:20:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO ncclTopoPopulateNics : Filled rdmap32s27 in topo with pciPath=/sys/devices/pci0000:20/0000:20:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:a0/0000:a0:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Topology detection : could not read /sys/devices/pci0000:a0/0000:a0:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO ncclTopoPopulateNics : Filled rdmap160s27 in topo with pciPath=/sys/devices/pci0000:a0/0000:a0:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:90/0000:90:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:90/0000:90:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:90/0000:90:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:90/0000:90:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO ncclTopoPopulateNics : Filled rdmap144s27 in topo with pciPath=/sys/devices/pci0000:90/0000:90:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO ncclTopoPopulateNics : Filled rdmap144s27 in topo with pciPath=/sys/devices/pci0000:90/0000:90:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:a0/0000:a0:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:a0/0000:a0:1b.0/../max_link_speed, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Topology detection : could not read /sys/devices/pci0000:a0/0000:a0:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Topology detection : could not read /sys/devices/pci0000:a0/0000:a0:1b.0/../max_link_width, ignoring
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO ncclTopoPopulateNics : Filled rdmap160s27 in topo with pciPath=/sys/devices/pci0000:a0/0000:a0:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO ncclTopoPopulateNics : Filled rdmap160s27 in topo with pciPath=/sys/devices/pci0000:a0/0000:a0:1b.0 keep=1 coll=(null)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO KV Convert to int : could not find value of 'Unknown' in dictionary, falling back to 60
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO === System : maxBw 240.0 totalBw 240.0 ===
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO CPU/0-0 (1/1/2)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + PCI[24.0] - GPU/0-101c0 (0)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + PCI[24.0] - GPU/0-101d0 (1)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + PCI[24.0] - GPU/0-201c0 (2)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + PCI[24.0] - GPU/0-201d0 (3)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + PCI[12.0] - NIC/0-101b0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + PCI[12.0] - NIC/0-201b0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + SYS[10.0] - CPU/0-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO CPU/0-1 (1/1/2)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + PCI[12.0] - NIC/0-901b0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + PCI[12.0] - NIC/0-a01b0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO + SYS[10.0] - CPU/0-0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO ==========================================
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO GPU/0-101c0 :GPU/0-101c0 (0/5000.0/LOC) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO GPU/0-101d0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (0/5000.0/LOC) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO GPU/0-201c0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (0/5000.0/LOC) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO GPU/0-201d0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (0/5000.0/LOC) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Setting affinity for GPU 2 to 0-23,48-71
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO === System : maxBw 240.0 totalBw 240.0 ===
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO CPU/0-0 (1/1/2)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + PCI[24.0] - GPU/0-101c0 (0)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + PCI[24.0] - GPU/0-101d0 (1)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + PCI[24.0] - GPU/0-201c0 (2)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + PCI[24.0] - GPU/0-201d0 (3)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + PCI[12.0] - NIC/0-101b0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + PCI[12.0] - NIC/0-201b0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + SYS[10.0] - CPU/0-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO CPU/0-1 (1/1/2)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + PCI[12.0] - NIC/0-901b0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + PCI[12.0] - NIC/0-a01b0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO + SYS[10.0] - CPU/0-0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO ==========================================
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO GPU/0-101c0 :GPU/0-101c0 (0/5000.0/LOC) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO GPU/0-101d0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (0/5000.0/LOC) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO GPU/0-201c0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (0/5000.0/LOC) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO GPU/0-201d0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (0/5000.0/LOC) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Setting affinity for GPU 1 to 0-23,48-71
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO NVLS multicast support is not available on dev 2 (NVLS_NCHANNELS 0)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO NVLS multicast support is not available on dev 1 (NVLS_NCHANNELS 0)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO === System : maxBw 240.0 totalBw 240.0 ===
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO CPU/0-0 (1/1/2)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + PCI[24.0] - GPU/0-101c0 (0)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + PCI[24.0] - GPU/0-101d0 (1)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + PCI[24.0] - GPU/0-201c0 (2)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + PCI[24.0] - GPU/0-201d0 (3)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + PCI[12.0] - NIC/0-101b0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + PCI[12.0] - NIC/0-201b0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + SYS[10.0] - CPU/0-1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO CPU/0-1 (1/1/2)
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + PCI[12.0] - NIC/0-901b0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + PCI[12.0] - NIC/0-a01b0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO + SYS[10.0] - CPU/0-0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO ==========================================
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO GPU/0-101c0 :GPU/0-101c0 (0/5000.0/LOC) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO GPU/0-101d0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (0/5000.0/LOC) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO GPU/0-201c0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (0/5000.0/LOC) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO GPU/0-201d0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (0/5000.0/LOC) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Setting affinity for GPU 0 to 0-23,48-71
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO NVLS multicast support is not available on dev 0 (NVLS_NCHANNELS 0)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO === System : maxBw 240.0 totalBw 240.0 ===
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO CPU/0-0 (1/1/2)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + PCI[24.0] - GPU/0-101c0 (0)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + PCI[24.0] - GPU/0-101d0 (1)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + PCI[24.0] - GPU/0-201c0 (2)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + PCI[24.0] - GPU/0-201d0 (3)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO               + NVL[240.0] - NVS/0-0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + PCI[12.0] - NIC/0-101b0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + PCI[12.0] - NIC/0-201b0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + SYS[10.0] - CPU/0-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO CPU/0-1 (1/1/2)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + PCI[12.0] - NIC/0-901b0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + PCI[12.0] - NIC/0-a01b0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO + SYS[10.0] - CPU/0-0
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO ==========================================
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO GPU/0-101c0 :GPU/0-101c0 (0/5000.0/LOC) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO GPU/0-101d0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (0/5000.0/LOC) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO GPU/0-201c0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (0/5000.0/LOC) GPU/0-201d0 (2/240.0/NVL) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO GPU/0-201d0 :GPU/0-101c0 (2/240.0/NVL) GPU/0-101d0 (2/240.0/NVL) GPU/0-201c0 (2/240.0/NVL) GPU/0-201d0 (0/5000.0/LOC) NVS/0-0 (1/240.0/NVL) CPU/0-0 (1/24.0/PHB) CPU/0-1 (2/10.0/SYS) 
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Setting affinity for GPU 3 to 0-23,48-71
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Pattern 4, crossNic 0, nChannels 12, bw 20.000000/20.000000, type NVL/PIX, sameChannels 1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  0 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  1 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  2 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  3 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO NVLS multicast support is not available on dev 3 (NVLS_NCHANNELS 0)
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  4 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  5 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  6 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  7 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  8 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  9 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO 10 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO 11 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Pattern 4, crossNic 0, nChannels 12, bw 20.000000/20.000000, type NVL/PIX, sameChannels 1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  0 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  1 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  2 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  3 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  4 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  5 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  6 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  7 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  8 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  9 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO 10 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO 11 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Pattern 4, crossNic 0, nChannels 12, bw 20.000000/20.000000, type NVL/PIX, sameChannels 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  0 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  1 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  2 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  3 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Pattern 1, crossNic 0, nChannels 12, bw 20.000000/20.000000, type NVL/PIX, sameChannels 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  4 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  0 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  5 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  1 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  6 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  2 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  7 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  3 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  8 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  4 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  9 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  5 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO 10 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  6 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO 11 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  7 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  8 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO  9 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO 10 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO 11 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Pattern 1, crossNic 0, nChannels 12, bw 20.000000/20.000000, type NVL/PIX, sameChannels 1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  0 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  1 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  2 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  3 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  4 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  5 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  6 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  7 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  8 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO  9 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO 10 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO 11 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Pattern 4, crossNic 0, nChannels 12, bw 20.000000/20.000000, type NVL/PIX, sameChannels 1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  0 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  1 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  2 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  3 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  4 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  5 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  6 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  7 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  8 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  9 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO 10 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO 11 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Pattern 1, crossNic 0, nChannels 12, bw 20.000000/20.000000, type NVL/PIX, sameChannels 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  0 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  1 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  2 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  3 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  4 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  5 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  6 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  7 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  8 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO  9 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO 10 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO 11 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Pattern 1, crossNic 0, nChannels 12, bw 20.000000/20.000000, type NVL/PIX, sameChannels 1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  0 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  1 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  2 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  3 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  4 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  5 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  6 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  7 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  8 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO  9 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO 10 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO 11 : GPU/0 GPU/1 GPU/2 GPU/3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO comm 0x7f8e9006a050 rank 3 nRanks 4 nNodes 1 localRanks 4 localRank 3 MNNVL 0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO comm 0x7f1c6c06a6e0 rank 1 nRanks 4 nNodes 1 localRanks 4 localRank 1 MNNVL 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO comm 0x7f596406afe0 rank 0 nRanks 4 nNodes 1 localRanks 4 localRank 0 MNNVL 0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO comm 0x7fcc98652710 rank 2 nRanks 4 nNodes 1 localRanks 4 localRank 2 MNNVL 0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 0 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 0 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 12 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 12 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 1 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 1 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 13 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 00 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 13 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 2 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 01 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 2 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 00 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 14 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 02 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 14 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 3 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 01 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 3 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 03 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 15 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 02 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 15 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 04 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 4 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 03 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 4 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 16 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 05 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 04 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 16 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 5 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 06 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 05 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 5 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 17 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 07 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 17 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 6 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 06 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 08 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 6 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 18 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 07 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 09 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 18 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 7 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 08 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 10 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 7 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 19 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 09 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 11 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 19 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 8 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 10 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 8 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 20 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 12 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 11 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 20 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 9 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 13 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 9 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 12 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 21 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 21 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 14 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 10 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 13 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 10 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 15 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 22 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 14 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 22 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 11 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 16 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 11 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 15 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Tree 23 : 0 -> 1 -> 2/-1/-1
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 17 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Tree 23 : -1 -> 0 -> 1/-1/-1
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 16 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 18 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 17 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 00/24 : 0 1 2 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 19 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 18 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 01/24 : 0 1 2 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 20 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 00 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 19 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 02/24 : 0 1 2 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 21 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 01 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 20 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 03/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 02 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 22 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 21 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 04/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 03 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Ring 23 : 2 -> 3 -> 0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 05/24 : 0 1 2 3
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 22 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 04 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Trees [0] -1/-1/-1->3->2 [1] -1/-1/-1->3->2 [2] -1/-1/-1->3->2 [3] -1/-1/-1->3->2 [4] -1/-1/-1->3->2 [5] -1/-1/-1->3->2 [6] -1/-1/-1->3->2 [7] -1/-1/-1->3->2 [8] -1/-1/-1->3->2 [9] -1/-1/-1->3->2 [10] -1/-1/-1->3->2 [11] -1/-1/-1->3->2 [12] -1/-1/-1->3->2 [13] -1/-1/-1->3->2 [14] -1/-1/-1->3->2 [15] -1/-1/-1->3->2 [16] -1/-1/-1->3->2 [17] -1/-1/-1->3->2 [18] -1/-1/-1->3->2 [19] -1/-1/-1->3->2 [20] -1/-1/-1->3->2 [21] -1/-1/-1->3->2 [22] -1/-1/-1->3->2 [23] -1/-1/-1->3->2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 06/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 05 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Ring 23 : 1 -> 2 -> 3
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO P2P Chunksize set to 524288
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 07/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 06 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Trees [0] 3/-1/-1->2->1 [1] 3/-1/-1->2->1 [2] 3/-1/-1->2->1 [3] 3/-1/-1->2->1 [4] 3/-1/-1->2->1 [5] 3/-1/-1->2->1 [6] 3/-1/-1->2->1 [7] 3/-1/-1->2->1 [8] 3/-1/-1->2->1 [9] 3/-1/-1->2->1 [10] 3/-1/-1->2->1 [11] 3/-1/-1->2->1 [12] 3/-1/-1->2->1 [13] 3/-1/-1->2->1 [14] 3/-1/-1->2->1 [15] 3/-1/-1->2->1 [16] 3/-1/-1->2->1 [17] 3/-1/-1->2->1 [18] 3/-1/-1->2->1 [19] 3/-1/-1->2->1 [20] 3/-1/-1->2->1 [21] 3/-1/-1->2->1 [22] 3/-1/-1->2->1 [23] 3/-1/-1->2->1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 08/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 07 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO P2P Chunksize set to 524288
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 09/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 08 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 10/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 09 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 11/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 10 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 12/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 11 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 13/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 12 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 14/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 13 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 15/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 14 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 16/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 15 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 17/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 16 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 18/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 17 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 19/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 18 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 20/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 19 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 21/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 20 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 22/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 21 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Channel 23/24 : 0 1 2 3
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 22 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 00 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Ring 23 : 0 -> 1 -> 2
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Trees [0] 2/-1/-1->1->0 [1] 2/-1/-1->1->0 [2] 2/-1/-1->1->0 [3] 2/-1/-1->1->0 [4] 2/-1/-1->1->0 [5] 2/-1/-1->1->0 [6] 2/-1/-1->1->0 [7] 2/-1/-1->1->0 [8] 2/-1/-1->1->0 [9] 2/-1/-1->1->0 [10] 2/-1/-1->1->0 [11] 2/-1/-1->1->0 [12] 2/-1/-1->1->0 [13] 2/-1/-1->1->0 [14] 2/-1/-1->1->0 [15] 2/-1/-1->1->0 [16] 2/-1/-1->1->0 [17] 2/-1/-1->1->0 [18] 2/-1/-1->1->0 [19] 2/-1/-1->1->0 [20] 2/-1/-1->1->0 [21] 2/-1/-1->1->0 [22] 2/-1/-1->1->0 [23] 2/-1/-1->1->0
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 01 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO P2P Chunksize set to 524288
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 02 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 03 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 04 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 05 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 06 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 07 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 08 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 09 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 10 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 11 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 12 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 13 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 14 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 15 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 16 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 17 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 18 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 19 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 20 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 21 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 22 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Ring 23 : 3 -> 0 -> 1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1 [2] 1/-1/-1->0->-1 [3] 1/-1/-1->0->-1 [4] 1/-1/-1->0->-1 [5] 1/-1/-1->0->-1 [6] 1/-1/-1->0->-1 [7] 1/-1/-1->0->-1 [8] 1/-1/-1->0->-1 [9] 1/-1/-1->0->-1 [10] 1/-1/-1->0->-1 [11] 1/-1/-1->0->-1 [12] 1/-1/-1->0->-1 [13] 1/-1/-1->0->-1 [14] 1/-1/-1->0->-1 [15] 1/-1/-1->0->-1 [16] 1/-1/-1->0->-1 [17] 1/-1/-1->0->-1 [18] 1/-1/-1->0->-1 [19] 1/-1/-1->0->-1 [20] 1/-1/-1->0->-1 [21] 1/-1/-1->0->-1 [22] 1/-1/-1->0->-1 [23] 1/-1/-1->0->-1
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO P2P Chunksize set to 524288
+llama-3-8b-node-0-0:215:1384 [3] NCCL INFO [Proxy Service] Device 3 CPU core 17
+llama-3-8b-node-0-0:215:1385 [3] NCCL INFO [Proxy Service UDS] Device 3 CPU core 61
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0
+llama-3-8b-node-0-0:214:1386 [2] NCCL INFO [Proxy Service] Device 2 CPU core 4
+llama-3-8b-node-0-0:214:1387 [2] NCCL INFO [Proxy Service UDS] Device 2 CPU core 3
+llama-3-8b-node-0-0:212:1388 [0] NCCL INFO [Proxy Service] Device 0 CPU core 56
+llama-3-8b-node-0-0:212:1389 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 19
+llama-3-8b-node-0-0:213:1390 [1] NCCL INFO [Proxy Service] Device 1 CPU core 14
+llama-3-8b-node-0-0:213:1391 [1] NCCL INFO [Proxy Service UDS] Device 1 CPU core 60
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Enabled NCCL Func/Proto/Algo Matrix:
+     Function |       LL     LL128    Simple   |          Tree           Ring  CollNetDirect   CollNetChain           NVLS       NVLSTree            PAT  
+    Broadcast |        0         0         1   |             1              1              1              1              1              1              1  
+       Reduce |        0         0         1   |             1              1              1              1              1              1              1  
+    AllGather |        0         0         1   |             1              1              1              1              1              1              1  
+ReduceScatter |        0         0         1   |             1              1              1              1              1              1              1  
+    AllReduce |        0         0         1   |             1              1              1              1              1              1              1  
+
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 32 p2p channels per peer
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 32 p2p channels per peer
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 32 p2p channels per peer
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO CC Off, workFifoBytes 1048576
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 32 p2p channels per peer
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : p4d.24xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : p4d.24xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO ncclCommInitRankConfig comm 0x7f596406afe0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 101c0 commId 0xce37a0af67ef3246 - Init COMPLETE
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO ncclCommInitRankConfig comm 0x7fcc98652710 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 201c0 commId 0xce37a0af67ef3246 - Init COMPLETE
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : p4d.24xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:212:1380 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 4 total 0.06 (kernels 0.00, alloc 0.00, bootstrap 0.01, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.02, rest 0.01)
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO ncclCommInitRankConfig comm 0x7f8e9006a050 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId 201d0 commId 0xce37a0af67ef3246 - Init COMPLETE
+llama-3-8b-node-0-0:214:1383 [2] NCCL INFO Init timings - ncclCommInitRankConfig: rank 2 nranks 4 total 0.05 (kernels 0.00, alloc 0.00, bootstrap 0.00, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.02, rest 0.01)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : p4d.24xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:215:1381 [3] NCCL INFO Init timings - ncclCommInitRankConfig: rank 3 nranks 4 total 0.06 (kernels 0.00, alloc 0.00, bootstrap 0.01, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.02, rest 0.01)
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO ncclCommInitRankConfig comm 0x7f1c6c06a6e0 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 101d0 commId 0xce37a0af67ef3246 - Init COMPLETE
+llama-3-8b-node-0-0:213:1382 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 4 total 0.06 (kernels 0.00, alloc 0.00, bootstrap 0.01, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.02, rest 0.01)
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 00/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 01/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 02/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 00/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 00/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 03/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 03/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 01/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 04/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 01/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 04/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 02/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 05/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 05/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 02/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 03/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 06/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 06/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 07/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 03/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 04/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 07/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 04/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 08/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 05/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 08/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 05/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 09/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 06/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 09/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 10/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 06/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 07/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 10/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 11/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 07/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 08/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 11/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 12/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 08/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 13/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 12/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 09/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 09/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 13/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 14/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 10/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 10/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 15/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 14/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 11/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 11/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 15/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 16/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 12/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 16/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 12/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 17/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 17/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 13/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 18/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 13/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 18/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 14/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 19/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 14/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 19/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 15/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 20/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 15/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 20/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 21/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 16/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 16/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 22/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 21/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 17/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Channel 23/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 17/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 22/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 18/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Channel 23/0 : 2[2] -> 3[3] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 18/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 19/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 19/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 20/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 21/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 20/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 22/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 21/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 22/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Channel 23/0 : 1[1] -> 2[2] via P2P/CUMEM/read
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Channel 23/0 : 3[3] -> 0[0] via P2P/CUMEM/read
+llama-3-8b-node-0-0:214:1392 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+llama-3-8b-node-0-0:213:1394 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+llama-3-8b-node-0-0:212:1395 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+llama-3-8b-node-0-0:215:1393 [3] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+
+[Step 5] GPU 0 Memory: Allocated: 0.11GB, Reserved: 7.41GB, Peak: 3.29GB
+
+[Step 5] GPU 3 Memory: Allocated: 0.11GB, Reserved: 6.18GB, Peak: 3.29GB
+
+[Step 5] GPU 2 Memory: Allocated: 0.11GB, Reserved: 6.18GB, Peak: 3.29GB
+
+[Step 5] Memory: 0.11GB | Net Sent: 30.3MB, Recv: 30.3MB | Throughput: 0.3MB/s
+
+[Step 5] Memory: 0.11GB | Net Sent: 30.3MB, Recv: 30.3MB | Throughput: 0.3MB/s
+
+[Step 5] Memory: 0.11GB | Net Sent: 30.3MB, Recv: 30.3MB | Throughput: 0.3MB/s
+
+[Step 5] GPU 1 Memory: Allocated: 0.11GB, Reserved: 6.18GB, Peak: 3.29GB
+
+[Step 5] Memory: 0.11GB | Net Sent: 30.3MB, Recv: 30.3MB | Throughput: 0.3MB/s
+{'loss': 10.0349, 'grad_norm': 5.991349697113037, 'learning_rate': 1.8400000000000003e-05, 'epoch': 0.0, 'time': '10:19:58'}
