@@ -16,7 +16,7 @@
 
 * [C4. Pytorch Training Operator 설치](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c4-training-operator.md)
 
-* C5. Observability 
+* C5. 가시성(Observability) 및 메트릭 분석 
    * [GPU 모니터링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-gpu-monitoring.md)    
    * [EFA 네트워크 모니터링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-network-efa-mon.md) 
    * [훈련 로그 수집](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c5-log-monitoring.md)
