@@ -326,53 +326,6 @@ aws iam attach-role-policy \
 ```
 
 
-## lustre 삭제 ##
-```
-export CLUSTER_NAME="training-on-eks"
-export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export BUCKET_NAME="training-on-eks-lustre-${ACCOUNT_ID}"
-
-# 1. eksctl iamserviceaccount 삭제 (IAM Role과 연관성 제거)
-echo "1. eksctl iamserviceaccount 삭제 중..."
-eksctl delete iamserviceaccount \
-    --name fsx-csi-sa \
-    --namespace fsx-csi \
-    --cluster ${CLUSTER_NAME} \
-    --wait
-
-# 2. 커스텀 S3 정책 삭제
-echo "2. IAM 정책(FSxLustreS3IntegrationPolicy) 삭제 중..."
-POLICY_ARN=$(aws iam list-policies --scope Local --query "Policies[?PolicyName=='${FSX_S3Policy}'].Arn" --output text)
-if [ "$POLICY_ARN" != "None" ] && [ -n "$POLICY_ARN" ]; then
-    # 역할이 아직 남아있을 경우를 대비해 연결 해제 시도
-    aws iam detach-role-policy --role-name "${ROLE_NAME}" --policy-arn "${POLICY_ARN}" 2>/dev/null
-    aws iam delete-policy --policy-arn "${POLICY_ARN}"
-    echo "정책 삭제 완료: ${POLICY_ARN}"
-else
-    echo "${FSX_S3Policy} 정책이 이미 삭제되었습니다."
-fi
-
-# 3. FSx_Lustre_CSI_Driver_Role이 남아있을 경우 직접 삭제
-echo "3. IAM 역할(${FSX_ROLE}) 삭제 중..."
-if aws iam get-role --role-name "${FSX_ROLE}" 2>/dev/null; then
-    # 연결된 모든 정책 해제
-    for p_arn in $(aws iam list-attached-role-policies --role-name "${FSX_ROLE}" --query 'AttachedPolicies[].PolicyArn' --output text); do
-        aws iam detach-role-policy --role-name "${FSX_ROLE}" --policy-arn "${p_arn}"
-    done
-    # 인라인 정책이 남아있으면 delete-role 명령이 실패합니다.
-    INLINE_POLICIES=$(aws iam list-role-policies --role-name "${FSX_ROLE}" --query 'PolicyNames[]' --output text)
-    for p_name in $INLINE_POLICIES; do
-        aws iam delete-role-policy --role-name "${FSX_ROLE}" --policy-name "${p_name}"
-        echo "인라인 정책 삭제 완료: ${p_name}"
-    done 
-
-    aws iam delete-role --role-name "${FSX_ROLE}"
-    echo "역할 삭제 완료."
-else
-    echo "${FSX_ROLE} 이 이미 삭제되었습니다."
-fi
-```
-
 ## 레퍼런스 ##
 
 * https://github.com/kubernetes-sigs/aws-fsx-csi-driver/blob/master/docs/install.md
