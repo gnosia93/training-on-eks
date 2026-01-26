@@ -351,27 +351,7 @@ curl http://ad78aef1d9d4740e2bf66746ebb5179f-1710625772.us-west-2.elb.amazonaws.
 <html>
 <head>
 <title>Welcome to nginx!</title>
-<style>
-    body {
-        width: 35em;
-        margin: 0 auto;
-        font-family: Tahoma, Verdana, Arial, sans-serif;
-    }
-</style>
-</head>
-<body>
-<h1>Welcome to nginx!</h1>
-<p>If you see this page, the nginx web server is successfully installed and
-working. Further configuration is required.</p>
-
-<p>For online documentation and support please refer to
-<a href="http://nginx.org/">nginx.org</a>.<br/>
-Commercial support is available at
-<a href="http://nginx.com/">nginx.com</a>.</p>
-
-<p><em>Thank you for using nginx.</em></p>
-</body>
-</html>
+...
 ```
 nginx 서비스 삭제하기 
 ```
@@ -379,21 +359,8 @@ kubectl delete svc nginx
 ```
 
 ## 클러스터 삭제 ##
-#### 1. 카펜터 인스턴스 프로파일 삭제 #### 
-```
-ROLE_NAME="eksctl-KarpenterNodeRole-training-on-eks"
-for p in $(aws iam list-attached-role-policies --role-name "$ROLE_NAME" --query 'AttachedPolicies[*].PolicyArn' --output text); do aws iam detach-role-policy --role-name "$ROLE_NAME" --policy-arn "$p"; done
-for p in $(aws iam list-role-policies --role-name "$ROLE_NAME" --query 'PolicyNames[*]' --output text); do aws iam delete-role-policy --role-name "$ROLE_NAME" --policy-name "$p"; done
-for i in $(aws iam list-instance-profiles-for-role --role-name "$ROLE_NAME" --query 'InstanceProfiles[*].InstanceProfileName' --output text); do aws iam remove-role-from-instance-profile --instance-profile-name "$i" --role-name "$ROLE_NAME"; aws iam delete-instance-profile --instance-profile-name "$i"; done
-aws iam delete-role --role-name "$ROLE_NAME"
-```
-#### 2. 클러스터 삭제 ####
-```
-eksctl delete cluster -f cluster.yaml
-```
-
-#### 3. eksctl-KarpenterNodeRole-training-on-eks 삭제 ####
-eksctl-KarpenterNodeRole-training-on-eks 관련해서 가비지가 남아 있으면, 새로운 클러스터 생성시 Karpenter 단계에서 에러가 발생한다. 
+#### 1. eksctl-KarpenterNodeRole-training-on-eks Role 삭제 ####
+eksctl-KarpenterNodeRole-training-on-eks Role 의 경우 위에서 policy 를 추가했기 때문에 eksctl 로 지워지지 않는다. Role 부터 삭제한 후 클러스터를 삭제한다.
 ```
 INSTANCE_PROFILES=$(aws iam list-instance-profiles-for-role \
   --role-name eksctl-KarpenterNodeRole-training-on-eks \
@@ -420,6 +387,12 @@ done
 
 aws iam delete-role --role-name eksctl-KarpenterNodeRole-training-on-eks
 ```
+
+#### 2. 클러스터 삭제 ####
+```
+eksctl delete cluster -f cluster.yaml
+```
+
 
 ## 레퍼런스 ##
 
