@@ -130,7 +130,7 @@ def main():
     if not dist.is_initialized():
         dist.init_process_group(backend="nccl")
         
-    start_time = time.time()
+#    start_time = time.time()
     model_name = "meta-llama/Meta-Llama-3-8B"
     config = AutoConfig.from_pretrained(model_name)
     
@@ -199,7 +199,9 @@ def main():
         data_collator=data_collator,
         callbacks=[SimpleTimeCallback(), MemoryLoggingCallback(), SystemMonitorCallback()] 
     )
-    
+
+    # 시작 시간 기록
+    start_time = time.time()
     trainer.train()
     
     # 종료 시간 기록 및 소요 시간 계산
