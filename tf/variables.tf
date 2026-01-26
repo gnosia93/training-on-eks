@@ -31,7 +31,7 @@ variable "key_name" {
   description = "AWS SSH Key Pair name for EC2 access"
   type        = string
   # TODO: 이 기본값을 사용자의 실제 AWS 키페어 이름으로 변경하세요.
-  default     = "us-west-2" 
+  default     = "aws-kp-1" 
 }
 
 
