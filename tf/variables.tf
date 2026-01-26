@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS Region to deploy resources"
   type        = string
-  default     = "ap-northeast-1" # 원하는 리전으로 변경하세요 (예: "us-east-1")
+  default     = "ap-northeast-2" # 원하는 리전으로 변경하세요 (예: "us-east-1")
 }
 
 variable "cluster_name" {
@@ -31,7 +31,7 @@ variable "key_name" {
   description = "AWS SSH Key Pair name for EC2 access"
   type        = string
   # TODO: 이 기본값을 사용자의 실제 AWS 키페어 이름으로 변경하세요.
-  default     = "aws-kp-1" 
+  default     = "aws-kp-2" 
 }
 
 
