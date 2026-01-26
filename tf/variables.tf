@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS Region to deploy resources"
   type        = string
-  default     = "us-west-2" # 원하는 리전으로 변경하세요 (예: "us-east-1")
+  default     = "ap-northeast-1" # 원하는 리전으로 변경하세요 (예: "us-east-1")
 }
 
 variable "cluster_name" {
