@@ -1,0 +1,260 @@
+pip 설치 완료, 학습을 시작합니다...
+Master Address: llama-3-8b-node-0-0.llama-3-8b
+Master Port: 29500
+df: /root/.triton/autotune: No such file or directory
+[Rank 0] GPU Memory Flushed.
+loading configuration file config.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/config.json
+Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 128000,
+  "dtype": "bfloat16",
+  "eos_token_id": 128001,
+  "head_dim": 128,
+  "hidden_act": "silu",
+  "hidden_size": 4096,
+  "initializer_range": 0.02,
+  "intermediate_size": 14336,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 32,
+  "num_hidden_layers": 32,
+  "num_key_value_heads": 8,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_scaling": null,
+  "rope_theta": 500000.0,
+  "tie_word_embeddings": false,
+  "transformers_version": "4.57.6",
+  "use_cache": true,
+  "vocab_size": 128256
+}
+
+loading file tokenizer.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/tokenizer.json
+loading file tokenizer.model from cache at None
+loading file added_tokens.json from cache at None
+loading file special_tokens_map.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/special_tokens_map.json
+loading file tokenizer_config.json from cache at /root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B/snapshots/8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920/tokenizer_config.json
+loading file chat_template.jinja from cache at None
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+`torch_dtype` is deprecated! Use `dtype` instead!
+Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+Generate config GenerationConfig {
+  "bos_token_id": 128000,
+  "eos_token_id": 128001
+}
+
+llama-3-8b-node-0-0:194:194 [0] NCCL INFO NCCL_SOCKET_IFNAME set by environment to ^docker0,lo
+llama-3-8b-node-0-0:194:194 [0] NCCL INFO Bootstrap: Using eth0:10.0.11.14<0>
+llama-3-8b-node-0-0:194:194 [0] NCCL INFO cudaDriverVersion 13000
+llama-3-8b-node-0-0:194:194 [0] NCCL INFO NCCL version 2.27.3+cuda12.9
+llama-3-8b-node-0-0:194:194 [0] NCCL INFO Comm config Blocking set to 1
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/Plugin: Plugin name set by env to libnccl-net.so
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/Plugin: Loaded net plugin Libfabric (v10)
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/Plugin: Failed to find ncclCollNetPlugin_v10 symbol.
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/Plugin: Failed to find ncclCollNetPlugin_v9 symbol.
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/Plugin: Failed to find ncclCollNetPlugin_v8 symbol.
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/Plugin: Failed to find ncclCollNetPlugin_v7 symbol.
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/Plugin: Failed to find ncclCollNetPlugin_v6 symbol.
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Successfully loaded external plugin libnccl-net.so
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Initializing aws-ofi-nccl 1.16.2
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Using Libfabric version 2.1
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Using CUDA driver version 13000 with runtime 12090
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Configuring AWS-specific options
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Setting provider_filter to efa
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Internode latency set at 75.0 us
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Selected provider is efa, fabric is efa (found 4 nics)
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI NIC group 0 device #0 0000:9b:00.0
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI NIC group 1 device #0 0000:9c:00.0
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI NIC group 2 device #0 0000:bc:00.0
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI NIC group 3 device #0 0000:bd:00.0
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Selected provider is efa, fabric is efa (found 4 nics)
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Using transport protocol SENDRECV
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Creating one domain per process
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI GUID of rdmap155s0: 3b6e201200002d00
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI GUID for dev[0]: 00000000000000000a000b0e00000000
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI GUID of rdmap156s0: a7b5b9c000002d01
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI GUID for dev[1]: 00000000000000000a000b0e00000001
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI GUID of rdmap188s0: 95f9fbea0000f001
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI GUID for dev[2]: 00000000000000000a000b0e00000002
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI GUID of rdmap189s0: 2959b5a20000f000
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI GUID for dev[3]: 00000000000000000a000b0e00000003
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Could not disable CUDA API usage for HMEM, disabling GDR
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Setting FI_OPT_EFA_SENDRECV_IN_ORDER_ALIGNED_128_BYTES not supported.
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Need to force simple protocol: byte delivery ordering not supported
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Support for global registrations: false
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Support for DMA-BUF registrations: false
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Need to force simple protocol: GDR not supported
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Adding FI_EFA_FORK_SAFE=1 to environment
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Adding NCCL_PROTO=simple to environment
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI Adding NCCL_TUNER_PLUGIN=libnccl-net.so to environment
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Initialized NET plugin Libfabric
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Assigned NET plugin Libfabric to comm
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Using network Libfabric
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO DMA-BUF is available on GPU device 0
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO ncclCommInitRankConfig comm 0x55920ac18960 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 9e000 commId 0x7dcff2626d08b830 - Init START
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO RAS client listening socket at ::1<28028>
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Bootstrap timings total 0.177358 (create 0.000102, send 0.000184, recv 0.176257, ring 0.000147, delay 0.000000)
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NCCL_P2P_LEVEL set by environment to NVL
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Setting affinity for GPU 0 to 0-47,96-143
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO comm 0x55920ac18960 rank 0 nRanks 4 nNodes 4 localRanks 1 localRank 0 MNNVL 0
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Channel 00/02 : 0 1 2 3
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Channel 01/02 : 0 1 2 3
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Trees [0] 2/-1/-1->0->-1 [1] -1/-1/-1->0->1
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO P2P Chunksize set to 131072
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0
+llama-3-8b-node-0-0:194:492 [0] NCCL INFO [Proxy Service] Device 0 CPU core 18
+llama-3-8b-node-0-0:194:493 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 129
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Enabled NCCL Func/Proto/Algo Matrix:
+     Function |       LL     LL128    Simple   |          Tree           Ring  CollNetDirect   CollNetChain           NVLS       NVLSTree            PAT  
+    Broadcast |        0         0         1   |             1              1              1              1              1              1              1  
+       Reduce |        0         0         1   |             1              1              1              1              1              1              1  
+    AllGather |        0         0         1   |             1              1              1              1              1              1              1  
+ReduceScatter |        0         0         1   |             1              1              1              1              1              1              1  
+    AllReduce |        0         0         1   |             1              1              1              1              1              1              1  
+
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO CC Off, workFifoBytes 1048576
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO TUNER/Plugin: Plugin name set by env to libnccl-net.so
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO TUNER/Plugin: Using tuner plugin nccl_ofi_tuner
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : g6e.48xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO ncclCommInitRankConfig comm 0x55920ac18960 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 9e000 commId 0x7dcff2626d08b830 - Init COMPLETE
+llama-3-8b-node-0-0:194:490 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 4 total 0.79 (kernels 0.17, alloc 0.42, bootstrap 0.18, allgathers 0.01, topo 0.01, graphs 0.00, connections 0.01, rest 0.00)
+llama-3-8b-node-0-0:194:495 [0] NCCL INFO [Proxy Progress] Device 0 CPU core 43
+llama-3-8b-node-0-0:194:494 [0] NCCL INFO Channel 00/0 : 3[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:494 [0] NCCL INFO Channel 01/0 : 3[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:494 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:494 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:494 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+Generating test split: 100%|██████████| 4358/4358 [00:00<00:00, 426745.19 examples/s]
+Generating train split: 100%|██████████| 36718/36718 [00:00<00:00, 825984.46 examples/s]
+Generating validation split: 100%|██████████| 3760/3760 [00:00<00:00, 731304.57 examples/s]
+Map: 100%|██████████| 36718/36718 [00:01<00:00, 18814.36 examples/s]
+PyTorch: setting up devices
+max_steps is given, it will override any value given in num_train_epochs
+Using auto half precision backend
+훈련 소요시간 기록 시작: 1769413976.72s
+Gradient accumulation steps mismatch: GradientAccumulationPlugin has 1, DeepSpeed config has 4. Using DeepSpeed's value.
+Detected ZeRO Offload and non-DeepSpeed optimizers: This combination should work as long as the custom optimizer has both CPU and GPU implementation (except LAMB)
+[rank0]:W0126 07:53:00.671000 194 site-packages/torch/utils/cpp_extension.py:2425] TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
+[rank0]:W0126 07:53:00.671000 194 site-packages/torch/utils/cpp_extension.py:2425] If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'] to specific architectures.
+Adam Optimizer #0 is created with AVX2 arithmetic capability.
+Config: alpha=0.000020, betas=(0.900000, 0.999000), weight_decay=0.010000, adam_w=1
+Stage 3 initialize beginning
+MA 0.0 GB         Max_MA 0.98 GB         CA 0.0 GB         Max_CA 1 GB 
+CPU Virtual Memory:  used = 88.69 GB, percent = 5.9%
+DeepSpeedZeRoOffload initialize [begin]
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 88.69 GB, percent = 5.9%
+Parameter Offload - Persistent parameters statistics: param_count = 65, numel = 266240
+DeepSpeedZeRoOffload initialize [end]
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 88.7 GB, percent = 5.9%
+Before creating fp16 partitions
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 88.7 GB, percent = 5.9%
+/usr/local/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+llama-3-8b-node-0-0:194:926 [0] NCCL INFO Channel 00/0 : 2[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:926 [0] NCCL INFO Channel 00/0 : 0[0] -> 2[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:926 [0] NCCL INFO Channel 01/0 : 1[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:926 [0] NCCL INFO Connected all trees
+After creating fp16 partitions: 19
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 120.77 GB, percent = 8.1%
+Before creating fp32 partitions
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 126.35 GB, percent = 8.5%
+After creating fp32 partitions
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 132.87 GB, percent = 8.9%
+Before initializing optimizer states
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 137.09 GB, percent = 9.2%
+After initializing optimizer states
+MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+CPU Virtual Memory:  used = 178.66 GB, percent = 12.0%
+llama-3-8b-node-0-0:194:967 [0] NCCL INFO Channel 00/0 : 1[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:967 [0] NCCL INFO Channel 00/0 : 0[0] -> 3[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:967 [0] NCCL INFO Channel 01/0 : 0[0] -> 3[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:967 [0] NCCL INFO Channel 01/0 : 2[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:967 [0] NCCL INFO Channel 01/0 : 0[0] -> 2[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:967 [0] NCCL INFO Connected binomial trees
+After initializing ZeRO optimizer
+MA 0.09 GB         Max_MA 2.05 GB         CA 2.05 GB         Max_CA 2 GB 
+CPU Virtual Memory:  used = 193.6 GB, percent = 13.0%
+***** Running training *****
+  Num examples = 36,718
+  Num Epochs = 1
+  Instantaneous batch size per device = 1
+  Total train batch size (w. parallel, distributed & accumulation) = 16
+  Gradient Accumulation steps = 4
+  Total optimization steps = 50
+  Number of trainable parameters = 8,030,261,248
+  0%|          | 0/50 [00:00<?, ?it/s]`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+llama-3-8b-node-0-0:194:989 [0] NCCL INFO Comm config Blocking set to 1
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Assigned NET plugin Libfabric to comm
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Using network Libfabric
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO DMA-BUF is available on GPU device 0
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO ncclCommInitRankConfig comm 0x7f3414069540 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 9e000 commId 0x7324e5e7d44799fd - Init START
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Bootstrap timings total 0.016549 (create 0.000149, send 0.000340, recv 0.000785, ring 0.014954, delay 0.000000)
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Setting affinity for GPU 0 to 0-47,96-143
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO comm 0x7f3414069540 rank 0 nRanks 4 nNodes 4 localRanks 1 localRank 0 MNNVL 0
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Channel 00/02 : 0 1 2 3
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Channel 01/02 : 0 1 2 3
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Trees [0] 2/-1/-1->0->-1 [1] -1/-1/-1->0->1
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO P2P Chunksize set to 131072
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0
+llama-3-8b-node-0-0:194:1003 [0] NCCL INFO [Proxy Service] Device 0 CPU core 129
+llama-3-8b-node-0-0:194:1004 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 2
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO NCCL_PROTO set by environment to simple
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Enabled NCCL Func/Proto/Algo Matrix:
+     Function |       LL     LL128    Simple   |          Tree           Ring  CollNetDirect   CollNetChain           NVLS       NVLSTree            PAT  
+    Broadcast |        0         0         1   |             1              1              1              1              1              1              1  
+       Reduce |        0         0         1   |             1              1              1              1              1              1              1  
+    AllGather |        0         0         1   |             1              1              1              1              1              1              1  
+ReduceScatter |        0         0         1   |             1              1              1              1              1              1              1  
+    AllReduce |        0         0         1   |             1              1              1              1              1              1              1  
+
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO CC Off, workFifoBytes 1048576
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO NET/OFI NCCL_OFI_TUNER is not available for platform : g6e.48xlarge, Fall back to NCCL's tuner
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO ncclCommInitRankConfig comm 0x7f3414069540 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 9e000 commId 0x7324e5e7d44799fd - Init COMPLETE
+llama-3-8b-node-0-0:194:1002 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 4 total 0.66 (kernels 0.00, alloc 0.00, bootstrap 0.02, allgathers 0.02, topo 0.01, graphs 0.00, connections 0.62, rest 0.00)
+llama-3-8b-node-0-0:194:1006 [0] NCCL INFO [Proxy Progress] Device 0 CPU core 129
+llama-3-8b-node-0-0:194:1005 [0] NCCL INFO Channel 00/0 : 3[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1005 [0] NCCL INFO Channel 01/0 : 3[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1005 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1005 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1005 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Channel 00/0 : 1[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Channel 01/0 : 1[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Channel 00/0 : 0[0] -> 3[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Channel 01/0 : 0[0] -> 3[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Channel 00/0 : 2[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Channel 01/0 : 2[0] -> 0[0] [receive] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Channel 00/0 : 0[0] -> 2[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Channel 01/0 : 0[0] -> 2[0] [send] via NET/Libfabric/0
+llama-3-8b-node-0-0:194:1007 [0] NCCL INFO Connected binomial trees
+llama-3-8b-node-0-0:194:1176 [0] NCCL INFO Connected all trees
+
+[Step 5] GPU 0 Memory: Allocated: 0.11GB, Reserved: 8.20GB, Peak: 3.29GB
+
+[Step 5] Memory: 0.11GB | Net Sent: 5.7MB, Recv: 5.1MB | Throughput: 0.0MB/s
+{'loss': 10.0607, 'grad_norm': 5.725719928741455, 'learning_rate': 1.8400000000000003e-05, 'epoch': 0.0, 'time': '08:07:19'}
+
+[Step 10] GPU 0 Memory: Allocated: 0.11GB, Reserved: 8.20GB, Peak: 3.29GB
+
+[Step 10] Memory: 0.11GB | Net Sent: 5.0MB, Recv: 4.5MB | Throughput: 0.0MB/s
+{'loss': 8.7804, 'grad_norm': 4.4161787033081055, 'learning_rate': 1.64e-05, 'epoch': 0.0, 'time': '08:20:10'}
+
+[Step 15] GPU 0 Memory: Allocated: 0.11GB, Reserved: 8.20GB, Peak: 3.29GB
