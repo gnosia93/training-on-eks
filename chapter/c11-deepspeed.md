@@ -59,13 +59,12 @@ efa 플러그인 데몬셋이 존재하는지 확인한다. 만약 해당 데몬
 ### 3. 큐브플로우 Trainer 설치 ###
 ```
 sudo dnf install git -y
-
 export VERSION=v2.1.0
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=${VERSION}"
+```
+10 초 정도 지나후에 클러스터 트레이닝런타임을 설치한다. 
+```
 kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/runtimes?ref=${VERSION}"
-```
-10 초 정도 지나후에 클러스터 트레이닝런타임 환경을 조회한다. 
-```
 kubectl get clustertrainingruntimes
 ```
 [결과]
