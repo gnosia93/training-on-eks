@@ -157,6 +157,9 @@ watch -n 2 nvidia-smi
 모델 파라미터는 처음 부터 쪼개져서 각각의 GPU로 로딩되고 있다.
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/param-dist-loading.png)
 
+파드안에 4개의 파이썬 프로세스가 훈련에 참여하고 있고, 쿠다 커널을 구워내는 Inductor 의 경우 활동을 완료하고 idle 상태로 들어가 있는 것을 확인할 수 있다. 
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/top-inductor.png)
+
 카펜터가 프로비저닝 한 노드 리스트를 조회한다. 만약 GPU 노드가 보이지 않는다면 카펜터 로그를 확인해 봐야 한다. 
 ```
 kubectl get nodes -o custom-columns="NAME:.metadata.name, \
