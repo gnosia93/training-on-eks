@@ -202,6 +202,10 @@ def main():
 
     # 시작 시간 기록
     start_time = time.time()
+    # 메인 프로세스(Rank 0)에서만 결과 출력
+    if trainer.is_world_process_zero():
+        print(f"훈련 소요시간 기록 시작: {start_time:.2f}s")
+    
     trainer.train()
     
     # 종료 시간 기록 및 소요 시간 계산
