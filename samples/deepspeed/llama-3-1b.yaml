@@ -46,7 +46,8 @@ spec:
         echo "=== Launching Single GPU Training ==="
         pip install -r requirements.txt 
         echo "pip 설치 완료, 학습을 시작합니다..." 
-        python llama-3-1b.py 
+        export CUDA_VISIBLE_DEVICES=0
+        torchrun --nproc_per_node=1 llama-3-1b.py 
     resourcesPerNode:
       limits:
         nvidia.com/gpu: 1
