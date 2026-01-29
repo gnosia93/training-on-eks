@@ -9,18 +9,9 @@ fi
 cd ~/training-on-eks/samples/deepspeed
 kubectl get trainjob 
 kubectl delete trainjob llama-3-1b --ignore-not-found=true # 작업이 없어도 에러 없이 진행
-envsubst '$HF_TOKEN' < trainjob-1to1.yaml | kubectl apply -f - 
+envsubst '$HF_TOKEN' < llama-3-1b.yaml | kubectl apply -f - 
 
 kubectl get trainjob 
 kubectl get pods -o wide
 kubectl get nodes
 
-kubectl get nodes -o custom-columns="NAME:.metadata.name, \
-   STATUS:.status.conditions[?(@.type=='Ready')].status, \
-   INSTANCE:.metadata.labels['node\.kubernetes\.io/instance-type'], \
-   ARCH:.status.nodeInfo.architecture, \
-   GPU:.status.capacity['nvidia\.com/gpu'], \
-   EFA:.status.capacity['vpc\.amazonaws\.com/efa'], \
-   ZONE:.metadata.labels['topology\.kubernetes\.io/zone'], \
-   CAPACITY:.metadata.labels['karpenter\.sh/capacity-type']" \
-| sed 's/\.ap-northeast-2\.compute\.internal//g' | column -t
