@@ -56,7 +56,8 @@ def main():
         model_name,
         torch_dtype=torch.bfloat16,
         attn_implementation="sdpa", # 메모리 효율을 위해 SDPA 유지
-    )      
+    )   
+    model.to("cuda") 
         
     # 데이터셋 로드 및 전처리 (전처리 시 CPU 메모리 주의)
     dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")   
