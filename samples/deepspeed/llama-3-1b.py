@@ -110,5 +110,8 @@ def main():
     print(f"최종 소요 시간: {readable_time}")
     print(f"전체 초 단위: {total_seconds:.2f}s")
 
+    if torch.distributed.is_initialized():
+        torch.distributed.destroy_process_group()    
+
 if __name__ == "__main__":
     main()
