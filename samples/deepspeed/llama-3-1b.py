@@ -73,8 +73,8 @@ def main():
     # 학습 인자 설정
     training_args = TrainingArguments(
         output_dir="/data/fsx",
-        per_device_train_batch_size=4,
-        gradient_accumulation_steps=4,
+        per_device_train_batch_size=16,
+        gradient_accumulation_steps=1,
         learning_rate=2e-5,
     #    max_steps=50,
         num_train_epochs=1,
