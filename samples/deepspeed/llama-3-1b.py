@@ -46,7 +46,7 @@ def main():
     args = parser.parse_args()
      
     model_name = "meta-llama/Llama-3.2-1B"
-    ds_config_path = "llama-3-stage1.json"
+    ds_config_path = "llama-3-1b-stage1.json"
 
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.pad_token = tokenizer.eos_token
