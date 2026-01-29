@@ -45,8 +45,8 @@ def main():
     parser.add_argument("--ds_config", type=str, default="llama-3-8b-stage3.json", help="Path to DeepSpeed config file")
     args = parser.parse_args()
      
-    model_name = args.model_name
-    ds_config_path = args.ds_config
+    model_name = "meta-llama/Llama-3.2-1B"
+    ds_config_path = "llama-3-stage1.json"
 
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.pad_token = tokenizer.eos_token
