@@ -43,14 +43,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_name", type=str, default="meta-llama/Meta-Llama-3-8B", help="HuggingFace model ID")
     parser.add_argument("--ds_config", type=str, default="llama-3-8b-stage3.json", help="Path to DeepSpeed config file")
-    
+    args = parser.parse_args()
+
     # 1. 최우선 순위: 프로세스 그룹 초기화 (랑데뷰 시작)
     # torchrun으로 실행 시 환경 변수를 읽어 자동으로 4개의 파드를 하나로 묶습니다.
     if not dist.is_initialized():
         dist.init_process_group(backend="nccl")
         
-#    start_time = time.time()
-    model_name = "meta-llama/Meta-Llama-3-8B"
+    model_name = args.model_name
     config = AutoConfig.from_pretrained(model_name)
     
     # 2. 토크나이저는 CPU 작업이므로 먼저 진행해도 무관
@@ -62,7 +62,7 @@ def main():
     # 모델 로딩시에 처음부터 파라미터 등을 분산해서 로딩 (DeepSpeed가 파라미터를 쪼개서 RANK 별로 로딩 하도록 처리)
     # 이와 관련해서 잘못 설정하는 경우 모든 랭크가 전체 파라미터를 올리게 된다. (GPU 터짐)
     # 각각 모든 파라미터를 올린 후에(Trainer 가 올림) 팁스피드가 관여해서 다시 모델을 쪼개게 된다. 
-    ds_config_path = "llama-3-8b-stage3.json"
+    ds_config_path = args.ds_config
     with deepspeed.zero.Init(config_dict_or_path=ds_config_path):
         model = AutoModelForCausalLM.from_config(
 #            model_name,
