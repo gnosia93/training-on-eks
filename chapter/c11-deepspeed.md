@@ -210,4 +210,4 @@ llama-3-8b-node-0-0:194:1072 [3] NCCL INFO [Service thread] Connection closed by
 ## 레퍼런스 ##
 * [Simple DeepSpeed](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-deepspeed-simple.md)
 * https://huggingface.co/meta-llama
-
+* https://apxml.com/tools/vram-calculator
