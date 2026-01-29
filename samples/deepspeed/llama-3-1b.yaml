@@ -1,0 +1,54 @@
+apiVersion: trainer.kubeflow.org/v1alpha1
+kind: TrainJob
+metadata:
+  name: llama-3-1b
+spec:
+  podTemplateOverrides:
+    - targetJobs:
+        - name: node                                                  # ClusterTrainingRuntime 에 있는 runtime job template
+      #metadata:
+      #  annotations:
+      #    karpenter.sh/do-not-disrupt: "true"                         # Karpenter의 노드 회수 방지
+      spec:
+        # runtimeRef YAML 을 수정해야 한다.
+        #securityContext:
+        #      capabilities:                                          # EFA 통신을 위해 메모리 잠금 권한 필요
+        #        add: ["IPC_LOCK"]  
+        #hostIPC: true  # 호스트의 IPC 네임스페이스 공유 설정
+        affinity:
+          podAffinity:
+            # EFA 는 동일 AZ 안에서만 동작하므로, 하나의 AZ 만 사용하도록 강제한다. 
+            # "조건을 만족하지 않으면 아예 배치하지 마라"는 강한 제약 (Hard Constraint)
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    # TrainJob이 생성하는 파드 라벨과 일치시켜야 함
+                    jobset.sigs.k8s.io/jobset-name: "llama-3-1b"
+                topologyKey: "topology.kubernetes.io/zone"
+        
+        nodeSelector:
+          node.kubernetes.io/instance-type: "p4d.24xlarge"              
+                     
+  runtimeRef:
+    name: torch-distributed                   # torch 분산 백엔드 사용 
+
+  trainer:
+    numNodes: 1                               # 파드수 설정
+    numProcPerNode: 1                         # 파드당 프로세스 갯수                                                                              
+    image: public.ecr.aws/deep-learning-containers/pytorch-training:2.8.0-gpu-py312-cu129-ubuntu22.04-ec2-v1.0
+    command:
+      - /bin/bash
+      - -c
+      - |
+        git clone https://github.com/gnosia93/training-on-eks /workspace/code
+        cd /workspace/code/samples/deepspeed
+        huggingface-cli login --token "${HF_TOKEN}"
+        echo "=== Launching Single GPU Training ==="
+        pip install -r requirements.txt 
+        echo "pip 설치 완료, 학습을 시작합니다..." 
+        python llama-3-1b.py 
+    resourcesPerNode:
+      limits:
+        nvidia.com/gpu: 1
+        vpc.amazonaws.com/efa: 1                      
+ 
