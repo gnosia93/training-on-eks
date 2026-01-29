@@ -1,4 +1,4 @@
-
+import argparse
 import os
 import logging
 import time
@@ -33,76 +33,17 @@ def flush_gpu_memory():
         torch.cuda.reset_peak_memory_stats()
     print(f"[Rank {os.environ.get('RANK', '0')}] GPU Memory Flushed.")
 
-class SimpleTimeCallback(TrainerCallback):
-    def on_log(self, args, state, control, logs=None, **kwargs):
-        if logs:
-            # 현재 시간을 YYYY-MM-DD HH:MM:SS 형태로 추가
-            logs["time"] = datetime.datetime.now().strftime("%H:%M:%S")
-
-class MemoryLoggingCallback(TrainerCallback):
-    def on_step_end(self, args, state, control, **kwargs):
-        # 5스텝마다 혹은 원하는 주기에 맞춰 출력 (logging_steps와 연동 권장)
-        if state.global_step % args.logging_steps == 0:
-            if torch.cuda.is_available():
-                # 현재 프로세스가 사용하는 GPU 번호
-                device = torch.cuda.current_device()
-                
-                # 할당된 메모리 (실제 모델+액티베이션이 쓰는 양)
-                allocated = torch.cuda.memory_allocated(device) / (1024 ** 3)
-                # 예약된 메모리 (PyTorch가 드라이버로부터 빌려온 전체 양)
-                reserved = torch.cuda.memory_reserved(device) / (1024 ** 3)
-                # 최대 피크 기록
-                max_mem = torch.cuda.max_memory_allocated(device) / (1024 ** 3)
-
-                print(f"\n[Step {state.global_step}] GPU {device} Memory: "
-                      f"Allocated: {allocated:.2f}GB, "
-                      f"Reserved: {reserved:.2f}GB, "
-                      f"Peak: {max_mem:.2f}GB")
-                
-                # 피크 통계 초기화 (다음 구간의 피크를 보기 위함 - 선택 사항)
-                torch.cuda.reset_peak_memory_stats(device)
-
-class SystemMonitorCallback(TrainerCallback):
-    def __init__(self):
-        # 초기 네트워크 수치 저장
-        net_io = psutil.net_io_counters()
-        self.last_net_sent = net_io.bytes_sent
-        self.last_net_recv = net_io.bytes_recv
-        self.last_time = time.time()
-
-    def on_step_end(self, args, state, control, **kwargs):
-        if state.global_step % args.logging_steps == 0:
-            curr_time = time.time()
-            net_io = psutil.net_io_counters()
-            
-            # 이전 로깅 시점 이후의 전송량 계산 (MB)
-            sent_mb = (net_io.bytes_sent - self.last_net_sent) / (1024 ** 2)
-            recv_mb = (net_io.bytes_recv - self.last_net_recv) / (1024 ** 2)
-            interval = curr_time - self.last_time
-            
-            # 초당 전송 속도 (MB/s)
-            throughput = (sent_mb + recv_mb) / interval
-
-            if torch.cuda.is_available():
-                device = torch.cuda.current_device()
-                allocated = torch.cuda.memory_allocated(device) / (1024 ** 3)
-                
-                print(f"\n[Step {state.global_step}] "
-                      f"Memory: {allocated:.2f}GB | "
-                      f"Net Sent: {sent_mb:.1f}MB, Recv: {recv_mb:.1f}MB | "
-                      f"Throughput: {throughput:.1f}MB/s")
-
-            # 수치 업데이트
-            self.last_net_sent = net_io.bytes_sent
-            self.last_net_recv = net_io.bytes_recv
-            self.last_time = curr_time
-
 # transformers 라이브러리의 로그 레벨을 INFO로 설정하여 학습 과정(Loss 등)을 확인합니다.
 transformers.utils.logging.set_verbosity_info()
 logger = logging.getLogger(__name__)
 
 def main():
     flush_gpu_memory()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_name", type=str, default="meta-llama/Meta-Llama-3-8B", help="HuggingFace model ID")
+    parser.add_argument("--ds_config", type=str, default="llama-3-8b-stage3.json", help="Path to DeepSpeed config file")
+    
     # 1. 최우선 순위: 프로세스 그룹 초기화 (랑데뷰 시작)
     # torchrun으로 실행 시 환경 변수를 읽어 자동으로 4개의 파드를 하나로 묶습니다.
     if not dist.is_initialized():
@@ -174,8 +115,7 @@ def main():
         model=model,
         args=training_args,
         train_dataset=tokenized_datasets,
-        data_collator=data_collator,
-        callbacks=[SimpleTimeCallback(), MemoryLoggingCallback(), SystemMonitorCallback()] 
+        data_collator=data_collator, 
     )
 
     # 시작 시간 기록
