@@ -44,7 +44,11 @@ def main():
     parser.add_argument("--model_name", type=str, default="meta-llama/Meta-Llama-3-8B", help="HuggingFace model ID")
     parser.add_argument("--ds_config", type=str, default="llama-3-8b-stage3.json", help="Path to DeepSpeed config file")
     args = parser.parse_args()
-     
+
+    # 랑데뷰(초기화) 필수
+    if not dist.is_initialized():
+        dist.init_process_group(backend="nccl")
+    
     model_name = "meta-llama/Llama-3.2-1B"
     ds_config_path = "llama-3-1b-stage1.json"
 
