@@ -8,7 +8,7 @@ fi
 
 cd ~/training-on-eks/samples/deepspeed
 kubectl get trainjob 
-kubectl delete trainjob llama-3-8b --ignore-not-found=true # 작업이 없어도 에러 없이 진행
+kubectl delete trainjob llama-3-1b --ignore-not-found=true # 작업이 없어도 에러 없이 진행
 envsubst '$HF_TOKEN' < trainjob-1to1.yaml | kubectl apply -f - 
 
 kubectl get trainjob 
