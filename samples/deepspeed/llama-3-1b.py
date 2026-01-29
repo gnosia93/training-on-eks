@@ -78,6 +78,7 @@ def main():
         learning_rate=2e-5,
     #    max_steps=50,
         num_train_epochs=1,
+        logging_steps=5,            
         bf16=True,
         deepspeed=ds_config_path, 
         gradient_checkpointing=True, 
