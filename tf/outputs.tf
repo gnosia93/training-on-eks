@@ -28,7 +28,7 @@ output "private_subnet" {
     value       = [for subnet in aws_subnet.private : subnet.id]
 }
 
-
+/*
 # 마운트에 필요한 정보 출력
 output "fsx_id" {
   value       = aws_fsx_lustre_file_system.lustre_file_system.id
@@ -44,6 +44,6 @@ output "mount_name" {
   value       = aws_fsx_lustre_file_system.lustre_file_system.mount_name
   description = "마운트 명령어의 경로 부분(마지막)에 사용됩니다."
 }
-
+*/
 
 
