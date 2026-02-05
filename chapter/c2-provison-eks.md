@@ -67,7 +67,7 @@ go 컴파일 과정에서 다소 시간이 소요된다.
 ```
 export AWS_REGION=$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].RegionName' --output text)
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export CLUSTER_NAME="training-on-eks-${AWS_REGION}"
+export CLUSTER_NAME="training-on-eks"
 export K8S_VERSION="1.34"
 export KARPENTER_VERSION="1.8.1"
 export VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values="${CLUSTER_NAME}" --query "Vpcs[].VpcId" --output text)
