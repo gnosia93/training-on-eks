@@ -52,7 +52,7 @@ spec:
           values: ["amd64"]
         - key: karpenter.sh/capacity-type
           operator: In
-          values: ["spot", "on-demand"]
+          values: ["spot", "on-demand", "reserved"]
         - key: karpenter.k8s.aws/instance-category
           operator: In
           values: ["g", "p"]
