@@ -12,14 +12,14 @@ helm search repo nvdp --devel
 [결과]
 ```
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION                                       
-nvdp/gpu-feature-discovery      0.18.0          0.18.0          A Helm chart for gpu-feature-discovery on Kuber...
-nvdp/nvidia-device-plugin       0.18.0          0.18.0          A Helm chart for the nvidia-device-plugin on Ku...
+nvdp/gpu-feature-discovery      0.18.2          0.18.2          A Helm chart for gpu-feature-discovery on Kuber...
+nvdp/nvidia-device-plugin       0.18.2          0.18.2          A Helm chart for the nvidia-device-plugin on Ku...
 ```
 ```
 helm install nvdp nvdp/nvidia-device-plugin \
   --namespace nvidia \
   --create-namespace \
-  --version 0.18.0 \
+  --version 0.18.2 \
   --set gfd.enabled=true
 
 kubectl get daemonset -n nvidia
