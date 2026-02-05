@@ -1,3 +1,4 @@
+/*
 # 현재 계정 정보 가져오기
 data "aws_caller_identity" "current" {}
 
@@ -67,6 +68,6 @@ resource "aws_security_group" "lustre_sg" {
 
   tags = { Name = "lustre-sg" }
 }
-
+*/
 
 
