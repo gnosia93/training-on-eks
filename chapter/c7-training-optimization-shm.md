@@ -7,6 +7,12 @@
 컨테이너 안에서 df -h /dev/shm을 입력해서 64M라고 나온다면 학습 안정성을 보장하기 위해서 아래과 같이 Pod 의 shared memory 공간을 늘려줘야 한다. 
 ```
 # K8s 설정 예시
+containers:
+  - name: training-node                                               
+    volumeMounts:                                           
+    - mountPath: /dev/shm
+      name: dshm
+
 volumes:
 - name: dshm
   emptyDir:
