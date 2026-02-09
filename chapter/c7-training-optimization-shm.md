@@ -6,18 +6,31 @@
 
 컨테이너 안에서 df -h /dev/shm을 입력해서 64M라고 나온다면 학습 안정성을 보장하기 위해서 아래과 같이 Pod 의 shared memory 공간을 늘려줘야 한다. 
 ```
-# K8s 설정 예시
-containers:
-  - name: training-node                                               
+spec:
+  containers:
+  - name: training-node
+    image: nvcr.io/nvidia/pytorch:23.10-py3 # 예시 이미지
+    resources:
+      requests:
+        # [계산] 실제 프로세스 사용량(64Gi) + Shared Memory(32Gi) + 여유분(4Gi) = 100Gi
+        memory: "100Gi"
+        cpu: "32"
+        nvidia.com/gpu: 8
+      limits:
+        # requests와 동일하게 설정하여 Guaranteed QoS 등급 획득 (OOM 보호)
+        memory: "100Gi"
+        cpu: "32"
+        nvidia.com/gpu: 8
     volumeMounts:                                           
     - mountPath: /dev/shm
       name: dshm
-
-volumes:
-- name: dshm
-  emptyDir:
-    medium: Memory
-    sizeLimit: "32Gi" # 호스트 RAM 중 32GB를 공유 메모리로 할당
+  
+  volumes:
+  - name: dshm
+    emptyDir:
+      medium: Memory
+      # 호스트 RAM에서 32Gi를 논리적으로 격리하여 공유 메모리로 사용
+      sizeLimit: "32Gi"
 ```
 * 일반적인 LLM 학습 환경에서는 전체 RAM의 25% ~ 50% 사이를 할당하는 것이 좋다.(텐서가 텍스트이냐, 이미지 또는 영상이냐에 따라 다르긴 하다) <--- 모니터링을 통해 적정량을 산출 필요.
 
