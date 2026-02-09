@@ -19,12 +19,12 @@ volumes:
     medium: Memory
     sizeLimit: "32Gi" # 호스트 RAM 중 32GB를 공유 메모리로 할당
 ```
+* 일반적인 LLM 학습 환경에서는 전체 RAM의 25% ~ 50% 사이를 할당하는 것이 좋다.(텐서가 텍스트이냐, 이미지 또는 영상이냐에 따라 다르긴 하다) <--- 모니터링을 통해 적정량을 산출 필요.
 
 ### Shared Memory(shm)와의 연쇄 작용 ###
 * DataLoader (Worker): 디스크에서 데이터를 읽어 전처리 후 Shared Memory(/dev/shm)에 저장한다.
 * Main Process: Shared Memory 에 있는 데이터를 자기 영역으로 가져와 Pin Memory에 고정한다.
 * GPU DMA 엔진: 고정된 메모리 주소에서 데이터를 읽어 GPU VRAM으로 직접 이동시킨다. 
-
 
 ### DataLoader의 pin_memory=True ###
 일반적인 메모리(Pageable Memory)는 OS가 물리적 위치를 언제든 바꿀 수 있어, GPU가 데이터를 가져가려면 반드시 CPU가 데이터를 복사해서 전달해줘야 한다. Pin Memory 사용 시 메모리 주소가 물리적으로 고정(Lock)되어, GPU 내부의 DMA(Direct Memory Access) 엔진이 CPU 도움 없이 직접 시스템 RAM의 해당 주소에 접근하여 데이터를 복사해 간다.  
@@ -51,3 +51,7 @@ nvidia-smi dmon이나 df -h /dev/shm을 통해 데이터 파이프라인이 병�
 * 모든 GPU가 서로 직접 P2P 통신을 할 수 있는 것은 아니다. 중간에 PCIe 스위치가 복잡하게 얽혀 있거나, 서로 다른 CPU 소켓에 꽂혀 있으면 P2P 통신이 하드웨어적으로 차단되는 경우가 빈번하다. 
 * P2P가 불가능한 상황에서 NCCL은 시스템 멈춤(Hang)을 방지하기 위해 즉시 Shared Memory 방식으로 전환한다(Fallback). 이때 /dev/shm이 64MB라면 통신 시도가 시작되자마자 에러가 나며 학습이 중단된다.
 * 작은 크기의 데이터를 여러 GPU에 뿌릴 때는 직접 P2P를 여러 번 맺는 것보다, 공유 메모리에 한 번 쓰고 다 같이 읽어가는 게 더 효율적일 때가 있다 (데이터 복사 효율이 좋음) 
+
+### PCIe Topology 확인 ###
+노드 내 GPU 간 P2P 지원 여부는 nvidia-smi topo -p2p r 명령어로 확인할 수 있다. 만약 결과가 NS(Not Supported)라면 해당 구간은 반드시 Shared Memory를 경유하게 되므로 /dev/shm 용량 확보가 
+필수 이다.
