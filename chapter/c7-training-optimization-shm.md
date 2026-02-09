@@ -42,6 +42,12 @@ pin_memory=True를 쓰려면 OS 레벨에서 "메모리를 고정(Lock)해도 �
 ### DataLoader의 prefetch_factor와의 관계 ###
 공유 메모리 점유율을 결정하는 숨은 변수로 num_workers뿐만 아니라 prefetch_factor (기본값 2)에 의해서도 공유 메모리 사용량이 결정된다. 즉 num_workers * prefetch_factor 만큼의 데이터 배치가 항상 /dev/shm에 대기하게 되므로, 대용량 데이터(이미지/비디오) 학습 시에는 이 곱셈 결과에 맞춰 sizeLimit을 설계해야 한다.
 
-## 모니터링 ##
+### 모니터링 ###
 nvidia-smi dmon이나 df -h /dev/shm을 통해 데이터 파이프라인이 병목 없이 흐르는지 모니터링할 수 있다.
 
+## NCCL 의 Shared Memory 통신 매커니즘 ##
+동일 노드안에서 GPU 와 GPU 간의 통신 방식은 NVLINK, P2P, Shared Memory 로 나뉘어 진다. NVLINK 를 활용하지 못하게 되는 경우(하드웨어 오류 또는 명시적으로 NVLINK 를 Disable 시킴 등) 
+* PCIe P2P가 빠름에도 불구하고 NCCL이 /dev/shm을 활성화(NCCL_SHM_DISABLE=0)하는 이유는 'PCIe 복잡성' 때문이다.
+* 모든 GPU가 서로 직접 P2P 통신을 할 수 있는 것은 아니다. 중간에 PCIe 스위치가 복잡하게 얽혀 있거나, 서로 다른 CPU 소켓에 꽂혀 있으면 P2P 통신이 하드웨어적으로 차단되는 경우가 빈번하다. 
+* P2P가 불가능한 상황에서 NCCL은 시스템 멈춤(Hang)을 방지하기 위해 즉시 Shared Memory 방식으로 전환한다(Fallback). 이때 /dev/shm이 64MB라면 통신 시도가 시작되자마자 에러가 나며 학습이 중단된다.
+* 작은 크기의 데이터를 여러 GPU에 뿌릴 때는 직접 P2P를 여러 번 맺는 것보다, 공유 메모리에 한 번 쓰고 다 같이 읽어가는 게 더 효율적일 때가 있다 (데이터 복사 효율이 좋음) 
