@@ -14,7 +14,7 @@ volumes:
 
 ### Shared Memory(shm)와의 연쇄 작용 ###
 * DataLoader (Worker): 디스크에서 데이터를 읽어 전처리 후 Shared Memory(/dev/shm)에 저장한다.
-* Main Process: 공유 메모리에 있는 데이터를 자기 영역으로 가져와 Pin Memory에 고정한다.
+* Main Process: Shared Memory 에 있는 데이터를 자기 영역으로 가져와 Pin Memory에 고정한다.
 * GPU DMA 엔진: 고정된 메모리 주소에서 데이터를 읽어 GPU VRAM으로 직접 이동시킨다. 
 
 
