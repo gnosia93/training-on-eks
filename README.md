@@ -30,7 +30,8 @@
    - [Placement Group 설정](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-placement-group.md) 
    - [GPU 토폴로지 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-intra-topology.md)
    - [NCCL 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-nccl.md)
-      
+   - [Shared Memory 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-shm.md)
+       
 * C8. 훈련 스케줄링 및 복원력 
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
    - [노드 / GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)      
