@@ -186,6 +186,9 @@ lrwxrwxrwx.  1 root root 0 Jan  7 09:10 rdmap0s29 -> ../../devices/pci0000:00/00
 EC2 콘솔에서 EFA 인스턴스를 선택하고 시스템 매니저로 호스트에 로그인 한후, efa hw counter 를 조회한다. 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/efa-hw-counter.png)
 
+* https://cloudswit.ch/blogs/roce-or-infiniband-technical-comparison/
+
+
   
 ## 레퍼런스 ##
 
