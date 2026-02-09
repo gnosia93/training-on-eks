@@ -41,3 +41,7 @@ pin_memory=True를 쓰려면 OS 레벨에서 "메모리를 고정(Lock)해도 �
 
 ### DataLoader의 prefetch_factor와의 관계 ###
 공유 메모리 점유율을 결정하는 숨은 변수로 num_workers뿐만 아니라 prefetch_factor (기본값 2)에 의해서도 공유 메모리 사용량이 결정된다. 즉 num_workers * prefetch_factor 만큼의 데이터 배치가 항상 /dev/shm에 대기하게 되므로, 대용량 데이터(이미지/비디오) 학습 시에는 이 곱셈 결과에 맞춰 sizeLimit을 설계해야 한다.
+
+## 모니터링 ##
+nvidia-smi dmon이나 df -h /dev/shm을 통해 데이터 파이프라인이 병목 없이 흐르는지 모니터링할 수 있다.
+
