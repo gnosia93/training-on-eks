@@ -1,4 +1,4 @@
-## Pod 메모리 최적화 ##
+## Shared Memory 최적화 ##
 
 ### 컨테이너 /dev/shm 크기 ###
 도커 및 쿠버네티스에서 shared memroy 의 기본값은 64MB 로, 별도의 설정이 없는 경우 컨테이너의 /dev/shm 크기는 64MB 로 제한된다.
