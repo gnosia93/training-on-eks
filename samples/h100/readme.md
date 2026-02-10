@@ -144,3 +144,4 @@ dataloader = DataLoader(
     pin_memory=True     # GPU로 바로 쏠 수 있게 메모리 페이지를 고정
 )
 ```
+* 로직: 학습 스크립트가 실행되기 전, 백그라운드 프로세스가 다음 수천 개의 파일 리스트를 미리 cat 하거나 ls 하여 스토리지 계층의 캐시(OS Page Cache)에 강제로 올려두는 기법을 씁니다.
