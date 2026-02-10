@@ -129,7 +129,18 @@ Legend:
   * 보안: 컨테이너가 호스트의 모든 네트워크 서비스에 접근 가능해져 보안상 위험합니다.
   * 관리: 쿠버네티스의 장점인 네트워크 정책(Network Policy) 등을 사용할 수 없게 됩니다.
   * true 로 설정하는 경우 pytrochjob / trainJob 이 포트 충돌로 동작하지 않는다.
-      * CNI 를 vpc-cni + cillium mixed 로 설정하는 것이 좋다.. 초기 rdma 이니셜 라이즈시 일반 tcp/ip 를 통과하게 되고, 연결이 맺어진 후루는 tcp/ip 스택을 bypass 한다..   
+    * CNI 를 vpc-cni + cillium mixed 로 설정하는 것이 좋다.. 초기 rdma 이니셜 라이즈시 일반 tcp/ip 를 통과하게 되고, 연결이 맺어진 후루는 tcp/ip 스택을 bypass 한다..
+  * 1. [노드당 파드 1개] - hostNetwork: true 강제 적용
+    * 노드 전체 자원(8 GPU 등)을 파드 하나가 다 쓰는 대규모 학습이라면, PyTorchJob에서도 hostNetwork를 쓸 수 있습니다. 포트 충돌 걱정이 없기 때문입니다.
+    * 설정 방법: YAML의 spec.template.spec 아래에 hostNetwork: true를 명시합니다.
+    * 주의사항: dnsPolicy: ClusterFirstWithHostNet 설정을 반드시 추가해야 합니다. 그래야 hostNetwork 모드에서도 쿠버네티스 내부 DNS(CoreDNS)를 찾아가서 헤드리스 서비스 이름을 해석할 수 있습니다.
+    * 장점: 가장 완벽한 RDMA 성능이 나옵니다.
+  * 2. [노드당 파드 여러 개] - Multus CNI가 유일한 퇴로
+    * 이 경우가 진짜 문제입니다. hostNetwork: true를 쓰면 포트가 겹쳐서 파드가 죽어버립니다. 이때는 "제어는 가상으로, 데이터는 실물로" 분리해야 합니다.
+    * Multus CNI 활용:
+      * eth0 (기본): hostNetwork: false 상태로 둡니다. PyTorchJob이 관리하는 제어 패킷과 포트들은 여기서 돌아갑니다. (iptables의 간섭을 받지만, 데이터 양이 적어 괜찮습니다.)
+      * net1 (추가): SR-IOV를 통해 H100 전용 NIC의 가상 함수(VF)를 파드에 직접 꽂아줍니다.
+      * 핵심 설정: NCCL이 eth0가 아닌 net1을 데이터 통로로 쓰도록 강제합니다   
 * resource limit:  
   nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
 
