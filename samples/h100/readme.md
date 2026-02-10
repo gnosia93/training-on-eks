@@ -145,3 +145,6 @@ dataloader = DataLoader(
 )
 ```
 * 로직: 학습 스크립트가 실행되기 전, 백그라운드 프로세스가 다음 수천 개의 파일 리스트를 미리 cat 하거나 ls 하여 스토리지 계층의 캐시(OS Page Cache)에 강제로 올려두는 기법을 씁니다.
+* RAM 용량이 클수록: 공유 메모리(shm)를 아주 크게 잡아서, Lustre에서 가져온 데이터를 최대한 많이 RAM에 미리 쟁여둬야 합니다.
+* 아무리 Pre-fetching 로직을 잘 짜도, Lustre 자체의 물리적 대역폭이 H100의 연산 속도를 못 따라가면 결국 헛수고가 됩니다. 로컬 NVMe는 Pre-fetching이 거의 필요 없을 정도로 반응 속도가 빠르다..
+* Lustre를 쓰신다면 prefetch_factor를 조절하면서 GPU Utilization이 출렁이는지 꼭 확인해보세요! 🦾
