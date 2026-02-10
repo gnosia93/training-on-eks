@@ -116,7 +116,7 @@ def main():
     # 5. 학습 인자 설정
     training_args = TrainingArguments(
         output_dir="/data/fsx",
-        per_device_train_batch_size=2, # FP8 사용 시 메모리 여유가 생기므로 1->2 상향 가능
+        per_device_train_batch_size=1, # FP8 사용 시 메모리 여유가 생기므로 1->2 상향 가능
         gradient_accumulation_steps=4,
         learning_rate=2e-5,
         max_steps=50,
@@ -127,6 +127,7 @@ def main():
         save_strategy="no",
         gradient_checkpointing=True,
         log_level="info",
+        log_level_replica="warning",                   # 나머지 워커 노드 로그 제한
         report_to="none"
     )
     
