@@ -132,3 +132,15 @@ spec:
 ----
 * 안전한 길: 아까 결론 내린 '로컬 NVMe(hostPath)' 방식. (가장 확실하고 스트레스 없음)
 * Lustre 도전: 만약 데이터가 너무 커서 로컬에 못 담는다면 Lustre를 쓰되, 반드시 데이터를 큰 덩어리로 패킹하고 Pre-fetching 로직을 강화해야 합니다.
+* . 실제 코드/환경에서의 Pre-fetching
+① PyTorch DataLoader의 prefetch_factor
+PyTorch DataLoader에는 이 로직이 이미 파라미터로 구현되어 있습니다.
+```
+dataloader = DataLoader(
+    dataset, 
+    batch_size=4, 
+    num_workers=8,      # 8개의 프로세스가 동시에 데이터를 준비
+    prefetch_factor=2,  # worker당 2개씩, 총 16개의 배치를 미리 로딩해서 대기함
+    pin_memory=True     # GPU로 바로 쏠 수 있게 메모리 페이지를 고정
+)
+```
