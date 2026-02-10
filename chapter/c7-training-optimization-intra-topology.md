@@ -128,7 +128,8 @@ Legend:
   * 포트 충돌: 한 노드에 같은 포트를 쓰는 Pod를 두 개 이상 띄울 수 없습니다.
   * 보안: 컨테이너가 호스트의 모든 네트워크 서비스에 접근 가능해져 보안상 위험합니다.
   * 관리: 쿠버네티스의 장점인 네트워크 정책(Network Policy) 등을 사용할 수 없게 됩니다.
-
+  * true 로 설정하는 경우 pytrochjob / trainJob 이 포트 충돌로 동작하지 않는다.
+      * CNI 를 vpc-cni + cillium mixed 로 설정하는 것이 좋다.. 초기 rdma 이니셜 라이즈시 일반 tcp/ip 를 통과하게 되고, 연결이 맺어진 후루는 tcp/ip 스택을 bypass 한다..   
 * resource limit:  
   nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
 
