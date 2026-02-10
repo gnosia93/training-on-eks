@@ -46,3 +46,37 @@ K8s 파드(Pod)는 떴다 죽으면 내부 파일이 사라집니다.
 export HF_HOME="/mnt/fast_ssd/hf_cache"
 ```
 데이터셋 로딩이 시작될 때 네트워크 대역폭보다는 디스크 I/O(읽기 속도)를 모니터링해 보세요. H100이라면 초당 수 GB는 읽어줘야 GPU가 배불리 먹습니다! 🦾
+
+---
+
+4개의 프로세스(또는 파드)가 동시에 "나 데이터 없네? 내가 받을게!" 하고 같은 폴더에 쓰기를 시작하면 파일이 깨지거나(Corrupted), 네트워크 대역폭을 나눠 쓰느라 다운로드 속도가 기어가는 지옥을 보게 됩니다.이를 해결하는 표준적인 방법들을 정리해 드릴게요.
+
+### 1. Hugging Face의 내장 락(File Lock) 메커니즘 ###
+다행히 Hugging Face의 transformers와 datasets 라이브러리에는 파일 기반 락(.lock) 기능이 들어있습니다.
+* 동작: 한 프로세스가 다운로드를 시작하면 해당 폴더에 .lock 파일을 만듭니다.
+* 효과: 다른 프로세스들은 이 락 파일을 보고 "누가 받고 있구나" 하고 기다립니다(Waiting).
+* 문제점: 하지만 네트워크 스토리지(NFS 등)를 공유할 때는 이 파일 락이 가끔 제대로 작동하지 않아 먹통이 되기도 합니다.
+
+### 2. 가장 깔끔한 방법: '메인 프로세스 우선' 로직 ###
+Hugging Face의 accelerator나 Trainer를 쓰신다면 코드에 이런 로직을 넣어 경합을 원천 차단합니다.
+```python
+from accelerate import Accelerator
+
+accelerator = Accelerator()
+
+# 0번 프로세스(Main)만 다운로드를 먼저 수행
+with accelerator.main_process_first():
+    # 여기서 모델/데이터셋 로딩 (나머지 프로세스는 여기서 대기)
+    model = AutoModelForCausalLM.from_pretrained(...)
+    dataset = load_dataset(...)
+```
+
+* 작동 원리: main_process_first() 컨텍스트 안에서는 0번 GPU(Rank 0)만 먼저 지나가서 다운로드를 완료합니다. 그동안 나머지 GPU들은 문 앞에서 기다렸다가, 다운로드가 끝나면 이미 받아진 파일을 읽기만 합니다.
+
+### 3. 인프라 수준의 해결책 (K8s 특화) ###
+K8s 환경이라면 코드를 고치기보다 인프라 설정을 활용하는 게 더 세련된 방법입니다.
+* Init Containers: 메인 학습 컨테이너가 뜨기 전, Init Container를 하나 띄워 데이터를 미리 다운로드 받아둡니다.
+* Pre-download Script: 학습 스크립트 실행 직전에 if [ $RANK -eq 0 ]; then ... 구문을 넣어 0번 파드만 다운로드하게 강제합니다.
+
+### 💡 실전 팁 ###
+주말에 테스트하실 때, H100 8장(또는 4장)이 동시에 같은 저장소에 접근하면 파일 시스템 부하가 엄청납니다. 가급적 0번 프로세스만 다운로드하게 락을 걸거나, 학습 시작 전 Hugging Face CLI의 download 명령어로 미리 데이터를 다 받아두시는 걸 강력 추천합니다
