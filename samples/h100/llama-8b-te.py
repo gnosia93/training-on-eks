@@ -133,3 +133,6 @@ def main():
         total_seconds = end_time - start_time
         print(f"\n[학습 종료 보고서]")
         print(f"최종 소요 시간: {str(timedelta(seconds=int(total_seconds)))}")
+
+if __name__ == "__main__":
+    main()
