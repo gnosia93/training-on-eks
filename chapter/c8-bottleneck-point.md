@@ -34,9 +34,31 @@ GPU가 연산을 끝냈는데 다음 데이터가 준비되지 않아 노는 현
   * SM Efficiency: nvidia-smi의 SM 이용률을 세부 분석하여 연산 유닛이 실제로 일하는지 확인..  
   
 |구분|	모니터링| 지표|	도구|	임계치 및 이상 징후|
-|*-*|*-*|*-*|*-*|*-*|
+|---|---|---|---|---|
 |GPU|	Volatile GPU-Util|	nvidia-smi|	95% 미만 유지 시 데이터/통신 병목 의심|
 |Power|	Power Draw|	nvidia-smi|	TDP 대비 현저히 낮으면 GPU Starvation|
 |Comm|	NCCL_DEBUG=INFO|	환경변수|	All-Reduce 단계에서 멈춤 현상 발생 여부|
 |Storage|	I/O Wait| / Disk| Read	iostat, dstat	Lustre 읽기 속도가 학습 요구량보다 낮음|
 |System|	/dev/shm| usage|	df -h	공유 메모리 가득 참 (Bus error 유발)|
+
+
+## 실전 장애 시나리오별 지표 해석 ##
+
+### 1. "데이터 로딩 병목" (Lustre/CPU 문제) ###
+* 지표 변화: GPU-Util이 100% → 0% → 100% 식으로 널뛰기를 합니다.
+* 결정적 힌트: Power Draw가 TDP(H100의 경우 약 700W) 근처에 못 가고 200~300W에서 머뭅니다.
+* 조치: iostat에서 Disk Read 대역폭이 바닥을 치고 있다면, 로컬 NVMe 캐싱이나 num_workers 상향이 필요합니다.
+
+### 2. "통신 지연/데드락" (NCCL/Network 문제) ###
+* 지표 변화: GPU-Util은 100%로 찍히는데, 학습 로그(Loss 출력)가 멈춰 있습니다.
+* 결정적 힌트: NCCL_DEBUG=INFO 로그에 net_send나 wait 상태가 무한 반복됩니다.
+* 조치: nvidia-smi nvlink -gt로 데이터가 실제로 흐르는지 보고, 안 흐른다면 포트 설정이나 인피니밴드 매핑을 의심해야 합니다.
+
+### 3. "공유 메모리 폭발" (System 문제) ###
+* 지표 변화: 학습이 잘 되다가 갑자기 Bus error와 함께 프로세스가 죽어버립니다.
+* 결정적 힌트: df -h /dev/shm이 100%를 찍고 있습니다.
+* 조치: sizeLimit을 늘리거나, 데이터 로더에서 불필요한 메모리 복사가 일어나는지 체크해야 합니다.
+
+### 4. GPU 온도 ###
+* 만약 온도가 80°C를 넘어가기 시작하면 GPU가 스스로 속도를 줄이는 Thermal Throttling이 발생합니다.
+* 이때는 GPU-Util은 100%인데 학습 속도만 느려지는 아주 교활한 병목이 생깁니다. (쿨링 팬 속도나 에어컨 가동 상태 확인 필수)
