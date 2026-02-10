@@ -107,7 +107,6 @@ NIC3    SYS     SYS     NODE    PIX                             X
 ```
 * EFA (4개/8개): 오직 NCCL 전용으로 1:1 매핑 유지 (PIX 경로 보호).
 * ENA (32개 중 일부): Lustre 전용으로 할당. CPU 자원을 조금 쓰더라도 GPU의 고속 도로(NVLink/EFA)를 방해하지 않는 것이 가장 영리한 설계임.
-
 * efa 설정 (환경변수)
 ```
 # 8개의 EFA 장치를 NCCL이 모두 사용하도록 지정
@@ -135,7 +134,25 @@ sudo lnetctl net add --net tcp0 --if eth1,eth2
 sudo lnetctl lnet configure
 sudo lnetctl set discovery 1
 ```
+#### p4d.48xlarge ####
+efa 100Gbps NIC 4개 탑재, ena NIC 의 갯수는 16개(?) ....
+```
+        GPU0    GPU1    GPU2    GPU3    NIC0    NIC1    CPU Affinity    NUMA Affinity
+GPU0     X      NV12    NV12    NV12    PIX     PXB     0-23            0
+GPU1    NV12     X      NV12    NV12    PIX     PXB     0-23            0
+GPU2    NV12    NV12     X      NV12    PXB     PIX     24-47           1
+GPU3    NV12    NV12    NV12     X      PXB     PIX     24-47           1
 
+NIC0    PIX     PIX     PXB     PXB      X
+NIC1    PXB     PXB     PIX     PIX             X
+``` 
+* GPU0 와 GPU 1 은 NIC0 와 PIX 모드로 연결되어 있다. 즉 동일한 PCIe 스위치 밑에서 하나의 efa NIC 을 공유
+* 하지만 NIC1 과는 PXB 관계이다. 즉 다른 PCIe 스위치라는 것이다.
+* SYS 는 PCIe 스위치가 없어서 CPU를 통과한다는 것을 의미한다. 
+#### 통신 아키텍처 설계 결론 ####
+* NCCL all-reduce 를 위해서 EFA NIC 을 할당한다.
+* Lustre 의 경우 EFA 가 아닌 일반 ENA 를 사용하도록 설정한다. AWS FSx for Lustre 의 경우 별도의 lnet 설정을 하지 않아도 p4d 나 p5 인스턴스에서만 설정하면 자동으로 설정된다.. 그런데 lustre 클러스터가 몇개의 nic 을 가지고 있는지는 확인이 필요하다.
+* NCCL 의 management traffic 은 ENA 를 사용하도록 설정한다.
 
 ### 인터커넥트 타입별 대역폭 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/topology-througput.png)
