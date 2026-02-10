@@ -108,6 +108,35 @@ NIC3    SYS     SYS     NODE    PIX                             X
 * EFA (4개/8개): 오직 NCCL 전용으로 1:1 매핑 유지 (PIX 경로 보호).
 * ENA (32개 중 일부): Lustre 전용으로 할당. CPU 자원을 조금 쓰더라도 GPU의 고속 도로(NVLink/EFA)를 방해하지 않는 것이 가장 영리한 설계임.
 
+* efa 설정 (환경변수)
+```
+# 8개의 EFA 장치를 NCCL이 모두 사용하도록 지정
+export NCCL_IB_HCA=efa0,efa1,efa2,efa3,efa4,efa5,efa6,efa7
+
+# EFA 전용 로직 활성화 및 RDMA 설정
+export FI_EFA_USE_DEVICE_RDMA=1
+export NCCL_IB_GID_INDEX=3
+
+# 일반 통신(Socket)은 eth0(또는 일반 NIC 이름)만 사용하도록 고정
+export NCCL_SOCKET_IFNAME=eth0
+```
+
+* Lustre 트래픽에서 EFA 제외하기 (LNet 설정)  
+Lustre가 EFA를 건드리지 못하게 하려면, LNet(Lustre Network) 설정에서 EFA 인터페이스를 아예 빼버리고 일반 NIC만 등록해야 한다.
+```
+# 1. 기존 설정 해제
+sudo lnetctl lnet unconfigure
+
+# 2. 일반 NIC(ENA)만 Lustre용(tcp0)으로 등록 (예: eth1, eth2 활용)
+# 32개의 일반 NIC 중 원하는 것을 지정하세요.
+sudo lnetctl net add --net tcp0 --if eth1,eth2
+
+# 3. LNet 재구성 및 Peer Discovery 활성화
+sudo lnetctl lnet configure
+sudo lnetctl set discovery 1
+```
+
+
 ### 인터커넥트 타입별 대역폭 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/topology-througput.png)
 
