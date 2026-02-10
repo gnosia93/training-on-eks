@@ -9,6 +9,25 @@ import time
 from datetime import timedelta
 import os
 
+
+# 1. Hugging Face 타임아웃 연장 (데이터셋 로딩 에러 방지)
+os.environ["HF_HUB_READ_TIMEOUT"] = "300"
+# 2. 메모리 파편화 방지 (OOM 및 Cache Flush 방지)
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+# 3. 랑데뷰 타임아웃 5분 
+os.environ["RDZV_TIMEOUT"] = "300"        
+
+def flush_gpu_memory():
+    """강제로 GPU 메모리 캐시를 비우고 가비지 컬렉션을 수행합니다."""
+    # 파이썬 수준의 객체 정리
+    gc.collect()
+    # PyTorch 수준의 캐시 비우기
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        # 현재 할당된 메모리 정보 초기화 (선택 사항)
+        torch.cuda.reset_peak_memory_stats()
+    print(f"[Rank {os.environ.get('RANK', '0')}] GPU Memory Flushed.")
+
 # 1. TE 레이어 교체 함수 (Linear와 LayerNorm 모두 교체)
 def replace_with_te_layers(model):
     for name, module in model.named_children():
