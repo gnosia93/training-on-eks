@@ -34,7 +34,7 @@ GPU가 연산을 끝냈는데 다음 데이터가 준비되지 않아 노는 현
   * SM Efficiency: nvidia-smi의 SM 이용률을 세부 분석하여 연산 유닛이 실제로 일하는지 확인..  
   
 |구분|	모니터링| 지표|	도구|	임계치 및 이상 징후|
-|**|**|**|**|**|
+|*-*|*-*|*-*|*-*|*-*|
 |GPU|	Volatile GPU-Util|	nvidia-smi|	95% 미만 유지 시 데이터/통신 병목 의심|
 |Power|	Power Draw|	nvidia-smi|	TDP 대비 현저히 낮으면 GPU Starvation|
 |Comm|	NCCL_DEBUG=INFO|	환경변수|	All-Reduce 단계에서 멈춤 현상 발생 여부|
