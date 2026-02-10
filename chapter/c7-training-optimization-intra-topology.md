@@ -141,6 +141,21 @@ Legend:
       * eth0 (기본): hostNetwork: false 상태로 둡니다. PyTorchJob이 관리하는 제어 패킷과 포트들은 여기서 돌아갑니다. (iptables의 간섭을 받지만, 데이터 양이 적어 괜찮습니다.)
       * net1 (추가): SR-IOV를 통해 H100 전용 NIC의 가상 함수(VF)를 파드에 직접 꽂아줍니다.
       * 핵심 설정: NCCL이 eth0가 아닌 net1을 데이터 통로로 쓰도록 강제합니다   
+  ```
+  온프레미스에서 겪게 될 대표적인 '삽질' 포인트 3가지만 요약해 드릴게요.
+  1. "파드 IP = 물리 IP"가 아니다 (Overlay의 저주)
+  AWS VPC CNI는 실제 VPC IP를 파드에 꽂아주지만, 온프레미스 기본 CNI(Calico, Flannel 등)는 보통 VxLAN이나 Geneve 같은 터널링을 씁니다.
+  삽질: 패킷을 보낼 때마다 커널이 패킷을 한 번 더 감싸는(Encapsulation) 연산을 합니다. 여기서 iptables와 CPU 오버헤드가 폭발하며 RDMA 성능이 깎입니다.
+  해결: 이를 피하려고 BGP 설정을 하거나, 아예 L2 Direct Routing 설정을 위해 네트워크 장비(스위치) 설정까지 건드려야 합니다.
+  2. RDMA/RoCE v2 설정의 지옥 (Lossless Network)
+  AWS EFA는 전용 망이라 신경 안 써도 되지만, 온프레미스 이더넷에서 RDMA를 쓰려면 패킷 유실이 0이어야 합니다.
+  삽질: 스위치에서 PFC(Priority Flow Control)와 ECN(Explicit Congestion Notification) 설정을 노드와 1:1로 맞춰야 합니다. Mellanox RoCEv2 가이드 설정이 조금이라도 어긋나면 RDMA가 중단되고 느린 TCP로 전환됩니다.
+  3. 멀티 NIC 구성 (Multus CNI)
+  H100 서버는 보통 훈련용 NIC가 8개 이상 박혀 있습니다.
+  삽질: 쿠버네티스는 기본적으로 파드에 NIC를 하나만 줍니다. 8개의 NIC를 파드 안에 다 넣어주려면 Multus CNI와 SR-IOV Device Plugin을 직접 설치하고 YAML로 일일이 매핑해야 합니다.
+  💡 한 줄 요약
+  "AWS는 돈(비용)으로 해결한 고속도로를 빌려주는 것이고, 온프레미스는 그 고속도로를 직접 아스팔트 깔고 표지판(설정) 세우며 만들어야 한다"고 보시면 됩니다
+  ``` 
 * resource limit:  
   nvidia.com/gpu 를 2개 이상 할당해야 단일 노드 내 P2P 통신이 가능하다
 
