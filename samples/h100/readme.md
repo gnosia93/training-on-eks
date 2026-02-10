@@ -80,3 +80,20 @@ K8s 환경이라면 코드를 고치기보다 인프라 설정을 활용하는 �
 
 ### 💡 실전 팁 ###
 주말에 테스트하실 때, H100 8장(또는 4장)이 동시에 같은 저장소에 접근하면 파일 시스템 부하가 엄청납니다. 가급적 0번 프로세스만 다운로드하게 락을 걸거나, 학습 시작 전 Hugging Face CLI의 download 명령어로 미리 데이터를 다 받아두시는 걸 강력 추천합니다
+
+### 컨테이너 hostpath Mount ###
+이미 호스트의 특정 디레토리에 (NVME 사용하느 디렉토리에) 훈련 샘플 데이터를 미리 받아 놓은게 골든 룰이다..
+```
+spec:
+  containers:
+  - name: h100-trainer
+    volumeMounts:
+    - mountPath: /root/.cache/huggingface  # 컨테이너 안의 캐시 경로
+      name: hf-cache
+  volumes:
+  - name: hf-cache
+    hostPath:
+      path: /data/hf_cache  # 호스트(노드)의 실제 경로
+      type: DirectoryOrCreate
+```
+
