@@ -155,7 +155,7 @@ NIC1    PXB     PXB     PIX     PIX             X
 * Lustre 의 경우 EFA 가 아닌 일반 ENA 를 사용하도록 설정한다. AWS FSx for Lustre 의 경우 별도의 lnet 설정을 하지 않아도 p4d 나 p5 인스턴스에서만 설정하면 자동으로 설정된다.. 그런데 lustre 클러스터가 몇개의 nic 을 가지고 있는지는 확인이 필요하다.
 * NCCL 의 management traffic 은 lustre 와는 별도의 ENA 를 사용하도록 설정한다. (예: eth0 - nccl orchestration, eth1-4 - lustre)
 
-#### NCCL Orchtectration Traffic (Management Traffic) ####
+#### NCCL Orchtectration Traffic (Management Traffic) - TCP 제어 평면(Control Plane) ####
 * 1. 매 스텝(Step)마다 발생하는 "배리어(Barrier) 동기화"  
   * 분산 학습은 한 번 시작하면 끝날 때까지 직진하는 게 아니라, 매 반복(Iteration)마다 8개의 프로세스가 "나 이번 계산 끝났어, 이제 All-Reduce 시작하자"라고 서로 신호를 주고받습니다.
   * 랑데뷰 이후에도: NCCL은 내부적으로 각 GPU의 상태를 체크하고 통신 스케줄링을 관리하기 위해 TCP 기반의 소켓 통신을 지속적으로 유지합니다. NVIDIA NCCL 가이드에 따르면, 실제 데이터는 EFA(RDMA)로 흐르지만, 그 흐름을 제어하는 '오케스트레이션 신호'는 여전히 TCP(Socket)를 탑니다.
