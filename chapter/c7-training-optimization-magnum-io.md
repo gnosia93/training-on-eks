@@ -20,13 +20,13 @@ GPU 연산이 아무리 빨라도 데이터를 가져오는 속도가 느리면 
 
 ## GPUDirect Storage(GDS)를 활성화 ##
 
-#### 1. 전제 조건 확인 ####
+### 1. 전제 조건 확인 ###
 GDS는 데이터가 NVMe SSD → PCIe 스위치 → GPU로 직접 흐르게 합니다. 이를 위해선 다음이 필요합니다.
 * GPU: H100 (SXM5)
 * OS: Ubuntu 20.04/22.04 등 최신 리눅스 커널
 * FS: GDS를 지원하는 파일 시스템 (가이드) - ext4, xfs, Lustre, Weka 등.
 
-#### 2. nvidia-fs 커널 모듈 설치 ####
+### 2. nvidia-fs 커널 모듈 설치 ###
 GDS의 핵심은 nvidia-fs라는 커널 드라이버입니다. 이게 있어야 GPU가 파일 시스템에 직접 명령을 내립니다.
 * NVIDIA 가속 드라이버 설치: H100 드라이버가 깔려 있어야 합니다.
 * nvidia-gds 패키지 설치:
@@ -34,25 +34,33 @@ GDS의 핵심은 nvidia-fs라는 커널 드라이버입니다. 이게 있어야 
 sudo apt-get install nvidia-gds
 ```
 
-#### 3. 커널 모듈 로드 및 확인 ####
+### 3. 커널 모듈 로드 및 확인 ###
 ```
 sudo modprobe nvidia-fs
 lsmod | grep nvidia_fs
 ```
-#### 4. 서비스 활성화 (nvidia-gds-check) ####
+### 4. 서비스 활성화 (nvidia-gds-check) ###
 NVIDIA에서 제공하는 도구로 현재 시스템이 GDS를 돌릴 준비가 되었는지 검사합니다.
 ```
 /usr/local/gds/tools/gdscheck -p
 ```
 * 결과 확인: 모든 항목이 PASS이거나 Supported여야 합니다. 특히 IOMMU(ATS/PASID) 설정이 안 되어 있으면 여기서 에러가 납니다.
 
-#### 5. 애플리케이션에서 사용 (cuFile API) ####
+### 5. 애플리케이션에서 사용 (cuFile API) ###
 GDS는 일반적인 read() 함수를 쓰지 않습니다. 개발자가 코드에서 cuFile API를 호출해야 작동합니다.
 * C++: cuFileHandleRegister, cuFileRead 등의 함수 사용.
 * PyTorch: 기본적으로 지원 준비 중이며, nv-kvs 같은 라이브러리를 통해 연동합니다.
 
 
-#### AWS P5 인스턴스 사용 시 팁 ####
+### AWS P5 인스턴스 사용 시 팁 ###
 * AWS DLAMI를 사용하면 드라이버는 대부분 잡혀 있지만, GDS는 사용하는 스토리지(EBS, 로컬 NVMe, FSx for Lustre)에 따라 추가 설정이 필요할 수 있습니다.
 * 로컬 NVMe(인스턴스 스토어): 가장 빠른 속도를 냅니다. /etc/default/nvidia-gds/의 설정 파일에서 해당 마운트 지점을 허용해야 합니다.
 * FSx for Lustre: 대규모 학습 데이터를 쓸 때 GDS와 찰떡궁합입니다. AWS FSx GDS 가이드를 참고하여 클라이언트 설정을 맞추세요.
+
+
+### 언제 사용해야 할까? ###
+* JPEG 디코더: 이미지 압축을 푸는 전용 하드웨어가 GPU 안에 따로 있습니다. CUDA 코어(연산 자원)를 거의 안 쓰고도 전처리가 가능합니다.
+* DALI 라이브러리: 사용자는 Python으로 코드를 짜지만, 내부적으로는 이 전용 하드웨어와 CUDA를 섞어서 "CPU보다 훨씬 빠르게, 하지만 GPU 연산에는 방해 안 되게" 전처리를 수행합니다. NVIDIA DALI 공식 문서에서 이 효율성을 강조하고 있죠.
+
+* 쓰지 마세요: 데이터셋이 작거나, 모델이 무거워서(LLM 등) CPU 전처리 속도로도 충분할 때.
+* 꼭 쓰세요: 이미지/영상 학습처럼 데이터 양이 방대하고, nvidia-smi를 봤을 때 GPU 사용률(Utilization)이 요동치며 CPU만 100%를 찍고 있을 때
