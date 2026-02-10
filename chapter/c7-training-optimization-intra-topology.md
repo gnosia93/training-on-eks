@@ -86,6 +86,27 @@ Legend:
   NV#  = Connection traversing a bonded set of # NVLinks
 ```
 
+### GPU/NIC 토폴로지 ###
+```
+# NIC 정보를 강제로 포함하여 출력
+nvidia-smi topo -m -n
+```
+[결과]
+```
+        GPU0    GPU1    GPU2    GPU3    NIC0    NIC1    NIC2    NIC3    CPU Affinity
+GPU0     X      NV18    NV18    NV18    PIX     NODE    SYS     SYS     0-23
+GPU1    NV18     X      NV18    NV18    NODE    PIX     SYS     SYS     0-23
+GPU2    NV18    NV18     X      NV18    SYS     SYS     PIX     NODE    24-47
+GPU3    NV18    NV18    NV18     X      SYS     SYS     NODE    PIX     24-47
+
+NIC0    PIX     NODE    SYS     SYS      X
+NIC1    NODE    PIX     SYS     SYS             X
+NIC2    SYS     SYS     PIX     NODE                    X
+NIC3    SYS     SYS     NODE    PIX                             X
+
+```
+* EFA (4개/8개): 오직 NCCL 전용으로 1:1 매핑 유지 (PIX 경로 보호).
+* ENA (32개 중 일부): Lustre 전용으로 할당. CPU 자원을 조금 쓰더라도 GPU의 고속 도로(NVLink/EFA)를 방해하지 않는 것이 가장 영리한 설계임.
 
 ### 인터커넥트 타입별 대역폭 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/topology-througput.png)
