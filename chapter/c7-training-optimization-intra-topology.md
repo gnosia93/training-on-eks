@@ -149,10 +149,20 @@ NIC1    PXB     PXB     PIX     PIX             X
 * GPU0 와 GPU 1 은 NIC0 와 PIX 모드로 연결되어 있다. 즉 동일한 PCIe 스위치 밑에서 하나의 efa NIC 을 공유
 * 하지만 NIC1 과는 PXB 관계이다. 즉 다른 PCIe 스위치라는 것이다.
 * SYS 는 PCIe 스위치가 없어서 CPU를 통과한다는 것을 의미한다. 
+
 #### 통신 아키텍처 설계 결론 ####
 * NCCL all-reduce 를 위해서 EFA NIC 을 할당한다.
 * Lustre 의 경우 EFA 가 아닌 일반 ENA 를 사용하도록 설정한다. AWS FSx for Lustre 의 경우 별도의 lnet 설정을 하지 않아도 p4d 나 p5 인스턴스에서만 설정하면 자동으로 설정된다.. 그런데 lustre 클러스터가 몇개의 nic 을 가지고 있는지는 확인이 필요하다.
-* NCCL 의 management traffic 은 ENA 를 사용하도록 설정한다.
+* NCCL 의 management traffic 은 lustre 와는 별도의 ENA 를 사용하도록 설정한다. (예: eth0 - nccl orchestration, eth1-4 - lustre)
+
+#### NCCL Orchtectration Traffic (Management Traffic) ####
+* 1. 매 스텝(Step)마다 발생하는 "배리어(Barrier) 동기화"  
+  * 분산 학습은 한 번 시작하면 끝날 때까지 직진하는 게 아니라, 매 반복(Iteration)마다 8개의 프로세스가 "나 이번 계산 끝났어, 이제 All-Reduce 시작하자"라고 서로 신호를 주고받습니다.
+  * 랑데뷰 이후에도: NCCL은 내부적으로 각 GPU의 상태를 체크하고 통신 스케줄링을 관리하기 위해 TCP 기반의 소켓 통신을 지속적으로 유지합니다. NVIDIA NCCL 가이드에 따르면, 실제 데이터는 EFA(RDMA)로 흐르지만, 그 흐름을 제어하는 '오케스트레이션 신호'는 여전히 TCP(Socket)를 탑니다.
+  * 간섭 발생: 만약 Lustre가 일반 NIC 대역폭을 꽉 채우고 있다면, 이 미세한 제어 신호가 지연됩니다. 결과적으로 EFA는 텅텅 비어 있는데, TCP 신호가 늦게 와서 GPU가 통신을 시작 못 하고 멍하니 기다리는 현상이 매 스텝 발생합니다.
+* 2. 예외 상황 및 상태 감지 (Health Check)
+  * 학습 중에 특정 노드나 프로세스에 문제가 생겼는지 감지하는 것도 TCP의 역할입니다.
+  * Keep-alive: 프로세스들이 살아있는지 확인하는 신호가 Lustre 트래픽에 밀려 타임아웃(Timeout)이 나면, 멀쩡한 학습이 Watchdog timeout이나 Connection reset by peer 에러를 내며 터질 수 있습니다.
 
 ### 인터커넥트 타입별 대역폭 ###
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/topology-througput.png)
