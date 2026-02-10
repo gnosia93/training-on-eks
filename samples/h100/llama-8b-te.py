@@ -103,7 +103,7 @@ def main():
             torch_dtype=torch.bfloat16,
             attn_implementation="sdpa",      # H100에 최적화된 FA2 권장 flash_attention_2
         )
-        # 중요: 가중치가 메모리에 할당된 직후, ZeRO가 쪼개기 전에 TE로 변환
+        # 중요: 가중치가 메모리에 분산 로딩된 직후, 기존 PyTorch 레이어가 ZeRO-3에 의해 완전히 고정(Finalize)되어 관리되기 전에, 최적화된 TE 레이어로 갈아치워야 한다
         model = replace_with_te_layers(model)
 
     # 4. 데이터셋 로드 및 전처리
