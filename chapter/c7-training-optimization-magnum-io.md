@@ -1,4 +1,4 @@
-
+## Magnum IO ##
 Magnum IO는 NVIDIA가 만든 "데이터 이동의 최적화 도구 모음(Software Stack)" 이다.
 GPU 연산이 아무리 빨라도 데이터를 가져오는 속도가 느리면 전체 연산 효율이 떨어지게 된다. 그래서 NVIDIA는 데이터가 저장소나 네트워크에서 GPU로 들어오는 모든 경로를 광속으로 만들기 위해 이 기술 들을 개발하였다.
 
@@ -16,3 +16,32 @@ GPU 연산이 아무리 빨라도 데이터를 가져오는 속도가 느리면 
 
 #### 4. NVSHMEM ####
 역할: 여러 GPU의 메모리를 마치 하나의 거대한 메모리처럼 보이게 하여, 개발자가 복잡한 복사 명령 없이 데이터를 다룰 수 있게 한다.
+
+
+## GPUDirect Storage(GDS)를 활성화 ##
+
+#### 1. 전제 조건 확인 ####
+GDS는 데이터가 NVMe SSD → PCIe 스위치 → GPU로 직접 흐르게 합니다. 이를 위해선 다음이 필요합니다.
+* GPU: H100 (SXM5)
+* OS: Ubuntu 20.04/22.04 등 최신 리눅스 커널
+* FS: GDS를 지원하는 파일 시스템 (가이드) - ext4, xfs, Lustre, Weka 등.
+
+#### 2. nvidia-fs 커널 모듈 설치 ####
+GDS의 핵심은 nvidia-fs라는 커널 드라이버입니다. 이게 있어야 GPU가 파일 시스템에 직접 명령을 내립니다.
+* NVIDIA 가속 드라이버 설치: H100 드라이버가 깔려 있어야 합니다.
+* nvidia-gds 패키지 설치:
+```
+sudo apt-get install nvidia-gds
+```
+
+#### 3. 커널 모듈 로드 및 확인 ####
+```
+sudo modprobe nvidia-fs
+lsmod | grep nvidia_fs
+```
+#### 4. 서비스 활성화 (nvidia-gds-check) ####
+NVIDIA에서 제공하는 도구로 현재 시스템이 GDS를 돌릴 준비가 되었는지 검사합니다.
+```
+/usr/local/gds/tools/gdscheck -p
+```
+* 결과 확인: 모든 항목이 PASS이거나 Supported여야 합니다. 특히 IOMMU(ATS/PASID) 설정이 안 되어 있으면 여기서 에러가 납니다.
