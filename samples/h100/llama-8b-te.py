@@ -101,7 +101,7 @@ def main():
         model = AutoModelForCausalLM.from_config(
             config=config,
             torch_dtype=torch.bfloat16,
-            attn_implementation="flash_attention_2", # SDPA보다 H100에 최적화된 FA2 권장
+            attn_implementation="sdpa",      # H100에 최적화된 FA2 권장 flash_attention_2
         )
         # 중요: 가중치가 메모리에 할당된 직후, ZeRO가 쪼개기 전에 TE로 변환
         model = replace_with_te_layers(model)
