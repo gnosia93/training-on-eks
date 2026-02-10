@@ -45,3 +45,14 @@ NVIDIA에서 제공하는 도구로 현재 시스템이 GDS를 돌릴 준비가 
 /usr/local/gds/tools/gdscheck -p
 ```
 * 결과 확인: 모든 항목이 PASS이거나 Supported여야 합니다. 특히 IOMMU(ATS/PASID) 설정이 안 되어 있으면 여기서 에러가 납니다.
+
+#### 5. 애플리케이션에서 사용 (cuFile API) ####
+GDS는 일반적인 read() 함수를 쓰지 않습니다. 개발자가 코드에서 cuFile API를 호출해야 작동합니다.
+* C++: cuFileHandleRegister, cuFileRead 등의 함수 사용.
+* PyTorch: 기본적으로 지원 준비 중이며, nv-kvs 같은 라이브러리를 통해 연동합니다.
+
+
+#### AWS P5 인스턴스 사용 시 팁 ####
+* AWS DLAMI를 사용하면 드라이버는 대부분 잡혀 있지만, GDS는 사용하는 스토리지(EBS, 로컬 NVMe, FSx for Lustre)에 따라 추가 설정이 필요할 수 있습니다.
+* 로컬 NVMe(인스턴스 스토어): 가장 빠른 속도를 냅니다. /etc/default/nvidia-gds/의 설정 파일에서 해당 마운트 지점을 허용해야 합니다.
+* FSx for Lustre: 대규모 학습 데이터를 쓸 때 GDS와 찰떡궁합입니다. AWS FSx GDS 가이드를 참고하여 클라이언트 설정을 맞추세요.
