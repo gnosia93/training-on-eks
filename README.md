@@ -31,7 +31,7 @@
    - [GPU 토폴로지 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-intra-topology.md)
    - [NCCL 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-nccl.md)
    - [Shared Memory 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-shm.md)
-   - OOM Kill 방지하기
+   - [OOM Kill 방지하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-oom.md)
    - [NVIDIA Magnum IO](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-magnum-io.md)
              
 * C8. 훈련 스케줄링 및 복원력 
