@@ -2,7 +2,7 @@
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/workshop-arch-3.png)
 
-본 워크샵은 EKS 및 Kubeflow Training Operator(PytorchJob/TrainJob)를 활용한 대규모 모델의 분산 훈련과 모니터링 핵심 기술을 다룹니다. GPU 인스턴스는 Karpenter NodePool을 통해 동적으로 프로비저닝하며, 모니터링은 Prometheus/Grafana 스택을 활용합니다. 인프라 구성에는 Terraform(VPC)과 eksctl(EKS 클러스터)을 사용하며, 원활한 실습 진행을 위해 컨테이너와 EKS에 대한 기초 지식이 필요합니다. 분산 훈련 전략으로는 PyTorch DDP/FSDP 및 DeepSpeed 프레임워크를 사용하고 있으며, TP/PP를 지원하는 NVIDIA Megatron-LM의 고급 병렬화 기법는 포함되어 있지 않습니다 (향후 업데이트 예정). 분산 훈련 예제로는 허깅페이지 Llama 8B 모델을 LS40S 와 A100 에서 DeepSpeed 를 이용하여 훈련하고 google-t5 모델의 경우 Pytroch FSDP Native 를 활용합니다.    
+본 워크샵은 EKS 및 Kubeflow Training Operator(PytorchJob/TrainJob)를 활용한 대규모 모델의 분산 훈련과 모니터링 핵심 기술을 다룹니다. GPU 인스턴스는 Karpenter NodePool을 통해 동적으로 프로비저닝하며, 모니터링은 Prometheus/Grafana 스택을 활용합니다. 인프라 구성에는 Terraform(VPC)과 eksctl(EKS 클러스터)을 사용하며, 원활한 실습 진행을 위해 컨테이너와 EKS에 대한 기초 지식이 필요합니다. 분산 훈련 전략으로는 PyTorch DDP/FSDP 및 DeepSpeed 프레임워크를 사용하고 있으며, TP/PP를 지원하는 NVIDIA Megatron-LM의 고급 병렬화 기법는 포함되어 있지 않습니다 (향후 업데이트 예정). 분산 훈련 예제로는 허깅페이지 Llama 8B 모델을 Nvidia LS40S 와 A100 에서 DeepSpeed 를 이용하여 훈련하고 google-t5 모델의 경우 Pytroch FSDP Native 를 활용합니다.    
 
 #### _사전 준비 사항 - [Llama 3-8B](https://huggingface.co/meta-llama/Llama-3.1-8B) 모델 다운로드를 위한 허깅페이스 액세스 토큰(HF_TOKEN) 발급_ ####
 
