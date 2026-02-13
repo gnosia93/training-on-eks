@@ -3,7 +3,7 @@ Aggregation(Spine) 스위치단에서 오버서브스크립션(Oversubscription)
 
 ### 1. 계층적 집합 통신 (Hierarchical All-Reduce) 강제 ###
 Aggregation 스위치를 통과하는 트래픽 자체를 최소화해야 합니다. 랙 내부(Intra-rack) GPU들끼리 먼저 Reduce를 끝내서 데이터를 1/N로 압축한 뒤, 그 결과값만 랙 간(Inter-rack) Aggregation 스위치로 보낸다. 
-NCCL_ALGO=Tree 설정을 통해 물리적 토폴로지를 인지하게 하거나, NVIDIA SHARP (Scalable Hierarchical Aggregation and Reduction Protocol) 기능을 지원하는 멜라녹스(Mellanox) 스위치라면 이를 활성화하여 스위치 하드웨어가 직접 리듀스 연산을 하게 만들어야 한다. AWS EFA 는 불행하게도 이런 기능을 지원하지 않는다. 
+NCCL_ALGO=Tree 설정을 통해 물리적 토폴로지를 인지하게 하거나, NVIDIA SHARP (Scalable Hierarchical Aggregation and Reduction Protocol) 기능을 지원하는 멜라녹스(Mellanox) 스위치라면 이를 활성화하여 스위치 하드웨어가 직접 리듀스 연산을 하게 만들어야 한다. AWS EFA 는 불행하게도 SHARP 기능을 지원하지 않는다. 
 
 ### 2. 멀티레일(Multi-rail) 및 채널 최적화 ###
 Aggregation 단의 대역폭을 100% 활용하기 위해 데이터를 여러 경로로 찢어야 한다. 버퍼를 키우지 말고 NCCL_MIN_NCHANNELS를 늘려 데이터를 잘게 쪼개서 여러 NIC와 스위치 경로로 분산시킨다.
