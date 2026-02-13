@@ -12,5 +12,17 @@ Aggregation 단의 대역폭을 100% 활용하기 위해 데이터를 여러 경
 ### 3. RoCE v2 혼잡 제어 (Congestion Control) 튜닝 ###
 이더넷 기반이라면 Aggregation 스위치에서 발생하는 혼잡을 하드웨어 레벨에서 막아야 한다. ECN(Explicit Congestion Notification) 임계값을 아주 타이트하게 잡는다. 스위치 버퍼가 차기 전에 송신측(GPU 노드)에 "천천히 보내"라는 신호를 빨리 보내서 패킷 드랍을 원천 차단해야 한다. Aggregation 단에서 패킷 손실이 발생하면 재전송 오버헤드가 ToR 단보다 훨씬 크다. PFC 의  무손실(Lossless) 네트워크 설정이 완벽한지 다시 점검해야 한다.
 
+### EFA 환경 ###
+EFA는 IB의 SHARP 같은 인-네트워크 컴퓨팅 기능이 없다. 따라서 Aggregation 단의 오버서브스크립션은 물리적 병목으로 이를 해결하려면 랙 간 대역폭을 1:1로 증설하거나, 통신량을 줄이기 위해 NCCL 버퍼 튜닝 같은 미시적인 방법보다는 통신 위상(Topology) 자체를 뒤틀어야 한다.
 
-EFA는 IB의 SHARP 같은 인-네트워크 컴퓨팅 기능이 없다. 따라서 Aggregation 단의 오버서브스크립션은 물리적 병목으로, 이를 해결하려면 랙 간 대역폭을 1:1로 증설하거나, 통신량을 줄이기 위해 Pipeline Parallelism을 도입해 랙 간 통신 횟수 자체를 설계 단계에서 줄여야 한다.
+#### 1. Hierarchical All-Reduce (가장 현실적) ####
+랙 내부(Intra-rack)는 100G/200G EFA 대역폭을 풀로 써서 공유 메모리로 리듀스하고, Aggregation 단으로는 딱 한 놈(Rank)만 대표로 데이터를 보낸다. Aggregation 스위치를 통과하는 노드 간 트래픽을 랙당 노드 수만큼(예: 1/8) 줄일 수 있다.
+
+#### 2. NCCL_ALGO=Tree 강제 ####
+EFA 환경에서도 NCCL 알고리즘을 Tree로 강제하면, 링(Ring)처럼 모든 노드를 거치지 않고 계층적으로 데이터를 모우게 된다. Aggregation 스위치를 타는 횟수를 물리적으로 줄이는 유일한 소프트웨어 설정이다.
+
+#### 3. Chunking 최적화 (NCCL_BUFFSIZE의 역설) ####
+오히려 버퍼를 줄여야 할 수도 있다. 대형 버퍼는 Aggregation 스위치에 마이크로 버스트(Micro-burst)를 유발해 인캐스트를 심화시키게 된다. 작은 청크로 쪼개서 SRD가 여러 경로로 잘게 쪼개 보내도록 유도하는 게 레이턴시 안정성에는 더 좋다.
+
+
+
