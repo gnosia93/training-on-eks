@@ -34,7 +34,8 @@
    - [OOM Kill 방지하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-oom.md)
    - [NVIDIA Magnum IO](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-magnum-io.md)
    - [Network 오버스크립션](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-network.md)
-             
+   - https://github.com/pbelevich/pplx-kernels-benchmark
+               
 * C8. 훈련 스케줄링 및 복원력 
    - [Kueue 갱 스케줄링](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-kueue.md)
    - [노드 / GPU 스케줄링 배제](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-schedule-evit.md)      
