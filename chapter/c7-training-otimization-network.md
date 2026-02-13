@@ -34,3 +34,18 @@ EFA 환경에서도 NCCL 알고리즘을 Tree로 강제하면, 링(Ring)처럼 �
    * 기본값은 LLONG_MAX 으로 NCC_ALGO 가 Tree 인 경우 모든 패킷은 Tree 방식으로 전달된다.  
    * 1MB 미만 메시지: 트리(Tree) 알고리즘 사용 - 레이턴시에 민감한 작은 메시지를 빠르게 모으는 데 유리
    * 1MB 이상 메시지: 링(Ring) 알고리즘 사용 - 대역폭을 꽉 채워야 하는 큰 메시지를 모든 노드에 골고루 분산시켜 쏘는 데 유리 
+
+### NCCL_NET_GDR_LEVEL ####
+
+NCCL_NET_GDR_LEVEL (formerly NCCL_IB_GDR_LEVEL): Environment variable that controls the maximum "topology 
+distance" level at which NCCL allows GPUDirect RDMA (GDR). This specifies the degree of GDR optimization that
+enables direct GPU memory mapping to NIC (Network Interface Card) during network transfers, bypassing CPU 
+memory copies. While usually auto-optimized, explicit configuration is recommended.
+
+#### GDR Levels: ###
+* LOC (Local): GDR always disabled
+* PIX (PCIe Switch): GDR only when GPU and NIC are connected to the same PCIe switch. One of the most common and safe settings
+* PXB (PCIe Bridge / multiple switches): GDR enabled when GPU and NIC are connected via PCIe bridge, even across different PCI switches
+* PHB (PCI Host Bridge / NUMA node): GDR enabled within the same NUMA node (same CPU socket), traffic may pass through CPU root
+* SYS (System-wide): GDR always enabled across socket links (UPI/QPI). Most aggressive setting with compatibility risks
+
