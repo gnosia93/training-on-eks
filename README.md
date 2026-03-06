@@ -23,7 +23,8 @@
    * [GPU / 네트워크 / 노드 스로틀링 식별](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-detect-perf-drop.md)
    * [AI 훈련 병목지점](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c8-bottleneck-point.md)
    * [Nsight](https://github.com/aws-samples/awsome-distributed-training/tree/main/4.validation_and_observability/5.nsight)
-     
+   * [DCGM DeepDive]()
+       
 * [C6. FSDP로 LLM 훈련하기 (싱글노드 멀티 GPU)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c6-fsdp.md)    
 
 * C7. 분산 훈련 최적화
