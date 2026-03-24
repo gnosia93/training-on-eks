@@ -59,7 +59,7 @@
 * [A2. EC2 분산 훈련](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a2-ec2-nvlink.md)
 * [A3. 토폴리지별 훈련성능](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a3.training-perf-topology.md)
 * [A5. al2023-debug 파드](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a5.debug-container.md)
-
+* https://kubernetes.io/docs/setup/best-practices/cluster-large/
   
 ### _Revision History_ ###
 * 2025-01-07 First Released — EKS / Kubeflow 기반 분산 훈련 가이드
