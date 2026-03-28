@@ -473,3 +473,26 @@ trainer:
 ```
 
 
+## 확인필요 ##
+
+1. /dev/shm 크기 제한:
+```
+컨테이너 기본 /dev/shm: 64MB → 부족
+--ipc=host:             호스트 /dev/shm 전체 사용 (수십~수백 GB)
+--shm-size=512m으로 늘릴 수도 있지만, --ipc=host가 더 간편하고 넉넉합니다.
+```
+2. NVIDIA 드라이버/CUDA IPC:
+```
+GPU 간 통신(NVLink, P2P)에서 CUDA IPC 핸들을 사용하는데,
+이 핸들이 호스트 IPC 네임스페이스에 생성됨
+→ --ipc=host 없으면 컨테이너가 이 핸들에 접근 못 함
+```
+3. nccl 통신경로
+```
+--ipc=host 있으면:
+  GPU 0 ↔ GPU 1: CUDA IPC (NVLink/P2P 직접 통신) → 빠름
+
+--ipc=host 없으면:
+  CUDA IPC 핸들 접근 불가
+  → NCCL이 fallback으로 cudaMemcpy 경유 통신 → 느림
+```
