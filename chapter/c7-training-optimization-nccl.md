@@ -36,7 +36,6 @@ NCCL_TOPO_DUMP=system.xml ./build/all_reduce_perf -b 8 -e 128M -f 2 -g 8
 토폴로지가 예상과 다르게 인식되어 성능이 낮게 나올 경우, 추출된 XML을 수정하여 NCCL_TOPO_FILE 변수로 다시 적용함으로써 하드웨어 인식을 강제로 교정할 수 있다.
 
 ## 레퍼런스 ##
-
+* https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html
 * https://developer.nvidia.com/blog/understanding-nccl-tuning-to-accelerate-gpu-to-gpu-communication/
 * [Optimizing cuDNN and NCCL Performance on NVIDIA GPUs Using NVIDIA's Deep Learning SDK](https://massedcompute.com/faq-answers/?question=Can%20you%20provide%20examples%20of%20how%20to%20optimize%20cuDNN%20and%20NCCL%20performance%20on%20NVIDIA%20GPUs%20using%20NVIDIA%27s%20Deep%20Learning%20SDK?)
-* https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/index.html
