@@ -19,8 +19,15 @@ NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지
   * LL (Low Latency): 작은 메시지 대기 시간을 줄이는 데 적합.
   * SIMPLE: 더 큰 데이터 전송에 맞춰진 프로토콜
 * NCCL_SOCKET_NTHREADS: 네트워크 작업을 처리하는 CPU 스레드 수를 조정하여 처리량을 개선할 수 있다.
-* NCCL_NET_GDR_LEVEL: GPU Direct RDMA를 지원하는 경우, 이를 활성화하여 CPU 오버헤드를 줄이고 지연 시간을 단축
-
+* NCCL_NET_GDR_LEVEL: GPU Direct RDMA를 지원하는 경우, GPU-NIC 간의 거리를 지정하여 CPU 오버헤드를 줄이고 지연 시간을 단축
+ ```
+ LOC : Never use GPU Direct RDMA (always disabled).
+ PIX : Use GPU Direct RDMA when GPU and NIC are on the same PCI switch.
+ PXB : Use GPU Direct RDMA when GPU and NIC are connected through PCI switches (potentially multiple hops).
+ PHB : Use GPU Direct RDMA when GPU and NIC are on the same NUMA node. Traffic will go through the CPU.
+ SYS : Use GPU Direct RDMA even across the SMP interconnect between NUMA nodes (e.g., QPI/UPI) (always enabled).
+ ```
+ 하지만 대부분 NCCL 이 잘 설정하므로 그냥 둔다~ 
 
 
 ### 3. 성능 프로파일링 ###
