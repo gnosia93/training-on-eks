@@ -27,7 +27,7 @@ NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지
  PHB : Use GPU Direct RDMA when GPU and NIC are on the same NUMA node. Traffic will go through the CPU.
  SYS : Use GPU Direct RDMA even across the SMP interconnect between NUMA nodes (e.g., QPI/UPI) (always enabled).
  ```
- 하지만 대부분 NCCL 이 잘 설정하므로 그냥 둔다~ 
+   하지만 대부분 NCCL 이 잘 설정하므로 그냥 둔다~ 
 
 
 ### 3. 성능 프로파일링 ###
