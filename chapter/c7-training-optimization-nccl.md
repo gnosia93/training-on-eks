@@ -9,17 +9,19 @@ NVIDIA NCCL은 대부분의 경우 시스템 토폴로지를 자동으로 감지
 ### [2. 주요 환경 변수](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html) ###
 
 훈련 속도(Throughput)를 높이기 위해 다음 변수들을 조정해 보며 최적값을 찾아야 한다.
-* NCCL_BUFFSIZE: 통신 버퍼 크기입니다. 기본값은 2MB(2097152)이나, 대규모 모델 훈련 시 4194304 (4MB) 또는 8388608 (8MB)로 늘리면 성능이 향상될 수 있다.
+* NCCL_BUFFSIZE: 통신 버퍼 크기. 기본값은 4194304 (4MB) 이나, 대규모 모델 훈련 시 8388608 (8MB) 이상으로  늘리면 성능이 향상될 수 있다.
 * NCCL_P2P_LEVEL: GPU 간 P2P(Point-to-Point) 통신 방식을 제어한다. 
 * NCCL_P2P_DISABLE=1: GPU 간 P2P(Peer-to-Peer) 통신을 비활성화 하는 것으로 NVLink 사용이 차단된다.
 * NCCL_ALGO: 집합 통신(collective communication) 알고리즘을 지정한다.
-  * RING: 일반적으로 작은 메시지 크기에 효율적.
-  * TREE: 일반적으로 큰 메시지 크기나 복잡한 토폴로지(노드 간 연결이 불균일한 경우 등)에서 더 나은 성능을 보일 수 있다.
+  * RING: 일반적으로 큰 메시지 크기에 효율적 (대역폭 효율이 높음)
+  * TREE: 일반적으로 작은 메시지 크기에 유리 (레이턴시 낮음)
 * NCCL_PROTO: 통신 프로토콜을 지정.
   * LL (Low Latency): 작은 메시지 대기 시간을 줄이는 데 적합.
   * SIMPLE: 더 큰 데이터 전송에 맞춰진 프로토콜
 * NCCL_SOCKET_NTHREADS: 네트워크 작업을 처리하는 CPU 스레드 수를 조정하여 처리량을 개선할 수 있다.
 * NCCL_NET_GDR_LEVEL: GPU Direct RDMA를 지원하는 경우, 이를 활성화하여 CPU 오버헤드를 줄이고 지연 시간을 단축
+
+
 
 ### 3. 성능 프로파일링 ###
 * nccl-tests 실행: NVIDIA에서 제공하는 nccl-tests 벤치마크 도구를 사용하여 다양한 구성에서의 NCCL 성능(대역폭 및 지연 시간)을 확인할 수 있다.
