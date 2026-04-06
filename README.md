@@ -35,7 +35,7 @@
    - [Shared Memory 최적화](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-shm.md)
    - [OOM Kill 방지하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-oom.md)
    - [NVIDIA Magnum IO](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-optimization-magnum-io.md)
-   - [Network 오버스크립션](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-network.md)
+   - [Network 오버 서브 스크립션](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c7-training-otimization-network.md)
    - https://github.com/pbelevich/pplx-kernels-benchmark
    - [Kubelet Topology Manager](https://github.com/gnosia93/training-on-eks/blob/main/chapter/deepdive/d2.kubelet-topology-manager.md)
                  
