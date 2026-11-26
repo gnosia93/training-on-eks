@@ -67,7 +67,15 @@ if [ -n "$STEP" ]; then
       rm -rf "$DIR" && mv "$TMP" "$DIR"
   ' || { echo "체크포인트 준비 실패: $STEP" >&2; exit 1; }
   RESUME_DIR=$LOCAL/$STEP
+
+  # 1-4b) rank 0만 쓰는 공통 파일을 1번 노드(배치 스크립트가 도는 노드)에서 8대 모두에 복사
+  for f in $COMMON_FILES; do
+    cp "$LOCAL/$STEP/$f" "/tmp/$f.$SLURM_JOB_ID" &&            # 원본을 직접 보내지 않고 사본에서 보냄
+      sbcast -f "/tmp/$f.$SLURM_JOB_ID" "$LOCAL/$STEP/$f" ||
+      { echo "공통 파일 복사 실패: $f" >&2; exit 1; }
+  done
 fi
+
 
 # 1-5) 재개 지점보다 새 체크포인트는 로컬과 S3에서 모두 지움
 #      직전 체크포인트로 돌아가면 같은 step 이름을 다시 쓰게 되므로, 버린 쪽의 옛 파일과 섞이지 않게 함
