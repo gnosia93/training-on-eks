@@ -48,7 +48,7 @@
 * [C9. 커스텀 컨테이너 이미지 빌드](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c9-custom-container.md)
   
 * [C10. 체크포인트 아키텍처 설계](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-checkpoint-architect.md)
-  * [Lustre](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-saving-checkpoint.md)
+  * [Lustre 설정하기](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-saving-checkpoint.md)
 
 * [C11. DeepSpeed 분산 훈련 (멀티 GPU 노드)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c11-deepspeed.md)
 
