@@ -1,10 +1,6 @@
 # EFA 네트워크 지표 수집 해설
 
-> `incident.md` 6번(관측과 증거 수집의 공백)의 첫 항목을 풀어 쓴 문서입니다.
->
 > "EFA 트래픽은 일반 이더넷 인터페이스 지표에 잡히지 않습니다. `/sys/class/infiniband/*/ports/1/hw_counters`의 카운터(또는 `rdma statistic`)를 node_exporter textfile collector로 수집해 Grafana에 올렸습니다."
->
-> 본문의 1-1, 2-1, 4-1, 8번 같은 번호는 `incident.md`의 항목 번호입니다.
 
 ## 1. EFA 트래픽이 이더넷 지표에 안 잡히는 이유
 
