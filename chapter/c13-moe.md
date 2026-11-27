@@ -26,6 +26,23 @@ class FFN(nn.Module):
         # SwiGLU 연산: gate_proj에 SiLU 활성화 함수를 적용한 뒤 up_proj 결과와 곱하고, down_proj로 축소
         return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
 
+
+# 참고 - 클래식 트랜스포머 
+class ClassicFFN(nn.Module):
+    def __init__(self, hidden_dim, intermediate_dim): # 보통 intermediate_dim = 4 * hidden_dim
+        super().__init__()
+        # 1. 차원을 4배로 확장 (예: 4096 -> 16384)
+        self.fc1 = nn.Linear(hidden_dim, intermediate_dim)
+        
+        # 2. 다시 원래 차원으로 축소 (예: 16384 -> 4096)
+        self.fc2 = nn.Linear(intermediate_dim, hidden_dim)
+
+    def forward(self, x):
+        # x shape: (Batch, Seq_Len, hidden_dim)
+        # 확장 -> 활성화 함수(ReLU 또는 GELU) -> 축소
+        return self.fc2(F.gelu(self.fc1(x)))
+
+
 class MoELayer(nn.Module):
     def __init__(self, hidden_dim, num_experts, top_k=2):
         super().__init__()
