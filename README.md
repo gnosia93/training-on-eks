@@ -49,7 +49,7 @@
   
 * C10. 체크포인트 아키텍처 설계
   * [1. I/O 병목 줄이는 2-Tier 체크포인팅(NVMe + S3) 설계](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-checkpoint-dist.md)
-  * [2. 공유 스토리지 - Lustre](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-saving-checkpoint.md)
+  * [2. 고성능 병렬 공유 스토리지(Lustre) 기반 체크포인팅 설계](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c10-saving-checkpoint.md)
 
 * [C11. DeepSpeed 분산 훈련 (멀티 GPU 노드)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c11-deepspeed.md)
 
