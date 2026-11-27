@@ -57,7 +57,7 @@
 
 * [C13. MoE](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c13-moe.md)
 
-* [C14. AI Cluster Failure Type]()
+* [C14. AI Cluster Failure Type](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c14-ai-cluster-failure.md)
 
 ### _Appendix_ ###
 
