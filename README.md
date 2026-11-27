@@ -57,6 +57,8 @@
 
 * [C13. MoE](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c13-moe.md)
 
+* [C14. AI Cluster Failure Type]()
+
 ### _Appendix_ ###
 
 * [A1. 트러블 슈팅](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
