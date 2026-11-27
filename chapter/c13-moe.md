@@ -1,8 +1,9 @@
+## MoE ##
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/moe-arch.png)
 
 
-### 1. Gate(Router) 동작 방식 ###
+### 1. Gate(Router) 구현 방식 ###
 
 게이트는 거창한 알고리즘이 아니라, 단 하나의 선형 레이어(nn.Linear) + Softmax + Top-K 조합이다.
 토큰 벡터(예: 4096차원)를 입력받아 각 Expert(예: 8개)에 대한 "점수(Logit)"를 내고, 점수가 가장 높은 K개(예: 2개)만 뽑아서 그 점수를 가중치로 곱해주는 코드이다.
@@ -81,5 +82,6 @@ class MoELayer(nn.Module):
         return output
 ```
 
+### 2. GPU 통신 ###
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/moe-all-to-all.jpg)
