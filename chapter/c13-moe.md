@@ -80,3 +80,6 @@ class MoELayer(nn.Module):
                 
         return output
 ```
+
+
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/moe-all-to-all.jpg)
