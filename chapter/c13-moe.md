@@ -9,6 +9,7 @@
 토큰 벡터(예: 4096차원)를 입력받아 각 Expert(예: 8개)에 대한 "점수(Logit)"를 내고, 점수가 가장 높은 K개(예: 2개)만 뽑아서 그 점수를 가중치로 곱해주는 코드이다.
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/moe-ffn.jpg)
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/moe-silu.jpg)
 
 ```
 import torch
