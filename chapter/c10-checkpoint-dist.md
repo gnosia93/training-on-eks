@@ -2,9 +2,7 @@
 
 분산 체크포인트(Distributed Checkpoint, Megatron-LM/PyTorch DCP 등) 환경에서 **저장 속도 극대화(로컬 NVMe)**와 **복구 안정성 및 단순성(S3 공유 저장소)**을 동시에 달성하기 위한 2-Tier 체크포인트 파이프라인 설계 및 구현 문서입니다.
 
----
-
-## 1. 아키텍처 다이어그램
+![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/2-tier-nvme-s3-checkpointing.jpg)
 
 ### 1-1. 전체 저장 및 복구 파이프라인 (Mermaid)
 
