@@ -85,3 +85,7 @@ class MoELayer(nn.Module):
 ### 2. GPU 통신 ###
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/moe-all-to-all.jpg)
+
+## 레퍼런스 ##
+
+* https://housekdk.gitbook.io/ml/genai/moe
