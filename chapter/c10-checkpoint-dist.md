@@ -4,6 +4,10 @@
 
 ![](https://github.com/gnosia93/training-on-eks/blob/main/chapter/images/2-tier-nvme-s3-checkpointing.jpg)
 
+
+"본 분산 체크포인팅 구조는 별도의 공유 파일시스템(Lustre 등) 없이 각 노드의 로컬 NVMe SSD와 Amazon S3만을 활용합니다. 체크포인트 시점이 도래하면 64개 모든 랭크가 각자의 체크포인트 샤드(Shard)를 로컬 NVMe에 우선 기록한 뒤 즉시 다음 스텝 학습을 재개하며, 백그라운드 워커가 비동기로 S3에 파일을 업로드합니다. 이때 Rank 0는 자신의 샤드 파일과 전체 메타데이터(.meta)를 순차적으로 업로드하고, 모든 64개 랭크의 업로드 완료 마커(.done)가 S3에 모인 것을 최종 확인한 뒤 _SUCCESS 파일을 생성함으로써 체크포인트의 원자성(Atomicity)과 데이터 정합성을 보장합니다."
+
+
 ### 1-1. 전체 저장 및 복구 파이프라인 (Mermaid)
 
 ```mermaid
