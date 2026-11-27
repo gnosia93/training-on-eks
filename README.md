@@ -65,7 +65,8 @@
 * [A5. al2023-debug 파드](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a5.debug-container.md)
 * https://kubernetes.io/docs/setup/best-practices/cluster-large/
 * [A5. EFA 메트릭 수집](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a6-efa-metric-collection.md)
-  
+* [A6. The Landscape of GPU-Centric Communication]()
+    
 ### _Revision History_ ###
 * 2025-01-07 First Released — EKS / Kubeflow 기반 분산 훈련 가이드
 * 2025-01-08 Intel AMX - Gloo 기반 CPU 분산 훈련 추가
