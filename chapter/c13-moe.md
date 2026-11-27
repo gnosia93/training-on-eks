@@ -12,6 +12,25 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
+class FFN(nn.Module):
+    def __init__(self, hidden_dim, intermediate_dim):
+        super().__init__()
+        # 1. 차원을 넓히는 레이어 2개 (hidden_dim -> intermediate_dim)
+        self.gate_proj = nn.Linear(hidden_dim, intermediate_dim, bias=False)
+        self.up_proj   = nn.Linear(hidden_dim, intermediate_dim, bias=False)
+        
+        # 2. 다시 원래 차원으로 줄이는 레이어 1개 (intermediate_dim -> hidden_dim)
+        self.down_proj = nn.Linear(intermediate_dim, hidden_dim, bias=False)
+
+    def forward(self, x):
+        # SwiGLU 연산: gate_proj에 SiLU 활성화 함수를 적용한 뒤 up_proj 결과와 곱하고, down_proj로 축소
+        return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
+
+
+
+
+
 class MoELayer(nn.Module):
     def __init__(self, hidden_dim, num_experts, top_k=2):
         super().__init__()
