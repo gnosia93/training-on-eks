@@ -1,6 +1,13 @@
 대규모 분산 훈련에서 체크포인트 저장시 핵심 포인트는 데이터 저장을 위한 네트워크 대역폭(Throughput) 및 I/O 성능을 최대화 하는 것이다. 수천 개의 GPU 노드가 동시에 쓰기 작업을 수행할 때 성능 병목을 줄이기 위해서는 병렬 및 비동기 저장 (Parallel & Asynchronous Checkpointing) 기법 활용이 중요하며, 이를 통해 체크포인트를 저장하는 동안 GPU 연산이 중단되지 않도록 하는 것이다.  
 또한 PyTorch Distributed Checkpoint(DCP)를 활용하는 경우 각 Rank(프로세스)가 자신의 가중치만 저장하게 되고, 그 대상 경로를 FSx 러스터로 설정함으로써 쓰기 속도를 최대화 할 수 있다. 
 
+## Lustre에 직접 쓸 때 병목이 생기는 이유 ##
+
+* 동시 쓰기 경합(Burst Write Contention): 학습이 체크포인트 스텝에 도달하는 순간, 8대 노드(64개 GPU)가 동시에 수십 GB~수 TB의 데이터를 네트워크를 통해 Lustre의 OST(Object Storage Target)와 MDS(Metadata Server)로 한꺼번에 쏟아붓습니다.
+* 메타데이터 락(Metadata Lock) 부하: 분산 체크포인트는 수십 개의 파일(.distcp, .metadata 등)을 동시에 생성하고 기록합니다. 수많은 Rank가 동시에 파일을 열거나 크기를 갱신할 때 Lustre의 메타데이터 서버(MDS)에 락 경합이 걸려 쓰기 속도가 급격히 떨어집니다.
+* 비용 대비 대역폭 한계: 64개 Rank가 로컬 NVMe에 쓰는 합산 대역폭(수십 GB/s)만큼의 쓰기 성능을 Lustre에서 뽑아내려면, 스토리지 용량과 IOPS 스펙을 매우 높게 프로비저닝해야 하므로 인프라 비용이 기하급수적으로 늘어납니다.
+
+
 ## 러스터(Lustre) ##
 러스터(Lustre) 파일 시스템은 높은 처리량, 낮은 지연 시간, 뛰어난 확장성을 제공하는 병렬 분산 파일 시스템으로, 대규모 데이터셋을 처리해야 하는 AI 시스템에 필수적이다.
 AWS 에서 Lustre 파일 시스템을 사용하는 가장 빠른 방법은 완전 관리형 서비스인 Amazon FSx for Lustre 와 FSx for Lustre CSI(Container Storage Interface) 드라이버를 활용하여 쿠버네티스 클러스터에 통합하는 것이다.
