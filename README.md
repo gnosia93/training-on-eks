@@ -55,6 +55,8 @@
 
 * [C12. CPU 분산 훈련 (Intel AMX)](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c12-training-on-cpu.md)
 
+* [C13. MoE](https://github.com/gnosia93/training-on-eks/blob/main/chapter/c13-moe.md)
+
 ### _Appendix_ ###
 
 * [A1. 트러블 슈팅](https://github.com/gnosia93/training-on-eks/blob/main/appendix/a1-karpenter-message.md)
